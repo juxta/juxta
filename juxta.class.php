@@ -338,7 +338,7 @@ class Juxta {
 	}
 
 	private function triggers($database = '') {
-		$triggers = $this->query("SHOW TRIGGERS FROM `{$database}`", array('trigger', 'table', 'event', 'timing', 'created'));
+		$triggers = $this->query("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing', 'Created'));
 		return array('contents' => 'triggers', 'from' => $database, 'data' => $triggers);
 	}
 }
