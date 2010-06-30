@@ -6,42 +6,50 @@
 	<title>Juxta</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<link href="juxta.css" rel="stylesheet" media="all" />
+	<script language="JavaScript" type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="juxta.js"></script>
 </head>
 
 <body>
+
+	<script type='text/javascript'>
+		$(document).ready(function(){
+			Juxta = new Juxta();
+		});
+	</script>
 
 	<div id="header">
 		<h1>Juxta</h1>
 	</div>
 	
 	<div id="sidebar">
-		<ul>
-			<li class="connection"><h2><span class="level">Connection</span><span class="value">not defined</span></h2>
+		<ul style="display: none;">
+			<li class="connection"><h2><span class="level">Connection</span><span class="value">undefined</span></h2>
 				<ul class="buttons">
-					<li class="databases active"><span><a href="#databases">Databases</a></span></li>
-					<li class="processlist"><span><a href="#processlist">Processlist</a></span></li>
-					<li class="privileges"><span><a href="#privileges">Privileges</a></span></li>
-					<li class="server-status"><span><a href="#server-status">Server&nbsp;status</a></span></li>
-					<li class="backup"><span><a href="#backup">Backup</a></span></li>
-					<li class="restore"><span><a href="#restore">Restore</a></span></li>
+					<li class="databases"><a href="#databases">Databases</a></li>
+					<li class="processlist"><a href="#processlist">Processlist</a></li>
+					<li class="privileges"><a href="#privileges">Privileges</a></li>
+					<li class="server-status"><a href="#server-status">Server&nbsp;status</a></li>
+					<li class="backup"><a href="#backup">Backup</a></li>
+					<li class="restore"><a href="#restore">Restore</a></li>
 				</ul>
 			</li>
 			
-			<li class="database"><h2><span class="level">Database</span><span class="value">not defined</span></h2>
+			<li class="database"><h2><span class="level">Database</span><span class="value">undefined</h2>
 				<ul class="buttons">
-					<li class="tables"><span><a href="#tables">Tables</a></span></li>
-					<li class="views"><span><a href="#views">Views</a></span></li>
-					<li class="routines"><span><a href="#routines">Procedures&nbsp;&amp;&nbsp;Functions</a></span></li>
-					<li class="triggers"><span><a href="#triggers">Triggers</a></span></li>
+					<li class="tables"><a href="#tables">Tables</a></li>
+					<li class="views"><a href="#views">Views</a></li>
+					<li class="routines"><a href="#routines">Procedures&nbsp;&amp;&nbsp;Functions</a></li>
+					<li class="triggers"><a href="#triggers">Triggers</a></li>
 				</ul>
 			</li>
 			
-			<li class="table"><h2><span class="level">Table</span><span class="value">not defined</span></h2>
+			<li class="table"><h2><span class="level">Table</span><span class="value">undefined</span></h2>
 				<ul class="buttons">
-					<li class="columns"><span><a href="#columns">Columns&nbsp;&amp;&nbsp;Indices</a></span></li>
-					<li class="foreign"><span><a href="#foreign">Foreign&nbsp;keys</a></span></li>
-					<li class="options"><span><a href="#options">Options</a></span></li>
-					<li class="maintance"><span><a href="#maintance">Maintance</a></span></li>
+					<li class="columns"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indices</a></li>
+					<li class="foreign"><a href="#foreign">Foreign&nbsp;keys</a></li>
+					<li class="options"><a href="#options">Options</a></li>
+					<li class="maintance"><a href="#maintance">Maintance</a></li>
 				</ul>
 			</li>
 		</ul>
