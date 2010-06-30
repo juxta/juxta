@@ -1,3 +1,11 @@
+/*
+ * Juxta 0.1 http://juxta.ru
+ * 
+ * Copyright (c) 2010 Alexey Golovnya
+ * Licensed under the MIT license
+ * 
+ */
+
 (function($){
 	$.class = function(template, data) {
 		function create(){
