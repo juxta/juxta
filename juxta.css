@@ -1,1 +1,93 @@
+* {
+	outline: 0;
+	}
+html{
+	height: 100%;
+	}
+body{
+	overflow: hidden;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #e6e6e6;
+	font: 9pt Arial, "Trebuchet MS", Helvetica, sans-serif;
+	color: #000;
+	}
+.clear{
+	clear: both;
+	}
+	
+	
+/*
+ * Header
+ */
 
+#header{
+	height: 35px;
+	margin: 11px;
+	padding: 0 0 0 7px;
+	}
+#header h1{
+	float: left;
+	height: 35px;
+	line-height: 35px;
+	margin: 0;
+	padding: 0;
+	font-size: 18pt;
+	font-weight: normal;
+	}
+	
+	
+/*
+ * Sidebar
+ */
+
+#sidebar{
+	float: left;
+	width: 275px;
+	margin: 0 11px;
+	padding: 0;
+	}
+	
+	
+/*
+ * Applications
+ */
+
+#applications{
+	position: absolute;
+	top: 57px; right: 11px; bottom: 11px; left: 297px;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	
+	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+	}
+
+.application{
+	clear: left;
+	}
+.application h1{
+	float: left;
+	height: 46px;
+	line-height: 46px;
+	margin: 0 0 0 7px;
+	font-size: 22px;
+	font-weight: normal;
+	color: #000;
+	cursor: default;
+	}
+.application .close{
+	display: none;
+	float: right;
+	width: 18px;
+	height: 18px;
+	margin: 13px 11px 0 0;
+	cursor: pointer;
+	}
