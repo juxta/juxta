@@ -17,6 +17,10 @@ body{
 	clear: both;
 	}
 	
+#explorer, #backup-restore, #table-editor, #data-browser{
+	display: none;
+	}
+	
 	
 /*
  * Header
@@ -386,4 +390,108 @@ body{
 .context li.drop{
 	background: transparent url('images/trash.gif') left center no-repeat;
 	}
+	
+	
+/*
+ * Grid columns (content specific)
+ */
 
+.grid .head .database,
+.grid .head .table,
+.grid .head .view,
+.grid .head .routine,
+.grid .head .trigger{
+	width: 200px;
+	}
+.grid .body .table,
+.grid .body .view,
+.grid .body .routine,
+.grid .body .trigger{
+	width: 180px;
+	}
+
+.grid .head .table-engine,
+.grid .body .table-engine{
+	width: 120px;
+	}
+.grid .head .table-rows,
+.grid .body .table-rows{
+	width: 55px;
+	text-align: right;
+	}
+.grid .head .table-size,
+.grid .body .table-size{
+	width: 55px;
+	text-align: left;
+	}
+.grid .head .table-update-date
+.grid .body .table-update-date{
+	width: 125px;
+	border-right-width: 0px;
+	}
+
+.grid .head .process{
+	width: 120px;
+	}
+.grid .body .process{
+	width: 100px;
+	}
+.grid .head .process-user,
+.grid .body .process-user{
+	width: 175px;
+	}
+.grid .head .process-database,
+.grid .body .process-database{
+	width: 125px;
+	}
+.grid .head .process-command,
+.grid .body .process-command{
+	width: 75px;
+	}
+.grid .head .process-time,
+.grid .body .process-time{
+	width: 50px;
+	border-right-width: 0;
+	text-align: right;
+	}
+
+.grid .head .view-definer,
+.grid .body .view-definer{
+	width: 200px;
+	}
+.grid .body .view-updatable span{
+	padding: 0 3px;
+	font-size: 10px;
+	
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+.grid .body .view-updatable span.YES{
+	background-color: #ccf;
+}
+
+.grid .head .routine-definer,
+.grid .body .routine-definer{
+	width: 200px;
+}
+
+.grid .head .trigger-table,
+.grid .body .trigger-table{
+	width: 100px;
+	}
+.grid .head .trigger-event,
+.grid .body .trigger-event{
+	width: 100px;
+	}
+.grid .body .trigger-event{
+	font-size: 10px;
+	}
+.grid .body .trigger-event span{
+	padding: 0 3px;
+	background-color: #e3e3e3;
+	
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
