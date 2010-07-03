@@ -34,6 +34,7 @@ jQuery.aop.before(
 Juxta = $.class();
 Juxta.prototype = {
 	init: function(){
+		this.notification = new Juxta.Notification();
 		this.sidebar = new Juxta.Sidebar();
 		this.sidebar.path({'connection': '127.0.0.1'});
 		
@@ -126,6 +127,29 @@ Juxta.prototype = {
 	explore: function(params){
 		this.explorer.request(params);
 	},
+	notify: function(message, options){
+		this.notification.show(message, options);
+	}
+};
+
+Juxta.Notification = $.class();
+Juxta.Notification.prototype = {
+	init: function(){
+		this.container = $('#notify');
+	},
+	settings: {
+		delayTime: 3000,
+		hideSpeed: 300
+	},
+	show: function(message, options) {
+		var self = this;
+		options = $.extend({}, self.settings, options);
+		return $('<li><span>' + message + '</span></li>').
+			appendTo(this.container.find('ul')).
+			delay(options.delayTime).
+			slideUp(options.hideSpeed).
+			find('span').addClass(options.type);
+	}
 };
 
 Juxta.Sidebar = $.class();
