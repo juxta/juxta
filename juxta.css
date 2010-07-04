@@ -354,6 +354,9 @@ body{
 .grid .body tr:hover{
 	background-color: #f6f6f6;
 	}
+.grid .body tr.content:hover{
+	background-color: transparent;
+	}
 	
 .grid .body td{
 	padding: 2px 3px;
@@ -371,13 +374,22 @@ body{
 .grid .body td.check + td{
 	padding: 2px 2px 2px 0;
 	}
-.grid .body td.expand{
+.grid .body td.expand,
+.grid .body td.collapse{
 	width: 9px;
 	padding: 0 0 0 7px;
 	border-right-width: 0;
-	}
-.grid .body td.expand img{
+	background: transparent url('images/arrow-expand.png') center no-repeat;
 	cursor: pointer;
+	}
+.grid .body td.collapse{
+	background-image: url('images/arrow-collapse.png');
+	}
+.grid .body tr.content > td{
+	padding: 0;
+	}
+.grid .body tr.content td.check{
+	padding-left: 38px;
 	}
 .grid .body tr:last-child td{
 	border-bottom-width: 0px;

@@ -7,7 +7,7 @@
  */
 
 (function($){
-	$.class = function(template, data) {
+	$.class = function(template, data){
 		function create(){
 			if (this.init) {
 				this.init.apply(this, arguments);
@@ -15,8 +15,8 @@
 		}
 		return create;
 	};
-	$.template = function(template, data) {
-		return template.replace(/\{([\w\.]*)\}/g, function (str, key) {
+	$.template = function(template, data){
+		return template.replace(/\{([\w\.]*)\}/g, function (str, key){
 			var keys = key.split("."), value = data[keys.shift()];
 			$.each(keys, function () { value = value[this]; });
 			return (value === null || value === undefined) ? "" : value;
@@ -39,8 +39,9 @@ Juxta.prototype = {
 		this.sidebar.path({'connection': '127.0.0.1'});
 		
 		this.explorer = new Juxta.Explorer();
+		this.exchange = new Juxta.BackupRestore();
 		
-		if (location.hash == '') {
+		if (location.hash == ''){
 			location.hash = 'databases';
 		}
 		this.state = 'default';
@@ -54,8 +55,8 @@ Juxta.prototype = {
 		var hash = location.hash.replace(/#/g, '');
 		params = hash.split('/');
 		action = params.pop();
-		if (hash != Juxta.state) {
-			switch (action) {
+		if (hash != Juxta.state){
+			switch (action){
 				case 'databases':
 					Juxta.sidebar.highlight('databases');
 					Juxta.explorer.show({header: 'Databases', toolbar: {'Create database': "alert('Create database'); return false;"} });
@@ -74,6 +75,7 @@ Juxta.prototype = {
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
+					Juxta.exchange.show({header: 'Backup', toolbar: {'Options': null} });
 					break;
 				case 'restore':
 					Juxta.sidebar.highlight('restore');
@@ -141,7 +143,7 @@ Juxta.Notification.prototype = {
 		delayTime: 3000,
 		hideSpeed: 300
 	},
-	show: function(message, options) {
+	show: function(message, options){
 		var self = this;
 		options = $.extend({}, self.settings, options);
 		return $('<li><span>' + message + '</span></li>').
@@ -186,7 +188,7 @@ Juxta.Sidebar.prototype = {
 		if (!options){
 			options = {};
 		}
-		if (this.tree[link]) {
+		if (this.tree[link]){
 			var level = this.sidebar.find('ul:first-child > li.' + this.tree[link]);
 			if (level.is('.connection')) {
 				this.heads.filter('.connection').removeClass('closed').show();
@@ -204,7 +206,7 @@ Juxta.Sidebar.prototype = {
 		this.sidebar.find('.buttons li').removeClass('active');
 		this.sidebar.find('li.' + link).addClass('active');
 		
-		if (this.sidebar.find('ul:first-child').css('display') == 'none') {
+		if (this.sidebar.find('ul:first-child').css('display') == 'none'){
 			 this.sidebar.find('ul:first-child').slideDown();
 		}
 	},
@@ -236,22 +238,22 @@ Juxta.Explorer.prototype = {
 		this.statusBar = this.container.find('.status');
 	},
 	show: function(options){
-		if (!this.container.is(':visible')) {
+		if (!this.container.is(':visible')){
 			$('#applications .application').hide();
 			this.container.show();
 			this.stretch();
 		}
-		if (options && options.header) {
-			$('#explorer > h1').text(options.header);
+		if (options && options.header){
+			this.container.find('h1').text(options.header);
 		}
-		if (options && options.closable) {
-			$('#explorer div.close').show();
-		} else {
-			$('#explorer div.close').hide();
+		if (options && options.closable){
+			this.container.find('div.close').show();
+		} else{
+			this.container.find('div.close').hide();
 		}
-		if (options && options.toolbar) {
+		if (options && options.toolbar){
 			this.toolbar(options.toolbar);
-		} else {
+		} else{
 			this.toolbar();
 		}
 	},
@@ -317,40 +319,86 @@ Juxta.Grid.prototype = {
 	init: function(grid){
 		this.container = $(grid);
 		this.body = this.container.find('.body table');
-		this.head = this.container.find('.head')
-		this.actions = this.container.find('.actions')
+		this.head = this.container.find('.head');
+		this.actions = this.container.find('.actions');
 		
 		var self = this;
-		
 		this.body.change(function(event){
 			if ($(event.target).is('[type=checkbox]')){
-				$('.context:visible').hide()
+				$('.context:visible').hide();
 				if ($(event.target).is('[type=checkbox]:checked')){
+					// Highlight link
 					$(event.target).parent().next('td').find('a').addClass('checked');
+					// Check parent row if its child  selected all
+					if ($(event.target).parents('tr.content').find('[type=checkbox]').length > 0 &&
+						$(event.target).parents('tr.content').find('[type=checkbox]').length == $(event.target).parents('tr.content').find('[type=checkbox]:checked').length)
+					{
+						$(event.target).parents('tr.content').prev('tr')
+							.find('[type=checkbox]').attr('checked', true)
+							.parents('tr').find('a').addClass('checked');
+					}
+					// Check child rows
+					$(event.target).parents('tr').next('tr.content')
+						.find('[type=checkbox]').attr('checked', true)
+						.parents('tr').find('a').addClass('checked');
 				} else{
+					// Unhighlight link
 					$(event.target).parent().next('td').find('a').removeClass('checked');
+					// Uncheck parent row if its child slected none
+					if ($(event.target).parents('tr.content').find('[type=checkbox]').length > 0 &&
+						$(event.target).parents('tr.content').find('[type=checkbox]:checked').length == 0)
+					{
+						$(event.target).parents('tr.content').prev('tr')
+							.find('[type=checkbox]').attr('checked', false)
+							.parents('tr').find('a').removeClass('checked');
+					}
+					// Uncheck child rows
+					$(event.target).parents('tr').next('tr.content')
+						.find('[type=checkbox]').attr('checked', false)
+						.parents('tr').find('a').removeClass('checked');
 				}
 			}
-			self.statistics.selected = self.body.find('[type=checkbox]:checked').length
+			self.statistics.selected = self.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
 			Juxta.explorer.status(
-				self.statistics.cardinality == 0 ? '' :
 				(self.statistics.cardinality > 1 ? $.template('{cardinality} {items}', self.statistics) : $.template('{cardinality} {item}', self.statistics)) + 
 				(self.statistics.selected > 0 ? $.template(', {selected} selected', self.statistics) : '') 
 			);
 			
-			if (self.statistics.cardinality == self.statistics.selected) {
+			if (self.statistics.cardinality == self.statistics.selected){
 				self.actions.find('.all').addClass('active');
 				self.actions.find('.nothing').removeClass('active');
-			} else if(self.statistics.selected == 0) {
+			} else if(self.statistics.selected == 0){
 				self.actions.find('.all').removeClass('active');
 				self.actions.find('.nothing').addClass('active');
-			} else {
+			} else{
 				self.actions.find('.all').removeClass('active');
 				self.actions.find('.nothing').removeClass('active');
 			}
 		});
 
-		this.container.find('.actions').data('grid', this);
+		this.body.find('td.expand, td.collapse').live('click', function(){
+			// Temporary
+			$target = $(event.target);
+			if (!$target.parents('tr').next('tr.content').get(0)){
+				$target.parents('tr').after('<tr class="content"><td colspan="99"><table cellspacing="0"><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_1</a></td><td></td></tr><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_2</a></td><td></td></tr></table></td></tr>');
+			}
+			//
+			if ($target.hasClass('expand')){
+				$target.removeClass('expand').addClass('collapse');
+				$target.parents('tr').next('.content').show();
+				if ($target.parents('tr').find('[type=checkbox]').is(':checked')){
+					$target.parents('tr').next('tr.content').find('[type=checkbox]')
+						.attr('checked', true)
+						.parents('tr').find('a').addClass('checked');
+				}
+			} else{
+				$target.removeClass('collapse').addClass('expand');
+				$target.parents('tr').next('.content').hide();
+			}
+			
+			$('.context:visible').hide();
+			return false;
+		});
 		
 		this.container.find('.actions .all').live('click', function(){
 			self.select('all')
@@ -380,39 +428,35 @@ Juxta.Grid.prototype = {
 		
 		this.body.bind('contextmenu', contextMenu, function(event){
 			contextMenu = event.data;
-			contextMenu.menu.show().offset({top: event.clientY, left: event.clientX});
 			
-			contextMenu.page.find('a.checked').removeClass('checked');
-			contextMenu.page.find('[type=checkbox]:checked').removeAttr('checked');
+			if (!contextMenu.menu.find('ul').is(':empty')){
+				contextMenu.menu.show().offset({top: event.clientY, left: event.clientX});
 			
-			contextMenu.target = $(event.target).parents('tr');
-			contextMenu.target.find('td:nth-child(2)').find('a').addClass('checked');
+				contextMenu.page.find('a.checked').removeClass('checked');
+				contextMenu.page.find('[type=checkbox]:checked').removeAttr('checked');
+				contextMenu.target = $(event.target).parents('tr');
+				contextMenu.target.find('td:nth-child(2)').find('a').addClass('checked');
 			
-			contextMenu.value = contextMenu.target.find('td:nth-child(2)').find('a').text();
+				contextMenu.value = contextMenu.target.find('td:nth-child(2)').find('a').text();
 			
-			contextMenu.page.trigger('change')
+				contextMenu.page.trigger('change');
 			
-			if (event.preventDefault) {
-				event.preventDefault();
-				event.stopPropagation();
-			} else {
-				event.returnValue = false;
-				event.cancelBubble = true;
+				return false;
 			}
 		});
 	},
 	fill: function(data){
 		
-		if ($.isArray(data.context[0])) {
+		if ($.isArray(data.context[0])){
 			this.statistics.item = data.context[0][0];
 			this.statistics.items = data.context[0][1];
-		} else {
+		} else{
 			this.statistics.item = data.context[0];
 			this.statistics.items = 'items';
 		}
 		
 		var self = this;
-		if (data['head']) {
+		if (data['head']){
 			this.head.empty();
 			this.statistics.cardinality = 0;
 			this.body.trigger('change');
@@ -421,7 +465,7 @@ Juxta.Grid.prototype = {
 			});
 		}
 		
-		if (data && data.data) {
+		if (data && data.data){
 			this.body.empty();
 			this.statistics.cardinality = data.data.length;
 			
@@ -430,16 +474,16 @@ Juxta.Grid.prototype = {
 			jQuery.each(data.data, function(i, value) {
 				var v = {};
 				jQuery.each(data.context, function(ii, vvalue){
-					if (data.context.length == 1) {
+					if (data.context.length == 1){
 						if ($.isArray(vvalue)) {
 							v[vvalue[0]] = value;
-						} else {
+						} else{
 							v[vvalue] = value;
 						}					
-					} else {
-						if ($.isArray(vvalue)) {
+					} else{
+						if ($.isArray(vvalue)){
 							v[vvalue[0]] = value[ii];
-						} else {
+						} else{
 							v[vvalue] = value[ii];
 						}
 					}
@@ -455,10 +499,10 @@ Juxta.Grid.prototype = {
 		}
 	},
 	select: function(all){
-		if (all) {
+		if (all){
 			$('.context:visible').hide();
 			this.body.find('input[type=checkbox]').attr('checked', 'checked').parent().next('td').find('a').addClass('checked');
-		} else {
+		} else{
 			this.body.find('input[type=checkbox]').removeAttr('checked', '');
 			this.body.find('a.checked').removeClass('checked');
 		}
@@ -468,6 +512,62 @@ Juxta.Grid.prototype = {
 		return this.body.find('input[type=checkbox]:checked').map(function(){ return $(this).attr('name') });
 	}
 };
+
+Juxta.BackupRestore = $.class();
+Juxta.BackupRestore.prototype = {
+	init: function(){
+		this.container = $('#backup-restore');
+		$(window).resize(this.stretch);
+		this.grid = new Juxta.Grid('#backup-restore .grid');
+	},
+	show: function(options){
+		
+		if (!this.container.is(':visible')){
+			$('#applications .application').hide();
+			this.container.show();
+			this.stretch();
+		}
+		if (options && options.header){
+			this.container.find('h1').text(options.header);
+		}
+		if (options && options.closable){
+			this.container.find('div.close').show();
+		} else{
+			this.container.find('div.close').hide();
+		}
+		if (options && options.toolbar){
+			this.toolbar(options.toolbar);
+		} else{
+			this.toolbar();
+		}
+		
+		response = {
+			'head': {
+				'database': 'Items for backup'
+			},
+			'data-template': '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
+			'context': ['database'],
+			'data': ExplorerTestResponses.databases.data,
+		};
+		
+		this.grid.fill(response);
+	},
+	hide: function(){
+		this.container.hide();
+	},
+	stretch: function(){
+		$('#backup-restore:visible .grid .body').height($('#applications').height() - $('#backup-restore .grid div.body').get(0).offsetTop - $('#backup-restore .status').get(0).offsetHeight - 24);
+	},
+	toolbar: function(tools){
+		var toolbar = this.container.find('.tools');
+		toolbar.empty();
+		if (tools) {
+			jQuery.each(tools, function(title, action){
+				toolbar.append('<a href="#" onclick="' + action + '">' + title + '</a>');
+			});
+		}
+	}
+}
 
 var ExplorerTestResponses = {
 	databases: {
