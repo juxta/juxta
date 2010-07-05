@@ -360,7 +360,7 @@ Juxta.Grid.prototype = {
 			}
 			self.statistics.selected = self.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
 			Juxta.explorer.status(
-				(self.statistics.cardinality > 1 ? $.template('{cardinality} {items}', self.statistics) : $.template('{cardinality} {item}', self.statistics)) + 
+				(self.statistics.cardinality > 1 ? $.template('{cardinality} {items}', self.statistics) : '') + 
 				(self.statistics.selected > 0 ? $.template(', {selected} selected', self.statistics) : '') 
 			);
 			
@@ -373,6 +373,12 @@ Juxta.Grid.prototype = {
 			} else{
 				self.actions.find('.all').removeClass('active');
 				self.actions.find('.nothing').removeClass('active');
+			}
+			
+			if (self.statistics.selected < 1) {
+				self.actions.find('input[type=button]').attr('disabled', true);
+			} else{
+				self.actions.find('input[type=button]').attr('disabled', false);
 			}
 		});
 
