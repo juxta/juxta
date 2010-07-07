@@ -8,6 +8,7 @@
 	<link href="juxta.css" rel="stylesheet" media="all" />
 	<script language="JavaScript" type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="jquery/jquery-aop-1.3.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="jquery/jquery-ui-1.8.2.custom.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="juxta.js"></script>
 </head>
 
@@ -98,6 +99,70 @@
 			<div class="status">&nbsp;</div>
 		</div>
 	</div>
+	
+	<div id="login" class="float-box">
+		<h3>Connect to MySQL Server</h3>
+		<div class="close"><img src="./images/close.png" onclick="$('#login').hide();" /></div>
+		<div class="form">
+				<label>Stored&nbsp;connection</label>
+				<select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select>
+				<label>Host</label>
+				<input type="text" style="width: 125px;" value="127.0.0.1"/>
+				<label>User</label>
+				<input type="text" style="width: 125px;" value="root"/>	
+				<label>Password</label>
+				<input type="password" style="width: 125px;"/><br class="clear"/>
+		</div>
+		<div class="buttons"><input type="button" value="Connect"/></div>
+	</div>
+	
+	<div id="create-database" class="float-box">
+		<h3>Create Database</h3>
+		<div class="close"><img src="./images/close.png" onclick="$('#create-database').hide();" /></div>
+		<div class="form">
+			<label class="database-name" for="database-name" style="width: 92px; ">Database name</label>
+			<input type="text" id="database-name" style="width: 175px;" value=""/>
+				
+			<label class="database-name" for="database-name" style="width: 92px; ">Collation</label>
+			<select style="width: 175px; ">
+				<option>Default</option>
+				<optgroup title="cp1252 West European" label="latin1">
+					<option style="color: #000;">latin1_german1_ci</option>
+					<option>latin1_swedish_ci</option>
+					<option>latin1_danish_ci</option>
+					<option>latin1_german2_ci</option>
+					<option>latin1_bin</option>
+					<option>latin1_general_ci</option>
+					<option>latin1_general_cs</option>
+				</optgroup>
+				<optgroup title="ISO 8859-2 Central European" label="latin2">
+					<option>latin2_czech_cs</option>
+					<option>latin2_general_ci</option>
+					<option>latin2_hungarian_ci</option>
+					<option>latin2_croatian_ci</option>
+					<option>latin2_bin</option>
+				</optgroup>
+				<optgroup title="US ASCII" label="ascii">
+					<option>ascii_general_ci</option>
+					<option>ascii_bin</option>
+				</optgroup>
+				<optgroup title="Windows Cyrillic" label="cp1251">
+					<option>cp1251_bulgarian_ci</option>
+					<option>cp1251_ukrainian_ci</option>
+					<option>cp1251_bin</option>
+					<option>cp1251_general_ci</option>
+				</optgroup>
+				<optgroup title="UTF-8 Unicode" label="utf8">
+					<option>utf8_general_ci</option>
+					<option>utf8_bin</option>
+					<option>utf8_unicode_ci</option>
+					<option>utf8_icelandic_ci</option>
+				</optgroup>
+			</select><br class="clear"/>
+		</div>
+		<div class="buttons"><input type="button" value="Create"/></div>
+	</div>
+	
 
 </body>
 </html>

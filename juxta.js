@@ -41,6 +41,8 @@ Juxta.prototype = {
 		this.explorer = new Juxta.Explorer();
 		this.exchange = new Juxta.BackupRestore();
 		
+		$('.float-box').draggable({scroll: false, handle: 'h3'});
+		
 		if (location.hash == ''){
 			location.hash = 'databases';
 		}
@@ -59,7 +61,7 @@ Juxta.prototype = {
 			switch (action){
 				case 'databases':
 					Juxta.sidebar.highlight('databases');
-					Juxta.explorer.show({header: 'Databases', toolbar: {'Create database': "alert('Create database'); return false;"} });
+					Juxta.explorer.show({header: 'Databases', toolbar: {'Create database': "$('#create-database').show(); return false;"} });
 					Juxta.explore({show: 'databases'});
 					break;
 				case 'processlist':
@@ -79,6 +81,10 @@ Juxta.prototype = {
 					break;
 				case 'restore':
 					Juxta.sidebar.highlight('restore');
+					break;
+				case 'logout':
+					$('#header, #sidebar, #applications').hide();
+					$('#login').show();
 					break;
 					
 				case 'tables':
