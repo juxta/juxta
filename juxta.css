@@ -14,6 +14,13 @@ body{
 	font: 9pt Arial, "Trebuchet MS", Helvetica, sans-serif;
 	color: #000;
 	}
+a{
+	color: #00559c;
+	text-decoration: none;
+	}
+a:hover{
+	text-decoration: underline;
+}
 .clear{
 	clear: both;
 	}
@@ -68,16 +75,9 @@ body{
 	-moz-border-radius: 7px;
 	-web-kit-border-radius: 7px;
 	}
-#header ul.links li a{
-	text-decoration: none;
-	color: #000;
-	}	
 #header ul.links li.active span{
 	background-color: #fcfcfc;
 	font-weight: bold;
-	}
-#header ul.links li a:hover{
-	color: #183f7a;
 	}
 
 
@@ -203,7 +203,7 @@ body{
 	color: #000;
 	}
 #sidebar .buttons li a:hover{
-	color: #183f7a;
+	color: #00559c;
 	}
 #sidebar .buttons li.active span{
 	background-color: #fcfcfc;
@@ -258,12 +258,7 @@ body{
 	}
 .application .tools a{
 	margin-left: 14px;
-	text-decoration: none;
-	color: #183f7a;
 	}
-.application .tools a:hover{
-	text-decoration: underline;
-}
 
 .application .close{
 	display: none;
@@ -303,7 +298,7 @@ body{
 	
 .grid .actions span.like-a{
 	text-decoration: none;
-	color: #183f7a;
+	color: #00559c;
 	}
 .grid .actions span.like-a.active{
 	color: #fff;
@@ -406,7 +401,7 @@ body{
 	color: #000;
 	}
 .grid .body td a.checked{
-	background-color: #c5cfde;
+	background-color: #bfd4e6;
 	
 	border-radius: 3px;
 	-moz-border-radius: 3px;
