@@ -288,7 +288,6 @@ a:hover{
 	background-color: #ccc;
 	font-size: 14px;
 	color: #333;
-	border-top: #fff 1px solid;
 	border-bottom: #ccc 1px solid;
 	}
 	
@@ -557,11 +556,11 @@ a:hover{
 	position: absolute;
 	top: 250px;
 	left: 400px;
-	padding: 5px 11px 21px 11px;
+	padding: 0 0 21px 0;
 	
-	border-radius: 7px;
-	-moz-border-radius: 7px;
-	-webkit-border-radius: 7px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 	
 	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
 	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
@@ -570,20 +569,17 @@ a:hover{
 	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f3f3f3));
 	}
 .float-box h3{
-	height: 35px;
-	line-height: 35px;
-	margin: 3px 0 0;
-	padding: 0;
+	height: 46px;
+	line-height: 46px;
+	margin: 0 7px;
 	font-size: 16.5pt;
 	font-weight: normal;
 	color: #333;
-	}
-.float-box h3:hover{
 	cursor: default;
 	}
 .float-box .close{
 	position: absolute;
-	top: 17px;
+	top: 13px;
 	right: 11px;
 	}
 .float-box .close:hover{
@@ -591,7 +587,7 @@ a:hover{
 	}
 .float-box .form{
 	margin: 21px 0 14px 0;
-	padding: 0;
+	padding: 0 11px;
 	}
 .float-box .buttons{
 	clear: both;
