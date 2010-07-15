@@ -40,6 +40,7 @@ Juxta.prototype = {
 		
 		this.explorer = new Juxta.Explorer();
 		this.exchange = new Juxta.BackupRestore();
+		this.codeEditor = new Juxta.CodeEditor($('#code-editor'));
 		
 		$('.float-box').draggable({scroll: false, handle: 'h3'});
 		
@@ -135,6 +136,18 @@ Juxta.prototype = {
 	explore: function(params){
 		this.explorer.request(params);
 	},
+	edit: function(params){
+		$('#edit-routine').show();
+		if (params){
+			if (params.view){
+				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
+			} else if (params.routine){
+				this.codeEditor.edit('Routin e' + params.routine + ' from ' + params.from);
+			} else if (params.trigger){
+				this.codeEditor.edit('Trigger ' + params.trigger + ' from ' + params.from);
+			}
+		}
+	},
 	notify: function(message, options){
 		this.notification.show(message, options);
 	}
@@ -172,7 +185,7 @@ Juxta.Sidebar.prototype = {
 			'table': this.sidebar.find('li.table span.value'),
 		}
 		
-		self = this;
+		var self = this;
 		this.sidebar.find('.buttons li').each(function(){
 			$(this).html('<span>' + $(this).html() + '</span>')
 				.find('a').each(function(){
@@ -217,7 +230,7 @@ Juxta.Sidebar.prototype = {
 		}
 	},
 	path: function(path){
-		self = this;
+		var self = this;
 		$.extend(self.path, path)
 		$.each(self.values, function(item){
 			$(this).text(self.path[item])
@@ -225,7 +238,7 @@ Juxta.Sidebar.prototype = {
 		this.repairLinks();
 	},
 	repairLinks: function(){
-		self = this;
+		var self = this;
 		$('#sidebar').find('li.database a').each(function(){
 			this.href = '#' + self.path.database + '/' + this.className;
 		});
@@ -422,14 +435,14 @@ Juxta.Grid.prototype = {
 			return false;
 		});
 		
-		contextMenu = {
+		this.contextMenu = {
 			menu: this.container.find('.context'),
 			page: this.body,
 			target: null,
 			value: null,
 		};
 		
-		this.container.find('.context').bind('hide', contextMenu, function(event){
+		this.container.find('.context').bind('hide', self.contextMenu, function(event){
 			contextMenu = event.data;
 			
 			contextMenu.target.find('td:nth-child(2)').find('a').removeClass('checked');
@@ -438,7 +451,7 @@ Juxta.Grid.prototype = {
 			contextMenu.value = null;
 		})
 		
-		this.body.bind('contextmenu', contextMenu, function(event){
+		this.body.bind('contextmenu', self.contextMenu, function(event){
 			contextMenu = event.data;
 			
 			if (!contextMenu.menu.find('ul').is(':empty')){
@@ -579,7 +592,67 @@ Juxta.BackupRestore.prototype = {
 			});
 		}
 	}
-}
+};
+
+Juxta.CodeEditor = $.class();
+Juxta.CodeEditor.prototype = {
+	init: function(textarea, options){
+		this.textarea = $(textarea);
+		this.numbers = this.textarea.before('<ul class="line-numbers"><li>1</li></ul>').prev('ul');
+		this.lines = 1;
+		
+		var self = this;
+		this.numbers.css('height', this.textarea.attr('clientHeight'));
+		this.textarea.resize(function(){	// Resize line numbers container on text area resize
+			self.numbers.css('height', this.clientHeight);
+		}).scroll(function(){	// Scroll line numbers with text area
+			self.numbers.find('li:first-child').css({'margin-top': -this.scrollTop + 'px'});
+		});
+		
+		this.textarea.keydown(function(event){
+			if (event.which == 13) {	// Scroll to the left when new line starts
+				this.scrollLeft = 0; 
+			} else if (event.keyCode == 9 && !event.shiftKey && !event.altKey) {
+				var start = this.selectionStart;
+				var end = this.selectionEnd;
+
+				this.value = this.value.substring(0,start) + "\t" + this.value.substring(end, this.value.length);
+
+				this.selectionStart = start+1;
+				this.selectionEnd = start+1;
+				
+				return false;
+			}
+			
+		});
+		
+		var textAreaHeight = this.textarea.attr('clientHeight');
+		
+		// Calculating line numbers
+		var t = setInterval(function(){
+			rows = self.textarea.attr('value').replace(/\r\n/g, '\n').replace(/\n\r/g, '\n').split('\n').length;
+			if (rows != self.lines) {
+				if (rows > self.lines) {
+					for (row = self.lines + 1; row <= rows; row++){
+						self.numbers.append('<li>' + row + '</li>');
+						self.lines++;
+					}
+				} else if (rows < self.lines) {
+					self.numbers.find('li').slice(rows - self.lines).remove();
+					self.lines = rows;
+				}
+			}
+			
+			if (self.textarea.attr('clientHeight') != textAreaHeight) {
+				self.textarea.trigger('resize');
+				textAreaHeight = self.textarea.attr('clientHeight');
+			}
+		}, 100);
+	},
+	edit: function(text){
+		this.textarea.text(text);
+	}
+};
 
 var ExplorerTestResponses = {
 	databases: {
@@ -670,7 +743,7 @@ var ExplorerTestResponses = {
 				['selected_memebers', 'avg@129.168.200.1', 'NO'],
 			],
 			'with-data': {'database': 'sampdb'},
-			'contextMenu': '<li>Browse</li><li>Edit</li><li class="drop">Delete</li><li>Properties</li>'
+			'contextMenu': '<li>Browse</li><li onclick="Juxta.edit({view: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
 		}
 	},
 	routines: {
@@ -729,7 +802,7 @@ var ExplorerTestResponses = {
 				['delete_rows', 'student', 'DELETE', 'AFTER', 'root@localhost'],
 			],
 			'with-data': {'database': ''},
-			'contextMenu': '<li>Edit</li><li class="drop">Delete</li><li>Properties</li>'
+			'contextMenu': '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
 		}
 	}
 };
