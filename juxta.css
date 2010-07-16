@@ -411,10 +411,14 @@ a:hover{
 	display: none;
 	position: absolute;
 	top: 0; left: 0;
-	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#f4f4f4));
 	font-size: 14px;
+	
+	background-color: #f3f3f3;
+	background: -moz-linear-gradient(top, #fafafa, #f4f4f4);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#f4f4f4));
 
 	border-top: #f6f6f6 1px solid;
+	
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -558,6 +562,10 @@ a:hover{
 	left: 400px;
 	padding: 0 0 21px 0;
 	
+	background-color: #f6f6f6;
+	background: -moz-linear-gradient(top, #f8f8f8, #f3f3f3);
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f3f3f3));
+	
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -565,8 +573,6 @@ a:hover{
 	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
 	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
 	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
-	
-	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f3f3f3));
 	}
 .float-box h3{
 	height: 46px;
