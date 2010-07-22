@@ -7,14 +7,6 @@
  */
 
 (function($){
-	$.class = function(template, data){
-		function create(){
-			if (this.init) {
-				this.init.apply(this, arguments);
-			}
-		}
-		return create;
-	};
 	$.template = function(template, data){
 		return template.replace(/\{([\w\.]*)\}/g, function (str, key){
 			var keys = key.split("."), value = data[keys.shift()];
@@ -40,7 +32,9 @@ Juxta.prototype = {
 		
 		this.explorer = new Juxta.Explorer();
 		this.exchange = new Juxta.BackupRestore();
-		this.codeEditor = new Juxta.CodeEditor($('#code-editor'));
+		
+		this.login = new Juxta.Login('#login');
+		this.codeEditor = new Juxta.Editor($('#edit-routine'));
 		
 		$('.float-box').draggable({scroll: false, handle: 'h3'});
 		
@@ -84,8 +78,7 @@ Juxta.prototype = {
 					Juxta.sidebar.highlight('restore');
 					break;
 				case 'logout':
-					$('#header, #sidebar, #applications').hide();
-					$('#login').show();
+					Juxta.login.show();
 					break;
 					
 				case 'tables':
@@ -133,18 +126,23 @@ Juxta.prototype = {
 			Juxta.state = hash;
 		}
 	},
+	hide: function(){
+		$('#header, #sidebar, #applications').hide();
+	},
 	explore: function(params){
 		this.explorer.request(params);
 	},
 	edit: function(params){
-		$('#edit-routine').show();
 		if (params){
 			if (params.view){
 				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
+				this.codeEditor.show({title: 'Edit view'});
 			} else if (params.routine){
-				this.codeEditor.edit('Routin e' + params.routine + ' from ' + params.from);
+				this.codeEditor.edit('Routine' + params.routine + ' from ' + params.from);
+				this.codeEditor.show();
 			} else if (params.trigger){
 				this.codeEditor.edit('Trigger ' + params.trigger + ' from ' + params.from);
+				this.codeEditor.show();
 			}
 		}
 	},
@@ -653,6 +651,69 @@ Juxta.CodeEditor.prototype = {
 		this.textarea.text(text);
 	}
 };
+
+Juxta.FloatBox = $.class({
+	settings: {
+		title: 'New window',
+		closable: true
+	},
+	init: function(element, options){
+		var _this = this;
+		this.settings = $.extend({}, _this.settings, options);
+		
+		this.$floatBox = $(element);
+		this.$head = this.$floatBox.find('h3').is('h3') ? this.$floatBox.find('h3') : this.$floatBox.prepend('<h3>'+ this.settings.title + '</h3>').find('h3'); 
+		this.$terminator = this.$floatBox.find('input[type=button].close').is('input') ? this.$floatBox.find('input[type=button].close') : $('<input type="button" class="close"/>').insertAfter(this.$head);
+		
+		this.$floatBox.draggable({scroll: false, handle: 'h3'});
+		
+		var body = {
+			height: $(document.body).height(),
+			width: $(document.body).width()
+		};
+		this.$floatBox.css({
+			left: (body.width - this.$floatBox.width())/2,
+			top:  parseInt(0.75*(body.height - this.$floatBox.height())/2)
+		});
+
+		this.$terminator.click(function(){ _this.hide(); });
+	},
+	show: function(options){
+		_this = this;
+		options = $.extend({}, _this.settings, options);
+		
+		this.$head.text(options.title);
+		
+		this.$floatBox.show();
+	},
+	hide: function(){
+		this.$floatBox.hide();
+	}
+});
+
+Juxta.Login = $.class(Juxta.FloatBox, {
+	init: function(element){
+		this._super(element, {title: 'Connect to MySQL Server', closable: false});
+		
+		this.$floatBox.find('.buttons input[value=Connect]').click(function(){
+			alert('Connect');
+		});
+	},
+	show: function(){
+		Juxta.hide();
+		this._show();
+	}
+});
+
+Juxta.Editor = $.class(Juxta.FloatBox, {
+	init: function(element){
+		this._super(element, {title: 'Edit'});
+		this.editor = new Juxta.CodeEditor(this.$floatBox.find('textarea'));
+	},
+	edit: function(text){
+		this.editor.edit(text);
+	}
+});
 
 var ExplorerTestResponses = {
 	databases: {

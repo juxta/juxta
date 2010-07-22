@@ -10,6 +10,7 @@
 	<script language="JavaScript" type="text/javascript" src="jquery/jquery-aop-1.3.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="jquery/jquery-ui-1.8.2.custom.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="jquery/jquery-resize.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="jquery/jquery-simple-inheritance.js"></script>
 	<script language="JavaScript" type="text/javascript" src="juxta.js"></script>
 </head>
 
@@ -103,7 +104,6 @@
 	
 	<div id="login" class="float-box">
 		<h3>Connect to MySQL Server</h3>
-		<div class="close"><img src="./images/close.png" onclick="$('#login').hide();" /></div>
 		<div class="form">
 				<label>Stored&nbsp;connection</label>
 				<select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select>
@@ -119,7 +119,7 @@
 	
 	<div id="create-database" class="float-box">
 		<h3>Create Database</h3>
-		<div class="close"><img src="./images/close.png" onclick="$('#create-database').hide();" /></div>
+		<input type="button" class="close" onclick="$('#create-database').hide();"/>
 		<div class="form">
 			<label class="database-name" for="database-name" style="width: 92px; ">Database name</label>
 			<input type="text" id="database-name" style="width: 175px;" value=""/>
@@ -164,9 +164,8 @@
 		<div class="buttons"><input type="button" value="Create"/></div>
 	</div>
 
-	<div id="edit-routine" class="float-box" style="top: 100px; left: 330px;">
+	<div id="edit-routine" class="float-box">
 		<h3>Edit</h3>
-		<div class="close"><img src="./images/close.png" onclick="$('#edit-routine').hide();" /></div>
 		<div class="code-editor">
 			<textarea id="code-editor" wrap="off"></textarea>
 		</div>

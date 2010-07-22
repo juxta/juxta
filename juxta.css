@@ -588,9 +588,6 @@ a:hover{
 	top: 13px;
 	right: 11px;
 	}
-.float-box .close:hover{
-	cursor: pointer;
-	}
 .float-box .form{
 	margin: 21px 0 0 0;
 	padding: 0 11px;
@@ -693,8 +690,8 @@ a:hover{
 	text-align: right;
 	}
 .code-editor textarea{
-	height: 300px;
-	width: 450px;
+	height: 250px;
+	width: 400px;
 	overflow-y: scroll;
 	margin: 0 0 -4px -35px;
 	padding: 0 0 0 35px;
@@ -749,4 +746,14 @@ input[type=button]:disabled{
 	cursor: default;
 	background: #eee;
 	color: #666;
+	}
+	
+input[type=button].close{
+	height: 18px;
+	width: 18px;
+	background: transparent url('./images/close.png') center no-repeat;
+	
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
 	}
