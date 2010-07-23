@@ -56,12 +56,12 @@ Juxta.prototype = {
 			switch (action){
 				case 'databases':
 					Juxta.sidebar.highlight('databases');
-					Juxta.explorer.show({header: 'Databases', toolbar: {'Create database': "$('#create-database').show(); return false;"} });
+					Juxta.explorer.show({title: 'Databases', toolbar: {'Create database': "$('#create-database').show(); return false;"} });
 					Juxta.explore({show: 'databases'});
 					break;
 				case 'processlist':
 					Juxta.sidebar.highlight('processlist');
-					Juxta.explorer.show({'header': 'Processlist'});
+					Juxta.explorer.show({title: 'Processlist'});
 					Juxta.explore({show: 'processlist'});
 					break;
 				case 'privileges':
@@ -72,7 +72,7 @@ Juxta.prototype = {
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
-					Juxta.exchange.show({header: 'Backup', toolbar: {'Options': null} });
+					Juxta.exchange.show({title: 'Backup', toolbar: {'Options': null} });
 					break;
 				case 'restore':
 					Juxta.sidebar.highlight('restore');
@@ -84,25 +84,25 @@ Juxta.prototype = {
 				case 'tables':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('tables');
-					Juxta.explorer.show({'header': 'Tables'});
+					Juxta.explorer.show({title: 'Tables', from: params[0]});
 					Juxta.explore({show: 'tables', from: params[0]});
 					break;
 				case 'views':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('views');
-					Juxta.explorer.show({'header': 'Views'});
+					Juxta.explorer.show({title: 'Views', from: params[0]});
 					Juxta.explore({show: 'views', from: params[0]});
 					break;
 				case 'routines':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('routines');
-					Juxta.explorer.show({'header': 'Procedures & Functions'});
+					Juxta.explorer.show({title: 'Procedures & Functions', from: params[0]});
 					Juxta.explore({show: 'routines', from: params[0]});
 					break;
 				case 'triggers':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('triggers');
-					Juxta.explorer.show({'header': 'Triggers'});
+					Juxta.explorer.show({title: 'Triggers', from: params[0]});
 					Juxta.explore({show: 'triggers', from: params[0]});
 					break;
 					
@@ -136,7 +136,7 @@ Juxta.prototype = {
 		if (params){
 			if (params.view){
 				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
-				this.codeEditor.show({title: 'Edit view'});
+				this.codeEditor.show({title: 'Edit view', name: params.view});
 			} else if (params.routine){
 				this.codeEditor.edit('Routine' + params.routine + ' from ' + params.from);
 				this.codeEditor.show();
@@ -260,8 +260,11 @@ Juxta.Explorer.prototype = {
 			this.container.show();
 			this.stretch();
 		}
-		if (options && options.header){
-			this.container.find('h1').text(options.header);
+		if (options && options.title){
+			this.container.find('h1').html(
+				options.title + 
+				(options.from ? ' <span class="from">from <a>' + options.from + '</a></span>' : '')
+			);
 		}
 		if (options && options.closable){
 			this.container.find('div.close').show();
@@ -550,8 +553,11 @@ Juxta.BackupRestore.prototype = {
 			this.container.show();
 			this.stretch();
 		}
-		if (options && options.header){
-			this.container.find('h1').text(options.header);
+		if (options && options.title){
+			this.container.find('h1').html(
+				options.title + 
+				(options.from ? ' <span class="from">from <a>' + options.from+ '</a></span>' : '')
+			);
 		}
 		if (options && options.closable){
 			this.container.find('div.close').show();
@@ -682,7 +688,11 @@ Juxta.FloatBox = $.class({
 		_this = this;
 		options = $.extend({}, _this.settings, options);
 		
-		this.$head.text(options.title);
+		this.$head.html(
+			options.title +
+			(options.name ? ' <a>' + options.name + '</a>' : '') +
+			(options.from ? ' <span class="from">from <a>' + options.from + '</a></span>' : '')
+		);
 		
 		this.$floatBox.show();
 	},

@@ -240,18 +240,25 @@ a:hover{
 	height: 46px;
 	line-height: 46px;
 	margin: 0 0 0 7px;
-	font-size: 22px;
+	font-size: 16.5pt;
 	font-weight: normal;
 	color: #000;
 	cursor: default;
 	}
+.application h1 a{
+	text-decoration: none;
+	}
+.application h1 .from{
+	font-size: 13pt;
+	}
+
 	
 .application .tools{
 	float: left;
 	height: 46px;
 	line-height: 50px;
 	margin: 0 0 0 28px;
-	font-size: 16px;
+	font-size: 13pt;
 	font-weight: normal;
 	color: #000;
 	cursor: default;
@@ -582,6 +589,12 @@ a:hover{
 	font-weight: normal;
 	color: #333;
 	cursor: default;
+	}
+.float-box h3 a{
+	text-decoration: none;
+	}
+.float-box h3 .from{
+	font-size: 13pt;
 	}
 .float-box .close{
 	position: absolute;
