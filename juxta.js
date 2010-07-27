@@ -32,6 +32,9 @@ Juxta.prototype = {
 		
 		this.explorer = new Juxta.Explorer();
 		this.exchange = new Juxta.BackupRestore();
+		this.browser = new Juxta.Browser('#data-browser');
+		this.tableEditor = new Juxta.TableEditor('#table-editor');
+		this.dummy = new Juxta.Dummy('#dummy');
 		
 		this.login = new Juxta.Login('#login');
 		this.codeEditor = new Juxta.Editor($('#edit-routine'));
@@ -66,9 +69,11 @@ Juxta.prototype = {
 					break;
 				case 'privileges':
 					Juxta.sidebar.highlight('privileges');
+					Juxta.dummy.show({header: 'Privileges'});
 					break;
 				case 'server-status':
 					Juxta.sidebar.highlight('server-status');
+					Juxta.dummy.show({header: 'Server status'});
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
@@ -76,6 +81,7 @@ Juxta.prototype = {
 					break;
 				case 'restore':
 					Juxta.sidebar.highlight('restore');
+					Juxta.dummy.show({header: 'Restore'});
 					break;
 				case 'logout':
 					Juxta.login.show();
@@ -105,22 +111,30 @@ Juxta.prototype = {
 					Juxta.explorer.show({title: 'Triggers', from: params[0]});
 					Juxta.explore({show: 'triggers', from: params[0]});
 					break;
-					
+
+				case 'browse':
+					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
+					Juxta.browse({browse: params[1], from: params[0]});
+					break;
 				case 'columns':
 					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
 					Juxta.sidebar.highlight('columns');
+					Juxta.edit({table: params[1], from: params[0]});
 					break;
 				case 'foreign':
 					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
 					Juxta.sidebar.highlight('foreign');
+					Juxta.dummy.show();
 					break;
 				case 'options':
 					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
 					Juxta.sidebar.highlight('options');
+					Juxta.dummy.show({header: 'Options'});
 					break;
-				case 'maintance':
+				case 'maintenance':
 					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
-					Juxta.sidebar.highlight('maintance');
+					Juxta.sidebar.highlight('maintenance');
+					Juxta.dummy.show({header: {title: 'Maintenance table', name: params[1]}});
 					break;
 			}
 			Juxta.state = hash;
@@ -132,9 +146,14 @@ Juxta.prototype = {
 	explore: function(params){
 		this.explorer.request(params);
 	},
+	browse: function(params){
+		this.browser.show();
+	},
 	edit: function(params){
 		if (params){
-			if (params.view){
+			if (params.table) {
+				this.tableEditor.show();
+			} else if (params.view){
 				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
 				this.codeEditor.show({title: 'Edit view', name: params.view});
 			} else if (params.routine){
@@ -725,6 +744,98 @@ Juxta.Editor = $.class(Juxta.FloatBox, {
 	}
 });
 
+Juxta.Application = $.class({
+	settings: {
+		closable: false,
+		maximized: false
+	},
+	init: function(element, options){
+		this.settings = $.extend({}, this.settings, options);
+		
+		this.$application = $(element);
+		this.$menu = this.$application.find('.tools');
+		
+		this.tune(this.settings);
+		
+		if (this.settings.closable){
+			this.$application.find('.close').show();
+			this.$application.find('.close').click(function(){ history.back(); });
+		} else{
+			this.$application.find('.close').hide();
+		}
+	},
+	tune: function(options){
+		if ($.isPlainObject(options.header)){
+			this.$application.find('h1').html(
+				options.header.title + 
+				(options.header.name ? ' <a>' + options.header.name + '</a>' : '') +
+				(options.header.from ? ' <span class="from">from <a>' + options.header.from + '</a></span>' : '')
+			);
+		} else{
+			this.$application.find('h1').html(options.header);
+		}
+		this.menu(options.menu);
+	},
+	show: function(options){
+		options = $.extend({}, this.settings, options);
+		this.tune(options);
+		
+		if (!this.$application.is(':visible')){
+			$('#applications .application').hide();
+			this.$application.show();
+		}
+		
+		if (this.settings.maximized) {
+			this.maximize();
+		} else{
+			this.restore();
+		}
+		
+		return this;
+	},
+	hide: function(){
+		this.$application.hide();
+		return this;
+	},
+	menu: function(menu){
+		this.$menu.empty();
+		var _this = this;
+		if ($.isPlainObject(menu)) {
+			jQuery.each(menu, function(title, action){
+				_this.$menu.append('<a href="#" onclick="' + action + '">' + title + '</a>');
+			});
+		}
+		return this;
+	},
+	maximize: function(){
+		$('#applications').addClass('maximized');
+		return this;
+	},
+	restore: function(){
+		$('#applications').removeClass('maximized');
+		return this;
+	}
+});
+
+Juxta.Browser = $.class(Juxta.Application, {
+	init: function(element){
+		this._super(element, {header: 'Browse', closable: true, maximized: true});
+	}
+});
+
+Juxta.TableEditor = $.class(Juxta.Application, {
+	init: function(element){
+		this._super(element, {closable: false, mazimized: false, menu: {'Browse table' : "alert('Browse');"}});
+	}
+});
+
+
+Juxta.Dummy = $.class(Juxta.Application, {
+	init: function(element){
+		this._super(element, {header: 'Don\'t work'});
+	}
+});
+
 var ExplorerTestResponses = {
 	databases: {
 		'head': {
@@ -786,7 +897,7 @@ var ExplorerTestResponses = {
 				['student', 'InnoDB', 31, '1 K', '18.05.2010 7:56'],
 			],
 			'with-data': {'database': 'sampdb'},
-			'contextMenu': '<li>Columns & Indices</li><li>Browse</li><li class="drop">Drop</li><li>Properties</li>'
+			'contextMenu': '<li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/columns\'">Columns & Indices</li><li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/browse\'">Browse</li><li class="drop">Drop</li><li>Properties</li>'
 		}
 	},
 	views: {
