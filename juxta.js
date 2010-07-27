@@ -31,7 +31,7 @@ Juxta.prototype = {
 		this.sidebar.path({'connection': '127.0.0.1'});
 		
 		this.explorer = new Juxta.Explorer();
-		this.exchange = new Juxta.BackupRestore();
+		this.exchange = new Juxta.BackupRestore('#backup-restore');
 		this.browser = new Juxta.Browser('#data-browser');
 		this.tableEditor = new Juxta.TableEditor('#table-editor');
 		this.dummy = new Juxta.Dummy('#dummy');
@@ -77,7 +77,7 @@ Juxta.prototype = {
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
-					Juxta.exchange.show({title: 'Backup', toolbar: {'Options': null} });
+					Juxta.exchange.show();
 					break;
 				case 'restore':
 					Juxta.sidebar.highlight('restore');
@@ -264,6 +264,83 @@ Juxta.Sidebar.prototype = {
 		});
 	}
 };
+
+Juxta.Application = $.class({
+	settings: {
+		closable: false,
+		maximized: false
+	},
+	init: function(element, options){
+		this.settings = $.extend({}, this.settings, options);
+		
+		this.$application = $(element);
+		this.$menu = this.$application.find('.tools');
+		this.$statusBar = this.$application.find('.status');
+		
+		this.tune(this.settings);
+		
+		if (this.settings.closable){
+			this.$application.find('.close').show();
+			this.$application.find('.close').click(function(){ history.back(); });
+		} else{
+			this.$application.find('.close').hide();
+		}
+	},
+	tune: function(options){
+		if ($.isPlainObject(options.header)){
+			this.$application.find('h1').html(
+				options.header.title + 
+				(options.header.name ? ' <a>' + options.header.name + '</a>' : '') +
+				(options.header.from ? ' <span class="from">from <a>' + options.header.from + '</a></span>' : '')
+			);
+		} else{
+			this.$application.find('h1').html(options.header);
+		}
+		this.menu(options.menu);
+	},
+	show: function(options){
+		options = $.extend({}, this.settings, options);
+		this.tune(options);
+		
+		if (!this.$application.is(':visible')){
+			$('#applications .application').hide();
+			this.$application.show();
+		}
+		
+		if (this.settings.maximized) {
+			this.maximize();
+		} else{
+			this.restore();
+		}
+		
+		return this;
+	},
+	hide: function(){
+		this.$application.hide();
+		return this;
+	},
+	menu: function(menu){
+		this.$menu.empty();
+		var _this = this;
+		if ($.isPlainObject(menu)) {
+			jQuery.each(menu, function(title, action){
+				_this.$menu.append('<a href="#" onclick="' + action + '">' + title + '</a>');
+			});
+		}
+		return this;
+	},
+	maximize: function(){
+		$('#applications').addClass('maximized');
+		return this;
+	},
+	restore: function(){
+		$('#applications').removeClass('maximized');
+		return this;
+	},
+	status: function(text){
+		this.$statusBar.text(text);
+	}
+});
 
 Juxta.Explorer = $.class();
 Juxta.Explorer.prototype = {
@@ -558,36 +635,16 @@ Juxta.Grid.prototype = {
 	}
 };
 
-Juxta.BackupRestore = $.class();
-Juxta.BackupRestore.prototype = {
-	init: function(){
-		this.container = $('#backup-restore');
-		$(window).resize(this.stretch);
-		this.grid = new Juxta.Grid('#backup-restore .grid');
+Juxta.BackupRestore = $.class(Juxta.Application, {
+	init: function(element){
+		this._super(element, {header: 'Backup', menu: {'Options': null}});
+		this.grid = new Juxta.Grid(this.$application.find('.grid'));
+		
+		$(window).bind('resize', {_this: this}, this.stretch);
 	},
 	show: function(options){
-		
-		if (!this.container.is(':visible')){
-			$('#applications .application').hide();
-			this.container.show();
-			this.stretch();
-		}
-		if (options && options.title){
-			this.container.find('h1').html(
-				options.title + 
-				(options.from ? ' <span class="from">from <a>' + options.from+ '</a></span>' : '')
-			);
-		}
-		if (options && options.closable){
-			this.container.find('div.close').show();
-		} else{
-			this.container.find('div.close').hide();
-		}
-		if (options && options.toolbar){
-			this.toolbar(options.toolbar);
-		} else{
-			this.toolbar();
-		}
+		this._show(options);
+		this.stretch();
 		
 		response = {
 			'head': {
@@ -597,25 +654,15 @@ Juxta.BackupRestore.prototype = {
 			'context': ['database'],
 			'data': ExplorerTestResponses.databases.data,
 		};
-		
 		this.grid.fill(response);
 	},
-	hide: function(){
-		this.container.hide();
-	},
-	stretch: function(){
-		$('#backup-restore:visible .grid .body').height($('#applications').height() - $('#backup-restore .grid div.body').get(0).offsetTop - $('#backup-restore .status').get(0).offsetHeight - 24);
-	},
-	toolbar: function(tools){
-		var toolbar = this.container.find('.tools');
-		toolbar.empty();
-		if (tools) {
-			jQuery.each(tools, function(title, action){
-				toolbar.append('<a href="#" onclick="' + action + '">' + title + '</a>');
-			});
+	stretch: function(event){
+		var _this = event && event.data._this || this;
+		if (_this.$application.is(':visible')){
+			_this.$application.find('.grid .body').height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	}
-};
+});
 
 Juxta.CodeEditor = $.class();
 Juxta.CodeEditor.prototype = {
@@ -741,79 +788,6 @@ Juxta.Editor = $.class(Juxta.FloatBox, {
 	},
 	edit: function(text){
 		this.editor.edit(text);
-	}
-});
-
-Juxta.Application = $.class({
-	settings: {
-		closable: false,
-		maximized: false
-	},
-	init: function(element, options){
-		this.settings = $.extend({}, this.settings, options);
-		
-		this.$application = $(element);
-		this.$menu = this.$application.find('.tools');
-		
-		this.tune(this.settings);
-		
-		if (this.settings.closable){
-			this.$application.find('.close').show();
-			this.$application.find('.close').click(function(){ history.back(); });
-		} else{
-			this.$application.find('.close').hide();
-		}
-	},
-	tune: function(options){
-		if ($.isPlainObject(options.header)){
-			this.$application.find('h1').html(
-				options.header.title + 
-				(options.header.name ? ' <a>' + options.header.name + '</a>' : '') +
-				(options.header.from ? ' <span class="from">from <a>' + options.header.from + '</a></span>' : '')
-			);
-		} else{
-			this.$application.find('h1').html(options.header);
-		}
-		this.menu(options.menu);
-	},
-	show: function(options){
-		options = $.extend({}, this.settings, options);
-		this.tune(options);
-		
-		if (!this.$application.is(':visible')){
-			$('#applications .application').hide();
-			this.$application.show();
-		}
-		
-		if (this.settings.maximized) {
-			this.maximize();
-		} else{
-			this.restore();
-		}
-		
-		return this;
-	},
-	hide: function(){
-		this.$application.hide();
-		return this;
-	},
-	menu: function(menu){
-		this.$menu.empty();
-		var _this = this;
-		if ($.isPlainObject(menu)) {
-			jQuery.each(menu, function(title, action){
-				_this.$menu.append('<a href="#" onclick="' + action + '">' + title + '</a>');
-			});
-		}
-		return this;
-	},
-	maximize: function(){
-		$('#applications').addClass('maximized');
-		return this;
-	},
-	restore: function(){
-		$('#applications').removeClass('maximized');
-		return this;
 	}
 });
 
