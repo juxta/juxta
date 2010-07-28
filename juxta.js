@@ -30,7 +30,7 @@ Juxta.prototype = {
 		this.sidebar = new Juxta.Sidebar();
 		this.sidebar.path({'connection': '127.0.0.1'});
 		
-		this.explorer = new Juxta.Explorer();
+		this.explorer = new Juxta.Explorer('#explorer');
 		this.exchange = new Juxta.BackupRestore('#backup-restore');
 		this.browser = new Juxta.Browser('#data-browser');
 		this.tableEditor = new Juxta.TableEditor('#table-editor');
@@ -59,12 +59,12 @@ Juxta.prototype = {
 			switch (action){
 				case 'databases':
 					Juxta.sidebar.highlight('databases');
-					Juxta.explorer.show({title: 'Databases', toolbar: {'Create database': "$('#create-database').show(); return false;"} });
+					Juxta.explorer.show({header: 'Databases', menu: {'Create database': "$('#create-database').show(); return false;"} });
 					Juxta.explore({show: 'databases'});
 					break;
 				case 'processlist':
 					Juxta.sidebar.highlight('processlist');
-					Juxta.explorer.show({title: 'Processlist'});
+					Juxta.explorer.show({header: 'Processlist', menu: {'Refresh': 'return false;'}});
 					Juxta.explore({show: 'processlist'});
 					break;
 				case 'privileges':
@@ -90,25 +90,25 @@ Juxta.prototype = {
 				case 'tables':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('tables');
-					Juxta.explorer.show({title: 'Tables', from: params[0]});
+					Juxta.explorer.show({header: {title: 'Tables', from: params[0]}, menu: {'Create table': 'retrun false;'}});
 					Juxta.explore({show: 'tables', from: params[0]});
 					break;
 				case 'views':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('views');
-					Juxta.explorer.show({title: 'Views', from: params[0]});
+					Juxta.explorer.show({header: {title: 'Views', from: params[0]}, menu: {'Create view': 'return false;'}});
 					Juxta.explore({show: 'views', from: params[0]});
 					break;
 				case 'routines':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('routines');
-					Juxta.explorer.show({title: 'Procedures & Functions', from: params[0]});
+					Juxta.explorer.show({header: {title: 'Procedures & Functions', from: params[0]}});
 					Juxta.explore({show: 'routines', from: params[0]});
 					break;
 				case 'triggers':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('triggers');
-					Juxta.explorer.show({title: 'Triggers', from: params[0]});
+					Juxta.explorer.show({header: {title: 'Triggers', from: params[0]}, menu: {'Create trigger': null}});
 					Juxta.explore({show: 'triggers', from: params[0]});
 					break;
 
@@ -348,52 +348,21 @@ Juxta.Application = $.class({
 	}
 });
 
-Juxta.Explorer = $.class();
-Juxta.Explorer.prototype = {
-	init: function(){
-		this.container = $('#explorer');
+Juxta.Explorer = $.class(Juxta.Application, {
+	init: function(element){
+		this._super(element);
+		this.container = $(element);
 		$(window).resize(this.stretch);
+		
+		
 		this.grid = new Juxta.Grid('#explorer .grid');
-		this.statusBar = this.container.find('.status');
 	},
 	show: function(options){
-		Juxta.show();
-		if (!this.container.is(':visible')){
-			$('#applications .application').hide();
-			this.container.show();
-			this.stretch();
-		}
-		if (options && options.title){
-			this.container.find('h1').html(
-				options.title + 
-				(options.from ? ' <span class="from">from <a>' + options.from + '</a></span>' : '')
-			);
-		}
-		if (options && options.closable){
-			this.container.find('div.close').show();
-		} else{
-			this.container.find('div.close').hide();
-		}
-		if (options && options.toolbar){
-			this.toolbar(options.toolbar);
-		} else{
-			this.toolbar();
-		}
-	},
-	hide: function(){
-		this.container.hide();
+		this._show(options);
+		this.stretch();
 	},
 	stretch: function(){
 		$('#explorer:visible .grid .body').height($('#applications').height() - $('#explorer .grid div.body').get(0).offsetTop - $('#explorer .status').get(0).offsetHeight - 24);
-	},
-	toolbar: function(tools){
-		var toolbar = this.container.find('.tools');
-		toolbar.empty();
-		if (tools) {
-			jQuery.each(tools, function(title, action){
-				toolbar.append('<a href="#" onclick="' + action + '">' + title + '</a>');
-			});
-		}
 	},
 	request: function(params){
 		if (params.show == 'databases') {
@@ -425,11 +394,8 @@ Juxta.Explorer.prototype = {
 	},
 	response: function(data){
 		this.grid.fill(data);
-	},
-	status: function(text){
-		this.statusBar.text(text);
 	}
-};
+});
 
 Juxta.Grid = $.class();
 Juxta.Grid.prototype = {
