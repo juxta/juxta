@@ -140,8 +140,15 @@ Juxta.prototype = {
 			Juxta.state = hash;
 		}
 	},
+	show: function(){
+		$('#sidebar:visible ul:first-child').slideDown(250);
+		if ($('#applications').not(':visible')){
+			$('#applications').fadeIn(250);
+			$('#header h1, #header ul').fadeIn(250);
+		}
+	},
 	hide: function(){
-		$('#header, #sidebar, #applications').hide();
+		$('#header h1, #header ul, #sidebar ul:first-child, #applications').hide();
 	},
 	explore: function(params){
 		this.explorer.request(params);
@@ -241,10 +248,6 @@ Juxta.Sidebar.prototype = {
 		}
 		this.sidebar.find('.buttons li').removeClass('active');
 		this.sidebar.find('li.' + link).addClass('active');
-		
-		if (this.sidebar.find('ul:first-child').css('display') == 'none'){
-			 this.sidebar.find('ul:first-child').slideDown();
-		}
 	},
 	path: function(path){
 		var self = this;
@@ -299,6 +302,7 @@ Juxta.Application = $.class({
 		this.menu(options.menu);
 	},
 	show: function(options){
+		Juxta.show();
 		options = $.extend({}, this.settings, options);
 		this.tune(options);
 		
@@ -330,11 +334,13 @@ Juxta.Application = $.class({
 		return this;
 	},
 	maximize: function(){
+		$('#sidebar').hide();
 		$('#applications').addClass('maximized');
 		return this;
 	},
 	restore: function(){
 		$('#applications').removeClass('maximized');
+		$('#sidebar').show();
 		return this;
 	},
 	status: function(text){
@@ -351,6 +357,7 @@ Juxta.Explorer.prototype = {
 		this.statusBar = this.container.find('.status');
 	},
 	show: function(options){
+		Juxta.show();
 		if (!this.container.is(':visible')){
 			$('#applications .application').hide();
 			this.container.show();
@@ -771,8 +778,10 @@ Juxta.Login = $.class(Juxta.FloatBox, {
 	init: function(element){
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
 		
-		this.$floatBox.find('.buttons input[value=Connect]').click(function(){
-			alert('Connect');
+		var _this = this;
+		this.$floatBox.find('input[type=button].close, .buttons input[value=Connect]').click(function(){
+			_this.hide();
+			location.hash= 'databases';
 		});
 	},
 	show: function(){

@@ -40,6 +40,7 @@ a:hover{
 	padding: 0 0 0 7px;
 	}
 #header h1{
+	display: none;
 	float: left;
 	height: 35px;
 	line-height: 35px;
@@ -50,6 +51,7 @@ a:hover{
 	}
 	
 #header ul.links{
+	display: none;
 	float: right;
 	list-style-type: none;
 	height: 24px;
@@ -216,6 +218,7 @@ a:hover{
  */
 
 #applications{
+	display: none;
 	position: absolute;
 	top: 57px; right: 11px; bottom: 11px; left: 297px;
 	margin: 0;
