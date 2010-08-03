@@ -270,7 +270,7 @@ a:hover{
 	cursor: default;
 	}
 .application .tools a{
-	margin-left: 14px;
+	margin-left: 21px;
 	}
 
 .application .close{
@@ -467,13 +467,15 @@ a:hover{
 .grid .head .table,
 .grid .head .view,
 .grid .head .routine,
-.grid .head .trigger{
+.grid .head .trigger,
+.grid .head .user{
 	width: 200px;
 	}
 .grid .body .table,
 .grid .body .view,
 .grid .body .routine,
-.grid .body .trigger{
+.grid .body .trigger,
+.grid .body .user{
 	width: 180px;
 	}
 
@@ -520,6 +522,30 @@ a:hover{
 	width: 50px;
 	border-right-width: 0;
 	text-align: right;
+	}
+
+.grid .head .user-host,
+.grid .body .user-host{
+	width: 125px;
+	}
+.grid .head .user-password,
+.grid .body .user-password{
+	width: 60px;
+	}
+.grid .body .user-password span{
+	padding: 0 3px;
+	font-size: 10px;
+	
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+.grid .body .user-password span.NO{
+	background-color: #f99;
+	}
+.grid .head .user-global-privileges,
+.grid .body .user-global-privileges{
+	width: 175px;
 	}
 
 .grid .head .view-definer,
@@ -748,6 +774,7 @@ input[type=button]{
 	}
 	
 input[type=button]:hover{
+	color: #00559C;
 	cursor: pointer;
 	
 	background-color: #fcfcfc;

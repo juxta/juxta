@@ -69,7 +69,8 @@ Juxta.prototype = {
 					break;
 				case 'privileges':
 					Juxta.sidebar.highlight('privileges');
-					Juxta.dummy.show({header: 'Privileges'});
+					Juxta.explorer.show({header: 'Users', menu: {'Add a User': 'return false;', 'Flush Privileges': 'return false;'}});
+					Juxta.explore({show: 'users'});
 					break;
 				case 'server-status':
 					Juxta.sidebar.highlight('server-status');
@@ -369,6 +370,8 @@ Juxta.Explorer = $.class(Juxta.Application, {
 			response = ExplorerTestResponses.databases;
 		} else if (params.show == 'processlist'){
 			response = ExplorerTestResponses.processlist;
+		} else if (params.show == 'users'){
+			response = ExplorerTestResponses.users;
 		} else if (params.show == 'tables'){
 			response = ExplorerTestResponses.tables[params.from];
 			if (!response) {
@@ -810,6 +813,23 @@ var ExplorerTestResponses = {
 			[102, 'root@localhost', '', 'Query', 0]
 		],
 		'contextMenu': '<li>Information</li><li>Kill</li>'
+	},
+	users: {
+		'head': {
+			'user': 'Username',
+			'user-host': 'Host',
+			'user-password': 'Password',
+			'user-global-privileges': 'Gloval privileges',
+			'user-grant': 'Grant'
+		},
+		'data-template': '<tr><td class="check"><input type="checkbox" name="{user}"></td><td class="user"><a>{user}</td><td class="user-host">{host}</td><td class="user-password"><span class="{password}">{password}</span></td><td class="user-global-privileges">{privileges}</td><td class="user-grant">{grant}</td></tr>',
+		'context': [['user', 'users'], 'host', 'password', 'privileges', 'grant'],
+		'data': [
+			['avg', '%', 'YES', 'ALL PRIVILEGES', 'YES'],
+			['root', 'localhost', 'YES', 'ALL PRIVILEGES', 'YES'],
+			['test', '%', 'NO', 'USAGE', '']
+		],
+		'contextMenu': '<li>Edit Privileges</li><li>Change Password</li><li>Rename</li><li>Delete</li>'
 	},
 	tables: {
 		notfound: {
