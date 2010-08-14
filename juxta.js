@@ -60,7 +60,7 @@ Juxta.prototype = {
 			switch (action){
 				case 'databases':
 					Juxta.sidebar.highlight('databases');
-					Juxta.explorer.show({header: 'Databases', menu: {'Create database': {href: '#databases/create', click: "$('#create-database').show(); return false;"}}});
+					Juxta.explorer.show({header: 'Databases', menu: {'Create database': {href: '#databases/create', click: "Juxta.explorer.createDatabase.show(); return false;"}}});
 					Juxta.explore({show: 'databases'});
 					break;
 				case 'processlist':
@@ -381,6 +381,8 @@ Juxta.Explorer = $.class(Juxta.Application, {
 		this.grid = new Juxta.Grid('#explorer .grid');
 		
 		$(window).bind('resize', {_this: this}, this.stretch);
+		
+		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
 	},
 	show: function(options){
 		this._show(options);
@@ -874,6 +876,22 @@ Juxta.Login = $.class(Juxta.FloatBox, {
 	show: function(){
 		Juxta.hide();
 		this._show();
+	}
+});
+
+Juxta.CreateDatabase = $.class(Juxta.FloatBox, {
+	init: function(element){
+		this._super(element, {title: 'Create database'});
+		
+		var _this = this;
+		this.$floatBox.find('.buttons input[value=Create]').click(function(){
+			_this.hide();
+			Juxta.notify('Database ' + _this.$floatBox.find('input[name=new-database-name]').attr('value') + ' created');
+		});
+	},
+	show: function(options){
+		this.$floatBox.find('input[type=text]').attr('value', null);
+		this._show(options);
 	}
 });
 

@@ -6,7 +6,7 @@ var TestResponses = {
 		'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
 		'context': [['database', 'databases']],
 		'data': ['information_schema', 'mysql', 'sampdb', 'test'],
-		'contextMenu': '<li>Tables</li><li class="drop">Drop</li><li>Properties</li>'
+		'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value + \'/tables\'">Tables</li><li class="drop">Drop</li><li>Properties</li>'
 	},
 	processlist: {
 		'head': {
