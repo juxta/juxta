@@ -717,18 +717,22 @@ span.overflowed{
  * Form
  */
 
-.form label{
+.form p{
+	margin: 0 0 2px 0;
+	float: left;
+	clear: left;
+	line-height: 28px;
+	}
+.form p label{
 	float: left;
 	clear: both;
 	height: 24px;
 	line-height: 24px;
 	width: 125px;
-	margin-top: 2px;
 	padding-right: 14px;
 	font-size: 10pt;
 	color: #333;
 	text-align: right;
-	margin-bottom: 5px;
 	}
 .form input[type=text],
 .form input[type=password],
@@ -763,10 +767,6 @@ span.overflowed{
 
 #login.float-box{
 	width: 400px;
-	}
-
-#create-database.float-box{
-	width: 326px;
 	}
 
 
@@ -1078,4 +1078,40 @@ ul.striped li.stripe{
 #server-info ul.col-1 li .table,
 #server-info ul.col-2 li .table{
 	margin-left: 0 !important;
+	}
+
+
+/*
+ * Add user
+ */
+
+div.privileges{
+	clear: both;
+	width: 394px;
+	margin: 11px 0 0;
+	}
+.privileges-group{
+	float: left;
+	width: 386px;
+	margin-bottom: 7px;
+	padding: 7px 3px;
+	background-color: #eee;
+	border-radius: 3px;			
+	border: #eee 1px solid;
+	border-top-color: #ddd; 
+	border-left-color: #ddd;
+}
+.privileges-group.last{
+	margin-bottom: 0;
+	}
+ul.privileges{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	line-height: 19px;
+	float: left;
+	font-size: 9pt;
+	}
+ul.privileges input[type=checkbox]{
+	float: left;
 	}

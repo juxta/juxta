@@ -495,14 +495,11 @@
 	<div id="login" class="float-box">
 		<h3>Connect to MySQL Server</h3>
 		<div class="form">
-				<label>Stored&nbsp;connection</label>
-				<select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select>
-				<label>Host</label>
-				<input type="text" style="width: 125px;" value="127.0.0.1"/>
-				<label>User</label>
-				<input type="text" style="width: 125px;" value="root"/>	
-				<label>Password</label>
-				<input type="password" style="width: 125px;"/><br class="clear"/>
+			<p><label>Stored&nbsp;connection</label><select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select></p>
+			<p><label>Host</label><input type="text" style="width: 125px;" value="127.0.0.1"/></p>
+			<p><label>User</label><input type="text" style="width: 125px;" value="root"/></p>
+			<p><label>Password</label><input type="password" style="width: 125px;"/></p>	
+			<br class="clear"/>
 		</div>
 		<div class="buttons"><input type="button" value="Connect"/></div>
 	</div>
@@ -511,46 +508,127 @@
 		<h3>Create Database</h3>
 		<input type="button" class="close" onclick="$('#create-database').hide();"/>
 		<div class="form">
-			<label class="database-name" for="database-name" style="width: 92px; ">Database name</label>
-			<input type="text" name="new-database-name" id="database-name" style="width: 175px;" value=""/>
-				
-			<label style="width: 92px; ">Collation</label>
-			<select style="width: 175px; ">
-				<option>Default</option>
-				<optgroup title="cp1252 West European" label="latin1">
-					<option style="color: #000;">latin1_german1_ci</option>
-					<option>latin1_swedish_ci</option>
-					<option>latin1_danish_ci</option>
-					<option>latin1_german2_ci</option>
-					<option>latin1_bin</option>
-					<option>latin1_general_ci</option>
-					<option>latin1_general_cs</option>
-				</optgroup>
-				<optgroup title="ISO 8859-2 Central European" label="latin2">
-					<option>latin2_czech_cs</option>
-					<option>latin2_general_ci</option>
-					<option>latin2_hungarian_ci</option>
-					<option>latin2_croatian_ci</option>
-					<option>latin2_bin</option>
-				</optgroup>
-				<optgroup title="US ASCII" label="ascii">
-					<option>ascii_general_ci</option>
-					<option>ascii_bin</option>
-				</optgroup>
-				<optgroup title="Windows Cyrillic" label="cp1251">
-					<option>cp1251_bulgarian_ci</option>
-					<option>cp1251_ukrainian_ci</option>
-					<option>cp1251_bin</option>
-					<option>cp1251_general_ci</option>
-				</optgroup>
-				<optgroup title="UTF-8 Unicode" label="utf8">
-					<option>utf8_general_ci</option>
-					<option>utf8_bin</option>
-					<option>utf8_unicode_ci</option>
-					<option>utf8_icelandic_ci</option>
-				</optgroup>
-			</select><br class="clear"/>
+			<p><label class="database-name" for="database-name" style="width: 92px; ">Database name</label><input type="text" name="new-database-name" id="database-name" style="width: 175px;" value=""/></p>
+			<p>
+				<label style="width: 92px; ">Collation</label>
+				<select style="width: 175px; ">
+					<option>Default</option>
+					<optgroup title="cp1252 West European" label="latin1">
+						<option style="color: #000;">latin1_german1_ci</option>
+						<option>latin1_swedish_ci</option>
+						<option>latin1_danish_ci</option>
+						<option>latin1_german2_ci</option>
+						<option>latin1_bin</option>
+						<option>latin1_general_ci</option>
+						<option>latin1_general_cs</option>
+					</optgroup>
+					<optgroup title="ISO 8859-2 Central European" label="latin2">
+						<option>latin2_czech_cs</option>
+						<option>latin2_general_ci</option>
+						<option>latin2_hungarian_ci</option>
+						<option>latin2_croatian_ci</option>
+						<option>latin2_bin</option>
+					</optgroup>
+					<optgroup title="US ASCII" label="ascii">
+						<option>ascii_general_ci</option>
+						<option>ascii_bin</option>
+					</optgroup>
+					<optgroup title="Windows Cyrillic" label="cp1251">
+						<option>cp1251_bulgarian_ci</option>
+						<option>cp1251_ukrainian_ci</option>
+						<option>cp1251_bin</option>
+						<option>cp1251_general_ci</option>
+					</optgroup>
+					<optgroup title="UTF-8 Unicode" label="utf8">
+						<option>utf8_general_ci</option>
+						<option>utf8_bin</option>
+						<option>utf8_unicode_ci</option>
+						<option>utf8_icelandic_ci</option>
+					</optgroup>
+				</select>
+			</p>
+			<br class="clear"/>
 		</div>
+		<div class="buttons"><input type="button" value="Create"/></div>
+	</div>
+	
+	<div id="create-user" class="float-box">
+		<h3>Add a new User</h3>
+		<input type="button" class="close" onclick="$('#create-user').hide();"/>
+		<div class="form">
+			<p>
+				<label for="user-name" style="width: 100px; ">User name</label>
+				<input type="text" name="new-database-name" id="user-name" style="width: 175px;" value=""/>
+			</p>
+			<p>
+				<label for="database-name" style="width: 100px; ">Host</label>
+				<input type="text" name="new-database-name" id="database-name" style="width: 175px;" value=""/>&nbsp;
+				<span style="padding: 0 3px; background-color: #e3e3e3; border-radius: 3px; ">any</span>&nbsp;
+				<span style="padding: 0 3px; background-color: #e3e3e3; border-radius: 3px; ">localhost</span>
+			</p>
+			<p>
+				<label for="database-name" style="width: 100px; ">Password</label>
+				<input type="text" name="new-database-name" id="database-name" style="width: 100px;" value=""/>
+				&nbsp;&nbsp;&nbsp;<a class="fast">Generate</a>
+			</p>
+			<p>
+				<label for="database-name" style="width: 100px; ">Global privileges</label>
+				<a class="fast">All</a>&nbsp;&nbsp;&nbsp;<a class="fast">Usage</a>
+			</p><br class="clear"/>
+			
+			<div class="privileges">
+				<div class="privileges-group">
+					<ul class="privileges" style="width: 125px;">
+						<li><input type="checkbox">&nbsp;<label>Select</label></li>
+						<li><input type="checkbox">&nbsp;<label>Insert</label></li>
+						<li><input type="checkbox">&nbsp;<label>Update</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px;">
+						<li><input type="checkbox">&nbsp;<label>Delete</label></li>
+						<li><input type="checkbox">&nbsp;<label>Create</label></li>
+						<li><input type="checkbox">&nbsp;<label>Drop</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px;">
+						<li><input type="checkbox">&nbsp;<label>Alter</label></li>
+						<li><input type="checkbox">&nbsp;<label>Index</label></li>
+					</ul>
+				</div>
+				<div class="privileges-group">
+					<ul class="privileges" style="width: 125px; clear: left;">
+						<li><input type="checkbox">&nbsp;<label>Create Routine</label></li>
+						<li><input type="checkbox">&nbsp;<label>Alter Routine</label></li>
+						<li><input type="checkbox">&nbsp;<label>Execute</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px;">
+						<li><input type="checkbox">&nbsp;<label>Create View</label></li>
+						<li><input type="checkbox">&nbsp;<label>Show View</label></li>
+						<li><input type="checkbox">&nbsp;<label>Event</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px;">
+						<li><input type="checkbox">&nbsp;<label>Trigger</label></li>
+					</ul>
+				</div>
+				<div class="privileges-group last">
+					<ul class="privileges" style="clear: left; width: 125px; margin-top: 7px;">
+						<li><input type="checkbox">&nbsp;<label>Grant</label></li>
+						<li><input type="checkbox">&nbsp;<label>Process</label></li>
+						<li><input type="checkbox">&nbsp;<label>Super</label></li>
+						<li><input type="checkbox">&nbsp;<label>Shutdown</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px; margin-top: 7px;">
+						<li><input type="checkbox">&nbsp;<label>Reload</label></li>
+						<li><input type="checkbox">&nbsp;<label>Crate temp Table</label></li>
+						<li><input type="checkbox">&nbsp;<label>Lock Tables</label></li>
+						<li><input type="checkbox">&nbsp;<label>File</label></li>
+					</ul>
+					<ul class="privileges" style="width: 125px; margin-top: 7px;">
+						<li><input type="checkbox">&nbsp;<label>References</label></li>
+						<li><input type="checkbox">&nbsp;<label>Show Databases</label></li>
+						<li><input type="checkbox">&nbsp;<label>Create User</label></li>
+					</ul>
+				</div>
+			</div>
+		</div><br class="clear"/>
 		<div class="buttons"><input type="button" value="Create"/></div>
 	</div>
 

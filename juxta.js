@@ -70,7 +70,7 @@ Juxta.prototype = {
 					break;
 				case 'users':
 					Juxta.sidebar.highlight('users');
-					Juxta.explorer.show({header: 'Users', menu: {'Add a User': {href: '#users/add', click: 'return false;'}, 'Flush Privileges': {href: '#users/flush', click: 'return false;'}}});
+					Juxta.explorer.show({header: 'Users', menu: {'Add a user': {href: '#users/add', click: 'Juxta.explorer.createUser.show(); return false;'}, 'Flush privileges': {href: '#users/flush', click: 'return false;'}}});
 					Juxta.explore({show: 'users'});
 					break;
 				case 'status':
@@ -383,6 +383,7 @@ Juxta.Explorer = $.class(Juxta.Application, {
 		$(window).bind('resize', {_this: this}, this.stretch);
 		
 		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
+		this.createUser = new Juxta.CreateUser($('#create-user'));
 	},
 	show: function(options){
 		this._show(options);
@@ -887,6 +888,22 @@ Juxta.CreateDatabase = $.class(Juxta.FloatBox, {
 		this.$floatBox.find('.buttons input[value=Create]').click(function(){
 			_this.hide();
 			Juxta.notify('Database ' + _this.$floatBox.find('input[name=new-database-name]').attr('value') + ' created');
+		});
+	},
+	show: function(options){
+		this.$floatBox.find('input[type=text]').attr('value', null);
+		this._show(options);
+	}
+});
+
+Juxta.CreateUser = $.class(Juxta.FloatBox, {
+	init: function(element){
+		this._super(element, {title: 'Add a User'});
+		
+		var _this = this;
+		this.$floatBox.find('.buttons input[value=Create]').click(function(){
+			_this.hide();
+			Juxta.notify('User created');
 		});
 	},
 	show: function(options){
