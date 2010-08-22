@@ -57,8 +57,7 @@
 			
 			<li class="table"><h2><span class="level">Table</span><span class="value">undefined</span></h2>
 				<ul class="buttons">
-					<li class="columns"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indices</a></li>
-					<li class="foreign"><a href="#foreign">Foreign&nbsp;keys</a></li>
+					<li class="columns"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indexes</a></li>
 					<li class="options"><a href="#options">Options</a></li>
 					<li class="maintenance"><a href="#maintenance">Maintenance</a></li>
 				</ul>
@@ -68,7 +67,7 @@
 	
 	<div id="applications">
 		<div id="explorer" class="application">
-			<h1>Edit table</h1>
+			<h1>Databases</h1>
 			<div class="menu"></div>
 			<input type="button" class="close"/><br class="clear"/>
 			<div class="grid clear">
@@ -479,9 +478,86 @@
 		</div>
 		
 		<div id="table-editor" class="application">
-			<h1>Edit table</h1>
+			<h1>Table</h1>
 			<div class="menu"></div>
 			<input type="button" class="close"/><br class="clear"/>
+			<div class="grid columns clear">
+				<div class="actions"></div>
+				<ul class="head">
+					<li class="column">Column</li>
+					<li class="column-type">Type</li>
+					<li class="column-not-null">not<br/>NULL</li>
+					<li class="column-attributes">Attributes</li>
+					<li class="column-default-value">Default</li>
+					<li class="column-options">Options</li>
+				</ul>
+				<div class="body">
+					<table cellspacing="0">
+						<tr>
+							<td class="column"><a>id</a></td>
+							<td class="column-type">INTEGER</td>
+							<td class="column-not-null"><input type="checkbox" checked></td>
+							<td class="column-attributes"><span class="unsigned y">UNSIGNED</span><span class="zerofill">ZEROFILL</span></td>
+							<td class="column-default-value"></td>
+							<td class="column-options"><span class="primary y">PRIMARY</span><span class="auto-inc y">AUTO_INC</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>name</a></td>
+							<td class="column-type">VARCHAR (16)</td>
+							<td class="column-not-null"><input type="checkbox" checked></td>
+							<td class="column-attributes"><span class="binary y">BINARY</span></td>
+							<td class="column-default-value"></td>
+							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>email</a></td>
+							<td class="column-type">VARCHAR (80)</td>
+							<td class="column-not-null"><input type="checkbox" checked></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"></td>
+							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>date</a></td>
+							<td class="column-type">DATETIME</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>timestamp</a></td>
+							<td class="column-type">TIMESTAMP</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"></td>
+							<td class="column-default-value"><span class="null">NULL</span><span class="current_timestamp">TIMESTAMP</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+						</tr>
+					</table>
+				</div>
+				<div class="context"><ul></ul></div>
+			</div>
+			
+			<h2>Indexes <a class="fast">Foreign keys</a></h2>
+			
+			<div class="grid indexes clear">
+				<div class="actions hide"></div>
+				<ul class="head">
+					<li class="index">Key</li>
+					<li class="index-kind">Kind</li>
+					<li class="index-type">Type</li>
+					<li class="index-columns">Columns</li>
+				</ul>
+				<div class="body" style="height: 72px;">
+					<table cellspacing="0">
+						<tr><td class="index"><a>PRIMARY</a></td><td class="index-kind">PRIMARY</td><td class="index-type">BTREE</td><td class="index-columns">id</td></tr>
+						<tr><td class="index"><a>idx_name</a></td><td class="index-kind">INDEX</td><td class="index-type">BTREE</td><td class="index-columns">name</td></tr>
+					</table>
+				</div>
+				<div class="context"><ul></ul></div>
+			</div>
+			
+			<div class="status">&nbsp;</div>
 		</div>
 		
 		<div id="dummy" class="application">

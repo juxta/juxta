@@ -180,7 +180,7 @@ Juxta.prototype = {
 	edit: function(params){
 		if (params){
 			if (params.table) {
-				this.tableEditor.show();
+				this.tableEditor.show({header: {title: 'Table', name: params.table}});
 			} else if (params.view){
 				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
 				this.codeEditor.show({title: 'Edit view', name: params.view});
@@ -931,6 +931,17 @@ Juxta.Browser = $.class(Juxta.Application, {
 Juxta.TableEditor = $.class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {closable: false, mazimized: false, menu: {'Browse table' : {click: "alert('Browse'); return false;"}}});
+		$(window).bind('resize', {_this: this}, this.stretch);
+	},
+	show: function(options){
+		this._show(options);
+		this.stretch();
+	},
+	stretch: function(event){
+		var _this = event && event.data._this || this;
+		if (_this.$application.is(':visible')){
+			_this.$application.find('.grid.columns .body').height($('#applications').height() - _this.$application.find('.grid.columns .body').position().top - _this.$statusBar.height() - 24 - _this.$application.find('.grid.indexes')[0].offsetHeight - 54 /* H2 height with margins */);
+		}
 	}
 });
 
