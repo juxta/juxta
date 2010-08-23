@@ -494,36 +494,100 @@
 				<div class="body">
 					<table cellspacing="0">
 						<tr>
-							<td class="column"><a>id</a></td>
-							<td class="column-type">INTEGER</td>
+							<td class="column"><a>member_id</a></td>
+							<td class="column-type">INT(10)</td>
 							<td class="column-not-null"><input type="checkbox" checked></td>
 							<td class="column-attributes"><span class="unsigned y">UNSIGNED</span><span class="zerofill">ZEROFILL</span></td>
-							<td class="column-default-value"></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
 							<td class="column-options"><span class="primary y">PRIMARY</span><span class="auto-inc y">AUTO_INC</span></td>
 						</tr>
 						<tr>
-							<td class="column"><a>name</a></td>
-							<td class="column-type">VARCHAR (16)</td>
-							<td class="column-not-null"><input type="checkbox" checked></td>
-							<td class="column-attributes"><span class="binary y">BINARY</span></td>
-							<td class="column-default-value"></td>
-							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>email</a></td>
-							<td class="column-type">VARCHAR (80)</td>
+							<td class="column"><a>last_name</a></td>
+							<td class="column-type">VARCHAR(20)</td>
 							<td class="column-not-null"><input type="checkbox" checked></td>
 							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"></td>
-							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
 						</tr>
 						<tr>
-							<td class="column"><a>date</a></td>
-							<td class="column-type">DATETIME</td>
+							<td class="column"><a>first_name</a></td>
+							<td class="column-type">VARCHAR(20)</td>
+							<td class="column-not-null"><input type="checkbox" checked></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>suffix</a></td>
+							<td class="column-type">VARCHAR(5)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>expiration</a></td>
+							<td class="column-type">DATE</td>
 							<td class="column-not-null"><input type="checkbox"></td>
 							<td class="column-attributes"></td>
 							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>email</a></td>
+							<td class="column-type">VARCHAR(100)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>street</a></td>
+							<td class="column-type">VARCHAR(50)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>city</a></td>
+							<td class="column-type">VARCHAR(50)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>state</a></td>
+							<td class="column-type">VARCHAR(2)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>zip</a></td>
+							<td class="column-type">VARCHAR(10)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>phone</a></td>
+							<td class="column-type">VARCHAR(20)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
+						</tr>
+						<tr>
+							<td class="column"><a>interests</a></td>
+							<td class="column-type">VARCHAR(255)</td>
+							<td class="column-not-null"><input type="checkbox"></td>
+							<td class="column-attributes"><span class="binary">BINARY</span></td>
+							<td class="column-default-value"><span class="null y">NULL</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
 						</tr>
 						<tr>
 							<td class="column"><a>timestamp</a></td>
@@ -531,7 +595,7 @@
 							<td class="column-not-null"><input type="checkbox"></td>
 							<td class="column-attributes"></td>
 							<td class="column-default-value"><span class="null">NULL</span><span class="current_timestamp">TIMESTAMP</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span><span class="auto-inc">AUTO_INC</span></td>
+							<td class="column-options"><span class="primary">PRIMARY</span></td>
 						</tr>
 					</table>
 				</div>
@@ -551,7 +615,7 @@
 				<div class="body" style="height: 72px;">
 					<table cellspacing="0">
 						<tr><td class="index"><a>PRIMARY</a></td><td class="index-kind">PRIMARY</td><td class="index-type">BTREE</td><td class="index-columns">id</td></tr>
-						<tr><td class="index"><a>idx_name</a></td><td class="index-kind">INDEX</td><td class="index-type">BTREE</td><td class="index-columns">name</td></tr>
+						<tr><td class="index"><a>idx_name</a></td><td class="index-kind">INDEX</td><td class="index-type">BTREE</td><td class="index-columns">first_name, last_name</td></tr>
 					</table>
 				</div>
 				<div class="context"><ul></ul></div>

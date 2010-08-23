@@ -609,7 +609,7 @@ var TestResponses = {
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><a href="#{database}/{table}/columns">{table}</a></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td><td></td></tr>',
 			'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
 			'data': null,
-			'contextMenu': '<li>Columns & Indices</li><li>Browse</li><li class="drop">Drop</li><li>Properties</li>'
+			'contextMenu': '<li>Columns & Indexes</li><li>Browse</li><li class="drop">Drop</li><li>Properties</li>'
 		},
 		sampdb: {
 			'head': {
@@ -632,7 +632,7 @@ var TestResponses = {
 				['student', 'InnoDB', 31, '1 K', '18.05.2010 7:56'],
 			],
 			'with-data': {'database': 'sampdb'},
-			'contextMenu': '<li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/columns\'">Columns & Indices</li><li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/browse\'">Browse</li><li class="drop">Drop</li><li>Properties</li>'
+			'contextMenu': '<li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'sampdb/\' + Juxta.explorer.grid.contextMenu.value + \'/browse\'">Browse</li><li class="drop">Drop</li><li>Properties</li>'
 		}
 	},
 	views: {
