@@ -23,7 +23,7 @@ jQuery.aop.before(
 	}
 );
 
-Juxta = $.class();
+Juxta = $.Class();
 Juxta.prototype = {
 	init: function(){
 		this.notification = new Juxta.Notification();
@@ -198,7 +198,7 @@ Juxta.prototype = {
 	}
 };
 
-Juxta.Notification = $.class();
+Juxta.Notification = $.Class();
 Juxta.Notification.prototype = {
 	init: function(){
 		this.container = $('#notify');
@@ -218,7 +218,7 @@ Juxta.Notification.prototype = {
 	}
 };
 
-Juxta.Sidebar = $.class();
+Juxta.Sidebar = $.Class();
 Juxta.Sidebar.prototype = {
 	tree: {},
 	init: function(){
@@ -272,9 +272,9 @@ Juxta.Sidebar.prototype = {
 	},
 	path: function(path){
 		var self = this;
-		$.extend(self.path, path)
+		$.extend(self.path, path);
 		$.each(self.values, function(item){
-			$(this).text(self.path[item])
+			$(this).text(self.path[item]);
 		});
 		this.repairLinks();
 	},
@@ -289,7 +289,7 @@ Juxta.Sidebar.prototype = {
 	}
 };
 
-Juxta.Application = $.class({
+Juxta.Application = $.Class({
 	settings: {
 		closable: false,
 		maximized: false
@@ -375,7 +375,7 @@ Juxta.Application = $.class({
 	}
 });
 
-Juxta.Explorer = $.class(Juxta.Application, {
+Juxta.Explorer = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element);
 		this.grid = new Juxta.Grid('#explorer .grid');
@@ -430,7 +430,7 @@ Juxta.Explorer = $.class(Juxta.Application, {
 	}
 });
 
-Juxta.Grid = $.class();
+Juxta.Grid = $.Class();
 Juxta.Grid.prototype = {
 	statistics: {
 		item: 'item',
@@ -651,14 +651,10 @@ Juxta.Grid.prototype = {
 	}
 };
 
-Juxta.ServerInformation = $.class(Juxta.Application, {
+Juxta.ServerInformation = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {header: 'Server status', menu: {'Server status': null, 'System variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}})
 		this.grid = new Juxta.Grid(this.$application.find('.grid'));
-		
-		/*this.$application.find('.proper [class^=value_]').each(function(){
-			$(this).text(ExplorerTestResponses.status[this.className.split(' ', 1)[0].substr(6)]);
-		});*/
 		
 		$(window).bind('resize', {_this: this}, this.stretch);
 		
@@ -732,7 +728,7 @@ Juxta.ServerInformation = $.class(Juxta.Application, {
 	}
 });
 
-Juxta.BackupRestore = $.class(Juxta.Application, {
+Juxta.BackupRestore = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {header: 'Backup', menu: {'Options': {href: '#backup/options', click: 'return false;'}}});
 		this.grid = new Juxta.Grid(this.$application.find('.grid'));
@@ -761,7 +757,7 @@ Juxta.BackupRestore = $.class(Juxta.Application, {
 	}
 });
 
-Juxta.CodeEditor = $.class();
+Juxta.CodeEditor = $.Class();
 Juxta.CodeEditor.prototype = {
 	init: function(textarea, options){
 		this.textarea = $(textarea);
@@ -821,7 +817,7 @@ Juxta.CodeEditor.prototype = {
 	}
 };
 
-Juxta.FloatBox = $.class({
+Juxta.FloatBox = $.Class({
 	settings: {
 		title: 'New window',
 		closable: true
@@ -864,7 +860,7 @@ Juxta.FloatBox = $.class({
 	}
 });
 
-Juxta.Login = $.class(Juxta.FloatBox, {
+Juxta.Login = $.Class(Juxta.FloatBox, {
 	init: function(element){
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
 		
@@ -880,7 +876,7 @@ Juxta.Login = $.class(Juxta.FloatBox, {
 	}
 });
 
-Juxta.CreateDatabase = $.class(Juxta.FloatBox, {
+Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 	init: function(element){
 		this._super(element, {title: 'Create database'});
 		
@@ -896,7 +892,7 @@ Juxta.CreateDatabase = $.class(Juxta.FloatBox, {
 	}
 });
 
-Juxta.CreateUser = $.class(Juxta.FloatBox, {
+Juxta.CreateUser = $.Class(Juxta.FloatBox, {
 	init: function(element){
 		this._super(element, {title: 'Add a User'});
 		
@@ -912,7 +908,7 @@ Juxta.CreateUser = $.class(Juxta.FloatBox, {
 	}
 });
 
-Juxta.Editor = $.class(Juxta.FloatBox, {
+Juxta.Editor = $.Class(Juxta.FloatBox, {
 	init: function(element){
 		this._super(element, {title: 'Edit'});
 		this.editor = new Juxta.CodeEditor(this.$floatBox.find('textarea'));
@@ -922,13 +918,13 @@ Juxta.Editor = $.class(Juxta.FloatBox, {
 	}
 });
 
-Juxta.Browser = $.class(Juxta.Application, {
+Juxta.Browser = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {header: 'Browse', closable: true, maximized: true});
 	}
 });
 
-Juxta.TableEditor = $.class(Juxta.Application, {
+Juxta.TableEditor = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {closable: false, mazimized: false, menu: {'Browse table' : {click: "alert('Browse'); return false;"}}});
 		$(window).bind('resize', {_this: this}, this.stretch);
@@ -939,7 +935,6 @@ Juxta.TableEditor = $.class(Juxta.Application, {
 	},
 	stretch: function(event){
 		var _this = event && event.data._this || this;
-		console.log($('#applications').height());
 		if (_this.$application.is(':visible')){
 			if ($('#applications').height() < 500){
 				_this.$application.find('.grid.indexes .body').height(72);
@@ -952,7 +947,7 @@ Juxta.TableEditor = $.class(Juxta.Application, {
 });
 
 
-Juxta.Dummy = $.class(Juxta.Application, {
+Juxta.Dummy = $.Class(Juxta.Application, {
 	init: function(element){
 		this._super(element, {header: 'Don\'t work'});
 	}

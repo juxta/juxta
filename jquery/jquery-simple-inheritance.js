@@ -12,7 +12,7 @@
 (function($){
 	var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
   
-	$.class = function(){
+	$.Class = function(){
 		
 		base = typeof arguments[0] == 'function' ? arguments[0] : function(){};
 		prop = arguments[typeof arguments[0] == 'function' || arguments[1] ? 1 : 0];

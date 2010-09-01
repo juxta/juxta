@@ -1109,6 +1109,7 @@ ul.striped li.stripe{
 
 #server-info .menu {
 	float: right;
+	font-size: 10.5pt;
 	margin-right: 21px;
 	}
 	
@@ -1118,9 +1119,6 @@ ul.striped li.stripe{
 	}
 #server-info .hidden{
 	color: #999;
-	}
-#server-info a{
-	font-size: 10.5pt;
 	}
 
 #server-info .proper{
