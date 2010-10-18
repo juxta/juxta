@@ -195,26 +195,60 @@ Juxta.prototype = {
 	},
 	notify: function(message, options){
 		this.notification.show(message, options);
+	},
+	loading: function(message, options){
+		this.notification.loading(message, options);
 	}
 };
 
 Juxta.Notification = $.Class();
 Juxta.Notification.prototype = {
 	init: function(){
-		this.container = $('#notify');
+		this.container = $('#notify ul');
 	},
 	settings: {
-		delayTime: 3000,
-		hideSpeed: 300
+		hide: true,
+		delay: 3000,
+		hideSpeed: 300,
 	},
+	loadingSettings: {
+		hide: false,
+		delay: 250,
+		hideSpeed: 100
+	},
+	load: null,
 	show: function(message, options){
 		var self = this;
 		options = $.extend({}, self.settings, options);
-		return $('<li><span>' + message + '</span></li>').
-			appendTo(this.container.find('ul')).
-			delay(options.delayTime).
-			slideUp(options.hideSpeed).
-			find('span').addClass(options.type);
+		if (options.element){
+			var notify = options.element;
+		} else {
+			var notify = $('<li><span></span></li>').appendTo(this.container);
+		}
+		notify.show().find('span').text(message);
+		if (options.hide){
+			this.hide(notify, options);
+		}
+		notify.find('span').addClass(options.type);
+		return notify;
+	},
+	hide: function(element, options){
+		element.delay(options.delay).slideUp(options.hideSpeed).remove();
+		this.load = null;
+	},
+	loading: function(message, options){
+		var self = this;
+		options = $.extend({}, self.loadingSettings, options);
+		if (message === false){
+			this.hide(this.load, options);
+		} else {
+			this.container.empty();
+			message = message || 'Loading'; 
+			if (this.load){
+				options.element = this.load;
+			}
+			this.load = this.show(message, options);
+		}
 	}
 };
 
