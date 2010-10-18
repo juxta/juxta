@@ -606,7 +606,7 @@ var TestResponses = {
 				'table-size': 'Size',
 				'table-update-date': 'Update',
 			},
-			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><a href="#{database}/{table}/columns">{table}</a></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td><td></td></tr>',
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><a href="#{database}/{table}/columns">{table}</a></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td></tr>',
 			'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
 			'data': null,
 			'contextMenu': '<li>Columns & Indexes</li><li>Browse</li><li class="drop">Drop</li><li>Properties</li>'
@@ -619,7 +619,7 @@ var TestResponses = {
 				'table-size': 'Size',
 				'table-update-date': 'Update',
 			},
-			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><a href="#{database}/{table}/columns">{table}</a></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td><td></td></tr>',
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><a href="#{database}/{table}/columns">{table}</a></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td></tr>',
 			'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
 			'data': [
 				['absence', 'InnoDB', 6, '1 K', '9:22'],
@@ -642,7 +642,7 @@ var TestResponses = {
 				'view-definer': 'Definer',
 				'view-updatable': 'Updatable',
 			},
-			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td><td></td></tr>',
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
 			'context': [['view', 'views'], 'definer', 'updatable'],
 			'data': null,
 			'contextMenu': '<li>Browse</li><li>Edit</li><li class="drop">Delete</li><li>Properties</li>'
@@ -653,7 +653,7 @@ var TestResponses = {
 				'view-definer': 'Definer',
 				'view-updatable': 'Updatable',
 			},
-			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td><td></td></tr>',
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
 			'context': [['view', 'views'], 'definer', 'updatable'],
 			'data': [
 				['my_students', 'avg@192.168.200.1', 'YES'],
