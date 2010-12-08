@@ -449,6 +449,13 @@ span.overflowed{
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	}
+.grid .body .not-found{
+	color: #ccc;
+	display: none;
+	font-size: 10.5pt;
+	text-align: center;
+	position: relative;
+	}
 
 .grid .context{
 	display: none;
@@ -532,6 +539,9 @@ span.overflowed{
 	width: 177px;
 }
 
+.grid .body .table span.overflowed{
+	width: 180px;
+	}
 .grid .body .variable span.overflowed{
 	width: 202px;
 	}

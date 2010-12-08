@@ -29,29 +29,75 @@ Juxta.prototype = {
 		this.notification = new Juxta.Notification();
 		this.sidebar = new Juxta.Sidebar();
 		this.sidebar.path({'connection': '127.0.0.1'});
-		
+
 		this.explorer = new Juxta.Explorer('#explorer');
 		this.exchange = new Juxta.BackupRestore('#backup-restore');
 		this.browser = new Juxta.Browser('#data-browser');
 		this.tableEditor = new Juxta.TableEditor('#table-editor');
 		this.dummy = new Juxta.Dummy('#dummy');
 		this.serverInfo = new Juxta.ServerInformation('#server-info');
-		
+
 		this.login = new Juxta.Login('#login');
 		this.codeEditor = new Juxta.Editor($('#edit-routine'));
-		
-		$('.float-box').draggable({scroll: false, handle: 'h3'});
-		
+
+		$.ajaxSetup(this.ajaxSetup);
+
 		if (location.hash == ''){
 			location.hash = 'databases';
 		}
 		this.state = 'default';
 		setInterval(this.checkLocation, 200);
-		
+
+		$('.float-box').draggable({scroll: false, handle: 'h3'});
 		$(window).click(function(event){
 			$('.context:visible').hide();
 		});
 	},
+	/*	Ajax options
+	 */
+	ajaxSetup: {
+		url: 'juxta.php',
+		data: {show: 'databases'},
+		dataType: 'json',
+		type: 'POST',
+		beforeSend: function(){
+			Juxta.loading();
+		},
+		complete: function(){
+			Juxta.loading(false);
+		},
+		error: function(xhr, status){
+			if (status == 'parsererror'){
+				Juxta.error('Answer parsing error');
+			} else {
+				Juxta.error(xhr.status + ' ' + xhr.statusText);
+			}
+		}
+	},
+	/*	Common Ajax request/response interface
+	 */
+	request: function(params) {
+		$.ajax(params);
+	},
+	response: function(data, bind) {
+		switch (data.status) {
+			case 'ok':
+				if (bind) {
+					bind(data);
+				}
+				break;
+			case 'session-not-found':
+				location.hash = '#logout';
+				break;
+			case 'error':
+			case 'connect_error':
+				Juxta.error(data.error);
+				break;
+			default:
+				Juxta.error('Fuck..');
+		}
+	},
+	//
 	checkLocation: function(){
 		var hash = location.hash.replace(/#/g, '');
 		params = hash.split('/');
@@ -198,6 +244,10 @@ Juxta.prototype = {
 	},
 	loading: function(message, options){
 		this.notification.loading(message, options);
+	},
+	error: function(message, options){
+		options = $.extend({}, {type: 'error', hide: false}, options);
+		this.notification.show(message, options);
 	}
 };
 
@@ -214,9 +264,11 @@ Juxta.Notification.prototype = {
 	loadingSettings: {
 		hide: false,
 		delay: 250,
-		hideSpeed: 100
+		hideSpeed: 100,
+		type: 'loading'
 	},
 	load: null,
+	loads: 0,
 	show: function(message, options){
 		var self = this;
 		options = $.extend({}, self.settings, options);
@@ -233,21 +285,25 @@ Juxta.Notification.prototype = {
 		return notify;
 	},
 	hide: function(element, options){
-		element.delay(options.delay).slideUp(options.hideSpeed).remove();
+		element.delay(options.delay).slideUp(options.hideSpeed, function(){ $(this).remove(); });
 		this.load = null;
 	},
 	loading: function(message, options){
 		var self = this;
 		options = $.extend({}, self.loadingSettings, options);
 		if (message === false){
-			this.hide(this.load, options);
-		} else {
-			this.container.empty();
-			message = message || 'Loading'; 
-			if (this.load){
-				options.element = this.load;
+			if (--this.loads == 0) {
+				this.hide(this.load, options);
 			}
-			this.load = this.show(message, options);
+		} else {
+			if (this.loads++ == 0) {
+				this.container.empty();
+				message = message || 'Loading..'; 
+				if (this.load){
+					options.element = this.load;
+				}
+				this.load = this.show(message, options);
+			}
 		}
 	}
 };
@@ -357,9 +413,12 @@ Juxta.Application = $.Class({
 		this.menu(options.menu);
 	},
 	show: function(options){
-		Juxta.show();
-		options = $.extend({}, this.settings, options);
-		this.tune(options);
+		if (!options) {
+			Juxta.show();
+		} else {
+			options = $.extend({}, this.settings, options);
+			this.tune(options);
+		}
 		
 		if (!this.$application.is(':visible')){
 			$('#applications .application').hide();
@@ -426,41 +485,141 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	stretch: function(event){
 		var _this = event && event.data._this || this;
 		if (_this.$application.is(':visible')){
-			_this.$application.find('.grid .body').height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
+			_this.grid.height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(params){
-		if (params.show == 'databases') {
-			response = ExplorerTestResponses.databases;
-		} else if (params.show == 'processlist'){
-			response = ExplorerTestResponses.processlist;
-		} else if (params.show == 'users'){
-			response = ExplorerTestResponses.users;
-		} else if (params.show == 'tables'){
-			response = ExplorerTestResponses.tables[params.from];
-			if (!response) {
-				response = ExplorerTestResponses.tables['notfound'];
-			}
-		} else if (params.show == 'views'){
-			response = ExplorerTestResponses.views[params.from];
-			if (!response) {
-				response = ExplorerTestResponses.views['notfound'];
-			}
-		} else if (params.show == 'routines'){
-			response = ExplorerTestResponses.routines[params.from];
-			if (!response) {
-				response = ExplorerTestResponses.routines['notfound'];
-			}
-		} else if (params.show == 'triggers'){
-			response = ExplorerTestResponses.triggers[params.from];
-			if (!response) {
-				response = ExplorerTestResponses.triggers['notfound'];
-			}
+	request: function(params) {
+		if (this.prepare(params.show)) {
+			Juxta.request({data: params, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
+		} else {
+			Juxta.error('Request error');
 		}
-		this.response(response);
 	},
-	response: function(data){
-		this.grid.fill(data);
+	response: function(data) {
+		this.show();
+		if (this.preparedFor == data.contents) {
+			$.extend(data, this.templates[data.contents]);
+			this.grid.fill(data);
+		}
+	},
+	prepare: function(template) {
+		if (this.grid.prepare(this.templates[template])) {
+			this.preparedFor = template;
+			return true;
+		} else {
+			return false;
+		}
+	},
+	templates: {
+		databases: {
+			'head': {
+				'database': 'Database'
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
+			'context': [['database', 'databases']],
+			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value + \'/tables\'">Tables</li><li class="drop">Drop</li><li>Properties</li>'
+		},
+		processlist: {
+			'head': {
+				'process': 'Process Id',
+				'process-user': 'User',
+				'process-database': 'Database',
+				'process-command': 'Command',
+				'process-time': 'Time'
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{process}"></td><td class="process"><a>{process}</td><td class="process-user">{user}@{host}</td><td class="process-database">{ondatabase}</td><td class="process-command">{command}</td><td class="process-time">{time}</td><td></td></tr>',
+			'context': [['process', 'processes'], 'user', 'host', 'ondatabase', 'command', 'time'],
+			'contextMenu': '<li>Information</li><li>Kill</li>'
+		},
+		users: {
+			'head': {
+				'user': 'Username',
+				'user-host': 'Host',
+				'user-password': 'Password',
+				'user-global-privileges': 'Gloval privileges',
+				'user-grant': 'Grant'
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{user}"></td><td class="user"><a>{user}</td><td class="user-host">{host}</td><td class="user-password"><span class="{password}">{password}</span></td><td class="user-global-privileges">{privileges}</td><td class="user-grant">{grant}</td></tr>',
+			'context': [['user', 'users'], 'host', 'password', 'privileges', 'grant'],
+			'contextMenu': '<li>Edit Privileges</li><li>Change Password</li><li>Rename</li><li>Delete</li>'
+		},
+		status: {
+			'head': {
+					'variable': 'Variable',
+					'value': 'Value'
+				},
+			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+			'context': ['variable', 'value']
+		},
+		variables: {
+			'head': {
+					'variable': 'Variable',
+					'value': 'Value'
+				},
+			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+			'context': ['variable', 'value']
+		},
+		charsets: {
+			'head': {
+					'charset': 'Charset',
+					'charset-default-collation': 'Default collation',
+					'charset-description': 'Description'
+				},
+			'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
+			'context': ['charset', 'description', 'collation', 'maxlen']
+		},
+		engines: {
+			'head': {
+					'engine': 'Engine',
+					'engine-support': 'Support',
+					'engine-comment': 'Description'
+				},
+			'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
+			'context': ['engine', 'support', 'comment']
+		},
+		tables: {
+			'head': {
+				'table': 'Table',
+				'table-engine': 'Engine',
+				'table-rows': 'Rows',
+				'table-size': 'Size',
+				'table-update-date': 'Update',
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><span class="overflowed"><a href="#{database}/{table}/columns">{table}</a></span></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size}</td><td class="table-update-date">{updateDate}</td></tr>',
+			'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
+			'contextMenu': '<li onclick="location.hash = \'{database}/\' + Juxta.explorer.grid.contextMenu.value + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'{database}/\' + Juxta.explorer.grid.contextMenu.value + \'/browse\'">Browse</li><li class="drop">Drop</li><li>Properties</li>'
+		},
+		views: {
+			'head': {
+				'view': 'View',
+				'view-definer': 'Definer',
+				'view-updatable': 'Updatable',
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
+			'context': [['view', 'views'], 'definer', 'updatable'],
+			'contextMenu': '<li>Browse</li><li onclick="Juxta.edit({view: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
+		},
+		routines: {
+			'head': {
+				'routine': 'Routine',
+				'routine-definer': 'Definer',
+				'routine-return': 'Returns'
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{routine}"></td><td class="routine"><a>{routine}</a></td><td class="routine-definer">{definer}</td><td class="routine-retunr">{return}</td></tr>',
+			'context': ['routine', 'definer', 'return'],
+			'contextMenu': '<li>Edit</li><li class="drop">Delete</li><li>Properties</li>'
+		},
+		triggers: {
+			'head': {
+				'trigger': 'Trigger',
+				'trigger-table': 'Table',
+				'trigger-event': 'Event',
+				'trigger-definer': 'Definer',
+			},
+			'data-template': '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
+			'context': [['trigger', 'triggers'], 'table', 'event', 'timing', 'definer', 'size'],
+			'contextMenu': '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
+		}
 	}
 });
 
@@ -474,10 +633,12 @@ Juxta.Grid.prototype = {
 	},
 	init: function(grid){
 		this.container = $(grid);
-		this.body = this.container.find('.body table');
+		this.$bodyContainer = this.container.find('.body');
+		this.body = this.$bodyContainer.find('table');
+		this.$notFound = this.$bodyContainer.find('.not-found')
 		this.head = this.container.find('.head');
 		this.actions = this.container.find('.actions');
-		this.$context = this.container.find('.context')
+		this.$context = this.container.find('.context');
 		
 		var self = this;
 		this.body.change(function(event){
@@ -521,7 +682,7 @@ Juxta.Grid.prototype = {
 				(self.statistics.selected > 0 ? $.template(', {selected} selected', self.statistics) : '') 
 			);
 			
-			if (self.statistics.cardinality == self.statistics.selected){
+			if (self.statistics.cardinality > 0 && self.statistics.cardinality == self.statistics.selected){
 				self.actions.find('.all').addClass('active');
 				self.actions.find('.nothing').removeClass('active');
 			} else if(self.statistics.selected == 0){
@@ -539,7 +700,7 @@ Juxta.Grid.prototype = {
 			}
 		});
 
-		this.body.find('td.expand, td.collapse').live('click', function(){
+		this.body.find('td.expand, td.collapse').live('click', function(event){
 			// Temporary
 			$target = $(event.target);
 			if (!$target.parents('tr').next('tr.content').get(0)){
@@ -612,30 +773,50 @@ Juxta.Grid.prototype = {
 		}
 
 	},
-	fill: function(data){		
-		if ($.isArray(data.context[0])){
-			this.statistics.item = data.context[0][0];
-			this.statistics.items = data.context[0][1];
-		} else{
-			this.statistics.item = data.context[0];
-			this.statistics.items = 'items';
+	height: function(height){
+		if (height){
+			this.$notFound.css('top', height / 2 - 14 + 'px');
 		}
+		return this.$bodyContainer.height(height);
+	},
+	prepare: function(template){
+		// Empty grid header and body
+		this.head.empty();
+		this.empty();
 		
-		var self = this;
-		if (data['head']){
-			this.head.empty();
+		if (template){
+			var self = this;
+
+			// Define context for status bar
+			if ($.isArray(template.context[0])) {
+				this.statistics.item = template.context[0][0];
+				this.statistics.items = template.context[0][1];
+			} else{
+				this.statistics.item = template.context[0];
+				this.statistics.items = 'items';
+			}
+
+			// Make grid header
+			if (template['head']) {
+				this.head.empty();
+				$.each(template['head'], function(i, value){
+					self.head.append('<li class="' + i + '">' + value + '</li>');
+				});
+			}
+
+			//
 			this.statistics.cardinality = 0;
 			this.body.trigger('change');
-			$.each(data['head'], function(i, value){
-				self.head.append('<li class="' + i + '">' + value + '</li>');
-			});
+			return true;
+		} else {
+			return false;
 		}
+	},
+	fill: function(data){
+		var self = this;
 		
-		this.body.empty();
-		this.statistics.cardinality = 0;
-		
-		if (data && data.data){
-			this.body.empty();
+		this.empty();
+		if (data && data.data && data.data.length > 0){
 			this.statistics.cardinality = data.data.length;
 			
 			var objectToArray = !$.isArray(data.data);
@@ -660,15 +841,23 @@ Juxta.Grid.prototype = {
 						}
 					}
 				});
-				$.extend(forTemplate, data['with-data']);
+				$.extend(forTemplate, {database: data['from']});
 				self.body.append($.template(template, forTemplate));
 			});
 			this.body.trigger('change');
 			
-			this.container.find('.context ul').html(data.contextMenu);
+			
+			// Make context menu
+			if (data.contextMenu) {
+				this.container.find('.context ul').html($.template(data.contextMenu, {database: data['from']}));
+			}
 		} else {
-			this.body.empty();
+			this.$notFound.css('top', this.container.find('.body').height() / 2 - 14 + 'px').show();
 		}
+	},
+	empty: function(){
+		this.body.empty();
+		this.$notFound.hide();
 	},
 	select: function(all){
 		if (all){
@@ -779,7 +968,7 @@ Juxta.BackupRestore = $.Class(Juxta.Application, {
 			},
 			'data-template': '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
 			'context': ['database'],
-			'data': ExplorerTestResponses.databases.data,
+			'data': ['information_schema', 'mysql', 'sampdb', 'test'],
 		};
 		this.grid.fill(response);
 	},
@@ -979,7 +1168,6 @@ Juxta.TableEditor = $.Class(Juxta.Application, {
 		}
 	}
 });
-
 
 Juxta.Dummy = $.Class(Juxta.Application, {
 	init: function(element){
