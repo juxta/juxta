@@ -98,6 +98,20 @@ class Juxta {
 			case 'processlist':
 				$response = $this->processlist();
 				break;
+			case 'status':
+			case 'status-full':
+				$response = $this->status();
+				$response['contents'] = $data['show'];
+				break;
+			case 'variables':
+				$response = $this->variables();
+				break;
+			case 'charsets':
+				$response = $this->charsets();
+				break;
+			case 'engines':
+				$response = $this->engines();
+				break;
 			case 'users':
 				$response = $this->users();
 				break;
@@ -140,6 +154,30 @@ class Juxta {
 	private function processlist() {
 		$processlist = $this->query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
 		return array('contents' => 'processlist', 'data' => $processlist);
+	}
+	
+	private function status() {
+		$response = array();
+		$status = $this->query("SHOW STATUS", array(0, 1));
+		foreach ($status as $variable) {
+			$response[$variable[0]] = $variable[1];
+		}
+		return array('contents' => 'status', 'data' => $response);
+	}
+
+	private function variables() {
+		$variables = $this->query("SHOW VARIABLES", array(0, 1));
+		return array('contents' => 'variables', 'data' => $variables);
+	}
+
+	private function charsets() {
+		$charsets = $this->query("SHOW CHARSET", array('Charset', 'Description', 'Default collation', 'Maxlen'));
+		return array('contents' => 'charsets', 'data' => $charsets);
+	}
+
+	private function engines() {
+		$engines = $this->query("SHOW ENGINES", array('Engine', 'Support', 'Comment'));
+		return array('contents' => 'engines', 'data' => $engines);
 	}
 	
 	private function users() {

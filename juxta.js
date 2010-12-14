@@ -120,9 +120,10 @@ Juxta.prototype = {
 					Juxta.explore({show: 'users'});
 					break;
 				case 'status':
+				case 'status-full':
 					Juxta.sidebar.highlight('status');
 					Juxta.serverInfo.show({header: 'Server status'});
-					Juxta.info({show: 'status'});
+					Juxta.info({show: action});
 					break;
 				case 'variables':
 					Juxta.sidebar.highlight('status');
@@ -200,6 +201,8 @@ Juxta.prototype = {
 					Juxta.sidebar.highlight('maintenance');
 					Juxta.dummy.show({header: {title: 'Maintenance table', name: params[1]}});
 					break;
+				default:
+					document.location = '#databases';
 			}
 			Juxta.state = hash;
 		}
@@ -543,40 +546,6 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			'context': [['user', 'users'], 'host', 'password', 'privileges', 'grant'],
 			'contextMenu': '<li>Edit Privileges</li><li>Change Password</li><li>Rename</li><li>Delete</li>'
 		},
-		status: {
-			'head': {
-					'variable': 'Variable',
-					'value': 'Value'
-				},
-			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
-			'context': ['variable', 'value']
-		},
-		variables: {
-			'head': {
-					'variable': 'Variable',
-					'value': 'Value'
-				},
-			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
-			'context': ['variable', 'value']
-		},
-		charsets: {
-			'head': {
-					'charset': 'Charset',
-					'charset-default-collation': 'Default collation',
-					'charset-description': 'Description'
-				},
-			'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
-			'context': ['charset', 'description', 'collation', 'maxlen']
-		},
-		engines: {
-			'head': {
-					'engine': 'Engine',
-					'engine-support': 'Support',
-					'engine-comment': 'Description'
-				},
-			'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
-			'context': ['engine', 'support', 'comment']
-		},
 		tables: {
 			'head': {
 				'table': 'Table',
@@ -779,13 +748,29 @@ Juxta.Grid.prototype = {
 		}
 		return this.$bodyContainer.height(height);
 	},
-	prepare: function(template){
-		// Empty grid header and body
-		this.head.empty();
-		this.empty();
-		
-		if (template){
+	prepare: function(template) {
+		if (template) {
 			var self = this;
+			
+			// Empty grid header and body
+			if (template['head']) {
+				this.empty();
+				this.head.empty().show();
+				this.$bodyContainer.show();
+				this.container.find('.proper').hide();
+			} else {
+				this.empty();
+				this.head.empty().hide();
+				this.$bodyContainer.hide();
+			}
+			
+			// Make grid header
+			if (template['head']) {
+				this.head.empty();
+				$.each(template['head'], function(i, value){
+					self.head.append('<li class="' + i + '">' + value + '</li>');
+				});
+			}
 
 			// Define context for status bar
 			if ($.isArray(template.context[0])) {
@@ -794,14 +779,6 @@ Juxta.Grid.prototype = {
 			} else{
 				this.statistics.item = template.context[0];
 				this.statistics.items = 'items';
-			}
-
-			// Make grid header
-			if (template['head']) {
-				this.head.empty();
-				$.each(template['head'], function(i, value){
-					self.head.append('<li class="' + i + '">' + value + '</li>');
-				});
 			}
 
 			//
@@ -816,13 +793,12 @@ Juxta.Grid.prototype = {
 		var self = this;
 		
 		this.empty();
-		if (data && data.data && data.data.length > 0){
+		if (data && data.data && (data.data.length > 0 || $.isPlainObject(data.data))){
 			this.statistics.cardinality = data.data.length;
 			
-			var objectToArray = !$.isArray(data.data);
 			var template = data['data-template'];
 			jQuery.each(data.data, function(i, value){
-				if(objectToArray){
+				if ($.isPlainObject(data.data)) {
 					value = [i, value];
 				}
 				var forTemplate = {};
@@ -855,7 +831,7 @@ Juxta.Grid.prototype = {
 			this.$notFound.css('top', this.container.find('.body').height() / 2 - 14 + 'px').show();
 		}
 	},
-	empty: function(){
+	empty: function() {
 		this.body.empty();
 		this.$notFound.hide();
 	},
@@ -882,7 +858,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		$(window).bind('resize', {_this: this}, this.stretch);
 		
 		var _this = this;
-		this.$application.find('.switch').click(function(){
+		this.$application.find('.switch').click(function(event){
 			if (!$(event.target).hasClass('active')){
 				$(this).find('.active').removeClass('active');
 				$(event.target).addClass('active');
@@ -890,7 +866,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		});
 		this.$application.find('.switch li').eq(0).click(function(){
 			if (!$(this).hasClass('active')){
-				_this.request({show: 'status', view: 'simple'});
+				_this.request({show: 'status-full'});
 			}
 		});
 		this.$application.find('.switch li').eq(1).click(function(){
@@ -911,43 +887,77 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	show: function(options){
 		this._show(options);
 		this.stretch();
+		console.log('show');
 	},
-	request: function(params){
-		var response = null;
-		if (params.show == 'status'){
-			if (params.view == 'simple'){
-				response = ExplorerTestResponses.status;
-			} else{
-				this.properStatus();
-			}
-		} else if (params.show == 'variables'){
-			response = ExplorerTestResponses.variables;
-		} else if (params.show == 'charsets'){
-			response = ExplorerTestResponses.charsets;
-		} else if (params.show == 'engines'){
-			response = ExplorerTestResponses.engines;
-		}
-		if (response){
-			this.response(response);
+	request: function(params) {
+		if (this.prepare(params.show)) {
+			Juxta.request({data: params, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
+		} else {
+			Juxta.error('Request error');
 		}
 	},
-	response: function(data){
-		this.grid.fill(data);
-		this.properStatusHide();
+	response: function(response) {
+		if (response.contents == 'status') {
+			this.properStatus(response.data);
+		} else {
+			$.extend(response, this.templates[response.contents]);
+			this.grid.fill(response);
+		}
+		this.show();
 	},
-	properStatus: function(){
-		this.$application.find('.proper [class^=value_]').each(function(){
-			$(this).text(ExplorerTestResponses.status.data[this.className.split(' ', 1)[0].substr(6)]);
+	prepare: function(template) {
+		if (this.grid.prepare(this.templates[template])) {
+			this.preparedFor = template;
+			this.stretch();
+			return true;
+		} else {
+			return false;
+		}
+	},
+	properStatus: function(data) {
+		this.$application.find('.proper.server-status [class^=value_]').each(function(){
+			$(this).text(data[this.className.split(' ', 1)[0].substr(6)]);
 		});
-		this.$application.find('.grid .head').hide();
-		this.$application.find('.grid .body').hide();
-		this.$application.find('.proper').show();
-		this.stretch();
+		this.$application.find('.proper.server-status').show();
 	},
-	properStatusHide: function(){
-		this.$application.find('.proper').hide();
-		this.$application.find('.grid .head').show();
-		this.$application.find('.grid .body').show();
+	templates: {
+		status: {
+			'context': ['variable', 'value']
+		},
+		'status-full': {
+			'head': {
+					'variable': 'Variable',
+					'value': 'Value'
+			},
+			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+			'context': ['variable', 'value']
+		},
+		variables: {
+			'head': {
+					'variable': 'Variable',
+					'value': 'Value'
+				},
+			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+			'context': ['variable', 'value']
+		},
+		charsets: {
+			'head': {
+					'charset': 'Charset',
+					'charset-default-collation': 'Default collation',
+					'charset-description': 'Description'
+				},
+			'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
+			'context': ['charset', 'description', 'collation', 'maxlen']
+		},
+		engines: {
+			'head': {
+					'engine': 'Engine',
+					'engine-support': 'Support',
+					'engine-comment': 'Description'
+				},
+			'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
+			'context': ['engine', 'support', 'comment']
+		}
 	}
 });
 
