@@ -992,10 +992,12 @@ input[type=button].close{
 }
 .switch li:first-child{
 	border-top-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
 	}
 .switch li:last-child{
 	border-right-width: 0;
 	border-top-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
 	}
 .switch li.active{
 	font-weight: bold;
