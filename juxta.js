@@ -887,7 +887,6 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	show: function(options){
 		this._show(options);
 		this.stretch();
-		console.log('show');
 	},
 	request: function(params) {
 		if (this.prepare(params.show)) {
