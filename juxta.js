@@ -208,14 +208,14 @@ Juxta.prototype = {
 		}
 	},
 	show: function(){
-		$('#sidebar:visible ul:first-child').slideDown(250);
+		$('#sidebar').slideDown(250);
 		if ($('#applications').not(':visible')){
 			$('#applications').fadeIn(250);
 			$('#header h1, #header ul').fadeIn(250);
 		}
 	},
 	hide: function(){
-		$('#header h1, #header ul, #sidebar ul:first-child, #applications').hide();
+		$('#header h1, #header ul, #sidebar, #applications').hide();
 	},
 	explore: function(params){
 		this.explorer.request(params);
@@ -457,13 +457,13 @@ Juxta.Application = $.Class({
 		return this;
 	},
 	maximize: function(){
-		$('#sidebar').hide();
+		$('#sidebar').addClass('minimized');
 		$('#applications').addClass('maximized');
 		return this;
 	},
 	restore: function(){
 		$('#applications').removeClass('maximized');
-		$('#sidebar').show();
+		$('#sidebar').removeClass('minimized');
 		return this;
 	},
 	status: function(text){
