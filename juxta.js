@@ -341,23 +341,23 @@ Juxta.Sidebar.prototype = {
 			
 		});
 	},
-	highlight: function(link, options){
+	highlight: function(link, options) {
 		if (!options){
 			options = {};
 		}
-		if (this.tree[link]){
+		if (this.tree[link]) {
 			var level = this.sidebar.find('ul:first-child > li.' + this.tree[link]);
 			if (level.is('.connection')) {
-				this.heads.filter('.connection').removeClass('closed').show();
+				this.heads.filter('.connection').removeClass('closed').addClass('last').show();
 				this.heads.not('.connection').hide();
-			} else if(level.is('.database')){
-				this.heads.filter('.connection').addClass('closed').show();
-				this.heads.filter('.database').removeClass('closed').show();
+			} else if (level.is('.database')) {
+				this.heads.filter('.connection').removeClass('last').addClass('closed').show();
+				this.heads.filter('.database').removeClass('closed').addClass('last').show();
 				this.heads.filter('.table').hide();
-			} else if(level.is('.table')){
-				this.heads.filter('.connection').addClass('closed').show();
-				this.heads.filter('.database').addClass('closed').show();
-				this.heads.filter('.table').removeClass('closed').show();
+			} else if (level.is('.table')) {
+				this.heads.filter('.connection').removeClass('last').addClass('closed').show();
+				this.heads.filter('.database').removeClass('last').addClass('closed').show();
+				this.heads.filter('.table').removeClass('closed').addClass('last').show();
 			}
 		}
 		this.sidebar.find('.buttons li').removeClass('active');
