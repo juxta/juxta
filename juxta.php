@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Juxta 0.1 http://juxta.ru
+ * Juxta 0.0.1 http://juxta.ru
  * 
- * Copyright (c) 2010 Alexey Golovnya
+ * Copyright (c) 2010-2011 Alexey Golovnya
  * Licensed under the MIT license
  * 
  * @package juxta-php
- * @version 0.1 
+ * @version 0.0.1 
  * 
  */
 
