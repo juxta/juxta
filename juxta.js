@@ -332,17 +332,18 @@ Juxta.Sidebar.prototype = {
 			self.tree[this.className] = $(this).parent().parent().attr('class');
 		});
 
-		this.sidebar.find('ul:first-child > li').click(function() {
-			if ($(this).is('.unfold')) {
-				$(this).removeClass('unfold').addClass('fold').find('.buttons').slideUp(250);
+		this.sidebar.find('ul:first-child > li h2').click(function() {
+			$level = $(this).parent('li');
+			if ($level.is('.unfold:not(.last)')) {
+				$level.removeClass('unfold').addClass('fold').find('.buttons').slideUp(250);
 				self.sidebar.find('.last .buttons').slideDown('250');
-			} else if ($(this).is('.fold')) {
+			} else if ($level.is('.fold')) {
 				self.sidebar.find('.unfold').removeClass('unfold')
 					.find('.buttons').slideUp(250);
 				self.sidebar.
 					find('ul:first-child > li.last').
 					find('.buttons').slideUp(250);
-				$(this).addClass('unfold').find('.buttons').slideDown(250);
+				$level.addClass('unfold').find('.buttons').slideDown(250);
 			}
 		});
 
