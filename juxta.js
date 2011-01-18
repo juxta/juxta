@@ -331,33 +331,56 @@ Juxta.Sidebar.prototype = {
 				});
 			self.tree[this.className] = $(this).parent().parent().attr('class');
 		});
-		
-		this.sidebar.find('ul:first-child > li h2').click(function(event){
-			if ($(this).parent('li').is('.closed')) {
-				$(this).parent('li').removeClass('closed');
-			} else {
-				$(this).parent('li').addClass('closed');
+
+		this.sidebar.find('ul:first-child > li').click(function() {
+			if ($(this).is('.unfold')) {
+				$(this).removeClass('unfold').addClass('fold').find('.buttons').slideUp(250);
+				self.sidebar.find('.last .buttons').slideDown('250');
+			} else if ($(this).is('.fold')) {
+				self.sidebar.find('.unfold').removeClass('unfold')
+					.find('.buttons').slideUp(250);
+				self.sidebar.
+					find('ul:first-child > li.last').
+					find('.buttons').slideUp(250);
+				$(this).addClass('unfold').find('.buttons').slideDown(250);
 			}
-			
 		});
+
+		this.sidebar.hover(
+			function() {
+				clearTimeout(this.timer);
+			},
+			function(event) {
+				this.timer = setTimeout(function() { self.restore(); }, 2000);
+			}
+		);
+	},
+	// Expand last visible level, close previous
+	restore: function() {
+		this.sidebar
+			.find('.fold .buttons').slideUp(250);
+		this.sidebar
+			.find('.last').removeClass('fold-temp')
+			.find('.buttons').slideDown(250);
 	},
 	highlight: function(link, options) {
+		clearTimeout(this.sidebar.get(0).timer);
 		if (!options){
 			options = {};
 		}
 		if (this.tree[link]) {
 			var level = this.sidebar.find('ul:first-child > li.' + this.tree[link]);
 			if (level.is('.connection')) {
-				this.heads.filter('.connection').removeClass('closed').addClass('last').show();
-				this.heads.not('.connection').hide();
+				this.heads.filter('.connection').addClass('last').show().removeClass('fold').find('.buttons').show();
+				this.heads.not('.connection').removeClass('last').hide();
 			} else if (level.is('.database')) {
-				this.heads.filter('.connection').removeClass('last').addClass('closed').show();
-				this.heads.filter('.database').removeClass('closed').addClass('last').show();
-				this.heads.filter('.table').hide();
+				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
+				this.heads.filter('.database').addClass('last').show().removeClass('fold').find('.buttons').show();
+				this.heads.filter('.table').removeClass('last').hide();
 			} else if (level.is('.table')) {
-				this.heads.filter('.connection').removeClass('last').addClass('closed').show();
-				this.heads.filter('.database').removeClass('last').addClass('closed').show();
-				this.heads.filter('.table').removeClass('closed').addClass('last').show();
+				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
+				this.heads.filter('.database').removeClass('last').show().addClass('fold').find('.buttons').hide();
+				this.heads.filter('.table').addClass('last').show().removeClass('fold').find('.buttons').show();
 			}
 		}
 		this.sidebar.find('.buttons li').removeClass('active');
