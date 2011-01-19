@@ -198,6 +198,8 @@ span.overflowed{
 	font-size: 16.5pt;
 	font-weight: normal; 
 	color: #333;
+	width: 225px;
+	overflow: hidden;
 	}
 
 #sidebar .buttons {
