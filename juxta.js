@@ -334,19 +334,19 @@ Juxta.Sidebar.prototype = {
 
 		this.$sidebar.find('ul:first-child > li h2').click(function() {
 			$head = $(this).parent('li');
-			if ($head.is('.unfold:not(.last)')) {
-				$head.removeClass('unfold').addClass('fold').find('.buttons').slideUp(250);
+			if ($head.is(':not(.fold):not(.last):visible')) {
+				$head.addClass('fold').find('.buttons').slideUp(250);
 				self.$sidebar.find('.last .buttons').slideDown('250');
 			} else if ($head.is('.fold')) {
-				self.$sidebar.find('.unfold').removeClass('unfold').addClass('fold')
+				self.$sidebar.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold')
 					.find('.buttons').slideUp(250);
 				self.$sidebar.
 					find('ul:first-child > li.last').
 					find('.buttons').slideUp(250);
-				$head.removeClass('fold').addClass('unfold').find('.buttons').slideDown(250);
+				$head.removeClass('fold').find('.buttons').slideDown(250);
 			} else if ($head.is('.last') && $head.find('.buttons').not(':visible')) {
 				$head.find('.buttons').slideDown(250);
-				self.$sidebar.find('.unfold').removeClass('unfold').addClass('fold')
+				self.$sidebar.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold')
 					.find('.buttons').slideUp(250);
 			}
 		});
@@ -363,7 +363,7 @@ Juxta.Sidebar.prototype = {
 	// Expand last visible level, close previous
 	restore: function() {
 		this.$sidebar
-			.find('.unfold').removeClass('unfold').addClass('fold').find('.buttons').slideUp(250);
+			.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold').find('.buttons').slideUp(250);
 		this.$sidebar
 			.find('.last .buttons').slideDown(250);
 	},
@@ -375,16 +375,16 @@ Juxta.Sidebar.prototype = {
 		if (this.tree[link]) {
 			var level = this.$sidebar.find('ul:first-child > li.' + this.tree[link]);
 			if (level.is('.connection')) {
-				this.heads.filter('.connection').addClass('last').show().removeClass('unfold fold').find('.buttons').show();
+				this.heads.filter('.connection').addClass('last').show().removeClass('fold').find('.buttons').show();
 				this.heads.not('.connection').removeClass('last').hide();
 			} else if (level.is('.database')) {
 				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
-				this.heads.filter('.database').addClass('last').show().removeClass('unfold fold').find('.buttons').show();
+				this.heads.filter('.database').addClass('last').show().removeClass('fold').find('.buttons').show();
 				this.heads.filter('.table').removeClass('last').hide();
 			} else if (level.is('.table')) {
 				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
 				this.heads.filter('.database').removeClass('last').show().addClass('fold').find('.buttons').hide();
-				this.heads.filter('.table').addClass('last').show().removeClass('unfold fold').find('.buttons').show();
+				this.heads.filter('.table').addClass('last').show().removeClass('fold').find('.buttons').show();
 			}
 		}
 		this.$sidebar.find('.buttons li').removeClass('active');
