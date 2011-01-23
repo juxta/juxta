@@ -140,90 +140,101 @@ span.overflowed{
  * Sidebar
  */
 
-#sidebar{
+#sidebar {
+	background-color: #eee;
+	border-bottom: 1px solid #ddd;
+	display: none;
 	float: left;
-	width: 275px;
 	margin: 0 11px;
 	padding: 0;
-	}
-	
-#sidebar ul{
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	}
-
-#sidebar h2{
-	height: 48px;
-	margin: 0 0 14px;
-	padding: 0 0 0 48px;
-	background: #eee url('images/icon-48.png') left center no-repeat;
-	cursor: pointer;
-	
-	border-bottom: 1px solid #ddd;
+	width: 275px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	}
-#sidebar h2:hover{
-	background-color: #f3f3f3;
+#sidebar.minimized {
+	display: none;
 	}
-#sidebar h2 .level{
+
+#sidebar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 2px 0 3px 0;
+	}
+
+#sidebar li.connection,
+#sidebar li.database,
+#sidebar li.table {
+	border-top: #F9F9F9 1px solid;
+	border-bottom: #E3E3E3 1px solid;
+	}
+#sidebar li.connection {
+	border-top-color: #EEE;
+	}
+#sidebar li.last {
+	border-bottom-color: #EEE;
+	}
+#sidebar .folded ul{
+	display: none;
+	}
+
+#sidebar h2{
+	height: 48px;
+	margin: 0;
+	padding: 1px 0 1px 48px;
+	background: transparent url('images/icon-48.png') left center no-repeat;
+	cursor: pointer;
+	}
+#sidebar h2 .level {
 	float: left;
 	margin-top: 7px;
 	font-size: 8pt;
 	font-weight: normal;
-	color: #333; 
+	color: #333;
 	}
-#sidebar h2 .value{
+#sidebar h2 .value {
 	float: left;
 	clear: left;
 	font-size: 16.5pt;
 	font-weight: normal; 
 	color: #333;
+	width: 225px;
+	overflow: hidden;
 	}
-	
-#sidebar .closed h2{
-	margin-bottom: 1px;
-	background-color: transparent;
-	border-bottom-width: 0;
-	}
-#sidebar .closed ul{
-	display: none;
-	}
-	
-#sidebar .buttons{
+
+#sidebar .buttons {
 	list-style-type: none;
-	margin: 0 0 21px 28px;
+	margin: 14px 0 21px 28px;
 	padding: 0;
 	font-size: 10.5pt;
 	}
-#sidebar .buttons li{
-	height: 24px;
+#sidebar .buttons li {
 	line-height: 24px;
+	height: 24px;
 	}
-#sidebar .buttons li span{
+#sidebar .buttons li span {
 	float: left;
 	padding: 0 7px 0 21px;
-	cursor: pointer;
-	
 	border-radius: 7px;
 	-moz-border-radius: 7px;
 	-web-kit-border-radius: 7px;
 	}
-#sidebar .buttons li a{
+#sidebar .buttons li a {
 	text-decoration: none;
 	color: #000;
 	}
-#sidebar .buttons li a:hover{
-	color: #00559c;
+#sidebar .buttons li a:hover {
+	color: #00559C;
 	}
-#sidebar .buttons li.active span{
-	background-color: #fcfcfc;
+#sidebar .buttons li.active span {
+	background-color: #FCFCFC;
 	font-weight: bold;
 	}
-	
-	
+#sidebar .buttons li.active a:hover {
+	color: #000;
+	}
+
+
 /*
  * Applications
  */
@@ -254,9 +265,9 @@ span.overflowed{
 	
 .application h1{
 	float: left;
-	height: 46px;
-	line-height: 46px;
-	margin: 0 0 0 7px;
+	height: 52px;
+	line-height: 52px;
+	margin: 0 0 1px 7px;
 	font-size: 16.5pt;
 	font-weight: normal;
 	color: #000;
@@ -280,7 +291,7 @@ span.overflowed{
 	float: left;
 	height: 46px;
 	line-height: 50px;
-	margin: 0 0 0 28px;
+	margin: 3px 0 0 28px;
 	font-size: 13pt;
 	font-weight: normal;
 	color: #000;
@@ -766,8 +777,8 @@ span.overflowed{
 	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
 	}
 .float-box h3{
-	height: 46px;
-	line-height: 46px;
+	height: 52px;
+	line-height: 52px;
 	margin: 0 7px;
 	font-size: 16.5pt;
 	font-weight: normal;
@@ -782,7 +793,7 @@ span.overflowed{
 	}
 .float-box .close{
 	position: absolute;
-	top: 13px;
+	top: 16px;
 	right: 11px;
 	}
 .float-box .form{
@@ -868,7 +879,7 @@ span.overflowed{
  */
 
 .code-editor{
-	margin-top: 7px;
+	margin-top: 1px;
 	border-top: #ddd 1px solid;
 	border-bottom: #eee 1px solid;
 	background-color: #fff;
