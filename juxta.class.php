@@ -38,12 +38,7 @@ class Juxta {
 
 	public function __construct(array $config) {
 		$this->config = $config;
-		//
-		if ($_GET['debug']) {
-			$this->route($_GET);
-		} else {
-			$this->route($_POST);
-		}
+		$this->route();
 	}
 
 	public function __destruct() {
@@ -52,19 +47,23 @@ class Juxta {
 		}
 	}
 
-	private function query($sql, $cols) {
-		//
+	private function connect($connection) {
 		if (!$this->mysql) {
-			$connection = array(
-				'host' => $this->config['stored_connections'][0]['host'],
-				'user' => $this->config['stored_connections'][0]['user'],
-				'password' => $this->config['stored_connections'][0]['password'],
-			);
 			$this->mysql = @new mysqli($connection['host'], $connection['user'], $connection['password']);
 			if ($this->mysql->connect_error) {
 				throw new JuxtaConnectionException($this->mysql->connect_error, $this->mysql->connect_errno);
 			}
 		}
+	}
+
+	private function query($sql, $cols) {
+		//
+		if (!isset($_SESSION['host']) || !isset($_SESSION['user']) || !isset($_SESSION['password'])) {
+			throw new JuxtaSessionException('Please login');
+		}
+		//
+		$this->connect(array('host' => $_SESSION['host'], 'user' => $_SESSION['user'], 'password' => $_SESSION['password']));
+
 		$result = $this->mysql->query($sql);
 		if ($this->mysql->error) {
 			throw new JuxtaQueryException($this->mysql->error, $this->mysql->errno);
@@ -87,50 +86,78 @@ class Juxta {
 		return $response;
 	}
 
-	public function route($data) {
-		switch ($data['show']) {
-			case 'stored_connections':
-				$response = $this->storedConnections();
-				break;
-			case 'databases':
-				$response = $this->databases();
-				break;
-			case 'processlist':
-				$response = $this->processlist();
-				break;
-			case 'status':
-			case 'status-full':
-				$response = $this->status();
-				$response['contents'] = $data['show'];
-				break;
-			case 'variables':
-				$response = $this->variables();
-				break;
-			case 'charsets':
-				$response = $this->charsets();
-				break;
-			case 'engines':
-				$response = $this->engines();
-				break;
-			case 'users':
-				$response = $this->users();
-				break;
-			case 'tables':
-				$response = $this->tables($data['from']);
-				break;
-			case 'views':
-				$response = $this->views($data['from']);
-				break;
-			case 'routines':
-				$response = $this->routines($data['from']);
-				break;
-			case 'triggers':
-				$response = $this->triggers($data['from']);
-				break;
-			default:
-				throw new JuxtaException('Not clear request');
+	public function route() {
+		if (isset($_GET['show'])) {
+			switch ($_GET['show']) {
+				case 'stored_connections':
+					$response = $this->storedConnections();
+					break;
+				case 'databases':
+					$response = $this->databases();
+					break;
+				case 'processlist':
+					$response = $this->processlist();
+					break;
+				case 'status':
+				case 'status-full':
+					$response = $this->status();
+					$response['contents'] = $_GET['show'];
+					break;
+				case 'variables':
+					$response = $this->variables();
+					break;
+				case 'charsets':
+					$response = $this->charsets();
+					break;
+				case 'engines':
+					$response = $this->engines();
+					break;
+				case 'users':
+					$response = $this->users();
+					break;
+				case 'tables':
+					$response = $this->tables($_GET['from']);
+					break;
+				case 'views':
+					$response = $this->views($_GET['from']);
+					break;
+				case 'routines':
+					$response = $this->routines($_GET['from']);
+					break;
+				case 'triggers':
+					$response = $this->triggers($_GET['from']);
+					break;
+			}
 		}
-		print json_encode(array_merge(array('status' => 'ok'), (array)$response));
+		//
+		if (isset($_GET['login'])) {
+			try {
+				$this->connect(array(
+					'host' => $_POST['host'],
+					'port' => $_POST['port'],
+					'user' => $_POST['user'],
+					'password' => $_POST['password']
+				));
+				//
+				$_SESSION['host'] = $_POST['host'];
+				$_SESSION['port'] = $_POST['port'];
+				$_SESSION['user'] = $_POST['user'];
+				$_SESSION['password'] = $_POST['password'];
+				//
+				$response = array('status' => 'ok', 'result' => 'connected');
+			} catch (JuxtaConnectionException $e) {
+				$response = array('status' => 'ok', 'result' => 'failed', 'message' => $e->getMessage());
+			}
+		} elseif (isset($_GET['logout'])) {
+			session_destroy();
+			$response = array('status' => 'done', 'message' => 'Bye');
+		}
+		//
+		if (isset($response)) {
+			print json_encode(array_merge(array('status' => 'ok'), (array)$response));
+		} else {
+			throw new JuxtaException('Not clear request');
+		}
 	}
 
 	private function storedConnections() {
@@ -238,6 +265,10 @@ class JuxtaConnectionException extends JuxtaException {
 
 class JuxtaQueryException extends JuxtaException {
 	protected $status = 'error';
+}
+
+class JuxtaSessionException extends JuxtaException {
+	protected $status = 'session-not-found';
 }
 
 

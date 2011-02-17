@@ -633,14 +633,16 @@
 	
 	<div id="login" class="float-box">
 		<h3>Connect to MySQL Server</h3>
-		<div class="form">
-			<p><label>Stored&nbsp;connection</label><select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select></p>
-			<p><label>Host</label><input type="text" style="width: 125px;" value="127.0.0.1"/></p>
-			<p><label>User</label><input type="text" style="width: 125px;" value="root"/></p>
-			<p><label>Password</label><input type="password" style="width: 125px;"/></p>	
-			<br class="clear"/>
-		</div>
-		<div class="buttons"><input type="button" value="Connect"/></div>
+		<form name="login" method="post">
+			<div class="form">
+				<p><label for="login-connections">Stored&nbsp;connection</label><select id="login-connections" style="width: 200px;" disabled></select></p>
+				<p><label for="login-host">Host</label><input name="host" value="" type="text" style="width: 125px;" value="" id="login-host" /></p>
+				<p><label for="login-user">User</label><input name="user" value="" type="text" style="width: 125px;" id="login-user" /></p>
+				<p><label for="user-password">Password</label><input name="password" type="password" style="width: 125px;" id="user-password" /></p>
+				<br class="clear"/>
+			</div>
+			<div class="buttons"><input type="submit" name="connect" value="Connect" /></div>
+		</form>
 	</div>
 	
 	<div id="create-database" class="float-box">

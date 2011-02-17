@@ -22,12 +22,7 @@ if (isset($_GET['debug'])) {
 
 sleep(0);
 
-/*session_start();
-
-if (!isset($_SESSION['host']) || !isset($_SESSION['user']) || !isset($_SESSION['password'])) {
-	echo json_encode(array('status' => 'session-not-found', 'message' => 'Please login'));
-	return;
-}*/
+session_start();
 
 require 'config.php';
 require 'juxta.class.php';

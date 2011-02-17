@@ -37,7 +37,7 @@ Juxta.prototype = {
 		this.dummy = new Juxta.Dummy('#dummy');
 		this.serverInfo = new Juxta.ServerInformation('#server-info');
 
-		this.login = new Juxta.Login('#login');
+		this.auth = new Juxta.Auth('#login');
 		this.codeEditor = new Juxta.Editor($('#edit-routine'));
 
 		$.ajaxSetup(this.ajaxSetup);
@@ -57,7 +57,6 @@ Juxta.prototype = {
 	 */
 	ajaxSetup: {
 		url: 'juxta.php',
-		data: {show: 'databases'},
 		dataType: 'json',
 		type: 'POST',
 		beforeSend: function(){
@@ -77,21 +76,28 @@ Juxta.prototype = {
 	/*	Common Ajax request/response interface
 	 */
 	request: function(params) {
+		var queryString = params.action;
+		if (queryString && $.isPlainObject(queryString) && !$.isEmptyObject(queryString)) {
+			params.url = this.ajaxSetup.url + '?' + $.param(queryString);
+		} else if (queryString) {
+			params.url = params.url = this.ajaxSetup.url + '?' + queryString;
+		}
 		$.ajax(params);
 	},
-	response: function(data, bind) {
-		switch (data.status) {
+	response: function(response, bind) {
+		switch (response.status) {
 			case 'ok':
-				if (bind) {
-					bind(data);
-				}
+				$.isFunction(bind) && bind(response);
 				break;
 			case 'session-not-found':
-				location.hash = '#logout';
+				document.location.hash = '#login';
 				break;
 			case 'error':
+				Juxta.error(response.error);
+				break;
 			case 'connect_error':
-				Juxta.error(data.error);
+				Juxta.error(response.error);
+				Juxta.auth.show();
 				break;
 			default:
 				Juxta.error('Fuck..');
@@ -148,8 +154,8 @@ Juxta.prototype = {
 					Juxta.sidebar.highlight('restore');
 					Juxta.dummy.show({header: 'Restore'});
 					break;
-				case 'logout':
-					Juxta.login.show();
+				case 'login':
+					Juxta.auth.show();
 					break;
 					
 				case 'tables':
@@ -207,7 +213,8 @@ Juxta.prototype = {
 			Juxta.state = hash;
 		}
 	},
-	show: function(){
+	show: function() {
+		$('.float-box').hide();
 		$('#sidebar:visible ul:first-child').slideDown(250);
 		if ($('#applications').not(':visible')){
 			$('#applications').fadeIn(250);
@@ -491,9 +498,9 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			_this.grid.height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(params) {
-		if (this.prepare(params.show)) {
-			Juxta.request({data: params, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
+	request: function(action, data) {
+		if (this.prepare(action.show)) {
+			Juxta.request({action: action, data: data, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
 		} else {
 			Juxta.error('Request error');
 		}
@@ -714,7 +721,7 @@ Juxta.Grid.prototype = {
 		
 		if (self.contextMenu){
 			this.$context.bind('hide', self.contextMenu, function(event){
-				contextMenu = event.data;	
+				contextMenu = event.data;
 				contextMenu.target.find('td:nth-child(2)').find('a').removeClass('checked');
 				
 				contextMenu.target = null;
@@ -1092,19 +1099,65 @@ Juxta.FloatBox = $.Class({
 	}
 });
 
-Juxta.Login = $.Class(Juxta.FloatBox, {
-	init: function(element){
+Juxta.Auth = $.Class(Juxta.FloatBox, {
+	connections: undefined,
+	init: function(element) {
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
-		
-		var _this = this;
-		this.$floatBox.find('input[type=button].close, .buttons input[value=Connect]').click(function(){
-			_this.hide();
-			location.hash= 'databases';
+		this.$form = this.$floatBox.find('form[name=login]');
+		this.$password = this.$form.find('input[type=password]');
+		this.$submit = this.$form.find('input[type=submit]');
+
+		self = this;
+		$('#header a[href=#logout]').click(function() {
+			self.logout();
+			return false;
+		});
+		this.$form.bind('submit', function() {
+			self.$submit.focus();
+			self.login();
+			return false;
 		});
 	},
-	show: function(){
+	show: function() {
 		Juxta.hide();
+		this.$submit.attr('disabled', false);
+		this.$password.val(null);
 		this._show();
+		if (this.$form[0]['host'].value && this.$form[0]['user'].value) {
+			this.$password.focus();
+		} else if (this.$form[0]['host'].value) {
+			this.$form[0]['user'].focus();
+		} else {
+			this.$form[0]['host'].focus();
+		}
+	},
+	login : function() {
+		this.$submit.attr('disabled', true);
+		Juxta.request({
+			action: 'login',
+			data: this.$form.serialize(),
+			context: this,
+			success: function(xhr) {
+				Juxta.response(xhr, $.proxy(this.loginResponse, this));
+			}
+		});
+	},
+	logout: function() {
+		Juxta.request({action: 'logout', context: this,
+			success: function() {
+				document.location.hash = '#login';
+			}
+		});
+	},
+	loginResponse: function(response) {
+		if (response.result == 'connected') {
+			Juxta.state = null;
+			document.location.hash = '#databases';
+		} else {
+			this.$submit.attr('disabled', false);
+			this.$password.focus();
+			Juxta.error(response.message);
+		}
 	}
 });
 
