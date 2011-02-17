@@ -794,7 +794,8 @@ span.overflowed{
 	margin: 14px 0 0;
 	text-align: center;
 	}
-.float-box .buttons input[type=button]{
+.float-box .buttons input[type=button],
+.float-box .buttons input[type=submit] {
 	padding: 2px 7px;
 	}
 
@@ -906,7 +907,8 @@ span.overflowed{
  * Buttons, others interface elements
  */
 	
-input[type=button]{
+input[type=button],
+input[type=submit] {
 	height: 28px;
 	font-weight: bold;
 	color: #333;
@@ -932,7 +934,8 @@ input[type=button]{
 	border-bottom-width: 0;
 	}
 	
-input[type=button]:hover{
+input[type=button]:hover,
+input[type=submit]:hover {
 	color: #00559C;
 	cursor: pointer;
 	
@@ -940,14 +943,16 @@ input[type=button]:hover{
 	background: -moz-linear-gradient(top, #fcfcfc, #dcdcdc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dcdcdc));
 	}
-input[type=button]:active{
+input[type=button]:active,
+input[type=submit]:active {
 	cursor: pointer;
 	
 	background-color: #f0f0f0;
 	background: -moz-linear-gradient(top, #e3e3e3, #fcfcfc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#fcfcfc));
 	}
-input[type=button]:disabled{
+input[type=button]:disabled,
+input[type=submit]:disabled{
 	cursor: default;
 	background: #eee;
 	color: #666;
@@ -1175,7 +1180,7 @@ ul.striped li.stripe{
 	
 #server-info ul.col-1,
 #server-info ul.col-2{
-	float: left;									
+	float: left;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
