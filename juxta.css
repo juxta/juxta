@@ -958,7 +958,7 @@ input[type=submit]:disabled{
 	color: #666;
 	}
 	
-input[type=button].close{
+input[type=button].close {
 	height: 18px;
 	width: 18px;
 	background: transparent url('./images/close.png') center no-repeat;
@@ -966,6 +966,9 @@ input[type=button].close{
 	box-shadow: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
+	}
+input[type=button][disabled].close {
+	cursor: default;
 	}
 
 .switch{
