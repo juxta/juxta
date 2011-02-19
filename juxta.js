@@ -80,8 +80,15 @@ Juxta.prototype = {
 		if (queryString && $.isPlainObject(queryString) && !$.isEmptyObject(queryString)) {
 			params.url = this.ajaxSetup.url + '?' + $.param(queryString);
 		} else if (queryString) {
-			params.url = params.url = this.ajaxSetup.url + '?' + queryString;
+			params.url = this.ajaxSetup.url + '?' + queryString;
 		}
+		//
+		if (params.loadingMessage) {
+			params.beforeSend = function () {
+				Juxta.loading(params.loadingMessage);
+			}
+		}
+		//
 		$.ajax(params);
 	},
 	response: function(response, bind) {
@@ -1139,6 +1146,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			action: 'login',
 			data: this.$form.serialize(),
 			context: this,
+			loadingMessage: 'Connecting to ' + $('input[name=host]', this.$form).val(),
 			success: function(xhr) {
 				Juxta.response(xhr, $.proxy(this.loginResponse, this));
 			}
