@@ -62,7 +62,7 @@ Juxta.prototype = {
 		beforeSend: function(){
 			Juxta.loading();
 		},
-		complete: function(){
+		complete: function() {
 			Juxta.loading(false);
 		},
 		error: function(xhr, status){
@@ -270,13 +270,13 @@ Juxta.prototype = {
 
 Juxta.Notification = $.Class();
 Juxta.Notification.prototype = {
-	init: function(){
+	init: function() {
 		this.container = $('#notify ul');
 	},
 	settings: {
 		hide: true,
 		delay: 3000,
-		hideSpeed: 300,
+		hideSpeed: 300
 	},
 	loadingSettings: {
 		hide: false,
@@ -286,33 +286,37 @@ Juxta.Notification.prototype = {
 	},
 	load: null,
 	loads: 0,
-	show: function(message, options){
+	show: function(message, options) {
 		var self = this;
 		options = $.extend({}, self.settings, options);
-		if (options.element){
+		if (options.element) {
 			var notify = options.element;
 		} else {
 			var notify = $('<li><span></span></li>').appendTo(this.container);
 		}
 		notify.show().find('span').text(message);
-		if (options.hide){
+		if (options.hide) {
 			this.hide(notify, options);
 		}
 		notify.find('span').addClass(options.type);
 		return notify;
 	},
-	hide: function(element, options){
-		element.delay(options.delay).slideUp(options.hideSpeed, function(){ $(this).remove(); });
+	hide: function(element, options) {
+		if (options.fast) {
+			element.remove();
+		} else {
+			element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
+		}
 		this.load = null;
 	},
-	loading: function(message, options){
+	loading: function(message, options) {
 		var self = this;
 		options = $.extend({}, self.loadingSettings, options);
-		if (message === false){
+		if (message === false && this.load) {
 			if (--this.loads == 0) {
 				this.hide(this.load, options);
 			}
-		} else {
+		} else if(message !== false) {
 			if (this.loads++ == 0) {
 				this.container.empty();
 				message = message || 'Loading..'; 
@@ -1164,6 +1168,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			Juxta.state = null;
 			document.location.hash = '#databases';
 		} else {
+			Juxta.loading(false, {fast: true});
 			this.$submit.attr('disabled', false);
 			this.$password.focus();
 			Juxta.error(response.message);
