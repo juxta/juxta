@@ -1145,6 +1145,13 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		}
 	},
 	login : function() {
+		if (jQuery.trim($('input[name=host]', this.$form).val()) == '') {
+			$('input[name=host]', this.$form).val('localhost');
+		}
+		if (jQuery.trim($('input[name=port]', this.$form).val()) == '') {
+			$('input[name=port]', this.$form).val('3306');
+		}
+		//
 		this.$submit.attr('disabled', true);
 		Juxta.request({
 			action: 'login',

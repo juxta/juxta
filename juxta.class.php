@@ -49,7 +49,7 @@ class Juxta {
 
 	private function connect($connection) {
 		if (!$this->mysql) {
-			$this->mysql = @new mysqli($connection['host'], $connection['user'], $connection['password']);
+			$this->mysql = @new mysqli($connection['host'], $connection['user'], $connection['password'], null, $connection['port']);
 			if ($this->mysql->connect_error) {
 				throw new JuxtaConnectionException($this->mysql->connect_error, $this->mysql->connect_errno);
 			}
@@ -62,7 +62,7 @@ class Juxta {
 			throw new JuxtaSessionException('Please login');
 		}
 		//
-		$this->connect(array('host' => $_SESSION['host'], 'user' => $_SESSION['user'], 'password' => $_SESSION['password']));
+		$this->connect(array('host' => $_SESSION['host'], 'user' => $_SESSION['user'], 'password' => $_SESSION['password'], 'port' => $_SESSION['port']));
 
 		$result = $this->mysql->query($sql);
 		if ($this->mysql->error) {
@@ -132,6 +132,7 @@ class Juxta {
 		//
 		if (isset($_GET['login'])) {
 			try {
+				$_POST['port'] = $_POST['port'] ? $_POST['port'] : 3306;
 				$this->connect(array(
 					'host' => $_POST['host'],
 					'port' => $_POST['port'],
