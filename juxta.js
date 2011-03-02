@@ -1134,7 +1134,18 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		});
 		this.$connections.bind('change', function() {
 			self.fillForm(self.storedConnections[this.value]);
+			self.$connections.find('option[value=0]').remove();
 			self.$password.focus().val(null);
+		});
+		$('input[name=host],input[name=user]', this.$form).bind('keyup', function() {
+			if (self.$connections.val() > 0) {
+				var curConnection = self.storedConnections[self.$connections.val()];
+				if (curConnection['host'] != self.form['host'].value ||
+					curConnection['user'] != self.form['user'].value
+				) {
+					self.$connections.prepend('<option value="0"></option>').val(0);
+				}
+			}
 		});
 	},
 	show: function() {
