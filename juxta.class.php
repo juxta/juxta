@@ -36,20 +36,20 @@ class Juxta {
 	private $config = array();
 	private $mysql = NULL;
 
-	public function __construct(array $config) {
+	public function __construct($config = array()) {
 		$this->config = $config;
 		$this->route();
 	}
 
 	public function __destruct() {
-		if ($this->mysql) {
+		if (isset($this->mysql)) {
 			$this->mysql->close();
 		}
 	}
 
 	private function connect($connection) {
 		if (!$this->mysql) {
-			$this->mysql = @new mysqli($connection['host'], $connection['user'], $connection['password'], null, $connection['port']);
+			$this->mysql = new mysqli($connection['host'], $connection['user'], $connection['password'], null, $connection['port']);
 			if ($this->mysql->connect_error) {
 				throw new JuxtaConnectionException($this->mysql->connect_error, $this->mysql->connect_errno);
 			}
@@ -128,6 +128,12 @@ class Juxta {
 					$response = $this->triggers($_GET['from']);
 					break;
 			}
+		} elseif (isset($_GET['get'])) {
+			switch ($_GET['get']) {
+				case 'stored_connections':
+					$response = $this->storedConnections();
+					break;
+			}
 		}
 		//
 		if (isset($_GET['login'])) {
@@ -145,7 +151,11 @@ class Juxta {
 				$_SESSION['user'] = $_POST['user'];
 				$_SESSION['password'] = $_POST['password'];
 				//
-				$response = array('status' => 'ok', 'result' => 'connected');
+				$response = array(
+					'status' => 'ok',
+					'result' => 'connected',
+					'to' => array('host' => $_SESSION['host'], 'port' => $_SESSION['port'])
+				);
 			} catch (JuxtaConnectionException $e) {
 				$response = array('status' => 'ok', 'result' => 'failed', 'message' => $e->getMessage());
 			}
@@ -163,10 +173,18 @@ class Juxta {
 
 	private function storedConnections() {
 		$connections = array();
-		if (is_array($this->config['stored_connections'])) {
+		if (isset($this->config['stored_connections']) && is_array($this->config['stored_connections'])) {
 			foreach ($this->config['stored_connections'] as $connection) {
-				if ($connection['password']) {
+				// Don't pass password
+				if (isset($connection['password'])) {
 					unset($connection['password']);
+				}
+				// 3306 port default
+				if (isset($connection['port'])) {
+					$connection['port'] = (int)$connection['port'];
+				}
+				if (empty($connection['port'])) {
+					$connection['port'] = 3306;
 				}
 				$connections[] = $connection;
 			}

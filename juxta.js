@@ -1113,14 +1113,16 @@ Juxta.FloatBox = $.Class({
 });
 
 Juxta.Auth = $.Class(Juxta.FloatBox, {
-	connections: undefined,
+	storedConnections: undefined,
 	init: function(element) {
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
 		this.$form = this.$floatBox.find('form[name=login]');
+		this.form = this.$form.get(0);
+		this.$connections = $('select[name=connection]');
 		this.$password = this.$form.find('input[type=password]');
 		this.$submit = this.$form.find('input[type=submit]');
 
-		self = this;
+		var self = this;
 		$('#header a[href=#logout]').click(function() {
 			self.logout();
 			return false;
@@ -1130,18 +1132,28 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			self.login();
 			return false;
 		});
+		this.$connections.bind('change', function() {
+			self.fillForm(self.storedConnections[this.value]);
+			self.$password.focus().val(null);
+		});
 	},
 	show: function() {
+		if (!this.storedConnections) {
+			Juxta.request({
+				action: 'get=stored_connections',
+				context: this,
+				success: function(xhr) {
+					Juxta.response(xhr, $.proxy(this.getConnectionsResponse, this));
+				}
+			});
+		}
+		//
 		Juxta.hide();
 		this.$submit.attr('disabled', false);
 		this.$password.val(null);
 		this._show();
 		if (this.$form[0]['host'].value && this.$form[0]['user'].value) {
 			this.$password.focus();
-		} else if (this.$form[0]['host'].value) {
-			this.$form[0]['user'].focus();
-		} else {
-			this.$form[0]['host'].focus();
 		}
 	},
 	login : function() {
@@ -1176,9 +1188,38 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			document.location.hash = '#databases';
 		} else {
 			Juxta.loading(false, {fast: true});
+			Juxta.error(response.message);
+			//
 			this.$submit.attr('disabled', false);
 			this.$password.focus();
-			Juxta.error(response.message);
+		}
+	},
+	getConnectionsResponse: function(response) {
+		if (!$.isEmptyObject(response.data)) {
+			var self = this, connections = {};
+			$.each(response.data, function(i) {
+				if (this.name == undefined) {
+					this.name = this.user + '@' + this.host;
+				}
+				$('<option>', {val: i + 1, selected: this.default}).html(this.name).appendTo(self.$connections);
+				connections[i + 1] = this;
+			});
+			this.$connections.attr('disabled', false);
+			//
+			this.storedConnections = connections;
+			if (this.form['host'].value == '' && this.form['user'].value == '') {
+				this.fillForm(this.storedConnections[this.$connections.val()]);
+				this.$password.focus();
+			} else {
+				this.$connections.prepend('<option value="0"></option>');
+			}
+		}
+	},
+	fillForm: function(values) {
+		if (values) {
+			this.form['host'].value = values['host'];
+			this.form['port'].value = values['port'];
+			this.form['user'].value = values['user'];
 		}
 	}
 });
