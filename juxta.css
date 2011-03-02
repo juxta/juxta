@@ -796,16 +796,17 @@ span.overflowed{
 	top: 16px;
 	right: 11px;
 	}
-.float-box .form{
+.float-box form {
 	margin: 21px 0 0 0;
-	padding: 0 11px;
+	padding: 0 14px;
 	}
 .float-box .buttons{
 	clear: both;
 	margin: 14px 0 0;
 	text-align: center;
 	}
-.float-box .buttons input[type=button]{
+.float-box .buttons input[type=button],
+.float-box .buttons input[type=submit] {
 	padding: 2px 7px;
 	}
 
@@ -814,26 +815,26 @@ span.overflowed{
  * Form
  */
 
-.form p{
+form p {
 	margin: 0 0 3px 0;
 	float: left;
 	clear: left;
 	line-height: 28px;
 	}
-.form p label{
+form p label {
 	float: left;
 	clear: both;
-	height: 24px;
-	line-height: 24px;
+	height: 30px;
+	line-height: 30px;
 	width: 125px;
 	padding-right: 14px;
 	font-size: 10pt;
 	color: #333;
 	text-align: right;
 	}
-.form input[type=text],
-.form input[type=password],
-.form select{
+form input[type=text],
+form input[type=password],
+form select {
 	background-color: #fff;
 	border: #ccc 1px solid;
 	border-top-color: #b9b9b9;
@@ -845,18 +846,18 @@ span.overflowed{
 	font-size: 10.5pt;
 	padding: 3px 5px;
 	}
-.form input[type=text]:focus,
-.form input[type=password]:focus,
-.form select:focus{
+form input[type=text]:focus,
+form input[type=password]:focus,
+form select:focus {
 	-webkit-box-shadow: 0px 0px 1px rgba(24, 63, 122, 0.5);
 	}
-.form select optgroup{
+form select optgroup {
 	color: #666;
 	}
-.form select option{
+form select option {
 	color: #333;
 	}
-.form .helper{
+form .helper {
 	padding: 0 3px;
 	background-color: #e3e3e3;
 	border-radius: 3px;
@@ -869,10 +870,36 @@ span.overflowed{
  * Main forms
  */
 
-#login.float-box{
-	width: 400px;
+form[name=login] label {
+	width: 105px;
+	}
+form[name=login] .connections {
+	margin-bottom: 11px;
+	}
+form[name=login] select[name=connection] {
+	width: 255px;
+	}
+form[name=login] input[name=host],
+form[name=login] input[name=user],
+form[name=login] input[name=password] {
+	width: 125px;
+	}
+form[name=login] .port {
+	clear: none;
+	}
+form[name=login] .port label {
+	width: 38px;
+	}
+form[name=login] input[name=port] {
+	width: 34px;
 	}
 
+/*#login form p {
+	background-color: #99F;
+	}
+#login form label {
+	background-color: #9F9;
+	}*/
 
 /*
  * Code editor
@@ -917,7 +944,8 @@ span.overflowed{
  * Buttons, others interface elements
  */
 	
-input[type=button]{
+input[type=button],
+input[type=submit] {
 	height: 28px;
 	font-weight: bold;
 	color: #333;
@@ -943,7 +971,8 @@ input[type=button]{
 	border-bottom-width: 0;
 	}
 	
-input[type=button]:hover{
+input[type=button]:hover,
+input[type=submit]:hover {
 	color: #00559C;
 	cursor: pointer;
 	
@@ -951,20 +980,22 @@ input[type=button]:hover{
 	background: -moz-linear-gradient(top, #fcfcfc, #dcdcdc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dcdcdc));
 	}
-input[type=button]:active{
+input[type=button]:active,
+input[type=submit]:active {
 	cursor: pointer;
 	
 	background-color: #f0f0f0;
 	background: -moz-linear-gradient(top, #e3e3e3, #fcfcfc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#fcfcfc));
 	}
-input[type=button]:disabled{
+input[type=button]:disabled,
+input[type=submit]:disabled{
 	cursor: default;
 	background: #eee;
 	color: #666;
 	}
 	
-input[type=button].close{
+input[type=button].close {
 	height: 18px;
 	width: 18px;
 	background: transparent url('./images/close.png') center no-repeat;
@@ -972,6 +1003,9 @@ input[type=button].close{
 	box-shadow: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
+	}
+input[type=button][disabled].close {
+	cursor: default;
 	}
 
 .switch{
@@ -1186,7 +1220,7 @@ ul.striped li.stripe{
 	
 #server-info ul.col-1,
 #server-info ul.col-2{
-	float: left;									
+	float: left;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;

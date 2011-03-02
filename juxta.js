@@ -37,7 +37,7 @@ Juxta.prototype = {
 		this.dummy = new Juxta.Dummy('#dummy');
 		this.serverInfo = new Juxta.ServerInformation('#server-info');
 
-		this.login = new Juxta.Login('#login');
+		this.auth = new Juxta.Auth('#login');
 		this.codeEditor = new Juxta.Editor($('#edit-routine'));
 
 		$.ajaxSetup(this.ajaxSetup);
@@ -57,13 +57,12 @@ Juxta.prototype = {
 	 */
 	ajaxSetup: {
 		url: 'juxta.php',
-		data: {show: 'databases'},
 		dataType: 'json',
 		type: 'POST',
 		beforeSend: function(){
 			Juxta.loading();
 		},
-		complete: function(){
+		complete: function() {
 			Juxta.loading(false);
 		},
 		error: function(xhr, status){
@@ -77,21 +76,35 @@ Juxta.prototype = {
 	/*	Common Ajax request/response interface
 	 */
 	request: function(params) {
+		var queryString = params.action;
+		if (queryString && $.isPlainObject(queryString) && !$.isEmptyObject(queryString)) {
+			params.url = this.ajaxSetup.url + '?' + $.param(queryString);
+		} else if (queryString) {
+			params.url = this.ajaxSetup.url + '?' + queryString;
+		}
+		//
+		if (params.loadingMessage) {
+			params.beforeSend = function () {
+				Juxta.loading(params.loadingMessage);
+			}
+		}
+		//
 		$.ajax(params);
 	},
-	response: function(data, bind) {
-		switch (data.status) {
+	response: function(response, bind) {
+		switch (response.status) {
 			case 'ok':
-				if (bind) {
-					bind(data);
-				}
+				$.isFunction(bind) && bind(response);
 				break;
 			case 'session-not-found':
-				location.hash = '#logout';
+				document.location.hash = '#login';
 				break;
 			case 'error':
+				Juxta.error(response.error);
+				break;
 			case 'connect_error':
-				Juxta.error(data.error);
+				Juxta.error(response.error);
+				Juxta.auth.show();
 				break;
 			default:
 				Juxta.error('Fuck..');
@@ -148,8 +161,8 @@ Juxta.prototype = {
 					Juxta.sidebar.highlight('restore');
 					Juxta.dummy.show({header: 'Restore'});
 					break;
-				case 'logout':
-					Juxta.login.show();
+				case 'login':
+					Juxta.auth.show();
 					break;
 					
 				case 'tables':
@@ -207,8 +220,9 @@ Juxta.prototype = {
 			Juxta.state = hash;
 		}
 	},
-	show: function(){
+	show: function() {
 		$('#sidebar').slideDown(250);
+		$('.float-box').hide();
 		if ($('#applications').not(':visible')){
 			$('#applications').fadeIn(250);
 			$('#header h1, #header ul').fadeIn(250);
@@ -256,13 +270,13 @@ Juxta.prototype = {
 
 Juxta.Notification = $.Class();
 Juxta.Notification.prototype = {
-	init: function(){
+	init: function() {
 		this.container = $('#notify ul');
 	},
 	settings: {
 		hide: true,
 		delay: 3000,
-		hideSpeed: 300,
+		hideSpeed: 300
 	},
 	loadingSettings: {
 		hide: false,
@@ -272,33 +286,37 @@ Juxta.Notification.prototype = {
 	},
 	load: null,
 	loads: 0,
-	show: function(message, options){
+	show: function(message, options) {
 		var self = this;
 		options = $.extend({}, self.settings, options);
-		if (options.element){
+		if (options.element) {
 			var notify = options.element;
 		} else {
 			var notify = $('<li><span></span></li>').appendTo(this.container);
 		}
 		notify.show().find('span').text(message);
-		if (options.hide){
+		if (options.hide) {
 			this.hide(notify, options);
 		}
 		notify.find('span').addClass(options.type);
 		return notify;
 	},
-	hide: function(element, options){
-		element.delay(options.delay).slideUp(options.hideSpeed, function(){ $(this).remove(); });
+	hide: function(element, options) {
+		if (options.fast) {
+			element.remove();
+		} else {
+			element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
+		}
 		this.load = null;
 	},
-	loading: function(message, options){
+	loading: function(message, options) {
 		var self = this;
 		options = $.extend({}, self.loadingSettings, options);
-		if (message === false){
+		if (message === false && this.load) {
 			if (--this.loads == 0) {
 				this.hide(this.load, options);
 			}
-		} else {
+		} else if(message !== false) {
 			if (this.loads++ == 0) {
 				this.container.empty();
 				message = message || 'Loading..'; 
@@ -518,9 +536,9 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			_this.grid.height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(params) {
-		if (this.prepare(params.show)) {
-			Juxta.request({data: params, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
+	request: function(action, data) {
+		if (this.prepare(action.show)) {
+			Juxta.request({action: action, data: data, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
 		} else {
 			Juxta.error('Request error');
 		}
@@ -741,7 +759,7 @@ Juxta.Grid.prototype = {
 		
 		if (self.contextMenu){
 			this.$context.bind('hide', self.contextMenu, function(event){
-				contextMenu = event.data;	
+				contextMenu = event.data;
 				contextMenu.target.find('td:nth-child(2)').find('a').removeClass('checked');
 				
 				contextMenu.target = null;
@@ -1084,11 +1102,15 @@ Juxta.FloatBox = $.Class({
 	init: function(element, options){
 		var _this = this;
 		this.settings = $.extend({}, _this.settings, options);
-		
+
 		this.$floatBox = $(element);
-		this.$head = this.$floatBox.find('h3').is('h3') ? this.$floatBox.find('h3') : this.$floatBox.prepend('<h3>'+ this.settings.title + '</h3>').find('h3'); 
-		this.$terminator = this.$floatBox.find('input[type=button].close').is('input') ? this.$floatBox.find('input[type=button].close') : $('<input type="button" class="close"/>').insertAfter(this.$head);
-		
+		this.$head = this.$floatBox.find('h3').is('h3') ? this.$floatBox.find('h3') : this.$floatBox.prepend('<h3>'+ this.settings.title + '</h3>').find('h3');
+
+		this.$terminator = this.$floatBox.find('input[type=button].close').is('input')
+			? this.$floatBox.find('input[type=button].close')
+			: $('<input type="button" class="close"/>').insertAfter(this.$head).attr('disabled', !this.settings.closable);
+		this.$terminator.click(function() { _this.hide(); });
+
 		this.$floatBox.draggable({scroll: false, handle: 'h3'});
 		
 		var body = {
@@ -1099,8 +1121,6 @@ Juxta.FloatBox = $.Class({
 			left: (body.width - this.$floatBox.width())/2,
 			top:  parseInt(0.75*(body.height - this.$floatBox.height())/2)
 		});
-
-		this.$terminator.click(function(){ _this.hide(); });
 	},
 	show: function(options){
 		_this = this;
@@ -1119,19 +1139,126 @@ Juxta.FloatBox = $.Class({
 	}
 });
 
-Juxta.Login = $.Class(Juxta.FloatBox, {
-	init: function(element){
+Juxta.Auth = $.Class(Juxta.FloatBox, {
+	storedConnections: undefined,
+	init: function(element) {
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
-		
-		var _this = this;
-		this.$floatBox.find('input[type=button].close, .buttons input[value=Connect]').click(function(){
-			_this.hide();
-			location.hash= 'databases';
+		this.$form = this.$floatBox.find('form[name=login]');
+		this.form = this.$form.get(0);
+		this.$connections = $('select[name=connection]');
+		this.$password = this.$form.find('input[type=password]');
+		this.$submit = this.$form.find('input[type=submit]');
+
+		var self = this;
+		$('#header a[href=#logout]').click(function() {
+			self.logout();
+			return false;
+		});
+		this.$form.bind('submit', function() {
+			self.$submit.focus();
+			self.login();
+			return false;
+		});
+		this.$connections.bind('change', function() {
+			self.fillForm(self.storedConnections[this.value]);
+			self.$connections.find('option[value=0]').remove();
+			self.$password.focus().val(null);
+		});
+		$('input[name=host],input[name=user]', this.$form).bind('keyup', function() {
+			if (self.$connections.val() > 0) {
+				var curConnection = self.storedConnections[self.$connections.val()];
+				if (curConnection['host'] != self.form['host'].value ||
+					curConnection['user'] != self.form['user'].value
+				) {
+					self.$connections.prepend('<option value="0"></option>').val(0);
+				}
+			}
 		});
 	},
-	show: function(){
+	show: function() {
+		if (!this.storedConnections) {
+			Juxta.request({
+				action: 'get=stored_connections',
+				context: this,
+				success: function(xhr) {
+					Juxta.response(xhr, $.proxy(this.getConnectionsResponse, this));
+				}
+			});
+		}
+		//
 		Juxta.hide();
+		this.$submit.attr('disabled', false);
+		this.$password.val(null);
 		this._show();
+		if (this.$form[0]['host'].value && this.$form[0]['user'].value) {
+			this.$password.focus();
+		}
+	},
+	login : function() {
+		if (jQuery.trim($('input[name=host]', this.$form).val()) == '') {
+			$('input[name=host]', this.$form).val('localhost');
+		}
+		if (jQuery.trim($('input[name=port]', this.$form).val()) == '') {
+			$('input[name=port]', this.$form).val('3306');
+		}
+		//
+		this.$submit.attr('disabled', true);
+		Juxta.request({
+			action: 'login',
+			data: this.$form.serialize(),
+			context: this,
+			loadingMessage: 'Connecting to ' + $('input[name=host]', this.$form).val(),
+			success: function(xhr) {
+				Juxta.response(xhr, $.proxy(this.loginResponse, this));
+			}
+		});
+	},
+	logout: function() {
+		Juxta.request({action: 'logout', context: this,
+			success: function() {
+				document.location.hash = '#login';
+			}
+		});
+	},
+	loginResponse: function(response) {
+		if (response.result == 'connected') {
+			Juxta.state = null;
+			document.location.hash = '#databases';
+		} else {
+			Juxta.loading(false, {fast: true});
+			Juxta.error(response.message);
+			//
+			this.$submit.attr('disabled', false);
+			this.$password.focus();
+		}
+	},
+	getConnectionsResponse: function(response) {
+		if (!$.isEmptyObject(response.data)) {
+			var self = this, connections = {};
+			$.each(response.data, function(i) {
+				if (this.name == undefined) {
+					this.name = this.user + '@' + this.host;
+				}
+				$('<option>', {val: i + 1, selected: this.default}).html(this.name).appendTo(self.$connections);
+				connections[i + 1] = this;
+			});
+			this.$connections.attr('disabled', false);
+			//
+			this.storedConnections = connections;
+			if (this.form['host'].value == '' && this.form['user'].value == '') {
+				this.fillForm(this.storedConnections[this.$connections.val()]);
+				this.$password.focus();
+			} else {
+				this.$connections.prepend('<option value="0"></option>');
+			}
+		}
+	},
+	fillForm: function(values) {
+		if (values) {
+			this.form['host'].value = values['host'];
+			this.form['port'].value = values['port'];
+			this.form['user'].value = values['user'];
+		}
 	}
 });
 

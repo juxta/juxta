@@ -633,20 +633,21 @@
 	
 	<div id="login" class="float-box">
 		<h3>Connect to MySQL Server</h3>
-		<div class="form">
-			<p><label>Stored&nbsp;connection</label><select style="width: 200px;"><option>---</option><option>avg@birch.ie.tusur.ru</option><option>root@localhost</option></select></p>
-			<p><label>Host</label><input type="text" style="width: 125px;" value="127.0.0.1"/></p>
-			<p><label>User</label><input type="text" style="width: 125px;" value="root"/></p>
-			<p><label>Password</label><input type="password" style="width: 125px;"/></p>	
+		<form name="login" method="post">
+			<p class="connections"><label for="login-connections">Stored&nbsp;connection</label><select name="connection" id="login-connections" disabled></select></p>
+			<p class="host"><label for="login-host">Host</label><input name="host" type="text" id="login-host" /></p>
+			<p class="port"><label for="login-port">Port</label><input name="port" value="3306" type="text" id="login-port" /></p>
+			<p><label for="login-user">User</label><input name="user" type="text" id="login-user" /></p>
+			<p><label for="user-password">Password</label><input name="password" type="password" id="user-password" /></p>
 			<br class="clear"/>
-		</div>
-		<div class="buttons"><input type="button" value="Connect"/></div>
+			<div class="buttons"><input type="submit" name="connect" value="Connect" /></div>
+		</form>
 	</div>
 	
 	<div id="create-database" class="float-box">
 		<h3>Create Database</h3>
 		<input type="button" class="close" onclick="$('#create-database').hide();"/>
-		<div class="form">
+		<form name="create-database">
 			<p><label class="database-name" for="database-name" style="width: 92px; ">Database name</label><input type="text" name="new-database-name" id="database-name" style="width: 175px;" value=""/></p>
 			<p>
 				<label style="width: 92px; ">Collation</label>
@@ -687,14 +688,14 @@
 				</select>
 			</p>
 			<br class="clear"/>
-		</div>
-		<div class="buttons"><input type="button" value="Create"/></div>
+			<div class="buttons"><input type="button" value="Create"/></div>
+		</form>
 	</div>
 	
 	<div id="create-user" class="float-box">
 		<h3>Add a new User</h3>
 		<input type="button" class="close" onclick="$('#create-user').hide();"/>
-		<div class="form">
+		<form>
 			<p>
 				<label for="user-name" style="width: 100px; ">User name</label>
 				<input type="text" name="new-database-name" id="user-name" style="width: 125px;" value=""/>
@@ -746,9 +747,8 @@
 				<li><input type="checkbox" id="Repl_client_priv">&nbsp;<label for="Repl_client_priv">Replication Client</label></li>
 				<li><input type="checkbox" id="Repl_slave_priv">&nbsp;<label for="Repl_slave_priv">Replication Slave</label></li>
 			</ul><br class="clear"/>
-
-		</div>
-		<div class="buttons"><input type="button" value="Create" /></div>
+			<div class="buttons"><input type="button" value="Create" /></div>
+		</form>
 	</div>
 
 	<div id="edit-routine" class="float-box">
