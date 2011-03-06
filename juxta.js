@@ -263,7 +263,7 @@ Juxta.prototype = {
 		this.notification.loading(message, options);
 	},
 	error: function(message, options){
-		options = $.extend({}, {type: 'error', hide: false}, options);
+		options = $.extend({}, {type: 'error', hide: false, fast: true}, options);
 		this.notification.show(message, options);
 	}
 };
@@ -289,6 +289,9 @@ Juxta.Notification.prototype = {
 	show: function(message, options) {
 		var self = this;
 		options = $.extend({}, self.settings, options);
+		if (options.fast) {
+			this.container.empty();
+		}
 		if (options.element) {
 			var notify = options.element;
 		} else {
@@ -302,11 +305,7 @@ Juxta.Notification.prototype = {
 		return notify;
 	},
 	hide: function(element, options) {
-		if (options.fast) {
-			element.remove();
-		} else {
-			element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
-		}
+		element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
 		this.load = null;
 	},
 	loading: function(message, options) {
@@ -1225,7 +1224,6 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			Juxta.state = null;
 			document.location.hash = '#databases';
 		} else {
-			Juxta.loading(false, {fast: true});
 			Juxta.error(response.message);
 			//
 			this.$submit.attr('disabled', false);
