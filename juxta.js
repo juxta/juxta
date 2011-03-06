@@ -652,7 +652,7 @@ Juxta.Grid.prototype = {
 		this.head = this.container.find('.head');
 		this.actions = this.container.find('.actions');
 		this.$context = this.container.find('.context');
-		
+
 		var self = this;
 		this.body.change(function(event){
 			if ($(event.target).is('[type=checkbox]')){
@@ -690,11 +690,22 @@ Juxta.Grid.prototype = {
 				}
 			}
 			self.statistics.selected = self.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
-			Juxta.explorer.status(
-				(self.statistics.cardinality > 1 ? $.template('{cardinality} {items}', self.statistics) : '') + 
-				(self.statistics.selected > 0 ? $.template(', {selected} selected', self.statistics) : '') 
-			);
-			
+			var status = '';
+			if (self.statistics.cardinality > 0) {
+				status += self.statistics.cardinality;
+				if (self.statistics.cardinality == 1) {
+					status += ' ' + self.statistics.item;
+				} else {
+					status += ' ' + self.statistics.items;
+				}
+			}
+			if (self.statistics.selected > 0) {
+				status += ', ';
+				status += self.statistics.selected;
+				status += ' selected';
+			}
+			Juxta.explorer.status(status);
+
 			if (self.statistics.cardinality > 0 && self.statistics.cardinality == self.statistics.selected){
 				self.actions.find('.all').addClass('active');
 				self.actions.find('.nothing').removeClass('active');
@@ -705,7 +716,7 @@ Juxta.Grid.prototype = {
 				self.actions.find('.all').removeClass('active');
 				self.actions.find('.nothing').removeClass('active');
 			}
-			
+
 			if (self.statistics.selected < 1) {
 				self.actions.find('input[type=button]').attr('disabled', true);
 			} else{
@@ -732,21 +743,21 @@ Juxta.Grid.prototype = {
 				$target.removeClass('collapse').addClass('expand');
 				$target.parents('tr').next('.content').hide();
 			}
-			
+
 			$('.context:visible').hide();
 			return false;
 		});
-		
+
 		this.container.find('.actions .all').live('click', function(){
 			self.select('all')
 			return false
 		});
-		
+
 		this.container.find('.actions .nothing').live('click', function(){
 			self.select();
 			return false;
 		});
-		
+
 		if (this.$context.is('.context')) {
 			this.contextMenu = {
 				menu: this.container.find('.context'),
@@ -755,31 +766,31 @@ Juxta.Grid.prototype = {
 				value: null,
 			};
 		}
-		
+
 		if (self.contextMenu){
 			this.$context.bind('hide', self.contextMenu, function(event){
 				contextMenu = event.data;
 				contextMenu.target.find('td:nth-child(2)').find('a').removeClass('checked');
-				
+
 				contextMenu.target = null;
 				contextMenu.value = null;
 			});
-			
+
 			this.body.bind('contextmenu', self.contextMenu, function(event){
 				contextMenu = event.data;
-				
+
 				if (!contextMenu.menu.find('ul').is(':empty')){
 					contextMenu.menu.show().offset({top: event.clientY, left: event.clientX});
-				
+
 					contextMenu.page.find('a.checked').removeClass('checked');
 					contextMenu.page.find('[type=checkbox]:checked').removeAttr('checked');
 					contextMenu.target = $(event.target).parents('tr');
 					contextMenu.target.find('td:nth-child(2)').find('a').addClass('checked');
-				
+
 					contextMenu.value = contextMenu.target.find('td:nth-child(2)').find('a').text();
-				
+
 					contextMenu.page.trigger('change');
-				
+
 					return false;
 				}
 			});
@@ -795,7 +806,7 @@ Juxta.Grid.prototype = {
 	prepare: function(template) {
 		if (template) {
 			var self = this;
-			
+
 			// Empty grid header and body
 			if (template['head']) {
 				this.empty();
@@ -807,7 +818,7 @@ Juxta.Grid.prototype = {
 				this.head.empty().hide();
 				this.$bodyContainer.hide();
 			}
-			
+
 			// Make grid header
 			if (template['head']) {
 				this.head.empty();
@@ -835,11 +846,11 @@ Juxta.Grid.prototype = {
 	},
 	fill: function(data){
 		var self = this;
-		
+
 		this.empty();
 		if (data && data.data && (data.data.length > 0 || $.isPlainObject(data.data))){
 			this.statistics.cardinality = data.data.length;
-			
+
 			var template = data['data-template'];
 			jQuery.each(data.data, function(i, value){
 				if ($.isPlainObject(data.data)) {
@@ -852,7 +863,7 @@ Juxta.Grid.prototype = {
 							forTemplate[valueName[0]] = value;
 						} else{
 							forTemplate[valueName] = value;
-						}					
+						}
 					} else{
 						if ($.isArray(valueName)){
 							forTemplate[valueName[0]] = value[j];
@@ -865,8 +876,7 @@ Juxta.Grid.prototype = {
 				self.body.append($.template(template, forTemplate));
 			});
 			this.body.trigger('change');
-			
-			
+
 			// Make context menu
 			if (data.contextMenu) {
 				this.container.find('.context ul').html($.template(data.contextMenu, {database: data['from']}));
