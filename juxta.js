@@ -942,9 +942,9 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		this._show(options);
 		this.stretch();
 	},
-	request: function(params) {
-		if (this.prepare(params.show)) {
-			Juxta.request({data: params, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
+	request: function(action, data) {
+		if (this.prepare(action.show)) {
+			Juxta.request({action: action, data: data, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
 		} else {
 			Juxta.error('Request error');
 		}
