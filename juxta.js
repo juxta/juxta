@@ -1016,15 +1016,14 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		});
 		this.$application.find('.switch li').eq(0).click(function(){
 			if (!$(this).hasClass('active')){
-				_this.request({show: 'status-full'});
+				_this.request({show: 'status-full'}, {});
 			}
 		});
 		this.$application.find('.switch li').eq(1).click(function(){
 			if (!$(this).hasClass('active')){
-				_this.request({show: 'status'});
+				_this.request({show: 'status'}, {});
 			}
 		});
-		
 	},
 	stretch: function(event){
 		var _this = event && event.data._this || this;
