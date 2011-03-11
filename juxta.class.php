@@ -130,7 +130,7 @@ class Juxta {
 			}
 		} elseif (isset($_GET['get'])) {
 			switch ($_GET['get']) {
-				case 'stored_connections':
+				case 'connections':
 					$response = $this->storedConnections();
 					break;
 			}
@@ -161,7 +161,7 @@ class Juxta {
 			}
 		} elseif (isset($_GET['logout'])) {
 			session_destroy();
-			$response = array('status' => 'done', 'message' => 'Bye');
+			$response = array('status' => 'ok', 'logout' => 'done');
 		}
 		//
 		if (isset($response)) {
@@ -189,7 +189,7 @@ class Juxta {
 				$connections[] = $connection;
 			}
 		}
-		return array('contents' => 'stored_connections', 'data' => $connections);
+		return array('contents' => 'connections', 'data' => $connections);
 	}
 
 	private function databases() {

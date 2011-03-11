@@ -40,6 +40,8 @@ Juxta.prototype = {
 		this.auth = new Juxta.Auth('#login');
 		this.codeEditor = new Juxta.Editor($('#edit-routine'));
 
+		this.cache = new Juxta.Cache();
+
 		$.ajaxSetup(this.ajaxSetup);
 
 		if (location.hash == ''){
@@ -76,25 +78,47 @@ Juxta.prototype = {
 	/*	Common Ajax request/response interface
 	 */
 	request: function(params) {
+		// URL
 		var queryString = params.action;
 		if (queryString && $.isPlainObject(queryString) && !$.isEmptyObject(queryString)) {
-			params.url = this.ajaxSetup.url + '?' + $.param(queryString);
-		} else if (queryString) {
-			params.url = this.ajaxSetup.url + '?' + queryString;
+			queryString = $.param(queryString);
 		}
-		//
-		if (params.loadingMessage) {
+		params.url = this.ajaxSetup.url + '?' + queryString;
+
+		// Set message for loading notification
+		if (params.loading) {
 			params.beforeSend = function () {
-				Juxta.loading(params.loadingMessage);
+				Juxta.loading(params.loading);
 			}
 		}
-		//
-		$.ajax(params);
+
+		// Response callback and cache options
+		if ($.isFunction(params.success) && params.context) {
+			var cache = {},
+				response = params.success;
+			if (params.cache !== undefined && params.cache !== false) {
+				cache = {key: queryString, time: params.cache};
+			}
+			//
+			params.success = function(data) {
+				Juxta.response(data, $.proxy(response, params.context), cache);
+			}
+		}
+
+		// Response from cache or make request
+		var fromCache = this.cache.get(queryString);
+		if (fromCache) {
+			params.success(fromCache);
+			return;
+		} else {
+			$.ajax(params);
+		}
 	},
-	response: function(response, bind) {
+	response: function(response, responseCallback, cache) {
 		switch (response.status) {
 			case 'ok':
-				$.isFunction(bind) && bind(response);
+				cache.key && Juxta.cache.set(cache.key, response, cache.time);
+				$.isFunction(responseCallback) && responseCallback(response);
 				break;
 			case 'session-not-found':
 				document.location.hash = '#login';
@@ -125,7 +149,7 @@ Juxta.prototype = {
 				case 'processlist':
 					Juxta.sidebar.highlight('processlist');
 					Juxta.explorer.show({header: 'Processlist', menu: {'Refresh': {href: '#processlist', click: 'return false;'}}});
-					Juxta.explore({show: 'processlist'});
+					Juxta.explore({show: 'processlist', cache: false});
 					break;
 				case 'users':
 					Juxta.sidebar.highlight('users');
@@ -146,12 +170,12 @@ Juxta.prototype = {
 				case 'charsets':
 					Juxta.sidebar.highlight('status');
 					Juxta.serverInfo.show({header: 'Charsets', menu: {'Server status': '#status', 'System variables': '#variables', 'Charsets': null, 'Engines': '#engines'}});
-					Juxta.info({show: 'charsets'});
+					Juxta.info({show: 'charsets', cache: Infinity});
 					break;
 				case 'engines':
 					Juxta.sidebar.highlight('status');
 					Juxta.serverInfo.show({header: 'Engines', menu: {'Server status': '#status', 'System variables': '#variables', 'Charsets': '#charsets', 'Engines': null}});
-					Juxta.info({show: 'engines'});
+					Juxta.info({show: 'engines', cache: Infinity});
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
@@ -231,11 +255,29 @@ Juxta.prototype = {
 	hide: function(){
 		$('#header h1, #header ul, #sidebar, #applications').hide();
 	},
-	explore: function(params){
-		this.explorer.request(params);
+	explore: function(params) {
+		// Move options values from query to options variable
+		var query = $.extend({}, params), options = {};
+		$.each(['cache'], function(index, value) {
+			delete query[value];
+			if (params[value] !== undefined) {
+				options[value] = params[value];
+			}
+		});
+		//
+		this.explorer.request(query, options);
 	},
-	info: function(params){
-		this.serverInfo.request(params);
+	info: function(params) {
+		// Move options values from query to options variable
+		var query = $.extend({}, params), options = {};
+		$.each(['cache'], function(index, value) {
+			delete query[value];
+			if (params[value] !== undefined) {
+				options[value] = params[value];
+			}
+		});
+		//
+		this.serverInfo.request(query, options);
 	},
 	browse: function(params){
 		this.browser.show();
@@ -267,6 +309,51 @@ Juxta.prototype = {
 		this.notification.show(message, options);
 	}
 };
+
+Juxta.Cache = $.Class();
+Juxta.Cache.prototype = {
+	cache: {},
+	defaultLifeTime: 10000,
+
+	get: function(key) {
+		var timestamp = (new Date()).getTime();
+
+		if (this.cache[key] && this.cache[key]['expire'] >= timestamp) {
+			return this.cache[key]['data'];
+		} else if (this.cache[key]) {
+			this.flush(key);
+			return undefined;
+		} else {
+			return undefined;
+		}
+	},
+	set: function(key, data, lifeTime) {
+		var expire,
+			timestamp = (new Date()).getTime();
+		//
+		if (lifeTime === 0 || lifeTime === Infinity) {
+			expire = Infinity;
+		} else if (lifeTime === true || lifeTime === undefined) {
+			expire = timestamp + this.defaultLifeTime;
+		} else if (Number(lifeTime) > 0) {
+			expire = timestamp + lifeTime * 1000;
+		}
+		//
+		if (expire) {
+			this.cache[key] = {data: data, expire: expire};
+			return true;
+		} else {
+			return false;
+		}
+	},
+	flush: function(key) {
+		if (key) {
+			delete this.cache[key];
+		} else {
+			this.cache = {};
+		}
+	}
+}
 
 Juxta.Notification = $.Class();
 Juxta.Notification.prototype = {
@@ -516,6 +603,9 @@ Juxta.Application = $.Class({
 });
 
 Juxta.Explorer = $.Class(Juxta.Application, {
+	settings: {
+		cache: 60
+	},
 	init: function(element){
 		this._super(element);
 		this.grid = new Juxta.Grid('#explorer .grid');
@@ -535,11 +625,14 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			_this.grid.height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(action, data) {
-		if (this.prepare(action.show)) {
-			Juxta.request({action: action, data: data, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
-		} else {
-			Juxta.error('Request error');
+	request: function(query, options) {
+		if (this.prepare(query.show)) {
+			Juxta.request({
+				action: query,
+				context: this,
+				success: this.response,
+				cache: (options.cache != undefined ? options.cache : this.settings.cache)
+			});
 		}
 	},
 	response: function(data) {
@@ -905,6 +998,9 @@ Juxta.Grid.prototype = {
 };
 
 Juxta.ServerInformation = $.Class(Juxta.Application, {
+	settings: {
+		cache: 60
+	},
 	init: function(element){
 		this._super(element, {header: 'Server status', menu: {'Server status': null, 'System variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}})
 		this.grid = new Juxta.Grid(this.$application.find('.grid'));
@@ -942,11 +1038,14 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		this._show(options);
 		this.stretch();
 	},
-	request: function(action, data) {
-		if (this.prepare(action.show)) {
-			Juxta.request({action: action, data: data, context: this, success: function (xhr) { Juxta.response(xhr, $.proxy(this.response, this)); } });
-		} else {
-			Juxta.error('Request error');
+	request: function(query, options) {
+		if (this.prepare(query.show)) {
+			Juxta.request({
+				action: query,
+				context: this,
+				success: this.response,
+				cache: (options.cache != undefined ? options.cache : this.settings.cache)
+			});
 		}
 	},
 	response: function(response) {
@@ -1186,13 +1285,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 	},
 	show: function() {
 		if (!this.storedConnections) {
-			Juxta.request({
-				action: 'get=stored_connections',
-				context: this,
-				success: function(xhr) {
-					Juxta.response(xhr, $.proxy(this.getConnectionsResponse, this));
-				}
-			});
+			Juxta.request({action: {get: 'connections'}, context: this, success: this.getConnectionsResponse});
 		}
 		//
 		Juxta.hide();
@@ -1215,18 +1308,9 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		Juxta.request({
 			action: 'login',
 			data: this.$form.serialize(),
-			context: this,
-			loadingMessage: 'Connecting to ' + $('input[name=host]', this.$form).val(),
-			success: function(xhr) {
-				Juxta.response(xhr, $.proxy(this.loginResponse, this));
-			}
-		});
-	},
-	logout: function() {
-		Juxta.request({action: 'logout', context: this,
-			success: function() {
-				document.location.hash = '#login';
-			}
+			loading: 'Connecting to ' + $('input[name=host]', this.$form).val(),
+			success: this.loginResponse,
+			context: this
 		});
 	},
 	loginResponse: function(response) {
@@ -1239,6 +1323,9 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			this.$submit.attr('disabled', false);
 			this.$password.focus();
 		}
+	},
+	logout: function() {
+		Juxta.request({action: 'logout', success: function() { document.location.hash = '#login'; }});
 	},
 	getConnectionsResponse: function(response) {
 		if (!$.isEmptyObject(response.data)) {
