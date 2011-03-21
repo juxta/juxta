@@ -635,7 +635,7 @@ span.overflowed{
 .grid .head .table-size,
 .grid .body .table-size{
 	width: 55px;
-	text-align: left;
+	text-align: right;
 	}
 .grid .head .table-update-date
 .grid .body .table-update-date{

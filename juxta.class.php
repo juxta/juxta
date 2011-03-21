@@ -10,22 +10,6 @@
  * @version 0.0.1 
  * 
  */
- 
-function size($value) {
-	if ($value < 1024) {
-		return $value;
-	}
-	$value = round($value / 1024, 0);
-	if ($value < 1024) {
-		return $value . ' K';
-	}
-	$value = round($value / 1024, 0);
-	if ($value < 1024) {
-		return $value . ' M';
-	} else {
-		return $value . ' G';
-	}
-}
 
 /*
  * Juxta backend class
