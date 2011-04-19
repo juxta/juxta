@@ -100,7 +100,10 @@ Juxta.prototype = {
 		}
 
 		// Response from cache or make request
-		var fromCache = this.cache.get(queryString);
+		var fromCache = null;
+		if (params.refresh !== true) {
+			fromCache = this.cache.get(queryString);
+		}
 		if (fromCache) {
 			params.success(fromCache);
 			return;
@@ -232,6 +235,8 @@ Juxta.prototype = {
 					Juxta.sidebar.highlight('maintenance');
 					Juxta.dummy.show({header: {title: 'Maintenance table', name: params[1]}});
 					break;
+				case 'flush':
+					Juxta.cache.flush();
 				default:
 					document.location = '#databases';
 			}
@@ -252,7 +257,7 @@ Juxta.prototype = {
 	explore: function(params) {
 		// Move options values from query to options variable
 		var query = $.extend({}, params), options = {};
-		$.each(['cache'], function(index, value) {
+		$.each(['cache', 'refresh'], function(index, value) {
 			delete query[value];
 			if (params[value] !== undefined) {
 				options[value] = params[value];
@@ -264,7 +269,7 @@ Juxta.prototype = {
 	info: function(params) {
 		// Move options values from query to options variable
 		var query = $.extend({}, params), options = {};
-		$.each(['cache'], function(index, value) {
+		$.each(['cache', 'refresh'], function(index, value) {
 			delete query[value];
 			if (params[value] !== undefined) {
 				options[value] = params[value];

@@ -40,12 +40,11 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	},
 	request: function(query, options) {
 		if (this.prepare(query.show)) {
-			Juxta.request({
-				action: query,
-				context: this,
-				success: this.response,
-				cache: (options.cache != undefined ? options.cache : this.settings.cache)
-			});
+			Juxta.request($.extend({},
+				{action: query, action: query, context: this, success: this.response},
+				this.settings,
+				options
+			));
 		}
 	},
 	response: function(response) {
