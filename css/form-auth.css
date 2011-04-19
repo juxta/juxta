@@ -1,0 +1,28 @@
+/**
+ * Connect to MySQL Server form styles
+ *
+ */
+
+form[name=login] label {
+	width: 105px;
+	}
+form[name=login] .connections {
+	margin-bottom: 11px;
+	}
+form[name=login] select[name=connection] {
+	width: 255px;
+	}
+form[name=login] input[name=host],
+form[name=login] input[name=user],
+form[name=login] input[name=password] {
+	width: 125px;
+	}
+form[name=login] .port {
+	clear: none;
+	}
+form[name=login] .port label {
+	width: 38px;
+	}
+form[name=login] input[name=port] {
+	width: 34px;
+	}

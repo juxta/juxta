@@ -1,3 +1,6 @@
+@import url('form-auth.css');
+@import url('form-create-database.css');
+
 * { 
 	outline: 0;
 	}
@@ -182,7 +185,7 @@ span.overflowed{
 	height: 48px;
 	margin: 0;
 	padding: 1px 0 1px 48px;
-	background: transparent url('images/icon-48.png') left center no-repeat;
+	background: transparent url('../images/icon-48.png') left center no-repeat;
 	cursor: pointer;
 	}
 #sidebar h2 .level {
@@ -431,11 +434,11 @@ span.overflowed{
 	width: 9px;
 	padding: 0 0 0 7px;
 	border-right-width: 0;
-	background: transparent url('images/arrow-expand.png') center no-repeat;
+	background: transparent url('../images/arrow-expand.png') center no-repeat;
 	cursor: pointer;
 	}
 .grid .body td.collapse{
-	background-image: url('images/arrow-collapse.png');
+	background-image: url('../images/arrow-collapse.png');
 	}
 .grid .body tr.content > td{
 	padding: 0;
@@ -503,7 +506,7 @@ span.overflowed{
 	}
 	
 .context li.drop{
-	background: transparent url('images/trash.gif') left center no-repeat;
+	background: transparent url('../images/trash.gif') left center no-repeat;
 	}
 
 
@@ -867,41 +870,6 @@ form .helper {
 
 
 /*
- * Main forms
- */
-
-form[name=login] label {
-	width: 105px;
-	}
-form[name=login] .connections {
-	margin-bottom: 11px;
-	}
-form[name=login] select[name=connection] {
-	width: 255px;
-	}
-form[name=login] input[name=host],
-form[name=login] input[name=user],
-form[name=login] input[name=password] {
-	width: 125px;
-	}
-form[name=login] .port {
-	clear: none;
-	}
-form[name=login] .port label {
-	width: 38px;
-	}
-form[name=login] input[name=port] {
-	width: 34px;
-	}
-
-/*#login form p {
-	background-color: #99F;
-	}
-#login form label {
-	background-color: #9F9;
-	}*/
-
-/*
  * Code editor
  */
 
@@ -998,7 +966,7 @@ input[type=submit]:disabled{
 input[type=button].close {
 	height: 18px;
 	width: 18px;
-	background: transparent url('./images/close.png') center no-repeat;
+	background: transparent url('../images/close.png') center no-repeat;
 	
 	box-shadow: none;
 	-moz-box-shadow: none;
