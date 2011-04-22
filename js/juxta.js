@@ -86,17 +86,26 @@ Juxta.prototype = {
 			}
 		}
 
-		// Response callback and cache options
-		if ($.isFunction(params.success) && params.context) {
-			var cache = {},
-				response = params.success;
-			if (params.cache !== undefined && params.cache !== false) {
-				cache = {key: queryString, time: params.cache};
-			}
-			//
-			params.success = function(data) {
-				Juxta.response(data, $.proxy(response, params.context), cache);
-			}
+		// Cache options
+		var cache = {};
+		if (params.cache !== undefined && params.cache !== false) {
+			cache = {key: queryString, time: params.cache};
+		}
+
+		// Collect response callbacks
+		var callbacks = {};
+		if ($.isFunction(params.success)) {
+			callbacks.ok = params.context ? $.proxy(params.success, params.context) : params.success;
+			delete(params.success);
+		}
+		if ($.isFunction(params.error)) {
+			callbacks.error = params.error ? $.proxy(params.error, params.context) : params.error;
+			delete(params.error);
+		}
+
+		// Response
+		params.success = function (data) {
+			Juxta.response(data, callbacks, cache);
 		}
 
 		// Response from cache or make request
@@ -111,16 +120,23 @@ Juxta.prototype = {
 			$.ajax(params);
 		}
 	},
-	response: function(response, responseCallback, cache) {
+	response: function(response, callbacks, cache) {
 		switch (response.status) {
 			case 'ok':
-				cache.key && Juxta.cache.set(cache.key, response, cache.time);
-				$.isFunction(responseCallback) && responseCallback(response);
+				if (cache.key) {
+					Juxta.cache.set(cache.key, response, cache.time);
+				}
+				if ($.isFunction(callbacks.ok)) {
+					callbacks.ok(response)
+				}
 				break;
-			case 'session-not-found':
+			case 'session_not_found':
 				document.location.hash = '#login';
 				break;
 			case 'error':
+				if ($.isFunction(callbacks.error)) {
+					callbacks.error()
+				}
 				Juxta.error(response.error);
 				break;
 			case 'connect_error':
@@ -297,14 +313,16 @@ Juxta.prototype = {
 			}
 		}
 	},
+	/**
+	 * Notifications shortcuts
+	 */
 	notify: function(message, options) {
-		this.notification.show(message, options);
+		return this.notification.show(message, options);
 	},
 	loading: function(message, options) {
-		this.notification.loading(message, options);
+		return this.notification.loading(message, options);
 	},
 	error: function(message, options) {
-		options = $.extend({}, {type: 'error', hide: false, fast: true}, options);
-		this.notification.show(message, options);
+		return this.notification.show(message, $.extend({}, {type: 'error', hide: false, fast: true}, options));
 	}
 };

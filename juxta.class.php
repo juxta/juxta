@@ -117,10 +117,11 @@ class Juxta {
 				case 'connections':
 					$response = $this->storedConnections();
 					break;
+				case 'collations':
+					$response = $this->collations();
+					break;
 			}
-		}
-		//
-		if (isset($_GET['login'])) {
+		} elseif (isset($_GET['login'])) {
 			try {
 				$_POST['port'] = $_POST['port'] ? $_POST['port'] : 3306;
 				$this->connect(array(
@@ -146,6 +147,8 @@ class Juxta {
 		} elseif (isset($_GET['logout'])) {
 			session_destroy();
 			$response = array('status' => 'ok', 'logout' => 'done');
+		} elseif (isset($_GET['create']) && $_GET['create'] == 'database') {
+			$response = $this->createDatabase($_POST['name'], $_GET['collation']);
 		}
 		//
 		if (isset($response)) {
@@ -181,6 +184,11 @@ class Juxta {
 		return array('contents' => 'databases', 'data' => $databases);
 	}
 
+	private function createDatabase($name, $collation = null) {
+		$this->query("CREATE DATABASE `{$name}`");
+		return array('database' => 'created', 'name' => $name);
+	}
+
 	private function processlist() {
 		$processlist = $this->query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
 		return array('contents' => 'processlist', 'data' => $processlist);
@@ -203,6 +211,20 @@ class Juxta {
 	private function charsets() {
 		$charsets = $this->query("SHOW CHARSET", array('Charset', 'Description', 'Default collation', 'Maxlen'));
 		return array('contents' => 'charsets', 'data' => $charsets);
+	}
+
+	private function collations() {
+		$collations = $this->query("SHOW COLLATION", array('Charset', 'Collation'));
+		$response = array();
+		if (is_array($collations)) {
+			foreach ($collations as $collation) {
+				if (!array_key_exists($collation[0], $response)) {
+					$response[$collation[0]] = array();
+				}
+				$response[$collation[0]][] = $collation[1];
+			}
+		}
+		return array('contents' => 'collations', 'data' => $response);
 	}
 
 	private function engines() {
@@ -271,7 +293,7 @@ class JuxtaQueryException extends JuxtaException {
 }
 
 class JuxtaSessionException extends JuxtaException {
-	protected $status = 'session-not-found';
+	protected $status = 'session_not_found';
 }
 
 

@@ -35,8 +35,14 @@ Juxta.Notification.prototype = {
 		return notify;
 	},
 	hide: function(element, options) {
-		element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
-		this.load = null;
+		if (arguments.length == 2) {
+			element.delay(options.delay).slideUp(options.hideSpeed, function() { $(this).remove(); });
+			this.load = null;
+		} else {
+			this.load = null;
+			this.loads = 0;
+			this.container.empty();
+		}
 	},
 	loading: function(message, options) {
 		var self = this;

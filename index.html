@@ -5,7 +5,7 @@
 <head>
 	<title>Juxta</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<link href="juxta.css" rel="stylesheet" media="all" />
+	<link href="css/juxta.css" rel="stylesheet" media="all" />
 	<script src="jquery/jquery-1.5.1.min.js"></script>
 	<script src="jquery/jquery-aop-1.3.min.js"></script>
 	<script src="jquery/jquery-ui-1.8.2.custom.min.js"></script>
@@ -19,6 +19,7 @@
 	<script src="js/juxta.floatbox.js"></script>
 	<script src="js/juxta.sqleditor.js"></script>
 	<script src="js/juxta.dialogs.js"></script>
+	<script src="js/juxta.create-database.js"></script>
 	<script src="js/juxta.application.js"></script>
 	<script src="js/juxta.backuprestore.js"></script>
 	<script src="js/juxta.browser.js"></script>
@@ -648,49 +649,19 @@
 
 	<div id="create-database" class="float-box">
 		<h3>Create Database</h3>
-		<input type="button" class="close" onclick="$('#create-database').hide();"/>
 		<form name="create-database">
-			<p><label class="database-name" for="database-name" style="width: 92px; ">Database name</label><input type="text" name="new-database-name" id="database-name" style="width: 175px;" value=""/></p>
 			<p>
-				<label style="width: 92px; ">Collation</label>
-				<select style="width: 175px; ">
-					<option>Default</option>
-					<optgroup title="cp1252 West European" label="latin1">
-						<option style="color: #000;">latin1_german1_ci</option>
-						<option>latin1_swedish_ci</option>
-						<option>latin1_danish_ci</option>
-						<option>latin1_german2_ci</option>
-						<option>latin1_bin</option>
-						<option>latin1_general_ci</option>
-						<option>latin1_general_cs</option>
-					</optgroup>
-					<optgroup title="ISO 8859-2 Central European" label="latin2">
-						<option>latin2_czech_cs</option>
-						<option>latin2_general_ci</option>
-						<option>latin2_hungarian_ci</option>
-						<option>latin2_croatian_ci</option>
-						<option>latin2_bin</option>
-					</optgroup>
-					<optgroup title="US ASCII" label="ascii">
-						<option>ascii_general_ci</option>
-						<option>ascii_bin</option>
-					</optgroup>
-					<optgroup title="Windows Cyrillic" label="cp1251">
-						<option>cp1251_bulgarian_ci</option>
-						<option>cp1251_ukrainian_ci</option>
-						<option>cp1251_bin</option>
-						<option>cp1251_general_ci</option>
-					</optgroup>
-					<optgroup title="UTF-8 Unicode" label="utf8">
-						<option>utf8_general_ci</option>
-						<option>utf8_bin</option>
-						<option>utf8_unicode_ci</option>
-						<option>utf8_icelandic_ci</option>
-					</optgroup>
-				</select>
+				<label for="create-database-name" class="database-name">Database name</label>
+				<input type="text" name="name" id="create-database-name" value=""/>
 			</p>
+			<!--<p>
+				<label for="create-database-collations">Collation</label>
+				<select id="create-database-collations" name="collation">
+					<option>Default</option>
+				</select>
+			</p>-->
 			<br class="clear"/>
-			<div class="buttons"><input type="button" value="Create"/></div>
+			<div class="buttons"><input type="submit" name="create" value="Create"/></div>
 		</form>
 	</div>
 
