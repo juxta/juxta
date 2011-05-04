@@ -6,6 +6,9 @@ Juxta.Grid.prototype = {
 		cardinality: 0,
 		selected: 0
 	},
+	cache: {},
+	content: null,
+	from: null,
 	init: function(grid) {
 		this.container = $(grid);
 		this.$bodyContainer = this.container.find('.body');
@@ -210,6 +213,10 @@ Juxta.Grid.prototype = {
 		var self = this;
 
 		this.empty();
+		this.content = data.contents;
+		if (data.from) {
+			this.from = data.from;
+		}
 		if (data && data.data && (data.data.length > 0 || $.isPlainObject(data.data))) {
 			this.statistics.cardinality = data.data.length;
 
@@ -218,24 +225,32 @@ Juxta.Grid.prototype = {
 				if ($.isPlainObject(data.data)) {
 					value = [i, value];
 				}
-				var forTemplate = {};
+				var forTemplate = {},
+					cacheName;
 				jQuery.each(data.context, function(j, valueName) {
+					var name;
 					if (data.context.length == 1) {
 						if ($.isArray(valueName)) {
-							forTemplate[valueName[0]] = value;
+							name = valueName[0];
 						} else{
-							forTemplate[valueName] = value;
+							name = valueName;
 						}
+						forTemplate[name] = value;
 					} else{
 						if ($.isArray(valueName)) {
-							forTemplate[valueName[0]] = value[j];
+							name = valueName[0];
 						} else{
-							forTemplate[valueName] = value[j];
+							name = valueName;
 						}
+						forTemplate[name] = value[j];
+					}
+					if (!cacheName) {
+						cacheName = name;
 					}
 				});
 				$.extend(forTemplate, {database: data['from']});
-				self.body.append($.template(template, forTemplate));
+				var $q = $($.template(template, forTemplate)).appendTo(self.body);
+				self.cache[forTemplate[cacheName]] = $q;
 			});
 			this.body.trigger('change');
 
@@ -250,6 +265,9 @@ Juxta.Grid.prototype = {
 	empty: function() {
 		this.body.empty();
 		this.$notFound.hide();
+		this.cache = {};
+		this.content = null;
+		this.from = null;
 	},
 	select: function(all) {
 		if (all) {
@@ -262,6 +280,23 @@ Juxta.Grid.prototype = {
 		this.body.trigger('change')
 	},
 	selected: function() {
-		return this.body.find('input[type=checkbox]:checked').map(function() { return $(this).attr('name') });
+		var selected = this.body.find('input[type=checkbox]:checked').map(function() { return $(this).attr('name') }).toArray();
+		if ($.isEmptyObject(selected)) {
+			selected = null;
+		}
+		return selected;
+	},
+	remove: function(names) {
+		var grid = this;
+
+		if (!$.isArray(names)) {
+			names = [names];
+		}
+
+		$.each(names, function(i, name) {
+			if (grid.cache[name]) {
+				grid.cache[name].remove();
+			}
+		});
 	}
 };

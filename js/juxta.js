@@ -69,14 +69,18 @@ Juxta.prototype = {
 			}
 		}
 	},
+	queryString: function(action) {
+		var query = action;
+		if (query && $.isPlainObject(query) && !$.isEmptyObject(query)) {
+			query = $.param(query);
+		}
+		return query;
+	},
 	/*	Common Ajax request/response interface
 	 */
 	request: function(params) {
 		// URL
-		var queryString = params.action;
-		if (queryString && $.isPlainObject(queryString) && !$.isEmptyObject(queryString)) {
-			queryString = $.param(queryString);
-		}
+		var queryString = Juxta.queryString(params.action);
 		params.url = this.ajaxSetup.url + '?' + queryString;
 
 		// Set message for loading notification
@@ -135,7 +139,7 @@ Juxta.prototype = {
 				break;
 			case 'error':
 				if ($.isFunction(callbacks.error)) {
-					callbacks.error()
+					callbacks.error(response)
 				}
 				Juxta.error(response.error);
 				break;
@@ -281,6 +285,12 @@ Juxta.prototype = {
 		});
 		//
 		this.explorer.request(query, options);
+	},
+	drop: function(params) {
+		this.explorer.drop(params);
+	},
+	confirm: function(message) {
+		return confirm(message);
 	},
 	info: function(params) {
 		// Move options values from query to options variable

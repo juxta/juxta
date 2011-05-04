@@ -2,6 +2,8 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	settings: {
 		cache: 60
 	},
+	cache: null,
+	preparedFor: null,
 	init: function(element) {
 		this._super(element);
 		this.grid = new Juxta.Grid('#explorer .grid');
@@ -10,6 +12,20 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		
 		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
 		this.createUser = new Juxta.CreateUser($('#create-user'));
+
+		var explorer = this;
+		this.grid.actions.find('input[value=Drop]').click(function() {
+			var params = {
+					drop: explorer.grid.content,
+					item: explorer.grid.statistics.item,
+					items: explorer.grid.statistics.items
+				};
+			params[params.drop] = explorer.grid.selected();
+			if (explorer.grid.from) {
+				params['from'] = explorer.grid.from;
+			}
+			explorer.drop(params);
+		});
 	},
 	show: function(options) {
 		this._show(options);
@@ -22,9 +38,10 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		}
 	},
 	request: function(query, options) {
+		this.cache = Juxta.queryString(query);
 		if (this.prepare(query.show)) {
 			Juxta.request($.extend({},
-				{action: query, action: query, context: this, success: this.response},
+				{action: query, context: this, success: this.response},
 				this.settings,
 				options
 			));
@@ -45,6 +62,43 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			return false;
 		}
 	},
+	drop: function(params) {
+		var message = 'Drop ';
+		if (params.drop && params[params.drop].length == 1) {
+			message += params.item;
+			message += ' `' + params[params.drop][0] + '`';
+		} else {
+			message += params[params.drop].length;
+			message += ' ' + params.items;
+		}
+		if (Juxta.confirm(message + '?')) {
+			this.dropRequest(params);
+		}
+	},
+	dropRequest: function(params) {
+		var action = {drop: params.drop},
+			data = {};
+		//
+		if (params.from) {
+			action['from'] = params.from
+		}
+		data[params.drop] = params[params.drop];
+
+		Juxta.request({
+			action: action,
+			data: data,
+			success: this.responseDrop,
+			error: this.responseDrop,
+			context: this
+		});
+	},
+	responseDrop: function(response) {
+		this.grid.select(false);
+		if (response.dropped) {
+			this.grid.remove(response.dropped);
+		}
+		Juxta.cache.flush(this.cache);
+	},
 	templates: {
 		databases: {
 			'head': {
@@ -52,7 +106,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			},
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
 			'context': [['database', 'databases']],
-			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value + \'/tables\'">Tables</li><li class="drop">Drop</li><li>Properties</li>'
+			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value + \'/tables\'">Tables</li><li class="drop" onclick="Juxta.drop({drop: \'databases\', item: \'database\', databases: [Juxta.explorer.grid.contextMenu.value]});">Drop</li><li>Properties</li>'
 		},
 		processlist: {
 			'head': {

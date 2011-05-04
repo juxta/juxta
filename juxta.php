@@ -30,7 +30,18 @@ require 'juxta.class.php';
 try {
 	new Juxta($config);
 } catch (JuxtaException $e) {
-	print json_encode(array('status' => $e->getStatus(), 'error' => $e->getMessage(), 'errorno' => $e->getCode()));
+	$response = array(
+		'status' => $e->getStatus(),
+		'error' => $e->getMessage(),
+		'errorno' => $e->getCode()
+	);
+
+	$toResponse = $e->toResponse(); 
+	if (!empty($toResponse)) {
+		$response = array_merge($response, $e->toResponse());
+	}
+
+	echo json_encode($response);
 }
 
 ?>

@@ -148,7 +148,23 @@ class Juxta {
 			session_destroy();
 			$response = array('status' => 'ok', 'logout' => 'done');
 		} elseif (isset($_GET['create']) && $_GET['create'] == 'database') {
-			$response = $this->createDatabase($_POST['name'], $_GET['collation']);
+			switch ($_GET['create']) {
+				case 'database':
+				$response = $this->createDatabase($_POST['name']);
+			}
+		} elseif (isset($_GET['drop'])) {
+			switch ($_GET['drop']) {
+				case 'database':
+				case 'databases':
+					if (!empty($_POST['database'])) {
+						$_POST['databases'] = $_POST['database'];
+					}
+					if (!is_array($_POST['databases'])) {
+						$_POST['databases'] = array($_POST['databases']);
+					}
+					$response = $this->dropDatabases($_POST['databases']);
+					break;
+			}
 		}
 		//
 		if (isset($response)) {
@@ -187,6 +203,21 @@ class Juxta {
 	private function createDatabase($name, $collation = null) {
 		$this->query("CREATE DATABASE `{$name}`");
 		return array('database' => 'created', 'name' => $name);
+	}
+
+	private function dropDatabases(array $databases) {
+		$dropped = array();
+		foreach ($databases as $database) {
+			try {
+				$this->query("DROP DATABASE `{$database}`");
+				$dropped[] = $database;
+			} catch (JuxtaQueryException $e) {
+				$e->addtoResponse(array('dropped' => $dropped));
+				throw $e;
+			}
+		}
+
+		return array('databases' => $databases, 'dropped' => $dropped);
 	}
 
 	private function processlist() {
@@ -277,23 +308,35 @@ class Juxta {
  */
 
 class JuxtaException extends Exception {
-	protected $status = 'error';
+
+	protected $_status = 'error';
+
+	private $_toResponse = array();
 
 	public function getStatus() {
-		return $this->status;
+		return $this->_status;
 	}
+
+	public function addToResponse(array $toResponse = array()) {
+		$this->_toResponse = array_merge($this->_toResponse, $toResponse);
+	}
+
+	public function toResponse() {
+		return $this->_toResponse;
+	}
+
 }
 
 class JuxtaConnectionException extends JuxtaException {
-	protected $status = 'connect_error';
+	protected $_status = 'connect_error';
 }
 
 class JuxtaQueryException extends JuxtaException {
-	protected $status = 'error';
+	protected $_status = 'error';
 }
 
 class JuxtaSessionException extends JuxtaException {
-	protected $status = 'session_not_found';
+	protected $_status = 'session_not_found';
 }
 
 
