@@ -159,20 +159,14 @@ class Juxta {
 					if (!empty($_POST['database'])) {
 						$_POST['databases'] = $_POST['database'];
 					}
-					if (!is_array($_POST['databases'])) {
-						$_POST['databases'] = array($_POST['databases']);
-					}
-					$response = $this->dropDatabases($_POST['databases']);
+					$response = $this->dropDatabases((array)$_POST['databases']);
 					break;
 				case 'table':
 				case 'tables':
 					if (!empty($_POST['table'])) {
 						$_POST['tables'] = $_POST['table'];
 					}
-					if (!is_array($_POST['tables'])) {
-						$_POST['tables'] = array($_POST['tables']);
-					}
-					$response = $this->dropTables($_POST['tables'], $_GET['from']);
+					$response = $this->dropTables((array)$_POST['tables'], $_GET['from']);
 			}
 		}
 		//
@@ -295,7 +289,7 @@ class Juxta {
 		return array('contents' => 'tables', 'from' => $database, 'data' => $tables);
 	}
 
-	private function dropTables($tables, $from) {
+	private function dropTables(array $tables, $from) {
 		$dropped = array();
 		foreach ($tables as $table) {
 			try {
