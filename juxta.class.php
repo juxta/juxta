@@ -164,6 +164,15 @@ class Juxta {
 					}
 					$response = $this->dropDatabases($_POST['databases']);
 					break;
+				case 'table':
+				case 'tables':
+					if (!empty($_POST['table'])) {
+						$_POST['tables'] = $_POST['table'];
+					}
+					if (!is_array($_POST['tables'])) {
+						$_POST['tables'] = array($_POST['tables']);
+					}
+					$response = $this->dropTables($_POST['tables'], $_GET['from']);
 			}
 		}
 		//
@@ -285,17 +294,32 @@ class Juxta {
 		$tables = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'", array('TABLE_NAME', 'ENGINE', 'TABLE_ROWS', 'DATA_LENGTH', 'UPDATE_TIME'));
 		return array('contents' => 'tables', 'from' => $database, 'data' => $tables);
 	}
-	
+
+	private function dropTables($tables, $from) {
+		$dropped = array();
+		foreach ($tables as $table) {
+			try {
+				$this->query("DROP TABLE `{$from}`.`{$table}`;");
+				$dropped[] = $table;
+			} catch (JuxtaQueryException $e) {
+				$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+				throw $e;
+			}
+		}
+
+		return array('dropped' => $dropped);
+	}
+
 	private function views($database = '') {
 		$views = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'", array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
 		return array('contents' => 'views', 'from' => $database, 'data' => $views);
 	}
-	
+
 	private function routines($database = '') {
 		$routines = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}'", array('ROUTINE_NAME', 'DEFINER', 'DTD_IDENTIFIER'));
 		return array('contents' => 'routines', 'from' => $database, 'data' => $routines);
 	}
-	
+
 	private function triggers($database = '') {
 		$triggers = $this->query("SHOW TRIGGERS FROM `{$database}`", array('trigger', 'table', 'event', 'timing', 'created'));
 		return array('contents' => 'triggers', 'from' => $database, 'data' => $triggers);

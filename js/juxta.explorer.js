@@ -72,10 +72,10 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			message += ' ' + params.items;
 		}
 		if (Juxta.confirm(message + '?')) {
-			this.dropRequest(params);
+			this.requestDrop(params);
 		}
 	},
-	dropRequest: function(params) {
+	requestDrop: function(params) {
 		var action = {drop: params.drop},
 			data = {};
 		//
