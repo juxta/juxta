@@ -167,6 +167,14 @@ class Juxta {
 						$_POST['tables'] = $_POST['table'];
 					}
 					$response = $this->dropTables((array)$_POST['tables'], $_GET['from']);
+					break;
+				case 'view':
+				case 'views':
+					if (!empty($_POST['view'])) {
+						$_POST['views'] = $_POST['view'];
+					}
+					$response = $this->dropViews((array)$_POST['views'], $_GET['from']);
+					break;
 			}
 		}
 		//
@@ -307,6 +315,21 @@ class Juxta {
 	private function views($database = '') {
 		$views = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'", array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
 		return array('contents' => 'views', 'from' => $database, 'data' => $views);
+	}
+
+	private function dropViews(array $views, $from) {
+		$dropped = array();
+		foreach ($views as $view) {
+			try {
+				$this->query("DROP VIEW `{$from}`.`{$view}`;");
+				$dropped[] = $view;
+			} catch (JuxtaQueryException $e) {
+				$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+				throw $e;
+			}
+		}
+
+		return array('dropped' => $dropped);
 	}
 
 	private function routines($database = '') {

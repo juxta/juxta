@@ -64,9 +64,13 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	},
 	drop: function(params) {
 		var message = 'Drop ';
-		if (params.drop && params[params.drop].length == 1) {
+		if (params.drop && (!$.isArray(params[params.drop]) || params[params.drop].length == 1)) {
 			message += params.item;
-			message += ' `' + params[params.drop][0] + '`';
+			if ($.isArray(params[params.drop])) {
+				message += ' `' + params[params.drop][0] + '`';
+			} else {
+				message += ' `' + params[params.drop] + '`';
+			}
 		} else {
 			message += params[params.drop].length;
 			message += ' ' + params.items;
@@ -152,7 +156,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			},
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
 			'context': [['view', 'views'], 'definer', 'updatable'],
-			'contextMenu': '<li>Browse</li><li onclick="Juxta.edit({view: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
+			'contextMenu': '<li>Browse</li><li onclick="Juxta.edit({view: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop" onclick="Juxta.drop({drop: \'view\', item: \'view\', view: Juxta.explorer.grid.contextMenu.value, from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
 		},
 		routines: {
 			'head': {
