@@ -177,7 +177,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			},
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
 			'context': [['trigger', 'triggers'], 'table', 'event', 'timing', 'definer', 'size'],
-			'contextMenu': '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop">Delete</li><li>Properties</li>'
+			'contextMenu': '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value, from: \'sampdb\'})">Edit</li><li class="drop" onclick="Juxta.drop({drop: \'trigger\', item: \'trigger\', trigger: Juxta.explorer.grid.contextMenu.value, from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
 		}
 	}
 });

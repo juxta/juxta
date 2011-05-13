@@ -175,6 +175,13 @@ class Juxta {
 					}
 					$response = $this->dropViews((array)$_POST['views'], $_GET['from']);
 					break;
+				case 'trigger':
+				case 'triggers':
+					if (!empty($_REQUEST['trigger'])) {
+						$_REQUEST['triggers'] = $_REQUEST['trigger'];
+					}
+					$response = $this->dropTriggers((array)$_REQUEST['triggers'], $_GET['from']);
+					break;
 			}
 		}
 		//
@@ -341,6 +348,22 @@ class Juxta {
 		$triggers = $this->query("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing', 'Created'));
 		return array('contents' => 'triggers', 'from' => $database, 'data' => $triggers);
 	}
+	
+	private function dropTriggers(array $triggers, $database) {
+		$dropped = array();
+		foreach ($triggers as $trigger) {
+			try {
+				$this->query("DROP TRIGGER `{$database}`.`{$trigger}`");
+				$dropped[] = $trigger;
+			} catch (JuxtaQueryException $e) {
+				$e->addtoResponse(array('dropped' => $dropped));
+				throw $e;
+			}
+		}
+
+		return array('triggers' => $triggers, 'dropped' => $dropped);
+	}
+
 }
 
 /*
