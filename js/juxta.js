@@ -1,20 +1,13 @@
 /*
  * Juxta 0.0.1 http://juxta.ru
- * 
+ *
  * Copyright (c) 2010-2011 Alexey Golovnya
  * Licensed under the MIT license
- * 
+ *
  */
 
 $(document).ready(function() {
 	Juxta = new Juxta();
-	//
-	jQuery.aop.before(
-		{target: jQuery.fn, method: "hide"},
-		function() {
-			this.trigger("hide");
-		}
-	);
 });
 
 Juxta = $.Class();
@@ -46,7 +39,7 @@ Juxta.prototype = {
 
 		$('.float-box').draggable({scroll: false, handle: 'h3'});
 		$(window).click(function(event) {
-			$('.context:visible').hide();
+			$('.context:visible').trigger('hide').hide();
 		});
 	},
 	/*	Ajax options

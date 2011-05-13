@@ -124,41 +124,7 @@ Juxta.Grid.prototype = {
 		});
 
 		if (this.$context.is('.context')) {
-			this.contextMenu = {
-				menu: this.container.find('.context'),
-				page: this.body,
-				target: null,
-				value: null,
-			};
-		}
-
-		if (self.contextMenu) {
-			this.$context.bind('hide', self.contextMenu, function(event) {
-				contextMenu = event.data;
-				contextMenu.target.find('td:nth-child(2)').find('a').removeClass('checked');
-
-				contextMenu.target = null;
-				contextMenu.value = null;
-			});
-
-			this.body.bind('contextmenu', self.contextMenu, function(event) {
-				contextMenu = event.data;
-
-				if (!contextMenu.menu.find('ul').is(':empty')) {
-					contextMenu.menu.show().offset({top: event.clientY, left: event.clientX});
-
-					contextMenu.page.find('a.checked').removeClass('checked');
-					contextMenu.page.find('[type=checkbox]:checked').removeAttr('checked');
-					contextMenu.target = $(event.target).parents('tr');
-					contextMenu.target.find('td:nth-child(2)').find('a').addClass('checked');
-
-					contextMenu.value = contextMenu.target.find('td:nth-child(2)').find('a').text();
-
-					contextMenu.page.trigger('change');
-
-					return false;
-				}
-			});
+			this.contextMenu = new Juxta.ContextMenu(this.body, this.container.find('.context'));
 		}
 
 	},

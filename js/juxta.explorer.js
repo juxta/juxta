@@ -7,9 +7,9 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	init: function(element) {
 		this._super(element);
 		this.grid = new Juxta.Grid('#explorer .grid');
-		
+
 		$(window).bind('resize', {_this: this}, this.stretch);
-		
+
 		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
 		this.createUser = new Juxta.CreateUser($('#create-user'));
 
