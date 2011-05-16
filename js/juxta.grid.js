@@ -15,7 +15,7 @@ Juxta.Grid.prototype = {
 		this.body = this.$bodyContainer.find('table');
 		this.$notFound = this.$bodyContainer.find('.not-found')
 		this.head = this.container.find('.head');
-		this.actions = this.container.find('.actions');
+		this.$actions = this.container.find('.actions');
 		this.$context = this.container.find('.context');
 
 		var self = this;
@@ -72,20 +72,20 @@ Juxta.Grid.prototype = {
 			Juxta.explorer.status(status);
 
 			if (self.statistics.cardinality > 0 && self.statistics.cardinality == self.statistics.selected) {
-				self.actions.find('.all').addClass('active');
-				self.actions.find('.nothing').removeClass('active');
+				self.$actions.find('.all').addClass('active');
+				self.$actions.find('.nothing').removeClass('active');
 			} else if(self.statistics.selected == 0) {
-				self.actions.find('.all').removeClass('active');
-				self.actions.find('.nothing').addClass('active');
+				self.$actions.find('.all').removeClass('active');
+				self.$actions.find('.nothing').addClass('active');
 			} else{
-				self.actions.find('.all').removeClass('active');
-				self.actions.find('.nothing').removeClass('active');
+				self.$actions.find('.all').removeClass('active');
+				self.$actions.find('.nothing').removeClass('active');
 			}
 
 			if (self.statistics.selected < 1) {
-				self.actions.find('input[type=button]').attr('disabled', true);
+				self.$actions.find('input[type=button]').attr('disabled', true);
 			} else{
-				self.actions.find('input[type=button]').attr('disabled', false);
+				self.$actions.find('input[type=button]').attr('disabled', false);
 			}
 		});
 
@@ -113,14 +113,19 @@ Juxta.Grid.prototype = {
 			return false;
 		});
 
-		this.container.find('.actions .all').live('click', function() {
-			self.select('all')
-			return false
+		// Trigger event with type equals action name
+		this.$actions.bind('click', function() {
+			var $button = $(event.target);
+			if ($button.is('span.like-a, input') && $button.attr('name')) {
+				self.$actions.trigger($button.attr('name'));
+			}
 		});
 
-		this.container.find('.actions .nothing').live('click', function() {
+		this.$actions.bind('all', function() {
+			self.select('all');
+		});
+		this.$actions.bind('nothing', function() {
 			self.select();
-			return false;
 		});
 
 		if (this.$context.is('.context')) {
@@ -137,6 +142,11 @@ Juxta.Grid.prototype = {
 	prepare: function(template) {
 		if (template) {
 			var self = this;
+
+			this.$actions.empty();
+			if (template['actions']) {
+				this.$actions.html(template['actions']);
+			}
 
 			// Empty grid header and body
 			if (template['head']) {
@@ -170,6 +180,7 @@ Juxta.Grid.prototype = {
 			//
 			this.statistics.cardinality = 0;
 			this.body.trigger('change');
+
 			return true;
 		} else {
 			return false;
