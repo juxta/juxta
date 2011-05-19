@@ -89,30 +89,6 @@ Juxta.Grid.prototype = {
 			}
 		});
 
-		this.body.find('td.expand, td.collapse').live('click', function(event) {
-			// Temporary
-			$target = $(event.target);
-			if (!$target.parents('tr').next('tr.content').get(0)) {
-				$target.parents('tr').after('<tr class="content"><td colspan="99"><table cellspacing="0"><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_1</a></td><td></td></tr><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_2</a></td><td></td></tr></table></td></tr>');
-			}
-			//
-			if ($target.hasClass('expand')) {
-				$target.removeClass('expand').addClass('collapse');
-				$target.parents('tr').next('.content').show();
-				if ($target.parents('tr').find('[type=checkbox]').is(':checked')) {
-					$target.parents('tr').next('tr.content').find('[type=checkbox]')
-						.attr('checked', true)
-						.parents('tr').find('a').addClass('checked');
-				}
-			} else{
-				$target.removeClass('collapse').addClass('expand');
-				$target.parents('tr').next('.content').hide();
-			}
-
-			$('.context:visible').hide();
-			return false;
-		});
-
 		// Trigger event with type equals action name
 		this.$actions.bind('click', function() {
 			var $button = $(event.target);
