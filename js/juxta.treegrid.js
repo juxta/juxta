@@ -25,6 +25,19 @@ Juxta.TreeGrid = $.Class(Juxta.Grid, {
 			return false;
 		});
 
+		this.body.unbind('chage', this._selectRow);
+
+		this.body.change(function(event) {
+			if ($(event.target).is('[type=checkbox]')) {
+				var $row = $(event.target).parent().parent();
+				if ($(event.target).is('[type=checkbox]:checked')) {
+					that.selectRow($row);
+				} else{
+					that.deselectRow($row);
+				}
+			}
+		});
+
 	},
 	/**
 	 * Expand row
@@ -50,5 +63,47 @@ Juxta.TreeGrid = $.Class(Juxta.Grid, {
 				.attr('checked', true)
 				.parents('tr').find('a').addClass('checked');
 		}
+	},
+	/**
+	 * Select row
+	 * 
+	 */
+	selectRow: function(row) {
+		var $row = $(row);
+
+		// Check parent row if its child selected all
+		if ($row.parents('tr.content').find('[type=checkbox]').length > 0 &&
+			$row.parents('tr.content').find('[type=checkbox]').length === $row.parents('tr.content').find('[type=checkbox]:checked').length)
+		{
+			 $row.parents('tr.content').prev('tr')
+				.find('[type=checkbox]').attr('checked', true)
+				.parents('tr').find('a').addClass('checked');
+		}
+
+		// Check child rows
+		$row.next('tr.content')
+			.find('[type=checkbox]').attr('checked', true)
+			.parents('tr').find('a').addClass('checked');
+	},
+	/**
+	 * Deselect row
+	 * 
+	 */
+	deselectRow: function(row) {
+		var $row = $(row);
+
+		// Uncheck parent row if its child slected none
+		if ($row.parents('tr.content').find('[type=checkbox]').length > 0 &&
+			$row.parents('tr.content').find('[type=checkbox]:checked').length == 0)
+		{
+			$row.parents('tr.content').prev('tr')
+				.find('[type=checkbox]').attr('checked', false)
+				.parents('tr').find('a').removeClass('checked');
+		}
+
+		// Uncheck child rows
+		$row.next('tr.content')
+			.find('[type=checkbox]').attr('checked', false)
+			.parents('tr').find('a').removeClass('checked');
 	}
 });

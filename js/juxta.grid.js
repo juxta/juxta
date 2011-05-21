@@ -1,5 +1,4 @@
-Juxta.Grid = $.Class();
-Juxta.Grid.prototype = {
+Juxta.Grid = $.Class({
 	statistics: {
 		item: 'item',
 		items: 'items',
@@ -10,50 +9,29 @@ Juxta.Grid.prototype = {
 	content: null,
 	from: null,
 	init: function(grid) {
-		this.container = $(grid);
-		this.$bodyContainer = this.container.find('.body');
+		this.$container = $(grid);
+		this.$bodyContainer = this.$container.find('.body');
 		this.body = this.$bodyContainer.find('table');
 		this.$notFound = this.$bodyContainer.find('.not-found')
-		this.head = this.container.find('.head');
-		this.$actions = this.container.find('.actions');
-		this.$context = this.container.find('.context');
+		this.head = this.$container.find('.head');
+		this.$actions = this.$container.find('.actions');
+		this.$context = this.$container.find('.context');
 
-		var self = this;
+		var self = this
+			that = this;
+
 		this.body.change(function(event) {
 			if ($(event.target).is('[type=checkbox]')) {
 				$('.context:visible').hide();
+
+				var $row = $(event.target).parent().parent();
 				if ($(event.target).is('[type=checkbox]:checked')) {
-					// Highlight link
-					$(event.target).parent().next('td').find('a').addClass('checked');
-					// Check parent row if its child  selected all
-					if ($(event.target).parents('tr.content').find('[type=checkbox]').length > 0 &&
-						$(event.target).parents('tr.content').find('[type=checkbox]').length == $(event.target).parents('tr.content').find('[type=checkbox]:checked').length)
-					{
-						$(event.target).parents('tr.content').prev('tr')
-							.find('[type=checkbox]').attr('checked', true)
-							.parents('tr').find('a').addClass('checked');
-					}
-					// Check child rows
-					$(event.target).parents('tr').next('tr.content')
-						.find('[type=checkbox]').attr('checked', true)
-						.parents('tr').find('a').addClass('checked');
+					that.select($row);
 				} else{
-					// Unhighlight link
-					$(event.target).parent().next('td').find('a').removeClass('checked');
-					// Uncheck parent row if its child slected none
-					if ($(event.target).parents('tr.content').find('[type=checkbox]').length > 0 &&
-						$(event.target).parents('tr.content').find('[type=checkbox]:checked').length == 0)
-					{
-						$(event.target).parents('tr.content').prev('tr')
-							.find('[type=checkbox]').attr('checked', false)
-							.parents('tr').find('a').removeClass('checked');
-					}
-					// Uncheck child rows
-					$(event.target).parents('tr').next('tr.content')
-						.find('[type=checkbox]').attr('checked', false)
-						.parents('tr').find('a').removeClass('checked');
+					that.deselect($row);
 				}
 			}
+
 			self.statistics.selected = self.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
 			var status = '';
 			if (self.statistics.cardinality > 0) {
@@ -98,14 +76,14 @@ Juxta.Grid.prototype = {
 		});
 
 		this.$actions.bind('all', function() {
-			self.select('all');
+			self.select();
 		});
 		this.$actions.bind('nothing', function() {
-			self.select();
+			self.deselect();
 		});
 
 		if (this.$context.is('.context')) {
-			this.contextMenu = new Juxta.ContextMenu(this.body, this.container.find('.context'));
+			this.contextMenu = new Juxta.ContextMenu(this.body, this.$container.find('.context'));
 		}
 
 	},
@@ -129,7 +107,7 @@ Juxta.Grid.prototype = {
 				this.empty();
 				this.head.empty().show();
 				this.$bodyContainer.show();
-				this.container.find('.proper').hide();
+				this.$container.find('.proper').hide();
 			} else {
 				this.empty();
 				this.head.empty().hide();
@@ -209,10 +187,10 @@ Juxta.Grid.prototype = {
 
 			// Make context menu
 			if (data.contextMenu) {
-				this.container.find('.context ul').html($.template(data.contextMenu, {database: data['from']}));
+				this.$container.find('.context ul').html($.template(data.contextMenu, {database: data['from']}));
 			}
 		} else {
-			this.$notFound.css('top', this.container.find('.body').height() / 2 - 14 + 'px').show();
+			this.$notFound.css('top', this.$container.find('.body').height() / 2 - 14 + 'px').show();
 		}
 	},
 	empty: function() {
@@ -222,15 +200,65 @@ Juxta.Grid.prototype = {
 		this.content = null;
 		this.from = null;
 	},
-	select: function(all) {
-		if (all) {
-			$('.context:visible').hide();
-			this.body.find('input[type=checkbox]').attr('checked', 'checked').parent().next('td').find('a').addClass('checked');
-		} else{
-			this.body.find('input[type=checkbox]').removeAttr('checked', '');
-			this.body.find('a.checked').removeClass('checked');
+	/**
+	 * Select rows
+	 * 
+	 */
+	select: function(row) {
+		if (row) {
+			this.selectRow(row);
+		} else {
+			this.selectAll();
 		}
-		this.body.trigger('change')
+	},
+	/**
+	 * Deselect rows
+	 * 
+	 */
+	deselect: function(row) {
+		if (row) {
+			this.deselectRow(row);
+		} else {
+			this.deselectAll();
+		}
+	},
+	/**
+	 * Select all rows
+	 * 
+	 */
+	selectAll: function() {
+		$('.context:visible').hide();
+		this.body.find('input[type=checkbox]').attr('checked', 'checked').parent().next('td').find('a').addClass('checked');
+		this.body.trigger('change');
+	},
+	/**
+	 * Deselect all rows
+	 * 
+	 */
+	deselectAll: function() {
+		this.body.find('input[type=checkbox]').removeAttr('checked', '');
+		this.body.find('a.checked').removeClass('checked');
+		this.body.trigger('change');
+	},
+	/**
+	 * Select one row
+	 * 
+	 */
+	selectRow: function(row) {
+		var $row = $(row);
+
+		// Highlight link
+		$row.find('td.check').next('td').find('a').addClass('checked');
+	},
+	/**
+	 * Deselect one row
+	 * 
+	 */
+	deselectRow: function(row) {
+		var $row = $(row);
+
+		// Unhighlight link
+		$row.find('td.check').next('td').find('a').removeClass('checked');
 	},
 	selected: function() {
 		var selected = this.body.find('input[type=checkbox]:checked').map(function() { return $(this).attr('name') }).toArray();
@@ -252,4 +280,4 @@ Juxta.Grid.prototype = {
 			}
 		});
 	}
-};
+});
