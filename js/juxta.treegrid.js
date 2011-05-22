@@ -25,14 +25,17 @@ Juxta.TreeGrid = $.Class(Juxta.Grid, {
 			return false;
 		});
 
-		this.body.unbind('chage', this._selectRow);
+		this.body
+			.bind('all', function() { that.body.find('td + td a').removeClass('partial'); })
+			.bind('nothing', function() { that.body.find('td + td a').removeClass('partial'); });
 
 		this.body.change(function(event) {
 			if ($(event.target).is('[type=checkbox]')) {
 				var $row = $(event.target).parent().parent();
 				if ($(event.target).is('[type=checkbox]:checked')) {
 					that.selectRow($row);
-				} else{
+				} else {
+					$(event.target).removeClass('partial');
 					that.deselectRow($row);
 				}
 			}
@@ -71,13 +74,21 @@ Juxta.TreeGrid = $.Class(Juxta.Grid, {
 	selectRow: function(row) {
 		var $row = $(row);
 
+		$row.find('a').removeClass('partial');
+
+		var childs = $row.parents('tr.content').find('[type=checkbox]').length,
+			childsChecked = $row.parents('tr.content').find('[type=checkbox]:checked').length;
+
 		// Check parent row if its child selected all
-		if ($row.parents('tr.content').find('[type=checkbox]').length > 0 &&
-			$row.parents('tr.content').find('[type=checkbox]').length === $row.parents('tr.content').find('[type=checkbox]:checked').length)
-		{
-			 $row.parents('tr.content').prev('tr')
-				.find('[type=checkbox]').attr('checked', true)
-				.parents('tr').find('a').addClass('checked');
+		if (childs > 0) {
+			if (childs === childsChecked) {
+				$row.parents('tr.content').prev('tr')
+					.find('[type=checkbox]').attr('checked', true)
+					.parents('tr').find('a').removeClass('partial').addClass('checked');
+			} else if (childsChecked > 0) {
+				$row.parents('tr.content').prev('tr')
+					.find('a').addClass('partial');
+			}
 		}
 
 		// Check child rows
@@ -92,13 +103,19 @@ Juxta.TreeGrid = $.Class(Juxta.Grid, {
 	deselectRow: function(row) {
 		var $row = $(row);
 
+		var childs = $row.parents('tr.content').find('[type=checkbox]').length,
+			childsChecked = $row.parents('tr.content').find('[type=checkbox]:checked').length;
+
 		// Uncheck parent row if its child slected none
-		if ($row.parents('tr.content').find('[type=checkbox]').length > 0 &&
-			$row.parents('tr.content').find('[type=checkbox]:checked').length == 0)
-		{
-			$row.parents('tr.content').prev('tr')
-				.find('[type=checkbox]').attr('checked', false)
-				.parents('tr').find('a').removeClass('checked');
+		if (childs > 0) {
+			if (childsChecked === 0) {
+				$row.parents('tr.content').prev('tr')
+					.find('a').removeClass('partial');
+			} else if (childs > childsChecked) {
+				$row.parents('tr.content').prev('tr')
+					.find('[type=checkbox]').attr('checked', false)
+					.parents('tr').find('a').removeClass('checked').addClass('partial');
+			}
 		}
 
 		// Uncheck child rows

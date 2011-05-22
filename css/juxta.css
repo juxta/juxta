@@ -449,19 +449,21 @@ span.overflowed{
 .grid .body tr:last-child td{
 	border-bottom-width: 0px;
 	}
-.grid .body td a{
+.grid .body td a {
 	float: left;
 	line-height: 19px;
 	padding: 0 3px;
 	text-decoration: none;
 	color: #000;
-	}
-.grid .body td a.checked{
-	background-color: #bfd4e6;
-	
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
+	}
+.grid .body td a.checked {
+	background-color: #BFD4E6;
+	}
+.grid .body td a.partial {
+	background-color: #D6D6D6;
 	}
 .grid .body .not-found{
 	color: #ccc;

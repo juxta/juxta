@@ -72,6 +72,7 @@ Juxta.Grid = $.Class({
 			var $button = $(event.target);
 			if ($button.is('span.like-a, input') && $button.attr('name')) {
 				self.$actions.trigger($button.attr('name'));
+				self.body.trigger($button.attr('name'));
 			}
 		});
 
