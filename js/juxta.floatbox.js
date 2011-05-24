@@ -9,6 +9,7 @@ Juxta.FloatBox = $.Class({
 
 		this.$floatBox = $(element);
 		this.$head = this.$floatBox.find('h3').is('h3') ? this.$floatBox.find('h3') : this.$floatBox.prepend('<h3>'+ this.settings.title + '</h3>').find('h3');
+		this.settings.title = this.$head.html();
 
 		this.$terminator = this.$floatBox.find('input[type=button].close').is('input')
 			? this.$floatBox.find('input[type=button].close')

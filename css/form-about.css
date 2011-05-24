@@ -1,0 +1,34 @@
+/**
+ * About
+ *
+ */
+
+.float-box.about {
+	width: 350px;
+	}
+
+.float-box.about h4,
+.float-box.about p {
+	font-size: 10.5pt;
+	margin-bottom: 14px;
+	text-align: center;
+	width: 100%;
+	color: #111;
+	}
+
+.float-box.about h4 {
+	font-size: 25.5pt;
+	font-weight: bold;
+	margin: 14px 0 7px 0;
+	}
+
+.float-box.about p.version {
+	color: #666;
+	font-size: 9pt;
+	margin-top: 0;
+	}
+
+.float-box.about p.site,
+.float-box.about p.buttons {
+	margin-top: 20px;
+	}

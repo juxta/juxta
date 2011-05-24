@@ -35,7 +35,7 @@
 		<h1>Juxta</h1>
 		<ul class="links">
 			<li class="sql"><span><a href="#sql">Run SQL</a></span></li>
-			<li><span><a href="#about">About</a></span></li>
+			<li><span><a name="about">About</a></span></li>
 			<li><span><a href="#logout">Logout</a></span></li>
 		</ul>
 	</div>
@@ -645,6 +645,16 @@
 			<br class="clear"/>
 			<div class="buttons"><input type="submit" name="connect" value="Connect" /></div>
 		</form>
+	</div>
+
+	<div id="about" class="float-box about">
+		<h3>About Juxta</h3>
+		<h4>Juxta</h4>
+		<p class="version">Version 0.0.1</p>
+		<p class="site"><a href="http://juxta.ru">http://juxta.ru</a></p>
+		<p>Copyright &copy; 2010&ndash;2011 Alexey Golovnya</p>
+		<p>Licensed under the MIT license</p>
+		<p class="buttons"><input type="button" value="Close" onclick="Juxta.about.hide();"></p>
 	</div>
 
 	<div id="create-database" class="float-box">
