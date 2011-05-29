@@ -1,4 +1,7 @@
-Juxta.Grid = $.Class({
+Juxta.Grid = function(grid) {
+	this.init(grid);
+}
+Juxta.Grid.prototype = {
 	statistics: {
 		item: 'item',
 		items: 'items',
@@ -17,8 +20,7 @@ Juxta.Grid = $.Class({
 		this.$actions = this.$container.find('.actions');
 		this.$context = this.$container.find('.context');
 
-		var self = this
-			that = this;
+		var that = this;
 
 		this.body.change(function(event) {
 			if ($(event.target).is('[type=checkbox]')) {
@@ -32,38 +34,38 @@ Juxta.Grid = $.Class({
 				}
 			}
 
-			self.statistics.selected = self.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
+			that.statistics.selected = that.body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
 			var status = '';
-			if (self.statistics.cardinality > 0) {
-				status += self.statistics.cardinality;
-				if (self.statistics.cardinality == 1) {
-					status += ' ' + self.statistics.item;
+			if (that.statistics.cardinality > 0) {
+				status += that.statistics.cardinality;
+				if (that.statistics.cardinality == 1) {
+					status += ' ' + that.statistics.item;
 				} else {
-					status += ' ' + self.statistics.items;
+					status += ' ' + that.statistics.items;
 				}
 			}
-			if (self.statistics.selected > 0) {
+			if (that.statistics.selected > 0) {
 				status += ', ';
-				status += self.statistics.selected;
+				status += that.statistics.selected;
 				status += ' selected';
 			}
 			Juxta.explorer.status(status);
 
-			if (self.statistics.cardinality > 0 && self.statistics.cardinality == self.statistics.selected) {
-				self.$actions.find('.all').addClass('active');
-				self.$actions.find('.nothing').removeClass('active');
-			} else if(self.statistics.selected == 0) {
-				self.$actions.find('.all').removeClass('active');
-				self.$actions.find('.nothing').addClass('active');
+			if (that.statistics.cardinality > 0 && that.statistics.cardinality == that.statistics.selected) {
+				that.$actions.find('.all').addClass('active');
+				that.$actions.find('.nothing').removeClass('active');
+			} else if(that.statistics.selected == 0) {
+				that.$actions.find('.all').removeClass('active');
+				that.$actions.find('.nothing').addClass('active');
 			} else{
-				self.$actions.find('.all').removeClass('active');
-				self.$actions.find('.nothing').removeClass('active');
+				that.$actions.find('.all').removeClass('active');
+				that.$actions.find('.nothing').removeClass('active');
 			}
 
-			if (self.statistics.selected < 1) {
-				self.$actions.find('input[type=button]').attr('disabled', true);
+			if (that.statistics.selected < 1) {
+				that.$actions.find('input[type=button]').attr('disabled', true);
 			} else{
-				self.$actions.find('input[type=button]').attr('disabled', false);
+				that.$actions.find('input[type=button]').attr('disabled', false);
 			}
 		});
 
@@ -71,16 +73,16 @@ Juxta.Grid = $.Class({
 		this.$actions.bind('click', function() {
 			var $button = $(event.target);
 			if ($button.is('span.like-a, input') && $button.attr('name')) {
-				self.$actions.trigger($button.attr('name'));
-				self.body.trigger($button.attr('name'));
+				that.$actions.trigger($button.attr('name'));
+				that.body.trigger($button.attr('name'));
 			}
 		});
 
 		this.$actions.bind('all', function() {
-			self.select();
+			that.select();
 		});
 		this.$actions.bind('nothing', function() {
-			self.deselect();
+			that.deselect();
 		});
 
 		if (this.$context.is('.context')) {
@@ -96,7 +98,7 @@ Juxta.Grid = $.Class({
 	},
 	prepare: function(template) {
 		if (template) {
-			var self = this;
+			var that = this;
 
 			this.$actions.empty();
 			if (template['actions']) {
@@ -119,7 +121,7 @@ Juxta.Grid = $.Class({
 			if (template['head']) {
 				this.head.empty();
 				$.each(template['head'], function(i, value) {
-					self.head.append('<li class="' + i + '">' + value + '</li>');
+					that.head.append('<li class="' + i + '">' + value + '</li>');
 				});
 			}
 
@@ -142,7 +144,7 @@ Juxta.Grid = $.Class({
 		}
 	},
 	fill: function(data) {
-		var self = this;
+		var that = this;
 
 		this.empty();
 		this.content = data.contents;
@@ -181,8 +183,8 @@ Juxta.Grid = $.Class({
 					}
 				});
 				$.extend(forTemplate, {database: data['from']});
-				var $q = $($.template(template, forTemplate)).appendTo(self.body);
-				self.cache[forTemplate[cacheName]] = $q;
+				var $q = $($.template(template, forTemplate)).appendTo(that.body);
+				that.cache[forTemplate[cacheName]] = $q;
 			});
 			this.body.trigger('change');
 
@@ -281,4 +283,4 @@ Juxta.Grid = $.Class({
 			}
 		});
 	}
-});
+}
