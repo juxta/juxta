@@ -4,11 +4,14 @@ Juxta.TreeGrid = function(grid) {
 
 Juxta.TreeGrid.prototype.init = function(grid) {
 
+	this._selectRow = Juxta.Grid.prototype.selectRow;
+	this._deselectRow = Juxta.Grid.prototype.deselectRow;
+
 	Juxta.Grid.prototype.init.call(this, grid);
 
 	var that = this;
 
-	this.body.find('td.expand, td.collapse').live('click', function(event) {
+	this.$body.find('td.expand, td.collapse').live('click', function(event) {
 		// Temporary
 		var $target = $(event.target),
 			$row = $target.parents('tr');
@@ -28,21 +31,9 @@ Juxta.TreeGrid.prototype.init = function(grid) {
 		return false;
 	});
 
-	this.body
-		.bind('all', function() { that.body.find('td + td a').removeClass('partial'); })
-		.bind('nothing', function() { that.body.find('td + td a').removeClass('partial'); });
-
-	this.body.change(function(event) {
-		if ($(event.target).is('[type=checkbox]')) {
-			var $row = $(event.target).parent().parent();
-			if ($(event.target).is('[type=checkbox]:checked')) {
-				that.selectRow($row);
-			} else {
-				$(event.target).removeClass('partial');
-				that.deselectRow($row);
-			}
-		}
-	});
+	this.$body
+		.bind('all', function() { that.$body.find('td + td a').removeClass('partial'); })
+		.bind('nothing', function() { that.$body.find('td + td a').removeClass('partial'); });
 
 }
 
@@ -78,6 +69,7 @@ Juxta.TreeGrid.prototype.collapse = function(row) {
  * 
  */
 Juxta.TreeGrid.prototype.selectRow = function(row) {
+	this._selectRow(row);
 	var $row = $(row);
 
 	$row.find('a').removeClass('partial');
@@ -108,6 +100,7 @@ Juxta.TreeGrid.prototype.selectRow = function(row) {
  * 
  */
 Juxta.TreeGrid.prototype.deselectRow = function(row) {
+	this._deselectRow(row);
 	var $row = $(row);
 
 	var childs = $row.parents('tr.content').find('[type=checkbox]').length,

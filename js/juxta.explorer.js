@@ -13,7 +13,9 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
 		this.createUser = new Juxta.CreateUser($('#create-user'));
 
-		var explorer = this;
+		var that = this,
+			explorer = this;
+
 		this.grid.$actions.bind('drop', function() {
 			var params = {
 					drop: explorer.grid.content,
@@ -25,6 +27,24 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 				params['from'] = explorer.grid.from;
 			}
 			explorer.drop(params);
+		});
+
+		this.grid.$body.bind('change', function() {
+			var status = '';
+			if (that.grid.statistics.all > 0) {
+				status += that.grid.statistics.all;
+				if (that.grid.statistics.all == 1) {
+					status += ' ' + that.grid.statistics.item;
+				} else {
+					status += ' ' + that.grid.statistics.items;
+				}
+			}
+			if (that.grid.statistics.selected > 0) {
+				status += ', ';
+				status += that.grid.statistics.selected;
+				status += ' selected';
+			}
+			Juxta.explorer.status(status);
 		});
 	},
 	show: function(options) {
