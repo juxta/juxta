@@ -967,13 +967,18 @@ input[type=button].close {
 	height: 18px;
 	width: 18px;
 	background: transparent url('../images/close.png') center no-repeat;
-	
 	box-shadow: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	}
+
+input[type=button].close:hover {
+	background: transparent url('../images/close.png') top center no-repeat;
+	}
+
 input[type=button][disabled].close {
 	cursor: default;
+	background: transparent url('../images/close.png') bottom center no-repeat;
 	}
 
 .switch{
