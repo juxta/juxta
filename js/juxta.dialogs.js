@@ -85,7 +85,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 				if (this.name == undefined) {
 					this.name = this.user + '@' + this.host;
 				}
-				$('<option>', {val: i + 1, selected: this.default}).html(this.name).appendTo(self.$connections);
+				$('<option>', {val: i + 1, selected: this['default']}).html(this.name).appendTo(self.$connections);
 				connections[i + 1] = this;
 			});
 			this.$connections.attr('disabled', false);

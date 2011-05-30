@@ -73,13 +73,15 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	},
 	templates: {
 		status: {
-			'context': ['variable', 'value']
+			'context': ['variable', 'value'],
+			actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full">Full</li><li name="compact" class="active">Compact</li></ul>',
 		},
 		'status-full': {
 			'head': {
 					'variable': 'Variable',
 					'value': 'Value'
 			},
+			actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full" class="active">Full</li><li name="compact">Compact</li></ul>',
 			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
 			'context': ['variable', 'value']
 		},

@@ -1,7 +1,7 @@
 Juxta.BackupRestore = $.Class(Juxta.Application, {
 	init: function(element) {
 		this._super(element, {header: 'Backup', menu: {'Options': {href: '#backup/options', click: 'return false;'}}});
-		this.grid = new Juxta.Grid(this.$application.find('.grid'));
+		this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
 		
 		$(window).bind('resize', {_this: this}, this.stretch);
 	},

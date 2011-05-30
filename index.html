@@ -7,19 +7,20 @@
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<link href="css/juxta.css" rel="stylesheet" media="all" />
 	<script src="jquery/jquery-1.5.1.min.js"></script>
-	<script src="jquery/jquery-aop-1.3.min.js"></script>
 	<script src="jquery/jquery-ui-1.8.2.custom.min.js"></script>
 	<script src="jquery/jquery-simple-inheritance.js"></script>
 	<script src="jquery/jquery-template.js"></script>
 	<script src="js/juxta.js"></script>
 	<script src="js/juxta.cache.js"></script>
-	<script src="js/juxta.grid.js"></script>
 	<script src="js/juxta.notification.js"></script>
 	<script src="js/juxta.sidebar.js"></script>
 	<script src="js/juxta.floatbox.js"></script>
 	<script src="js/juxta.sqleditor.js"></script>
 	<script src="js/juxta.dialogs.js"></script>
 	<script src="js/juxta.create-database.js"></script>
+	<script src="js/juxta.contextmenu.js"></script>
+	<script src="js/juxta.grid.js"></script>
+	<script src="js/juxta.treegrid.js"></script>
 	<script src="js/juxta.application.js"></script>
 	<script src="js/juxta.backuprestore.js"></script>
 	<script src="js/juxta.browser.js"></script>
@@ -90,13 +91,7 @@
 			<div class="menu"></div>
 			<input type="button" class="close"/><br class="clear"/>
 			<div class="grid clear">
-				<div class="actions clear">
-					<span style="float: left; margin-right: 11px;">View</span>
-					<ul class="switch">
-						<li>Full</li>
-						<li class="active">Compact</li>
-					</ul>
-				</div>
+				<div class="actions clear"></div>
 				<ul class="head">
 					<li>Variable</li>
 					<li>Value</li>
@@ -458,7 +453,7 @@
 			<div class="menu"></div>
 			<div class="close"><img src="./images/close.png" /></div>
 			<div class="grid clear">
-				<div class="actions clear">Select:&nbsp;<span class="like-a all">all</span>,&nbsp;<span class="like-a nothing">nothing</span> <input type="button" value="Backup" /></div>
+				<div class="actions clear">Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span> <input type="button" value="Backup" /></div>
 				<ul class="head">
 					<li>Items for buckup</li>
 				</ul>
@@ -466,7 +461,6 @@
 					<table cellspacing="0"></table>
 					<div class="not-found">No items found</div>
 				</div>
-				<div class="context"><ul></ul></div>
 			</div>
 			<div class="status">&nbsp;</div>
 		</div>
