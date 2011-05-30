@@ -1,3 +1,7 @@
+/**
+ * @class Tree grid
+ * @extends Juxta.Grid
+ */
 Juxta.TreeGrid = function(grid) {
 	Juxta.Grid.call(this, grid);
 }

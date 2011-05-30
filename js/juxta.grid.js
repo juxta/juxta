@@ -1,6 +1,10 @@
+/**
+ * @class Grid
+ */
 Juxta.Grid = function(grid) {
 	this.init(grid);
 }
+
 Juxta.Grid.prototype = {
 	statistics: {
 		item: 'item',
@@ -185,6 +189,10 @@ Juxta.Grid.prototype = {
 			this.$notFound.css('top', this.$container.find('.body').height() / 2 - 14 + 'px').show();
 		}
 	},
+	/**
+	 * Empty grid body
+	 *
+	 */
 	empty: function() {
 		this.$body.empty();
 		this.$notFound.hide();
@@ -254,6 +262,10 @@ Juxta.Grid.prototype = {
 		// Unhighlight link
 		$row.find('td.check').next('td').find('a').removeClass('checked');
 	},
+	/**
+	 * Returns selected rows
+	 *
+	 */
 	selected: function() {
 		var selected = this.$body.find('input[type=checkbox]:checked').map(function() { return $(this).attr('name') }).toArray();
 		if ($.isEmptyObject(selected)) {
