@@ -20,6 +20,8 @@ $(document).ready(function() {
 Juxta = $.Class();
 Juxta.prototype = {
 	init: function() {
+		var that = this;
+
 		this.notification = new Juxta.Notification();
 		this.sidebar = new Juxta.Sidebar();
 		this.sidebar.path({'connection': '127.0.0.1'});
@@ -33,6 +35,9 @@ Juxta.prototype = {
 
 		this.auth = new Juxta.Auth('#login');
 		this.codeEditor = new Juxta.RoutineEditor($('#edit-routine'));
+
+		this.about = new Juxta.FloatBox('#about');
+		$('#header a[name=about]').click(function(){ that.about.show(); return false; });
 
 		this.cache = new Juxta.Cache();
 
