@@ -117,7 +117,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		});
 	},
 	responseDrop: function(response) {
-		this.grid.select(false);
+		this.grid.deselect();
 		if (response.dropped) {
 			this.grid.remove(response.dropped);
 		}
