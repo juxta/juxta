@@ -175,6 +175,12 @@ class Juxta {
 					}
 					$response = $this->dropViews((array)$_POST['views'], $_GET['from']);
 					break;
+				case 'routines':
+					if (!empty($_POST['routine'])) {
+						$_POST['routines'] = $_POST['routines'];
+					}
+					$response = $this->dropRoutines((array)$_POST['routines'], $_GET['from']);
+					break;
 				case 'trigger':
 				case 'triggers':
 					if (!empty($_REQUEST['trigger'])) {
@@ -188,7 +194,7 @@ class Juxta {
 		if (isset($response)) {
 			print json_encode(array_merge(array('status' => 'ok'), (array)$response));
 		} else {
-			throw new JuxtaException('Not clear request');
+			throw new JuxtaException('Invalid request');
 		}
 	}
 
@@ -235,7 +241,7 @@ class Juxta {
 			}
 		}
 
-		return array('databases' => $databases, 'dropped' => $dropped);
+		return array('dropped' => $dropped);
 	}
 
 	private function processlist() {
@@ -340,8 +346,43 @@ class Juxta {
 	}
 
 	private function routines($database = '') {
-		$routines = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}'", array('ROUTINE_NAME', 'DEFINER', 'DTD_IDENTIFIER'));
+		$routines = $this->query("SELECT `ROUTINE_NAME`, LOWER(`ROUTINE_TYPE`) AS `ROUTINE_TYPE`, `DEFINER`, `DTD_IDENTIFIER` FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}'", array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER'));
 		return array('contents' => 'routines', 'from' => $database, 'data' => $routines);
+	}
+
+	/**
+	 * Drops stored procedures and functions
+	 *
+	 * @param array $rouitines
+	 * @param string $from
+	 * @return array
+	 */
+	private function dropRoutines(array $routines, $from) {
+		$dropped = array();
+		if (isset($routines['function'])) {
+			foreach ($routines['function'] as $function) {
+				try {
+					$this->query("DROP FUNCTION `{$from}`.`{$function}`;");
+					$dropped['function'][] = $function;
+				} catch (JuxtaQueryException $e) {
+					$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+					throw $e;
+				}
+			}
+		}
+		if (isset($routines['procedure'])) {
+			foreach ($routines['procedure'] as $procedure) {
+				try {
+					$this->query("DROP PROCEDURE `{$from}`.`{$procedure}`;");
+					$dropped['procedure'][] = $procedure;
+				} catch (JuxtaQueryException $e) {
+					$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+					throw $e;
+				}
+			}
+		}
+
+		return array('dropped' => $dropped);
 	}
 
 	private function triggers($database = '') {

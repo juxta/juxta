@@ -39,6 +39,8 @@ Juxta.Grid.prototype = {
 				}
 			}
 
+			// Count all and selected items
+			that.statistics.all = that.$body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]').length;
 			that.statistics.selected = that.$body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
 
 			// Change all, nothing links states
@@ -191,7 +193,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Empty grid body
-	 *
 	 */
 	empty: function() {
 		this.$body.empty();
@@ -204,7 +205,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Select rows
-	 * 
 	 */
 	select: function(row) {
 		if (row) {
@@ -215,7 +215,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Deselect rows
-	 * 
 	 */
 	deselect: function(row) {
 		if (row) {
@@ -226,7 +225,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Select all rows
-	 * 
 	 */
 	selectAll: function() {
 		$('.context:visible').hide();
@@ -235,7 +233,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Deselect all rows
-	 * 
 	 */
 	deselectAll: function() {
 		this.$body.find('input[type=checkbox]').removeAttr('checked', '');
@@ -244,7 +241,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Select one row
-	 * 
 	 */
 	selectRow: function(row) {
 		var $row = $(row);
@@ -254,7 +250,6 @@ Juxta.Grid.prototype = {
 	},
 	/**
 	 * Deselect one row
-	 * 
 	 */
 	deselectRow: function(row) {
 		var $row = $(row);
@@ -263,27 +258,48 @@ Juxta.Grid.prototype = {
 		$row.find('td.check').next('td').find('a').removeClass('checked');
 	},
 	/**
-	 * Returns selected rows
-	 *
+	 * Returns names of selected rows
 	 */
-	selected: function() {
-		var selected = this.$body.find('input[type=checkbox]:checked').map(function() { return $(this).attr('name') }).toArray();
-		if ($.isEmptyObject(selected)) {
-			selected = null;
+	selected: function(filter, group) {
+		var selected = this.$body.find('input[type=checkbox]:checked');
+
+		// Apply filter
+		if (filter) {
+			selected = selected.filter(filter);
 		}
-		return selected;
+
+		// Collect to arrya and group by attribute
+		if (group) {
+			var grouped = {};
+			jQuery.each(selected, function() {
+				if (grouped[$(this).attr(group)] === undefined) {
+					grouped[$(this).attr(group)] = [];
+				}
+				grouped[$(this).attr(group)].push($(this).attr('name'));
+			});
+			selected = grouped;
+		} else {
+			selected = selected.map(function() { return $(this).attr('name'); }).toArray();
+		}
+
+		return !$.isEmptyObject(selected) ? selected : null;
 	},
-	remove: function(names) {
-		var grid = this;
+	/**
+	 * Removes rows by name
+	 */
+	remove: function(names, filter) {
+		var that = this;
 
 		if (!$.isArray(names)) {
 			names = [names];
 		}
 
 		$.each(names, function(i, name) {
-			if (grid.cache[name]) {
-				grid.cache[name].remove();
+			if (that.cache[name] && (filter === undefined || that.cache[name].find('.check :checkbox').is(filter))) {
+				that.cache[name].remove();
 			}
 		});
+
+		that.$body.trigger('change');
 	}
 }
