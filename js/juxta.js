@@ -43,7 +43,7 @@ Juxta.prototype = {
 		setInterval(this.checkLocation, 200);
 
 		$('.float-box').draggable({scroll: false, handle: 'h3'});
-		$(window).click(function(event) {
+		$(document.body).bind('click', function(event) {
 			$('.context:visible').trigger('hide').hide();
 		});
 	},

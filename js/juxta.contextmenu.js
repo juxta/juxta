@@ -12,11 +12,11 @@ Juxta.ContextMenu = function(page, menu) {
 	var that = this;
 
 	this.$page.bind('contextmenu', function(event) {
-		that.show();
+		that.show($(event.target).parents('tr'), {top: event.clientY, left: event.clientX});
 		return false;
 	});
 
-	this.$container.bind('hide', function(event) {
+	this.$container.bind('hide', function() {
 		that.hide();
 	});
 }
@@ -31,14 +31,14 @@ Juxta.ContextMenu.prototype.hide = function() {
 	this.$page.trigger('change');
 }
 
-Juxta.ContextMenu.prototype.show = function() {
-	this.$container.show().offset({top: event.clientY, left: event.clientX});
+Juxta.ContextMenu.prototype.show = function(row, position) {
+	this.target = row;
+	this.value = this.target.find('[type=checkbox]');
+
+	this.$container.show().offset(position);
 
 	this.$page.find('a.checked').removeClass('checked');
 	this.$page.find('[type=checkbox]:checked').removeAttr('checked');
-
-	this.target = $(event.target).parents('tr');
-	this.value = this.target.find('[type=checkbox]');
 
 	this.target.find(':checkbox').attr('checked', true);
 	this.target.find('td:nth-child(2)').find('a').addClass('checked');
