@@ -64,7 +64,7 @@ Juxta.Grid.prototype = {
 		});
 
 		// Trigger event with type equals action name
-		this.$actions.bind('click', function() {
+		this.$actions.bind('click', function(event) {
 			var $button = $(event.target);
 			if ($button.is('span.like-a, input') && $button.attr('name')) {
 				that.$actions.trigger($button.attr('name'));
