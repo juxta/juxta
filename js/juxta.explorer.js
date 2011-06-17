@@ -47,11 +47,6 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					status += ' ' + that.grid.statistics.items;
 				}
 			}
-			if (that.grid.statistics.selected > 0) {
-				status += ', ';
-				status += that.grid.statistics.selected;
-				status += ' selected';
-			}
 			Juxta.explorer.status(status);
 		});
 	},
