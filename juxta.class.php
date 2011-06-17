@@ -154,6 +154,7 @@ class Juxta {
 			}
 		} elseif (isset($_GET['drop'])) {
 			switch ($_GET['drop']) {
+				// Drop databases
 				case 'database':
 				case 'databases':
 					if (!empty($_POST['database'])) {
@@ -161,6 +162,7 @@ class Juxta {
 					}
 					$response = $this->dropDatabases((array)$_POST['databases']);
 					break;
+				// Drop tables
 				case 'table':
 				case 'tables':
 					if (!empty($_POST['table'])) {
@@ -168,6 +170,7 @@ class Juxta {
 					}
 					$response = $this->dropTables((array)$_POST['tables'], $_GET['from']);
 					break;
+				// Drop views
 				case 'view':
 				case 'views':
 					if (!empty($_POST['view'])) {
@@ -175,12 +178,23 @@ class Juxta {
 					}
 					$response = $this->dropViews((array)$_POST['views'], $_GET['from']);
 					break;
+				// Drop stored procedures
+				case 'function':
+					$_REQUEST['functions'] = (array)$_REQUEST['function'];
+				case 'functions':
+					$_REQUEST['routines']['function'] = $_REQUEST['functions'];
+				case 'procedure':
+					$_REQUEST['procedures'] = (array)$_REQUEST['procedure'];
+				case 'procedures':
+					$_REQUEST['routines']['procedure'] = $_REQUEST['procedures'];
+				case 'routine':
 				case 'routines':
 					if (!empty($_POST['routine'])) {
-						$_POST['routines'] = $_POST['routines'];
+						$_REQUEST['routines'] = $_REQUEST['routines'];
 					}
-					$response = $this->dropRoutines((array)$_POST['routines'], $_GET['from']);
+					$response = $this->dropRoutines((array)$_REQUEST['routines'], $_GET['from']);
 					break;
+				// Drop triggers
 				case 'trigger':
 				case 'triggers':
 					if (!empty($_REQUEST['trigger'])) {

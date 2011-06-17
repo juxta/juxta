@@ -231,7 +231,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{routine}" routine="{type}"></td><td class="routine"><a>{routine}</a></td><td class="routine-definer">{definer}</td><td class="routine-return">{return}</td></tr>',
 			'context': [['routine', 'routines'], 'type', 'definer', 'return'],
-			'contextMenu': '<li>Edit</li><li class="drop" onclick="Juxta.drop({drop: \'routine\', item: Juxta.explorer.grid.contextMenu.value.attr(\'routine\'), routine: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), routine: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
+			'contextMenu': '<li>Edit</li><li class="drop" onclick="var request = {drop: Juxta.explorer.grid.contextMenu.value.attr(\'routine\'), item: Juxta.explorer.grid.contextMenu.value.attr(\'routine\'), from: Juxta.explorer.grid.from}; request[request.drop] = Juxta.explorer.grid.contextMenu.value.attr(\'name\'); Juxta.drop(request);">Drop</li><li>Properties</li>'
 		},
 		triggers: {
 			'head': {
