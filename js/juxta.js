@@ -1,4 +1,4 @@
-/*
+/**
  * Juxta 0.0.1 http://juxta.ru
  *
  * Copyright (c) 2010-2011 Alexey Golovnya
@@ -15,24 +15,21 @@ Juxta.prototype = {
 	init: function() {
 		var that = this;
 
+		this.cache = new Juxta.Cache();
 		this.notification = new Juxta.Notification();
 		this.sidebar = new Juxta.Sidebar();
 		this.sidebar.path({'connection': '127.0.0.1'});
-
 		this.explorer = new Juxta.Explorer('#explorer');
 		this.exchange = new Juxta.BackupRestore('#backup-restore');
 		this.browser = new Juxta.Browser('#data-browser');
 		this.tableEditor = new Juxta.TableEditor('#table-editor');
 		this.dummy = new Juxta.Dummy('#dummy');
 		this.serverInfo = new Juxta.ServerInformation('#server-info');
-
 		this.auth = new Juxta.Auth('#login');
 		this.codeEditor = new Juxta.RoutineEditor($('#edit-routine'));
+		this.messageBox = new Juxta.FloatBox('#message');
 
-		this.about = new Juxta.FloatBox('#about');
-		$('#header a[name=about]').click(function(){ that.about.show(); return false; });
-
-		this.cache = new Juxta.Cache();
+		$('#header a[name=about]').bind('click', function() { that.about(); return false; });
 
 		$.ajaxSetup(this.ajaxSetup);
 
@@ -47,7 +44,8 @@ Juxta.prototype = {
 			$('.context:visible').trigger('hide').hide();
 		});
 	},
-	/*	Ajax options
+	/**
+	 * Ajax options
 	 */
 	ajaxSetup: {
 		url: 'juxta.php',
@@ -74,7 +72,8 @@ Juxta.prototype = {
 		}
 		return query;
 	},
-	/*	Common Ajax request/response interface
+	/**
+	 * Common Ajax request/response interface
 	 */
 	request: function(params) {
 		// URL
@@ -332,5 +331,14 @@ Juxta.prototype = {
 	},
 	error: function(message, options) {
 		return this.notification.show(message, $.extend({}, {type: 'error', hide: false, fast: true}, options));
+	},
+	/**
+	 *
+	 */
+	message: function(message, options) {
+		this.messageBox.show(options, message);
+	},
+	about: function() {
+		this.message($('#about').html(), {title: 'About Juxta'});
 	}
 };
