@@ -79,6 +79,9 @@ class Juxta {
 				case 'databases':
 					$response = $this->databases();
 					break;
+				case 'database-properties':
+					$response = $this->databaseProperties($_REQUEST['database']);
+					break;
 				case 'processlist':
 					$response = $this->processlist();
 					break;
@@ -258,6 +261,35 @@ class Juxta {
 		return array('dropped' => $dropped);
 	}
 
+
+	/**
+	 * Get database properties
+	 *
+	 * @param string $database Database name
+	 * @return array
+	 */
+	private function databaseProperties($database) {
+		$properties = array(
+			'name' => $database,
+		);
+
+		$charset = $this->query("SELECT `DEFAULT_CHARACTER_SET_NAME` as `name`, `DEFAULT_COLLATION_NAME` as `collation` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME` = '{$database}'");
+		if ($charset) {
+			$properties['charset'] = $charset[0]['name'];
+			$properties['collation'] = $charset[0]['collation'];
+		}
+
+		$statistics = $this->query("SELECT COUNT(*) AS `tables`, SUM(`TABLE_ROWS`) AS `rows`, SUM(`DATA_LENGTH`) AS `data_length`, SUM(`INDEX_LENGTH`) AS `index_length` FROM `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'"/*, array('tables', 'rows', 'data_length', 'index_length')*/);
+		if ($statistics) {
+			$properties['tables']= $statistics[0]['tables'];
+			$properties['rows']= $statistics[0]['rows'];
+			$properties['data_length']= (int)$statistics[0]['data_length'];
+			$properties['index_length']= (int)$statistics[0]['index_length'];
+		}
+
+		return array('contents' => 'database-properties', 'properties' => $properties, 'charset' => $statistics);
+	}
+	
 	private function processlist() {
 		$processlist = $this->query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
 		return array('contents' => 'processlist', 'data' => $processlist);

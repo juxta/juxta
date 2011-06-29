@@ -157,6 +157,32 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 
 		Juxta.cache.flush(this.cache);
 	},
+	//
+	properties: function(params) {
+		var query = {},
+			options = {};
+
+		if (params.database) {
+			query = {show: 'database-properties', database: params.database};
+		}
+
+		this.requestProperties(query, options);
+	},
+	requestProperties: function(query, options) {
+		//
+		Juxta.request({
+			action: query,
+			success: this.responseDatabaseProperties,
+			context: this
+		});
+
+	},
+	responseDatabaseProperties: function(response) {
+		Juxta.message(
+			$.template($('#database-properties').html(), response.properties),
+			{title: 'Database Properties'}
+		);
+	},
 	templates: {
 		databases: {
 			'head': {
@@ -165,7 +191,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			'context': [['database', 'databases']],
 			'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
-			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Juxta.drop({drop: \'database\', item: \'database\', database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')});">Drop</li><li>Properties</li>'
+			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Juxta.drop({drop: \'database\', item: \'database\', database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')});">Drop</li><li onclick="Juxta.explorer.properties({database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')}); ">Properties</li>'
 		},
 		processlist: {
 			'head': {

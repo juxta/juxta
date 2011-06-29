@@ -643,7 +643,7 @@
 
 	<div id="message" class="float-box message"></div>
 
-	<script type="text/template" id="about">
+	<script type="text/html" id="about">
 		<div class="about">
 			<h4>Juxta</h4>
 			<p class="version">Version 0.0.1</p>
@@ -670,6 +670,19 @@
 			<div class="buttons"><input type="submit" name="create" value="Create"/></div>
 		</form>
 	</div>
+
+	<script type="text/html" id="database-properties">
+		<ul class="properties database">
+			<li><h4>Name</h4><p>{name}</p></li>
+			<li><h4>Charset</h4><p>{charset}</p></li>
+			<li><h4>Collation</h4><p>{collation}</p></li>
+			<li><h4>Tables</h4><p>{tables}</p></li>
+			<li><h4>Rows</h4><p>{rows}</p></li>
+			<li><h4>Data length</h4><p>{data_length|size}</p></li>
+			<li><h4>Index length</h4><p>{index_length|size}</p></li>
+		</ul>
+		<p class="buttons"><input type="button" value="Close" onclick="Juxta.messageBox.hide();"></p>
+	</script>
 
 	<div id="create-user" class="float-box">
 		<h3>Add a new User</h3>

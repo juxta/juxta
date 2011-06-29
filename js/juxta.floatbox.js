@@ -42,7 +42,6 @@ Juxta.FloatBox.prototype = {
 		this.center();
 	},
 	show: function(options, content) {
-		console.log(options);
 		options = $.extend({}, this.settings, options);
 
 		this.$head.html(

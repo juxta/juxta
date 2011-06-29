@@ -1,0 +1,53 @@
+/**
+ * Database properties
+ *
+ */
+
+ul.properties.database {
+	font-size: 10pt;
+	line-height: 24px;
+	list-style-type: none;
+	margin: 7px 0 14px 0;
+	padding: 0;
+	width: 350px;
+	float: left;
+
+	background-color: #F9F9F9;
+	border-top: #DDD 1px solid;
+	border-bottom: #EEE 1px solid;
+	}
+
+ul.properties.database li {
+	clear: both;
+	}
+
+.properties.database h4 {
+	color: #333;
+	float: left;
+	font-weight: normal;
+	margin: 0 11px 0 0;
+	text-align: right;
+	width: 90px;
+
+	background-color: #EEE;
+	border-right: #E0E0E0 1px solid;
+	padding-right: 11px;
+	}
+
+.properties.database li:first-child h4 ,
+.properties.database li:first-child p {
+	padding-top: 5px;
+	}
+.properties.database li:last-child h4 ,
+.properties.database li:last-child p {
+	padding-bottom: 5px;
+	}
+
+.properties.database h4 + p {
+	float: left;
+	margin: 0;
+	}
+
+.properties.database p.buttons {
+	margin-top: 20px;
+	}
