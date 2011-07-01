@@ -21,21 +21,25 @@
 		var precision = 1;
 
 		if (value === undefined || value == 0) {
-			return value;
+			return 0;
 		}
+
 		if (value < 1024) {
 			return value + ' B';
 		}
+
 		value = Math.round(value/1024 * Math.pow(10, precision)) / Math.pow(10, precision);
 		if (value < 1024) {
 			return value + ' KB';
 		}
+
 		value = Math.round(value/1024 * Math.pow(10, precision)) / Math.pow(10, precision);
 		if (value < 1024) {
 			return value + ' MB';
-		} else {
-			return value + ' GB';
 		}
+
+		value = Math.round(value/1024 * Math.pow(10, precision)) / Math.pow(10, precision);
+		return value + ' GB';
 	}
 
 	jQuery.template.date = function(dateString) {
