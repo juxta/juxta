@@ -1,6 +1,6 @@
 (function($){
 	$.template = function(template, data) {
-		return template.replace(/\{([\w\.|]*)\}/g, function (str, key) {
+		return template.replace(/\{([\w\.|:\\/\s]*)\}/g, function (str, key) {
 			var token = key.split('|'),
 				variable = token.shift(),
 				keys = variable.split('.'),
@@ -9,13 +9,23 @@
 			//
 			$.each(keys, function () { value = value[this]; });
 			$.each(modifiers, function(m) {
-				if (typeof(jQuery.template[this]) === 'function') {
-					value = (jQuery.template[this])(value);
+				var args  = String(this).split(':'),
+					modifier = args.shift();
+				if (typeof(jQuery.template[modifier]) === 'function') {
+					value = (jQuery.template[modifier]).apply(jQuery, [value].concat(args));
 				}
 			});
 			return (value === null || value === undefined) ? '' : value;
 		});
-	};
+	}
+
+	jQuery.template.empty = function(value, defaultValue) {
+		if (value == 0 ) {
+			return defaultValue;
+		} else {
+			return value;
+		}
+	}
 
 	jQuery.template.size = function(value) {
 		var precision = 1;
