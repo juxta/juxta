@@ -20,7 +20,7 @@
 	}
 
 	jQuery.template.empty = function(value, defaultValue) {
-		if (value == 0 ) {
+		if (value == 0 || value === null || value === undefined) {
 			return defaultValue;
 		} else {
 			return value;
