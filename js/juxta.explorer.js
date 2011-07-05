@@ -180,7 +180,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	responseDatabaseProperties: function(response) {
 		Juxta.message(
 			$.template($('#database-properties').html(), response.properties),
-			{title: 'Database Properties'}
+			{title: 'Database {name}', name: response.properties.name}
 		);
 	},
 	templates: {

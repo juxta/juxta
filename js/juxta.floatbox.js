@@ -44,13 +44,16 @@ Juxta.FloatBox.prototype = {
 	show: function(options, content) {
 		options = $.extend({}, this.settings, options);
 
-		this.$head.html(
-			options.title +
-			(options.name ? ' <a>' + options.name + '</a>' : '') +
-			(options.from ? ' <span class="from">from <a>' + options.from + '</a></span>' : '')
-		);
+		if (options.name) {
+			options.name = '<a href="">' + options.name + '</a>'; 
+		}
+		if (options.from) {
+			options.from = '<span class="from">from <a>' + options.from + '</a></span>'; 
+		}
 
-		// Appent content
+		this.$head.html($.template(options.title, options));
+
+		// Append content
 		if (content) {
 			this.clear();
 			$(content).insertAfter(this.$terminator);
@@ -83,6 +86,6 @@ Juxta.FloatBox.prototype = {
 	 * Clear content
 	 */
 	clear: function() {
-		this.$container.find(':not(h3):not([type=button].close)').remove();
+		this.$container.find('> *:not(h3):not([type=button].close)').remove();
 	}
 };
