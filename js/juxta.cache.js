@@ -20,7 +20,7 @@ Juxta.Cache = function() {
 		}
 	}
 
-	this.set = function(key, data, lifeTime) {
+	this.set = function(key, data, lifeTime, index) {
 		var expire,
 			timestamp = (new Date()).getTime();
 		//
@@ -34,6 +34,9 @@ Juxta.Cache = function() {
 
 		if (expire) {
 			this.cache[key] = {data: data, expire: expire};
+			if (index) {
+				this.index(key, index);
+			}
 			return true;
 		} else {
 			return false;

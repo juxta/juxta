@@ -91,6 +91,9 @@ Juxta.prototype = {
 		var cache = {};
 		if (params.cache !== undefined && params.cache !== false) {
 			cache = {key: queryString, time: params.cache};
+			if (params.index) {
+				cache.index = params.index;
+			}
 		}
 
 		// Collect response callbacks
@@ -125,7 +128,7 @@ Juxta.prototype = {
 		switch (response.status) {
 			case 'ok':
 				if (cache.key) {
-					Juxta.cache.set(cache.key, response, cache.time);
+					Juxta.cache.set(cache.key, response, cache.time, cache.index);
 				}
 				if ($.isFunction(callbacks.ok)) {
 					callbacks.ok(response)
@@ -163,7 +166,12 @@ Juxta.prototype = {
 				case 'processlist':
 					Juxta.sidebar.highlight('processlist');
 					Juxta.explorer.show({header: 'Processlist', menu: {'Refresh': {href: '#processlist', click: 'return false;'}}});
-					Juxta.explore({show: 'processlist', cache: false});
+					Juxta.explore({
+						show: 'processlist',
+						cache: Infinity,
+						index: {name: 'processId', field: 0, path: ['data']},
+						refresh: true
+					});
 					break;
 				case 'users':
 					Juxta.sidebar.highlight('users');
@@ -202,7 +210,7 @@ Juxta.prototype = {
 				case 'login':
 					Juxta.auth.show();
 					break;
-					
+
 				case 'tables':
 					Juxta.sidebar.path({'database': params[0]});
 					Juxta.sidebar.highlight('tables');
@@ -274,7 +282,7 @@ Juxta.prototype = {
 	explore: function(params) {
 		// Move options values from query to options variable
 		var query = $.extend({}, params), options = {};
-		$.each(['cache', 'refresh'], function(index, value) {
+		$.each(['cache', 'index', 'refresh'], function(index, value) {
 			delete query[value];
 			if (params[value] !== undefined) {
 				options[value] = params[value];
