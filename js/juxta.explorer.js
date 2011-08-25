@@ -37,6 +37,10 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			that.drop(params);
 		});
 
+		this.grid.$actions.bind('kill', function() {
+			that.kill({processes: that.grid.selected()});
+		});
+
 		this.grid.$body.bind('change', function() {
 			var status = '';
 			if (that.grid.statistics.all > 0) {
@@ -183,13 +187,37 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			{title: 'Database {name}', name: response.properties.name}
 		);
 	},
+	kill: function(params) {
+		if (params['processes'].length === 1) {
+			var message = 'Kill process ' + params['processes'];
+		} else {
+			var message = 'Kill ' + params['processes'].length;
+		}
+		//
+		if (Juxta.confirm(message + '?')) {
+			this.requestKill(params);
+		}
+	},
+	requestKill: function(params) {
+		Juxta.request({
+			action: 'kill',
+			data: {processes: params['processes']},
+			success: this.responseKill,
+			error: this.responseKill,
+			context: this
+		});
+	},
+	responseKill: function(response) {
+		this.grid.deselect();
+		this.grid.remove(response.killed);
+	},
 	templates: {
 		databases: {
 			'head': {
 				'database': 'Database'
 			},
 			'context': [['database', 'databases']],
-			'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
+			'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="drop" value="Drop"/>',
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
 			'contextMenu': '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Juxta.drop({drop: \'database\', item: \'database\', database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')});">Drop</li><li onclick="Juxta.explorer.properties({database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')}); ">Properties</li>'
 		},
@@ -204,7 +232,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="kill" value="Kill"/>',
 			'data-template': '<tr><td class="check"><input type="checkbox" name="{process}"></td><td class="process"><a>{process}</td><td class="process-user">{user}@{host}</td><td class="process-database">{ondatabase}</td><td class="process-command">{command}</td><td class="process-time">{time}</td><td></td></tr>',
 			'context': [['process', 'processes'], 'user', 'host', 'ondatabase', 'command', 'time'],
-			'contextMenu': '<li>Information</li><li>Kill</li>'
+			'contextMenu': '<li>Information</li><li onclick="Juxta.kill({processes: [Juxta.explorer.grid.contextMenu.value.attr(\'name\')]});">Kill</li>'
 		},
 		users: {
 			'head': {

@@ -294,6 +294,9 @@ Juxta.prototype = {
 	drop: function(params) {
 		this.explorer.drop(params);
 	},
+	kill: function(params) {
+		this.explorer.kill(params);
+	},
 	confirm: function(message) {
 		return confirm(message);
 	},

@@ -206,6 +206,8 @@ class Juxta {
 					$response = $this->dropTriggers((array)$_REQUEST['triggers'], $_GET['from']);
 					break;
 			}
+		} elseif (isset($_GET['kill'])) {
+			$response = $this->kill((array)$_REQUEST['processes']);
 		}
 		//
 		if (isset($response)) {
@@ -289,12 +291,38 @@ class Juxta {
 
 		return array('contents' => 'database-properties', 'properties' => $properties, 'charset' => $statistics);
 	}
-	
-	private function processlist() {
+
+
+	private function processlist()
+	{
 		$processlist = $this->query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
 		return array('contents' => 'processlist', 'data' => $processlist);
 	}
-	
+
+
+	/**
+	 * Kill processes
+	 *
+	 * @param array $processes
+	 * @return array
+	 */
+	private function kill(array $processes)
+	{
+		$killed = array();
+		foreach ($processes as $process) {
+			try {
+				$this->query("KILL {$process}");
+				$killed[] = $process;
+			} catch (JuxtaQueryException $exception) {
+				$exception->addtoResponse(array('killed' => $killed));
+				throw $exception;
+			}
+		}
+
+		return array('killed' => $killed);
+	}
+
+
 	private function status() {
 		$response = array();
 		$status = $this->query("SHOW STATUS", array(0, 1));
