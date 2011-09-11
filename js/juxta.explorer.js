@@ -250,7 +250,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		processlist: {
 			head: {
 				header: 'Processlist',
-				menu: {'Refresh': {href: '#processlist', click: 'return false;'}}
+				menu: {'Refresh': {href: '#processlist', click: "Juxta.explore({show: 'processlist'}); return false;"}}
 			},
 			grid: {
 				context: [['process', 'processes'], 'user', 'host', 'ondatabase', 'command', 'time'],
