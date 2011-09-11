@@ -102,7 +102,9 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		}
 	},
 	prepare: function(template) {
-		if (this.grid.prepare(this.templates[template].grid)) {
+		if (template === this.preparedFor) {
+			return true;
+		} else if (this.grid.prepare(this.templates[template].grid)) {
 			this.preparedFor = template;
 			return true;
 		} else {
