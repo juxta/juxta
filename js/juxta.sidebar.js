@@ -54,11 +54,13 @@ Juxta.Sidebar.prototype = {
 		this.$sidebar
 			.find('.last .buttons').slideDown(250);
 	},
-	highlight: function(link, options) {
+	highlight: function(link, path) {
 		clearTimeout(this.$sidebar.get(0).timer);
-		if (!options) {
-			options = {};
+
+		if (path) {
+			this.path(path);
 		}
+
 		if (this.tree[link]) {
 			var level = this.$sidebar.find('ul:first-child > li.' + this.tree[link]);
 			if (level.is('.connection')) {

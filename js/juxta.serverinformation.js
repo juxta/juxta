@@ -38,9 +38,25 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		this._show(options);
 		this.stretch();
 	},
-	request: function(query, options) {
+	request: function(params) {
+		this.show(this.templates[params.show]['head']);
+		// Extend request options
+		if (this.templates[params.show].query) {
+			params = $.extend({}, this.templates[params.show].query, params);
+		}
+		// Move options values from query to options variable
+		var query = $.extend({}, params),
+			options = {};
+		$.each(['cache', 'refresh'], function(index, value) {
+			delete query[value];
+			if (params[value] !== undefined) {
+				options[value] = params[value];
+			}
+		});
+		//
 		if (this.prepare(query.show)) {
-			Juxta.request($.extend({},
+			Juxta.request($.extend(
+				{},
 				{action: query, action: query, context: this, success: this.response},
 				this.settings,
 				options
@@ -51,13 +67,13 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		if (response.contents == 'status') {
 			this.properStatus(response.data);
 		} else {
-			$.extend(response, this.templates[response.contents]);
+			$.extend(response, this.templates[response.contents].grid);
 			this.grid.fill(response);
 		}
 		this.show();
 	},
 	prepare: function(template) {
-		if (this.grid.prepare(this.templates[template])) {
+		if (this.grid.prepare(this.templates[template].grid)) {
 			this.preparedFor = template;
 			this.stretch();
 			return true;
@@ -73,43 +89,73 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	},
 	templates: {
 		status: {
-			'context': ['variable', 'value'],
-			actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full">Full</li><li name="compact" class="active">Compact</li></ul>',
+			head: {
+				header: 'Server Status'
+			},
+			grid: {
+				context: ['variable', 'value'],
+				actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full">Full</li><li name="compact" class="active">Compact</li></ul>'
+			}
 		},
 		'status-full': {
-			'head': {
-					'variable': 'Variable',
-					'value': 'Value'
+			head: {
+				header: 'Server Status'
 			},
-			actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full" class="active">Full</li><li name="compact">Compact</li></ul>',
-			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
-			'context': ['variable', 'value']
+			grid: {
+				head: {
+						'variable': 'Variable',
+						'value': 'Value'
+				},
+				actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full" class="active">Full</li><li name="compact">Compact</li></ul>',
+				'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+				context: ['variable', 'value']
+			}
 		},
 		variables: {
-			'head': {
-					'variable': 'Variable',
-					'value': 'Value'
-				},
-			'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
-			'context': ['variable', 'value']
+			head: {
+				header: 'System Variables',
+				menu: {'Server Status': '#status', 'System Variables': null, 'Charsets': '#charsets', 'Engines': '#engines'}
+			},
+			grid: {
+				head: {
+						'variable': 'Variable',
+						'value': 'Value'
+					},
+				'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+				context: ['variable', 'value']
+			}
 		},
 		charsets: {
-			'head': {
-					'charset': 'Charset',
-					'charset-default-collation': 'Default collation',
-					'charset-description': 'Description'
-				},
-			'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
-			'context': ['charset', 'description', 'collation', 'maxlen']
+			head: {
+				header: 'Charsets',
+				menu: {'Server Status': '#status', 'System Variables': '#variables', 'Charsets': null, 'Engines': '#engines'}
+			},
+			grid: {
+				head: {
+						'charset': 'Charset',
+						'charset-default-collation': 'Default collation',
+						'charset-description': 'Description'
+					},
+				'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
+				context: ['charset', 'description', 'collation', 'maxlen']
+			},
+			query: {cache: Infinity}
 		},
 		engines: {
-			'head': {
-					'engine': 'Engine',
-					'engine-support': 'Support',
-					'engine-comment': 'Description'
-				},
-			'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
-			'context': ['engine', 'support', 'comment']
+			head: {
+				header: 'Engines',
+				menu: {'Server Status': '#status', 'System Variables': '#variables', 'Charsets': '#charsets', 'Engines': null}
+			},
+			grid: {
+				head: {
+						'engine': 'Engine',
+						'engine-support': 'Support',
+						'engine-comment': 'Description'
+					},
+				'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
+				context: ['engine', 'support', 'comment']
+			},
+			query: {cache: Infinity}
 		}
 	}
 });

@@ -38,18 +38,18 @@ Juxta.Application = $.Class({
 			options = $.extend({}, this.settings, options);
 			this.tune(options);
 		}
-		
+
 		if (!this.$application.is(':visible')) {
 			$('#applications .application').hide();
 			this.$application.show();
 		}
-		
+
 		if (this.settings.maximized) {
 			this.maximize();
 		} else{
 			this.restore();
 		}
-		
+
 		return this;
 	},
 	hide: function() {

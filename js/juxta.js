@@ -10,7 +10,7 @@ $(document).ready(function() {
 	Juxta = new Juxta();
 });
 
-Juxta = $.Class();
+var Juxta = $.Class();
 Juxta.prototype = {
 	init: function() {
 		var that = this;
@@ -131,7 +131,7 @@ Juxta.prototype = {
 					Juxta.cache.set(cache.key, response, cache.time, cache.index);
 				}
 				if ($.isFunction(callbacks.ok)) {
-					callbacks.ok(response)
+					callbacks.ok(response);
 				}
 				break;
 			case 'session_not_found':
@@ -139,7 +139,7 @@ Juxta.prototype = {
 				break;
 			case 'error':
 				if ($.isFunction(callbacks.error)) {
-					callbacks.error(response)
+					callbacks.error(response);
 				}
 				Juxta.error(response.error);
 				break;
@@ -153,51 +153,22 @@ Juxta.prototype = {
 	},
 	//
 	checkLocation: function() {
-		var hash = location.hash.replace(/#/g, '');
-		params = hash.split('/');
-		action = params.pop();
+		var hash = location.hash.replace(/#/g, ''),
+			params = hash.split('/'),
+			action = params.pop();
 		if (hash != Juxta.state) {
 			switch (action) {
 				case 'databases':
-					Juxta.sidebar.highlight('databases');
-					Juxta.explorer.show({header: 'Databases', menu: {'Create database': {href: '#databases/create', click: "Juxta.explorer.createDatabase.show(); return false;"}}});
-					Juxta.explore({show: 'databases'});
-					break;
 				case 'processlist':
-					Juxta.sidebar.highlight('processlist');
-					Juxta.explorer.show({header: 'Processlist', menu: {'Refresh': {href: '#processlist', click: 'return false;'}}});
-					Juxta.explore({
-						show: 'processlist',
-						cache: Infinity,
-						index: {name: 'processId', field: 0, path: ['data']},
-						refresh: true
-					});
-					break;
 				case 'users':
-					Juxta.sidebar.highlight('users');
-					Juxta.explorer.show({header: 'Users', menu: {'Add a user': {href: '#users/add', click: 'Juxta.explorer.createUser.show(); return false;'}, 'Flush privileges': {href: '#users/flush', click: 'return false;'}}});
-					Juxta.explore({show: 'users'});
+					Juxta.explore({show: action});
 					break;
 				case 'status':
 				case 'status-full':
-					Juxta.sidebar.highlight('status');
-					Juxta.serverInfo.show({header: 'Server status'});
-					Juxta.info({show: action});
-					break;
 				case 'variables':
-					Juxta.sidebar.highlight('status');
-					Juxta.serverInfo.show({header: 'System variables', menu: {'Server status': '#status', 'System variables': null, 'Charsets': '#charsets', 'Engines': '#engines'}});
-					Juxta.info({show: 'variables'});
-					break;
 				case 'charsets':
-					Juxta.sidebar.highlight('status');
-					Juxta.serverInfo.show({header: 'Charsets', menu: {'Server status': '#status', 'System variables': '#variables', 'Charsets': null, 'Engines': '#engines'}});
-					Juxta.info({show: 'charsets', cache: Infinity});
-					break;
 				case 'engines':
-					Juxta.sidebar.highlight('status');
-					Juxta.serverInfo.show({header: 'Engines', menu: {'Server status': '#status', 'System variables': '#variables', 'Charsets': '#charsets', 'Engines': null}});
-					Juxta.info({show: 'engines', cache: Infinity});
+					Juxta.info({show: action});
 					break;
 				case 'backup':
 					Juxta.sidebar.highlight('backup');
@@ -210,55 +181,32 @@ Juxta.prototype = {
 				case 'login':
 					Juxta.auth.show();
 					break;
-
+				//
 				case 'tables':
-					Juxta.sidebar.path({'database': params[0]});
-					Juxta.sidebar.highlight('tables');
-					Juxta.explorer.show({header: {title: 'Tables', from: params[0]}, menu: {'Create table': {click: 'return false;'}}});
-					Juxta.explore({show: 'tables', from: params[0]});
-					break;
 				case 'views':
-					Juxta.sidebar.path({'database': params[0]});
-					Juxta.sidebar.highlight('views');
-					Juxta.explorer.show({header: {title: 'Views', from: params[0]}, menu: {'Create view': {click: 'return false;'}}});
-					Juxta.explore({show: 'views', from: params[0]});
-					break;
 				case 'routines':
-					Juxta.sidebar.path({'database': params[0]});
-					Juxta.sidebar.highlight('routines');
-					Juxta.explorer.show({header: {title: 'Procedures & Functions', from: params[0]}});
-					Juxta.explore({show: 'routines', from: params[0]});
-					break;
 				case 'triggers':
-					Juxta.sidebar.path({'database': params[0]});
-					Juxta.sidebar.highlight('triggers');
-					Juxta.explorer.show({header: {title: 'Triggers', from: params[0]}, menu: {'Create trigger': {click: 'return false;'}}});
-					Juxta.explore({show: 'triggers', from: params[0]});
+					Juxta.explore({show: action, from: params[0]});
 					break;
-
+				//
 				case 'browse':
-					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
 					Juxta.browse({browse: params[1], from: params[0]});
 					break;
 				case 'columns':
-					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
-					Juxta.sidebar.highlight('columns');
+					Juxta.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
 					Juxta.edit({table: params[1], from: params[0]});
 					break;
 				case 'foreign':
-					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
-					Juxta.sidebar.highlight('foreign');
+					Juxta.sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});
 					Juxta.dummy.show();
 					break;
 				case 'options':
-					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
-					Juxta.sidebar.highlight('options');
+					Juxta.sidebar.highlight('options', {'database': params[0], 'table': params[1]});
 					Juxta.dummy.show({header: 'Options'});
 					break;
 				case 'maintenance':
-					Juxta.sidebar.path({'database': params[0], 'table': params[1]});
-					Juxta.sidebar.highlight('maintenance');
-					Juxta.dummy.show({header: {title: 'Maintenance table', name: params[1]}});
+					Juxta.sidebar.highlight('maintenance', {'database': params[0], 'table': params[1]});
+					Juxta.dummy.show({header: {title: 'Maintenance Table', name: params[1]}});
 					break;
 				case 'flush':
 					Juxta.cache.flush();
@@ -280,16 +228,13 @@ Juxta.prototype = {
 		$('#header h1, #header ul, #sidebar, #applications').hide();
 	},
 	explore: function(params) {
-		// Move options values from query to options variable
-		var query = $.extend({}, params), options = {};
-		$.each(['cache', 'index', 'refresh'], function(index, value) {
-			delete query[value];
-			if (params[value] !== undefined) {
-				options[value] = params[value];
-			}
-		});
-		//
-		this.explorer.request(query, options);
+		if (params.from) {
+			Juxta.sidebar.highlight(params.show, {'database': params.from});
+			Juxta.explorer.request(params);
+		} else {
+			Juxta.sidebar.highlight(params.show);
+			Juxta.explorer.request(params);
+		}
 	},
 	drop: function(params) {
 		this.explorer.drop(params);
@@ -301,18 +246,12 @@ Juxta.prototype = {
 		return confirm(message);
 	},
 	info: function(params) {
-		// Move options values from query to options variable
-		var query = $.extend({}, params), options = {};
-		$.each(['cache', 'refresh'], function(index, value) {
-			delete query[value];
-			if (params[value] !== undefined) {
-				options[value] = params[value];
-			}
-		});
-		//
-		this.serverInfo.request(query, options);
+		console.log(params);
+		Juxta.sidebar.highlight('status');
+		Juxta.serverInfo.request(params);
 	},
 	browse: function(params) {
+		Juxta.sidebar.path({'database': params.from, 'table': params.browse});
 		this.browser.show();
 	},
 	edit: function(params) {
