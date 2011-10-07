@@ -1,0 +1,25 @@
+/**
+ * Data browser
+ *
+ */
+
+.grid.rows .head .column {
+	width: 125px;
+	}
+
+.grid.rows .body .column:first-child {
+	width: 127px;
+	}
+
+.grid.rows .body .column {
+	width: 125px;
+	padding: 0;
+	}
+
+.grid.rows .body .column div {
+	width: 126px;
+	padding: 2px 3px;
+	height: 19px;
+	overflow: hidden;
+	white-space: nowrap;
+	}
