@@ -245,7 +245,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 				},
 				context: [['database', 'databases']],
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="drop" value="Drop"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#{database}/tables">{database}</a></td></tr>',
 				contextMenu: '<li onclick="location.hash = Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Juxta.drop({drop: \'database\', item: \'database\', database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')});">Drop</li><li onclick="Juxta.explorer.properties({database: Juxta.explorer.grid.contextMenu.value.attr(\'name\')}); ">Properties</li>'
 			}
 		},
@@ -264,7 +264,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'process-time': 'Time'
 				},
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="kill" value="Kill"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{process}"></td><td class="process"><a>{process}</td><td class="process-user">{user}@{host}</td><td class="process-database">{ondatabase}</td><td class="process-command">{command}</td><td class="process-time">{time}</td><td></td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{process}"></td><td class="process"><a>{process}</td><td class="process-user">{user}@{host}</td><td class="process-database">{ondatabase}</td><td class="process-command">{command}</td><td class="process-time">{time}</td><td></td></tr>',
 				contextMenu: '<li>Information</li><li onclick="Juxta.kill({processes: [Juxta.explorer.grid.contextMenu.value.attr(\'name\')]});">Kill</li>'
 			},
 			query: {cache: Infinity, index: {name: 'processId', field: 0, path: ['data']}, refresh: true}
@@ -283,7 +283,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'user-grant': 'Grant'
 				},
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="delete" value="Delete"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{user}"></td><td class="user"><a>{user}</td><td class="user-host">{host}</td><td class="user-password"><span class="{password}">{password}</span></td><td class="user-global-privileges">{privileges}</td><td class="user-grant">{grant}</td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{user}"></td><td class="user"><a>{user}</td><td class="user-host">{host}</td><td class="user-password"><span class="{password}">{password}</span></td><td class="user-global-privileges">{privileges}</td><td class="user-grant">{grant}</td></tr>',
 				context: [['user', 'users'], 'host', 'password', 'privileges', 'grant'],
 				contextMenu: '<li>Edit Privileges</li><li>Change Password</li><li>Rename</li><li>Delete</li>'
 			}
@@ -302,7 +302,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'table-update-date': 'Update',
 				},
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><span class="overflowed"><a href="#{database}/{table}/columns">{table}</a></span></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size|size}</td><td class="table-update-date">{updateDate|date}</td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><span class="overflowed"><a href="#{database}/{table}/columns">{table}</a></span></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size|size}</td><td class="table-update-date">{updateDate|date}</td></tr>',
 				'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
 				'contextMenu': '<li onclick="location.hash = \'{database}/\' + Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'{database}/\' + Juxta.explorer.grid.contextMenu.value.attr(\'name\') + \'/browse\'">Browse</li><li class="drop" onclick="Juxta.drop({drop: \'table\', item: \'table\', table: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
 			}
@@ -319,7 +319,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'view-updatable': 'Updatable',
 				},
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
 				context: [['view', 'views'], 'definer', 'updatable'],
 				contextMenu: '<li>Browse</li><li onclick="Juxta.edit({view: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: \'sampdb\'})">Edit</li><li class="drop" onclick="Juxta.drop({drop: \'view\', item: \'view\', view: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
 			}
@@ -335,7 +335,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'routine-return': 'Returns'
 				},
 				'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{routine}" routine="{type}"></td><td class="routine"><a>{routine}</a></td><td class="routine-definer">{definer}</td><td class="routine-return">{return}</td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{routine}" routine="{type}"></td><td class="routine"><a>{routine}</a></td><td class="routine-definer">{definer}</td><td class="routine-return">{return}</td></tr>',
 				'context': [['routine', 'routines'], 'type', 'definer', 'return'],
 				'contextMenu': '<li>Edit</li><li class="drop" onclick="var request = {drop: Juxta.explorer.grid.contextMenu.value.attr(\'routine\'), item: Juxta.explorer.grid.contextMenu.value.attr(\'routine\'), from: Juxta.explorer.grid.from}; request[request.drop] = Juxta.explorer.grid.contextMenu.value.attr(\'name\'); Juxta.drop(request);">Drop</li><li>Properties</li>'
 			}
@@ -353,7 +353,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 					'trigger-definer': 'Definer',
 				},
 				'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
-				'data-template': '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
+				row: '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
 				'context': [['trigger', 'triggers'], 'table', 'event', 'timing', 'definer', 'size'],
 				'contextMenu': '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: \'sampdb\'})">Edit</li><li class="drop" onclick="Juxta.drop({drop: \'trigger\', item: \'trigger\', trigger: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
 			}

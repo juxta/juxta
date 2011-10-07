@@ -55,7 +55,7 @@ class Juxta {
 		//
 		$response = array();
 		if ($result) {
-			while ($row = mysqli_fetch_array($result)) {
+			while ($row = mysqli_fetch_array($result, is_int($cols) ? $cols : MYSQLI_BOTH)) {
 				$toResponse = array();
 				if (is_array($cols)) {
 					foreach ($cols as $col) {
@@ -208,6 +208,8 @@ class Juxta {
 			}
 		} elseif (isset($_GET['kill'])) {
 			$response = $this->kill((array)$_REQUEST['processes']);
+		} elseif (isset($_GET['browse'])) {
+			$response = $this->browse($_GET['browse'], $_GET['from']);
 		}
 		//
 		if (isset($response)) {
@@ -477,6 +479,12 @@ class Juxta {
 		}
 
 		return array('triggers' => $triggers, 'dropped' => $dropped);
+	}
+
+	private function browse($table, $database, $limit = null, $offset = null) {
+		$columns = $this->query("SHOW COLUMNS IN `{$table}` FROM `{$database}`", array('Field', 'Key', 'Type'));
+		$data = $this->query("SELECT * FROM `{$database}`.`{$table}`");
+		return array('data' => $data, 'columns' => $columns);
 	}
 
 }

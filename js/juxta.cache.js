@@ -3,9 +3,9 @@
  */
 Juxta.Cache = function() {
 
-	this.cache = {};
-
 	var defaultLifeTime = 10000;
+
+	this.cache = {};
 
 	this.get = function(key) {
 		var timestamp = (new Date()).getTime();

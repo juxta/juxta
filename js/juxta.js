@@ -217,7 +217,7 @@ Juxta.prototype = {
 		}
 	},
 	show: function() {
-		$('#sidebar').slideDown(250);
+		$('#sidebar:not(.minimized)').slideDown(250);
 		$('.float-box').hide();
 		if ($('#applications').not(':visible')) {
 			$('#applications').fadeIn(250);
@@ -246,13 +246,12 @@ Juxta.prototype = {
 		return confirm(message);
 	},
 	info: function(params) {
-		console.log(params);
 		Juxta.sidebar.highlight('status');
 		Juxta.serverInfo.request(params);
 	},
 	browse: function(params) {
 		Juxta.sidebar.path({'database': params.from, 'table': params.browse});
-		this.browser.show();
+		this.browser.request(params);
 	},
 	edit: function(params) {
 		if (params) {

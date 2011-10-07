@@ -2,6 +2,7 @@
 @import url('form-auth.css');
 @import url('form-create-database.css');
 @import url('form-database-properties.css');
+@import url('browser.css');
 
 * { 
 	outline: 0;
@@ -404,8 +405,8 @@ span.overflowed{
 	}
 	
 .grid .body table{
-	width: 100%;
 	font-size: 9pt;
+	width: 100%;
 	}
 		
 .grid .body tr:hover{

@@ -107,7 +107,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 						'value': 'Value'
 				},
 				actions: '<span style="float: left; margin-right: 11px;">View</span><ul class="switch"><li name="full" class="active">Full</li><li name="compact">Compact</li></ul>',
-				'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+				row: '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
 				context: ['variable', 'value']
 			}
 		},
@@ -121,7 +121,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 						'variable': 'Variable',
 						'value': 'Value'
 					},
-				'data-template': '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
+				row: '<tr><td class="variable"><span class="overflowed"><a>{variable}</a></span></td><td class="value">{value}</td></tr>',
 				context: ['variable', 'value']
 			}
 		},
@@ -136,7 +136,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 						'charset-default-collation': 'Default collation',
 						'charset-description': 'Description'
 					},
-				'data-template': '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
+				row: '<tr><td class="charset"><a>{charset}</a></td><td class="charset-default-collation">{collation}</td><td class="charset-description">{description}</td></tr>',
 				context: ['charset', 'description', 'collation', 'maxlen']
 			},
 			query: {cache: Infinity}
@@ -152,7 +152,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 						'engine-support': 'Support',
 						'engine-comment': 'Description'
 					},
-				'data-template': '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
+				row: '<tr><td class="engine"><a>{engine}</a></td><td class="engine-support"><span class="{support}">{support}</span></td><td class="engine-comment">{comment}</td></tr>',
 				context: ['engine', 'support', 'comment']
 			},
 			query: {cache: Infinity}

@@ -13,12 +13,12 @@
 
 header("Cache-Control: no-cache;");
 
-if (isset($_GET['debug'])) {
+//if (isset($_GET['debug'])) {
 	error_reporting(E_ALL | E_STRICT);
-} else {
-	error_reporting(0);
+//} else {
+//	error_reporting(0);
 	header("Content-Type: application/json");
-}
+//}
 
 sleep(0);
 

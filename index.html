@@ -465,13 +465,21 @@
 			<div class="status">&nbsp;</div>
 		</div>
 
-		<div id="data-browser" class="application">
+		<div id="data-browser" class="application browser">
 			<h1>Browse</h1>
 			<div class="menu"></div>
-			<input type="button" class="close"/><br class="clear"/>
-			<div class="clear" style="text-align: center; ">
-				<p style="font-size: 13pt; color: #ccc; margin-top: 150px; ">Don't work</p>
+			<input type="button" class="close"/>
+			<br class="clear"/>
+			<div class="grid rows clear">
+				<div class="actions">Select:&nbsp;<span class="like-a all">all</span>,&nbsp;<span class="like-a nothing">nothing</span> <input type="button" value="Drop" /></div>
+				<ul class="head"></ul>
+				<div class="body">
+					<table cellspacing="0"></table>
+					<div class="not-found">No items found</div>
+				</div>
+				<div class="context"><ul></ul></div>
 			</div>
+			<div class="status">&nbsp;</div>
 		</div>
 
 		<div id="table-editor" class="application">

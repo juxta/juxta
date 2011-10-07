@@ -148,7 +148,7 @@ Juxta.Grid.prototype = {
 		if (data && data.data && (data.data.length > 0 || $.isPlainObject(data.data))) {
 			this.statistics.all = data.data.length;
 
-			var template = data['data-template'];
+			var template = data.row;
 			jQuery.each(data.data, function(i, value) {
 				if ($.isPlainObject(data.data)) {
 					value = [i, value];

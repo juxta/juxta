@@ -10,12 +10,12 @@ Juxta.BackupRestore = $.Class(Juxta.Application, {
 		this.stretch();
 		
 		response = {
-			'head': {
+			head: {
 				'database': 'Items for backup'
 			},
-			'data-template': '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
-			'context': ['database'],
-			'data': ['information_schema', 'mysql', 'sampdb', 'test'],
+			row: '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
+			context: ['database'],
+			data: ['information_schema', 'mysql', 'sampdb', 'test'],
 		};
 		this.grid.fill(response);
 	},
