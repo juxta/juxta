@@ -1,5 +1,6 @@
 /**
- * @class Grid
+ * @class Simple grid
+ * @constructor
  */
 Juxta.Grid = function(grid) {
 	this.init(grid);
@@ -14,11 +15,21 @@ Juxta.Grid.prototype = {
 	},
 	content: null,
 	from: null,
+	columns: [],
 	cache: {},
+	/**
+	 * Context menu
+	 * @filed {Juxta.ContextMenu}
+	 */
+	contextMenu: null,
+	/**
+	 *
+	 */
 	init: function(grid) {
 		this.$container = $(grid);
 		this.$bodyContainer = this.$container.find('.body');
-		this.$body = this.$bodyContainer.find('table');
+		this.$bodyHead = this.$bodyContainer.find('table thead');
+		this.$body = this.$bodyContainer.find('table tbody');
 		this.$notFound = this.$bodyContainer.find('.not-found')
 		this.head = this.$container.find('.head');
 		this.$actions = this.$container.find('.actions');
@@ -80,7 +91,7 @@ Juxta.Grid.prototype = {
 		});
 
 		if (this.$context.is('.context')) {
-			this.contextMenu = new Juxta.ContextMenu(this.$body, this.$container.find('.context'));
+			this.contextMenu = new Juxta.ContextMenu(this.$body, this.$context);
 		}
 
 	},
@@ -137,27 +148,32 @@ Juxta.Grid.prototype = {
 			return false;
 		}
 	},
-	fill: function(data) {
+	/**
+	 * Fill grid data
+	 * @param {Array} data
+	 * @param {Object} params
+	 */
+	fill: function(data, params) {
 		var that = this;
 
 		this.empty();
-		this.content = data.contents;
-		if (data.from) {
-			this.from = data.from;
+		this.content = params.contents;
+		if (params.from) {
+			this.from = params.from;
 		}
-		if (data && data.data && (data.data.length > 0 || $.isPlainObject(data.data))) {
-			this.statistics.all = data.data.length;
+		if (data && (data.length > 0 || $.isPlainObject(data))) {
+			this.statistics.all = data.length;
 
-			var template = data.row;
-			jQuery.each(data.data, function(i, value) {
-				if ($.isPlainObject(data.data)) {
+			var template = params.row;
+			jQuery.each(data, function(i, value) {
+				if ($.isPlainObject(data)) {
 					value = [i, value];
 				}
 				var forTemplate = {},
 					cacheName;
-				jQuery.each(data.context, function(j, valueName) {
+				jQuery.each(params.context, function(j, valueName) {
 					var name;
-					if (data.context.length == 1) {
+					if (params.context.length == 1) {
 						if ($.isArray(valueName)) {
 							name = valueName[0];
 						} else{
@@ -176,7 +192,10 @@ Juxta.Grid.prototype = {
 						cacheName = name;
 					}
 				});
-				$.extend(forTemplate, {database: data['from']});
+				// @todo Rewrite this
+				if (params.from) {
+					$.extend(forTemplate, {database: params['from']});
+				}
 
 				var $q = $($.template(template, forTemplate)).appendTo(that.$body);
 				that.cache[forTemplate[cacheName]] = $q;
@@ -184,8 +203,13 @@ Juxta.Grid.prototype = {
 			this.$body.trigger('change');
 
 			// Make context menu
-			if (data.contextMenu) {
-				this.$container.find('.context ul').html($.template(data.contextMenu, {database: data['from']}));
+			if (params.contextMenu && this.contextMenu) {
+				if (params.from) {
+					var menu = $.template(params.contextMenu, {database: params.from});
+				} else {
+					var menu = params.contextMenu;
+				}
+				this.contextMenu.load(menu);
 			}
 		} else {
 			this.$notFound.css('top', this.$container.find('.body').height() / 2 - 14 + 'px').show();
@@ -197,6 +221,7 @@ Juxta.Grid.prototype = {
 	empty: function() {
 		this.$body.empty();
 		this.$notFound.hide();
+
 		this.cache = {};
 		this.content = null;
 		this.from = null;

@@ -67,8 +67,9 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		if (response.contents == 'status') {
 			this.properStatus(response.data);
 		} else {
-			$.extend(response, this.templates[response.contents].grid);
-			this.grid.fill(response);
+			var params = $.extend({}, response, this.templates[response.contents].grid);
+			delete params.data;
+			this.grid.fill(response.data, params);
 		}
 		this.show();
 	},

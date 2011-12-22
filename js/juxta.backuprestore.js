@@ -8,16 +8,14 @@ Juxta.BackupRestore = $.Class(Juxta.Application, {
 	show: function(options) {
 		this._show(options);
 		this.stretch();
-		
-		response = {
-			head: {
-				'database': 'Items for backup'
-			},
-			row: '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
-			context: ['database'],
-			data: ['information_schema', 'mysql', 'sampdb', 'test'],
-		};
-		this.grid.fill(response);
+
+		var params = {
+				head: {'database': 'Items for backup'},
+				row: '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
+				context: ['database']
+			};
+		var data = ['information_schema', 'mysql', 'sampdb', 'test'];
+		this.grid.fill(data, params);
 	},
 	stretch: function(event) {
 		var _this = event && event.data._this || this;

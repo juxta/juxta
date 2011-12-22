@@ -33,32 +33,41 @@ Juxta.Browser = $.Class(Juxta.Application, {
 		));
 	},
 	response: function(response) {
-		$.extend(response, {
-			head: {},
-			row: null,
-			context: [],
-			contextMenu: '<li onclick="Juxta.edit({trigger: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: \'sampdb\'})">Edit</li><li class="drop" onclick="Juxta.drop({drop: \'trigger\', item: \'trigger\', trigger: Juxta.explorer.grid.contextMenu.value.attr(\'name\'), from: Juxta.explorer.grid.from});">Drop</li><li>Properties</li>'
-		});
+		var params = $.extend(
+			{},
+			response,
+			{
+				head: {},
+				row: null,
+				context: [],
+				contextMenu: [
+					{title: 'Delete', action: function() { console.log('Drop'); }},
+					{title: 'Edit', action: function() { console.log('Edit');  }}
+				]
+			}
+		);
 
 		if (response.columns) {
-			response.row = '<tr>';
+			params.row = '<tr>';
 			$.each(response.columns, function(i, column) {
-				response.head[(
+				params.head[(
 					'column' +
 					(column[1] ? ' ' + column[1] : '') +
 					' ' + column[0]
 				).toLowerCase()] = column[0];
 				//
-				response.row += '<td class="column ' + column[0] + '"><div>{' + column[0] + '}</div></td>';
+				params.row += '<td class="column ' + column[0] + '"><div>{' + column[0] + '}</div></td>';
+				//params.row += '<td>{' + column[0] + '}</td>';
 				//
-				response.context.push(column[0]);
+				params.context.push(column[0]);
 			});
-			response.row += '<td></td></tr>';
+			params.row += '</tr>';
 		}
-		console.log(response);
+		delete params.data;
+		console.log(response.data);
 
-		this.grid.prepare(response);
-		this.grid.fill(response);
+		this.grid.prepare(params);
+		this.grid.fill(response.data, params);
 
 		this.show();
 	}

@@ -1,26 +1,47 @@
 /**
- * @class ContextMenu
+ * @class Grid context menu
+ * @constructor
+ * @param {jQuery, String} Page
+ * @param {jQuery, String} Menu container
  */
-
 Juxta.ContextMenu = function(page, menu) {
-	//
-	this.target = null;
-	this.value = null;
+
+	/**
+	 * Grid body
+	 * @field
+	 */
 	this.$page = $(page);
+
+	/**
+	 * Container
+	 * @field
+	 */
 	this.$container = $(menu);
 
-	var that = this;
+	/**
+	 * Target (row)
+	 * @field
+	 */
+	this.target = null;
 
+	/**
+	 * Value
+	 * @field
+	 */
+	this.value = null;
+
+	var that = this;
 	this.$page.bind('contextmenu', function(event) {
 		that.show($(event.target).parents('tr'), {top: event.clientY, left: event.clientX});
 		return false;
 	});
 
-	this.$container.bind('hide', function() {
-		that.hide();
-	});
+	this.$container.bind('hide', $.proxy(this.hide, this));
 }
 
+/**
+ * Hide menu
+ */
 Juxta.ContextMenu.prototype.hide = function() {
 	this.target.find(':checkbox').attr('checked', false);
 	this.target.find('td:nth-child(2)').find('a').removeClass('checked');
@@ -31,6 +52,11 @@ Juxta.ContextMenu.prototype.hide = function() {
 	this.$page.trigger('change');
 }
 
+/**
+ * Show menu
+ * @param {jQuery} Table row
+ * @param {Object} Position
+ */
 Juxta.ContextMenu.prototype.show = function(row, position) {
 	this.target = row;
 	this.value = this.target.find('[type=checkbox]');
@@ -44,4 +70,28 @@ Juxta.ContextMenu.prototype.show = function(row, position) {
 	this.target.find('td:nth-child(2)').find('a').addClass('checked');
 
 	this.$page.trigger('change');
+
+	return false;
 }
+
+/**
+ * Load menu
+ * @param {String, Array} Menu template or items 
+ */
+Juxta.ContextMenu.prototype.load = function(menu) {
+	if (typeof menu === 'string') {
+		this.$container.find('ul').html(menu);
+	} else {
+		var $menu = this.$container.find('ul').empty();
+		$.each(menu, function(i, item) {
+			var $item = $('<li>').text(item.title);
+			if (item.class) {
+				$item.addClass(item.class);
+			}
+			if (item.action && typeof item.action === 'function') {
+				$item.bind('click', item.action);
+			}
+			$item.appendTo($menu);
+		});
+	}
+ }

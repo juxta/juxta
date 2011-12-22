@@ -94,11 +94,12 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			));
 		}
 	},
-	response: function(data) {
+	response: function(response) {
 		this.show();
-		if (this.preparedFor == data.contents) {
-			$.extend(data, this.templates[data.contents].grid);
-			this.grid.fill(data);
+		if (this.preparedFor == response.contents) {
+			var params = $.extend({}, response, this.templates[response.contents].grid);
+			delete params.data;
+			this.grid.fill(response.data, params);
 		}
 	},
 	prepare: function(template) {

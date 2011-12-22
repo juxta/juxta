@@ -7,19 +7,28 @@
 	width: 125px;
 	}
 
-.grid.rows .body .column:first-child {
-	width: 127px;
+.grid.rows .body table thead th.column{
+	//width: 125px;
+	background-color: #9f9;
+	border-right: #F66 1px solid;
 	}
 
-.grid.rows .body .column {
-	width: 125px;
+.grid.rows .body table tbody td {
 	padding: 0;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: ignore;
+	-webkit-box-sizing: border-box;
 	}
 
-.grid.rows .body .column div {
-	width: 126px;
-	padding: 2px 3px;
-	height: 19px;
-	overflow: hidden;
+.grid.rows .body table tbody td div {
+	width: 125px;
+	padding: 0 3px;
 	white-space: nowrap;
+	text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: ignore;
+	-webkit-box-sizing: border-box;
 	}

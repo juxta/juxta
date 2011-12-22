@@ -1,11 +1,18 @@
 /**
- * @class Tree grid
+ * @class Grid with expande/collapse rows
  * @extends Juxta.Grid
+ * @constructor
+ * @param {String, jQuery} Grid container
  */
 Juxta.TreeGrid = function(grid) {
 	Juxta.Grid.call(this, grid);
 }
 
+/**
+ * Initialisation
+ *
+ * @param {String} grid
+ */
 Juxta.TreeGrid.prototype.init = function(grid) {
 
 	this._selectRow = Juxta.Grid.prototype.selectRow;
