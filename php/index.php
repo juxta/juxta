@@ -35,7 +35,7 @@ set_error_handler('juxtaErrorHandler');
 session_start();
 
 require 'config.php';
-require 'juxta.class.php';
+require 'juxta.php';
 
 try {
 	new Juxta($config);

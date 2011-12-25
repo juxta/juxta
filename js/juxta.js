@@ -48,7 +48,7 @@ Juxta.prototype = {
 	 * Ajax options
 	 */
 	ajaxSetup: {
-		url: 'juxta.php',
+		url: 'php/',
 		dataType: 'json',
 		type: 'POST',
 		beforeSend: function() {
