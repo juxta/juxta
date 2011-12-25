@@ -1,26 +1,36 @@
 <?php
-
 /*
  * Juxta 0.0.1 http://juxta.ru
- * 
- * Copyright (c) 2010-2011 Alexey Golovnya
+ *
  * Licensed under the MIT license
- * 
- * @package juxta-php
- * @version 0.0.1 
- * 
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
+ * @copyright	Copyright (c) 2010-2011 Alexey Golovnya
+ * @license 	MIT License
+ * @version 	0.0.1
  */
 
 header("Cache-Control: no-cache;");
+header("Content-Type: application/json");
 
-//if (isset($_GET['debug'])) {
-	error_reporting(E_ALL | E_STRICT);
-//} else {
-//	error_reporting(0);
-	header("Content-Type: application/json");
-//}
+error_reporting(E_ALL | E_STRICT);
 
-sleep(0);
+if (isset($_REQUEST['debug']) && $_REQUEST['debug'] === 'true') {
+	define('DEBUG', true);
+} else {
+	define('DEBUG', false);
+}
+
+function juxtaErrorHandler($no, $str, $file, $line)
+{
+	if (DEBUG) {
+		throw new JuxtaException("{$str} in {$file}:{$line}", $no);
+		return true;
+	}
+}
+
+set_error_handler('juxtaErrorHandler');
 
 session_start();
 
@@ -43,5 +53,3 @@ try {
 
 	echo json_encode($response);
 }
-
-?>

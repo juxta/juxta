@@ -54,6 +54,9 @@ Juxta.prototype = {
 		beforeSend: function() {
 			Juxta.loading();
 		},
+		data: {
+			debug: true
+		},
 		complete: function() {
 			Juxta.loading(false);
 		},
