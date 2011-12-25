@@ -1,56 +1,118 @@
 <?php
-
 /*
  * Juxta 0.0.1 http://juxta.ru
- * 
- * Copyright (c) 2010-2011 Alexey Golovnya
+ *
  * Licensed under the MIT license
- * 
- * @package juxta-php
- * @version 0.0.1 
- * 
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
+ * @copyright	Copyright (c) 2010-2011 Alexey Golovnya
+ * @license 	MIT License
+ * @version 	0.0.1
  */
 
 /*
- * Juxta backend class
- * 
+ * Juxta for MySQL PHP backend main class
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
  */
+class Juxta
+{
 
-class Juxta {
-	private $config = array();
-	private $mysql = NULL;
+	/**
+	 * Config
+	 * 
+	 * @var array
+	 */
+	private $_config = array();
 
-	public function __construct($config = array()) {
-		$this->config = $config;
+
+	/**
+	 * Connection
+	 *
+	 * @var
+	 */
+	private $_mysql = NULL;
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $config
+	 */
+	public function __construct($config = array())
+	{
+		$this->_config = $config;
 		$this->route();
 	}
 
-	public function __destruct() {
-		if (isset($this->mysql)) {
-			$this->mysql->close();
+
+	/**
+	 * Destructor
+	 *
+	 */
+	public function __destruct()
+	{
+		if (isset($this->_mysql)) {
+			$this->_mysql->close();
 		}
 	}
 
-	private function connect($connection) {
-		if (!$this->mysql) {
-			$this->mysql = new mysqli($connection['host'], $connection['user'], $connection['password'], null, $connection['port']);
-			if ($this->mysql->connect_error) {
-				throw new JuxtaConnectionException($this->mysql->connect_error, $this->mysql->connect_errno);
+
+	/**
+	 * Creates a connection
+	 *
+	 * @param array $connection
+	 */
+	private function _connect($connection)
+	{
+		if (!$this->_mysql) {
+			$this->_mysql = new mysqli(
+				$connection['host'],
+				$connection['user'],
+				$connection['password'],
+				null,
+				$connection['port']
+			);
+
+			if ($this->_mysql->connect_error) {
+				throw new JuxtaConnectionException(
+					$this->_mysql->connect_error,
+					$this->_mysql->connect_errno
+				);
 			}
 		}
 	}
 
-	private function query($sql, $cols) {
+
+	/**
+	 * Makes query
+	 *
+	 * @param string $sql
+	 * @param $cols
+	 * @return array
+	 */
+	private function _query($sql, $cols = null)
+	{
 		//
-		if (!isset($_SESSION['host']) || !isset($_SESSION['user']) || !isset($_SESSION['password'])) {
+		if (!isset($_SESSION['host'])
+			|| !isset($_SESSION['user'])
+			|| !isset($_SESSION['password'])
+		) {
 			throw new JuxtaSessionException('Please login');
 		}
 		//
-		$this->connect(array('host' => $_SESSION['host'], 'user' => $_SESSION['user'], 'password' => $_SESSION['password'], 'port' => $_SESSION['port']));
+		$this->_connect(array(
+			'host' => $_SESSION['host'],
+			'user' => $_SESSION['user'],
+			'password' => $_SESSION['password'],
+			'port' => $_SESSION['port'])
+		);
 
-		$result = $this->mysql->query($sql);
-		if ($this->mysql->error) {
-			throw new JuxtaQueryException($this->mysql->error, $this->mysql->errno);
+		$result = $this->_mysql->query($sql);
+		if ($this->_mysql->error) {
+			throw new JuxtaQueryException($this->_mysql->error, $this->_mysql->errno);
 		}
 		//
 		$response = array();
@@ -67,58 +129,62 @@ class Juxta {
 				$response[] = $toResponse;
 			}
 		}
+
 		return $response;
 	}
 
-	public function route() {
+
+	/**
+	 * Routing
+	 *
+	 */
+	public function route()
+	{
 		if (isset($_GET['show'])) {
 			switch ($_GET['show']) {
-				case 'stored_connections':
-					$response = $this->storedConnections();
-					break;
 				case 'databases':
-					$response = $this->databases();
+					$response = $this->_showDatabases();
 					break;
 				case 'database-properties':
-					$response = $this->databaseProperties($_REQUEST['database']);
+					$response = $this->_showDatabaseProperties($_REQUEST['database']);
 					break;
 				case 'processlist':
-					$response = $this->processlist();
+					$response = $this->_showProcesslist();
 					break;
 				case 'status':
 				case 'status-full':
-					$response = $this->status();
+					$response = $this->_showStatus();
 					$response['contents'] = $_GET['show'];
 					break;
 				case 'variables':
-					$response = $this->variables();
+					$response = $this->_showVariables();
 					break;
 				case 'charsets':
-					$response = $this->charsets();
+					$response = $this->_showCharsets();
 					break;
 				case 'engines':
-					$response = $this->engines();
+					$response = $this->_showEngines();
 					break;
 				case 'users':
-					$response = $this->users();
+					$response = $this->_showUsers();
 					break;
 				case 'tables':
-					$response = $this->tables($_GET['from']);
+					$response = $this->_showTables($_GET['from']);
 					break;
 				case 'views':
-					$response = $this->views($_GET['from']);
+					$response = $this->_showViews($_GET['from']);
 					break;
 				case 'routines':
-					$response = $this->routines($_GET['from']);
+					$response = $this->_showRoutines($_GET['from']);
 					break;
 				case 'triggers':
-					$response = $this->triggers($_GET['from']);
+					$response = $this->_showTriggers($_GET['from']);
 					break;
 			}
 		} elseif (isset($_GET['get'])) {
 			switch ($_GET['get']) {
 				case 'connections':
-					$response = $this->storedConnections();
+					$response = $this->_getConnections();
 					break;
 				case 'collations':
 					$response = $this->collations();
@@ -127,7 +193,7 @@ class Juxta {
 		} elseif (isset($_GET['login'])) {
 			try {
 				$_POST['port'] = $_POST['port'] ? $_POST['port'] : 3306;
-				$this->connect(array(
+				$this->_connect(array(
 					'host' => $_POST['host'],
 					'port' => $_POST['port'],
 					'user' => $_POST['user'],
@@ -153,7 +219,7 @@ class Juxta {
 		} elseif (isset($_GET['create']) && $_GET['create'] == 'database') {
 			switch ($_GET['create']) {
 				case 'database':
-				$response = $this->createDatabase($_POST['name']);
+				$response = $this->_createDatabase($_POST['name']);
 			}
 		} elseif (isset($_GET['drop'])) {
 			switch ($_GET['drop']) {
@@ -163,7 +229,7 @@ class Juxta {
 					if (!empty($_POST['database'])) {
 						$_POST['databases'] = $_POST['database'];
 					}
-					$response = $this->dropDatabases((array)$_POST['databases']);
+					$response = $this->_dropDatabases((array)$_POST['databases']);
 					break;
 				// Drop tables
 				case 'table':
@@ -171,7 +237,7 @@ class Juxta {
 					if (!empty($_POST['table'])) {
 						$_POST['tables'] = $_POST['table'];
 					}
-					$response = $this->dropTables((array)$_POST['tables'], $_GET['from']);
+					$response = $this->_dropTables((array)$_POST['tables'], $_GET['from']);
 					break;
 				// Drop views
 				case 'view':
@@ -179,7 +245,7 @@ class Juxta {
 					if (!empty($_POST['view'])) {
 						$_POST['views'] = $_POST['view'];
 					}
-					$response = $this->dropViews((array)$_POST['views'], $_GET['from']);
+					$response = $this->_dropViews((array)$_POST['views'], $_GET['from']);
 					break;
 				// Drop stored procedures
 				case 'function':
@@ -195,7 +261,7 @@ class Juxta {
 					if (!empty($_POST['routine'])) {
 						$_REQUEST['routines'] = $_REQUEST['routines'];
 					}
-					$response = $this->dropRoutines((array)$_REQUEST['routines'], $_GET['from']);
+					$response = $this->_dropRoutines((array)$_REQUEST['routines'], $_GET['from']);
 					break;
 				// Drop triggers
 				case 'trigger':
@@ -203,13 +269,13 @@ class Juxta {
 					if (!empty($_REQUEST['trigger'])) {
 						$_REQUEST['triggers'] = $_REQUEST['trigger'];
 					}
-					$response = $this->dropTriggers((array)$_REQUEST['triggers'], $_GET['from']);
+					$response = $this->_dropTriggers((array)$_REQUEST['triggers'], $_GET['from']);
 					break;
 			}
 		} elseif (isset($_GET['kill'])) {
-			$response = $this->kill((array)$_REQUEST['processes']);
+			$response = $this->_kill((array)$_REQUEST['processes']);
 		} elseif (isset($_GET['browse'])) {
-			$response = $this->browse($_GET['browse'], $_GET['from']);
+			$response = $this->_browse($_GET['browse'], $_GET['from']);
 		}
 		//
 		if (isset($response)) {
@@ -219,10 +285,19 @@ class Juxta {
 		}
 	}
 
-	private function storedConnections() {
+
+	/**
+	 * Returns stored connections
+	 *
+	 * @return array
+	 */
+	private function _getConnections()
+	{
 		$connections = array();
-		if (isset($this->config['stored_connections']) && is_array($this->config['stored_connections'])) {
-			foreach ($this->config['stored_connections'] as $connection) {
+		if (isset($this->_config['stored_connections'])
+			&& is_array($this->_config['stored_connections'])
+		) {
+			foreach ($this->_config['stored_connections'] as $connection) {
 				// Don't pass password
 				if (isset($connection['password'])) {
 					unset($connection['password']);
@@ -237,24 +312,48 @@ class Juxta {
 				$connections[] = $connection;
 			}
 		}
+
 		return array('contents' => 'connections', 'data' => $connections);
 	}
 
-	private function databases() {
-		$databases = $this->query("SHOW DATABASES", array(0));
+
+	/**
+	 * Returns list of databases
+	 * 
+	 * @return array
+	 */
+	private function _showDatabases()
+	{
+		$databases = $this->_query("SHOW DATABASES", array(0));
 		return array('contents' => 'databases', 'data' => $databases);
 	}
 
-	private function createDatabase($name, $collation = null) {
-		$this->query("CREATE DATABASE `{$name}`");
+
+	/**
+	 * Creates a database
+	 *
+	 * @return array
+	 */
+	private function _createDatabase($name, $collation = null)
+	{
+		$this->_query("CREATE DATABASE `{$name}`");
+
 		return array('database' => 'created', 'name' => $name);
 	}
 
-	private function dropDatabases(array $databases) {
+
+	/**
+	 * Drops databases
+	 *
+	 * @return array
+	 */
+	private function _dropDatabases(array $databases)
+	{
 		$dropped = array();
+
 		foreach ($databases as $database) {
 			try {
-				$this->query("DROP DATABASE `{$database}`");
+				$this->_query("DROP DATABASE `{$database}`");
 				$dropped[] = $database;
 			} catch (JuxtaQueryException $e) {
 				$e->addtoResponse(array('dropped' => $dropped));
@@ -267,23 +366,33 @@ class Juxta {
 
 
 	/**
-	 * Get database properties
+	 * Gets a database's properties
 	 *
 	 * @param string $database Database name
 	 * @return array
 	 */
-	private function databaseProperties($database) {
-		$properties = array(
-			'name' => $database,
-		);
+	private function _showDatabaseProperties($database)
+	{
+		$properties = array('name' => $database);
 
-		$charset = $this->query("SELECT `DEFAULT_CHARACTER_SET_NAME` as `name`, `DEFAULT_COLLATION_NAME` as `collation` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME` = '{$database}'");
+		$sql1 = "SELECT `DEFAULT_CHARACTER_SET_NAME` as `name`, "
+			 . "`DEFAULT_COLLATION_NAME` as `collation` "
+			 . "FROM `information_schema`.`SCHEMATA` "
+			 . "WHERE `SCHEMA_NAME` = '{$database}'";
+
+		$charset = $this->_query($sql1);
 		if ($charset) {
 			$properties['charset'] = $charset[0]['name'];
 			$properties['collation'] = $charset[0]['collation'];
 		}
 
-		$statistics = $this->query("SELECT COUNT(*) AS `tables`, SUM(`TABLE_ROWS`) AS `rows`, SUM(`DATA_LENGTH`) AS `data_length`, SUM(`INDEX_LENGTH`) AS `index_length` FROM `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'"/*, array('tables', 'rows', 'data_length', 'index_length')*/);
+		$sql2 = "SELECT COUNT(*) AS `tables`, SUM(`TABLE_ROWS`) AS `rows`, "
+			  . "SUM(`DATA_LENGTH`) AS `data_length`, "
+			  . "SUM(`INDEX_LENGTH`) AS `index_length` "
+			  . "FROM `INFORMATION_SCHEMA`.`TABLES` "
+			  . "WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'";
+
+		$statistics = $this->_query($sql2);
 		if ($statistics) {
 			$properties['tables']= $statistics[0]['tables'];
 			$properties['rows']= $statistics[0]['rows'];
@@ -291,29 +400,43 @@ class Juxta {
 			$properties['index_length']= (int)$statistics[0]['index_length'];
 		}
 
-		return array('contents' => 'database-properties', 'properties' => $properties, 'charset' => $statistics);
-	}
-
-
-	private function processlist()
-	{
-		$processlist = $this->query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
-		return array('contents' => 'processlist', 'data' => $processlist);
+		return array(
+			'contents' => 'database-properties',
+			'properties' => $properties,
+			'charset' => $statistics
+		);
 	}
 
 
 	/**
-	 * Kill processes
+	 * Returns list of processes
 	 *
-	 * @param array $processes
+	 * @retrun array
+	 */
+	private function _showProcesslist()
+	{
+		$processlist = $this->_query("SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
+
+		return array(
+			'contents' => 'processlist',
+			'data' => $processlist
+		);
+	}
+
+
+	/**
+	 * Kills processes
+	 *
+	 * @param array $processes list of processes ids
 	 * @return array
 	 */
-	private function kill(array $processes)
+	private function _kill(array $processes)
 	{
-		$killed = array();
+		$killed = null;
+
 		foreach ($processes as $process) {
 			try {
-				$this->query("KILL {$process}");
+				$this->_query("KILL {$process}");
 				$killed[] = $process;
 			} catch (JuxtaQueryException $exception) {
 				$exception->addtoResponse(array('killed' => $killed));
@@ -325,28 +448,60 @@ class Juxta {
 	}
 
 
-	private function status() {
+	/**
+	 * Retruns list of status variables
+	 *
+	 */
+	private function _showStatus()
+	{
 		$response = array();
-		$status = $this->query("SHOW STATUS", array(0, 1));
+
+		$status = $this->_query("SHOW STATUS", array(0, 1));
 		foreach ($status as $variable) {
 			$response[$variable[0]] = $variable[1];
 		}
+
 		return array('contents' => 'status', 'data' => $response);
 	}
 
-	private function variables() {
-		$variables = $this->query("SHOW VARIABLES", array(0, 1));
+
+	/**
+	 * Returns list of system variables
+	 *
+	 * @return array
+	 */
+	private function _showVariables()
+	{
+		$variables = $this->_query("SHOW VARIABLES", array(0, 1));
+
 		return array('contents' => 'variables', 'data' => $variables);
 	}
 
-	private function charsets() {
-		$charsets = $this->query("SHOW CHARSET", array('Charset', 'Description', 'Default collation', 'Maxlen'));
+
+	/**
+	 * Returns list of available character sets
+	 *
+	 * @retrun array
+	 */
+	private function _showCharsets()
+	{
+		$charsets = $this->_query("SHOW CHARSET",
+			array('Charset', 'Description', 'Default collation', 'Maxlen'));
+
 		return array('contents' => 'charsets', 'data' => $charsets);
 	}
 
-	private function collations() {
-		$collations = $this->query("SHOW COLLATION", array('Charset', 'Collation'));
-		$response = array();
+
+	/**
+	 * Lists all available collations
+	 *
+	 * @return array
+	 */
+	private function _showCollations()
+	{
+		$response = null;
+
+		$collations = $this->_query("SHOW COLLATION", array('Charset', 'Collation'));
 		if (is_array($collations)) {
 			foreach ($collations as $collation) {
 				if (!array_key_exists($collation[0], $response)) {
@@ -355,16 +510,32 @@ class Juxta {
 				$response[$collation[0]][] = $collation[1];
 			}
 		}
+
 		return array('contents' => 'collations', 'data' => $response);
 	}
 
-	private function engines() {
-		$engines = $this->query("SHOW ENGINES", array('Engine', 'Support', 'Comment'));
+
+	/**
+	 * Returns information about server's storage engines
+	 *
+	 * @return array
+	 */
+	private function _showEngines()
+	{
+		$engines = $this->_query("SHOW ENGINES", array('Engine', 'Support', 'Comment'));
+
 		return array('contents' => 'engines', 'data' => $engines);
 	}
-	
-	private function users() {
-		$users = $this->query("SELECT * FROM mysql.user");
+
+
+	/**
+	 * Lists users
+	 *
+	 * @return array
+	 */
+	private function _showUsers()
+	{
+		$users = $this->_query("SELECT * FROM mysql.user");
 		if (is_array($users)) {
 			$response = array();
 			foreach ($users as $user) {
@@ -378,19 +549,46 @@ class Juxta {
 				);
 			}
 		}
+
 		return array('contents' => 'users', 'data' => $response);
 	}
 
-	private function tables($database = '') {
-		$tables = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'", array('TABLE_NAME', 'ENGINE', 'TABLE_ROWS', 'DATA_LENGTH', 'UPDATE_TIME'));
-		return array('contents' => 'tables', 'from' => $database, 'data' => $tables);
+
+	/**
+	 * Returns information about tables in a database
+	 *
+	 * @return array
+	 */
+	private function _showTables($database = '')
+	{
+		$sql = "SELECT * FROM `INFORMATION_SCHEMA`.`TABLES` "
+			 . "WHERE `TABLE_SCHEMA` = '{$database}' "
+			 . "AND `TABLE_TYPE` <> 'VIEW'";
+
+		$tables = $this->_query($sql, array('TABLE_NAME', 'ENGINE',
+										   'TABLE_ROWS', 'DATA_LENGTH',
+										   'UPDATE_TIME'));
+
+		return array('contents' => 'tables',
+			'from' => $database, 'data' => $tables
+		);
 	}
 
-	private function dropTables(array $tables, $from) {
-		$dropped = array();
+
+	/**
+	 * Drops tables
+	 *
+	 * @param array $tables Tables
+	 * @param string $from Database
+	 * @return array
+	 */
+	private function _dropTables(array $tables, $from)
+	{
+		$dropped = null;
+
 		foreach ($tables as $table) {
 			try {
-				$this->query("DROP TABLE `{$from}`.`{$table}`;");
+				$this->_query("DROP TABLE `{$from}`.`{$table}`;");
 				$dropped[] = $table;
 			} catch (JuxtaQueryException $e) {
 				$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
@@ -401,16 +599,37 @@ class Juxta {
 		return array('dropped' => $dropped);
 	}
 
-	private function views($database = '') {
-		$views = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'", array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
+
+	/**
+	 * Returns information about views in a database
+	 *
+	 * @param string $database Database
+	 * @return array
+	 */
+	private function _showViews($database = '')
+	{
+		$sql = "SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` "
+			 . "WHERE `TABLE_SCHEMA` = '{$database}'";
+		$views = $this->_query($sql, array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
+
 		return array('contents' => 'views', 'from' => $database, 'data' => $views);
 	}
 
-	private function dropViews(array $views, $from) {
-		$dropped = array();
+
+	/**
+	 * Drops views
+	 *
+	 * @param array $views List of views
+	 * @param $from string Database
+	 * @return array
+	 */
+	private function _dropViews(array $views, $from)
+	{
+		$dropped = null;
+
 		foreach ($views as $view) {
 			try {
-				$this->query("DROP VIEW `{$from}`.`{$view}`;");
+				$this->_query("DROP VIEW `{$from}`.`{$view}`;");
 				$dropped[] = $view;
 			} catch (JuxtaQueryException $e) {
 				$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
@@ -421,10 +640,31 @@ class Juxta {
 		return array('dropped' => $dropped);
 	}
 
-	private function routines($database = '') {
-		$routines = $this->query("SELECT `ROUTINE_NAME`, LOWER(`ROUTINE_TYPE`) AS `ROUTINE_TYPE`, `DEFINER`, `DTD_IDENTIFIER` FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}'", array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER'));
-		return array('contents' => 'routines', 'from' => $database, 'data' => $routines);
+
+	/**
+	 * Returns information about stored procedures and functions
+	 *
+	 * @param $database Database
+	 * @return array
+	 */
+	private function _showRoutines($database = '')
+	{
+		$sql = "SELECT `ROUTINE_NAME`, LOWER(`ROUTINE_TYPE`) AS `ROUTINE_TYPE`, "
+			 . "`DEFINER`, `DTD_IDENTIFIER` "
+			 . "FROM `INFORMATION_SCHEMA`.`ROUTINES` "
+			 . "WHERE `ROUTINE_SCHEMA` = '{$database}'";
+		$routines = $this->_query(
+			$sql,
+			array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER')
+		);
+
+		return array(
+			'contents' => 'routines',
+			'from' => $database,
+			'data' => $routines
+		);
 	}
+
 
 	/**
 	 * Drops stored procedures and functions
@@ -433,12 +673,14 @@ class Juxta {
 	 * @param string $from
 	 * @return array
 	 */
-	private function dropRoutines(array $routines, $from) {
+	private function _dropRoutines(array $routines, $from)
+	{
 		$dropped = array();
+
 		if (isset($routines['function'])) {
 			foreach ($routines['function'] as $function) {
 				try {
-					$this->query("DROP FUNCTION `{$from}`.`{$function}`;");
+					$this->_query("DROP FUNCTION `{$from}`.`{$function}`;");
 					$dropped['function'][] = $function;
 				} catch (JuxtaQueryException $e) {
 					$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
@@ -449,7 +691,7 @@ class Juxta {
 		if (isset($routines['procedure'])) {
 			foreach ($routines['procedure'] as $procedure) {
 				try {
-					$this->query("DROP PROCEDURE `{$from}`.`{$procedure}`;");
+					$this->_query("DROP PROCEDURE `{$from}`.`{$procedure}`;");
 					$dropped['procedure'][] = $procedure;
 				} catch (JuxtaQueryException $e) {
 					$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
@@ -461,16 +703,41 @@ class Juxta {
 		return array('dropped' => $dropped);
 	}
 
-	private function triggers($database = '') {
-		$triggers = $this->query("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing', 'Created'));
-		return array('contents' => 'triggers', 'from' => $database, 'data' => $triggers);
+
+	/**
+	 * Lists triggers
+	 *
+	 * @param string $database Database
+	 * @return array
+	 */
+	private function _showTriggers($database = '')
+	{
+		$triggers = $this->_query(
+			"SHOW TRIGGERS FROM `{$database}`",
+			array('Trigger', 'Table', 'Event', 'Timing', 'Created')
+		);
+
+		return array(
+			'contents' => 'triggers',
+			'from' => $database,
+			'data' => $triggers
+		);
 	}
-	
-	private function dropTriggers(array $triggers, $database) {
+
+
+	/**
+	 * Drops triggers
+	 *
+	 * @param array $triggers Triggers
+	 * @param string $database Database
+	 * @return array
+	 */
+	private function _dropTriggers(array $triggers, $database)
+	{
 		$dropped = array();
 		foreach ($triggers as $trigger) {
 			try {
-				$this->query("DROP TRIGGER `{$database}`.`{$trigger}`");
+				$this->_query("DROP TRIGGER `{$database}`.`{$trigger}`");
 				$dropped[] = $trigger;
 			} catch (JuxtaQueryException $e) {
 				$e->addtoResponse(array('dropped' => $dropped));
@@ -481,50 +748,137 @@ class Juxta {
 		return array('triggers' => $triggers, 'dropped' => $dropped);
 	}
 
-	private function browse($table, $database, $limit = null, $offset = null) {
-		$columns = $this->query("SHOW COLUMNS IN `{$table}` FROM `{$database}`", array('Field', 'Key', 'Type'));
-		$data = $this->query("SELECT * FROM `{$database}`.`{$table}`");
+
+	/**
+	 * Browse table data
+	 *
+	 * @param string $table Table name
+	 * @param string $database Database
+	 * @param int $limit
+	 * @param int $offset
+	 * @return array
+	 */
+	private function _browse($table, $database, $limit = null, $offset = null)
+	{
+		$columns = $this->_query(
+			"SHOW COLUMNS IN `{$table}` FROM `{$database}`",
+			array('Field', 'Key', 'Type')
+		);
+		$data = $this->_query("SELECT * FROM `{$database}`.`{$table}`");
+
 		return array('data' => $data, 'columns' => $columns);
 	}
 
 }
 
+
 /*
  * Exceptions raised in Juxta class
- * 
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
  */
+class JuxtaException extends Exception
+{
 
-class JuxtaException extends Exception {
-
+	/**
+	 * Status
+	 *
+	 * @var string
+	 */
 	protected $_status = 'error';
 
+
+	/**
+	 *
+	 * @var array
+	 */
 	private $_toResponse = array();
 
-	public function getStatus() {
+
+	/**
+	 * Returns status
+	 *
+	 * @return string
+	 */
+	public function getStatus()
+	{
 		return $this->_status;
 	}
 
-	public function addToResponse(array $toResponse = array()) {
+
+	/**
+	 * Add information to response
+	 *
+	 * @param array
+	 */
+	public function addToResponse(array $toResponse = array())
+	{
 		$this->_toResponse = array_merge($this->_toResponse, $toResponse);
 	}
 
-	public function toResponse() {
+
+	/**
+	 *
+	 * @return array
+	 */
+	public function toResponse()
+	{
 		return $this->_toResponse;
 	}
 
 }
 
-class JuxtaConnectionException extends JuxtaException {
+/**
+ * Connection exception
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
+ */
+class JuxtaConnectionException extends JuxtaException
+{
+
+	/**
+	 * Status
+	 *
+	 * @var string
+	 */
 	protected $_status = 'connect_error';
+
 }
 
-class JuxtaQueryException extends JuxtaException {
+/**
+ * Query exception
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
+ */
+class JuxtaQueryException extends JuxtaException
+{
+
+	/**
+	 * Status
+	 *
+	 * @var string
+	 */
 	protected $_status = 'error';
+
 }
 
-class JuxtaSessionException extends JuxtaException {
+/**
+ * Session exception
+ *
+ * @category	Juxta
+ * @package 	Juxta_PHP
+ */ 
+class JuxtaSessionException extends JuxtaException
+{
+
+	/**
+	 * Status
+	 *
+	 * @var string
+	 */
 	protected $_status = 'session_not_found';
+
 }
-
-
-?>
