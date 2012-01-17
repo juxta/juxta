@@ -108,29 +108,3 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		}
 	}
 });
-
-Juxta.CreateUser = $.Class(Juxta.FloatBox, {
-	init: function(element) {
-		this._super(element, {title: 'Add a User'});
-
-		var _this = this;
-		this.$floatBox.find('.buttons input[value=Create]').click(function() {
-			_this.hide();
-			Juxta.notify('User created');
-		});
-	},
-	show: function(options) {
-		this.$floatBox.find('input[type=text]').attr('value', null);
-		this._show(options);
-	}
-});
-
-Juxta.RoutineEditor = $.Class(Juxta.FloatBox, {
-	init: function(element) {
-		this._super(element, {title: 'Edit'});
-		this.editor = new Juxta.SqlEditor(this.$floatBox.find('textarea'));
-	},
-	edit: function(text) {
-		this.editor.edit(text);
-	}
-});
