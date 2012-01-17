@@ -1,12 +1,13 @@
 Juxta.Auth = $.Class(Juxta.FloatBox, {
 	storedConnections: undefined,
-	init: function(element) {
+	init: function(element, request) {
 		this._super(element, {title: 'Connect to MySQL Server', closable: false});
 		this.$form = this.$floatBox.find('form[name=login]');
 		this.form = this.$form.get(0);
 		this.$connections = $('select[name=connection]');
 		this.$password = this.$form.find('input[type=password]');
 		this.$submit = this.$form.find('input[type=submit]');
+		this.request = request;
 
 		var self = this;
 		$('#header a[href=#logout]').click(function() {
@@ -36,7 +37,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 	},
 	show: function() {
 		if (!this.storedConnections) {
-			Juxta.request({action: {get: 'connections'}, context: this, success: this.getConnectionsResponse});
+			this.request.send({action: {get: 'connections'}, context: this, success: this.getConnectionsResponse});
 		}
 		//
 		Juxta.hide();
@@ -56,10 +57,10 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		}
 		//
 		this.$submit.attr('disabled', true);
-		Juxta.request({
+		this.request.send({
 			action: 'login',
 			data: this.$form.serialize(),
-			loading: 'Connecting to ' + $('input[name=host]', this.$form).val(),
+			beforeSend: function() { Juxta.loading('Connecting to ' + $('input[name=host]', this.$form).val()) },
 			success: this.loginResponse,
 			context: this
 		});
@@ -76,7 +77,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		}
 	},
 	logout: function() {
-		Juxta.request({action: 'logout', success: function() { Juxta.cache.flush(); document.location.hash = '#login'; }});
+		this.request.send({action: 'logout', success: function() { Juxta.cache.flush(); document.location.hash = '#login'; }});
 	},
 	getConnectionsResponse: function(response) {
 		if (!$.isEmptyObject(response.data)) {

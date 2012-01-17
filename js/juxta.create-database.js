@@ -1,10 +1,11 @@
 Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
-	init: function(element) {
+	init: function(element, request) {
 		this._super(element, {title: 'Create database'});
 
 		this.$form = this.$floatBox.find('form[name=create-database]');
 		this.$collations = this.$form.find('[name=collation]');
 		this.$submit = this.$form.find('input[type=submit]');
+		this.request = request;
 
 		var that = this;
 		this.$form.bind('submit', function() {
@@ -24,7 +25,7 @@ Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 	},
 	requestCreateDatabase: function() {
 		this.$submit.attr('disabled', true);
-		Juxta.request({
+		this.request.send({
 			action: {create: 'database'},
 			data: this.$form.serialize(),
 			success: this.responseCreateDatabase,
@@ -37,7 +38,7 @@ Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 		Juxta.explore({show: 'databases', refresh: true});
 	},
 	requestGetCollations: function() {
-		Juxta.request({
+		this.request.send({
 			action: {get: 'collations'},
 			cache: true,
 			context: this,

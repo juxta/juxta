@@ -82,7 +82,7 @@ class JuxtaConnectionException extends JuxtaException
 	 *
 	 * @var string
 	 */
-	protected $_status = 'connect_error';
+	protected $_status = 'connection_error';
 
 }
 

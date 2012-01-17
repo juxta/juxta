@@ -1,4 +1,4 @@
-/**
+/*
  * Juxta 0.0.1 http://juxta.ru
  *
  * Copyright (c) 2010-2011 Alexey Golovnya
@@ -10,215 +10,149 @@ $(document).ready(function() {
 	Juxta = new Juxta();
 });
 
-var Juxta = $.Class();
+/**
+ * @class Juxta base application
+ */
+Juxta = function() {
+
+	/**
+	 * Cache
+	 * @type Juxta.Cache
+	 */
+	this.cache = new Juxta.Cache();
+
+
+	/**
+	 * Request/response
+	 * @type Juxta.Request
+	 */
+	this.request = new Juxta.Request(this.cache, {
+		request: {
+			beforeSend: function() {
+				Juxta.loading();
+			},
+			complete: function() {
+				Juxta.loading(false);
+			},
+			error: function(xhr, status) {
+				if (status == 'parsererror') {
+					Juxta.error('Answer parsing error');
+				} else {
+					Juxta.error(xhr.status + ' ' + xhr.statusText);
+				}
+			}
+		},
+		response: {
+			connectionError: function(response) { Juxta.error(response.error); Juxta.auth.show(); },
+			sessionNotFound: function() { document.location.hash = '#login'; },
+			error: function(response) { Juxta.error(response.error); },
+			unknowStatus: function() { Juxta.error('Response with unknow status recived'); }
+		}
+	});
+
+	this.notification = new Juxta.Notification();
+	this.sidebar = new Juxta.Sidebar();
+	this.sidebar.path({'connection': '127.0.0.1'});
+	this.explorer = new Juxta.Explorer('#explorer', this.request);
+	this.exchange = new Juxta.BackupRestore('#backup-restore');
+	this.browser = new Juxta.Browser('#data-browser', this.request);
+	this.tableEditor = new Juxta.TableEditor('#table-editor');
+	this.dummy = new Juxta.Dummy('#dummy');
+	this.server = new Juxta.ServerInformation('#server-info', this.request);
+	this.auth = new Juxta.Auth('#login', this.request);
+	this.codeEditor = new Juxta.RoutineEditor($('#edit-routine'));
+	this.messageBox = new Juxta.FloatBox('#message');
+
+	var that = this;
+
+	$('#header a[name=about]').bind('click', function() { that.about(); return false; });
+
+	if (location.hash == '') {
+		location.hash = 'databases';
+	}
+	this.state = 'default';
+	setInterval($.proxy(this.checkLocation, this), 200);
+
+	$('.float-box').draggable({scroll: false, handle: 'h3'});
+	$(document.body).bind('click', function(event) {
+		$('.context:visible').trigger('hide').hide();
+	});
+}
+
 Juxta.prototype = {
-	init: function() {
-		var that = this;
 
-		this.cache = new Juxta.Cache();
-		this.notification = new Juxta.Notification();
-		this.sidebar = new Juxta.Sidebar();
-		this.sidebar.path({'connection': '127.0.0.1'});
-		this.explorer = new Juxta.Explorer('#explorer');
-		this.exchange = new Juxta.BackupRestore('#backup-restore');
-		this.browser = new Juxta.Browser('#data-browser');
-		this.tableEditor = new Juxta.TableEditor('#table-editor');
-		this.dummy = new Juxta.Dummy('#dummy');
-		this.serverInfo = new Juxta.ServerInformation('#server-info');
-		this.auth = new Juxta.Auth('#login');
-		this.codeEditor = new Juxta.RoutineEditor($('#edit-routine'));
-		this.messageBox = new Juxta.FloatBox('#message');
-
-		$('#header a[name=about]').bind('click', function() { that.about(); return false; });
-
-		$.ajaxSetup(this.ajaxSetup);
-
-		if (location.hash == '') {
-			location.hash = 'databases';
-		}
-		this.state = 'default';
-		setInterval(this.checkLocation, 200);
-
-		$('.float-box').draggable({scroll: false, handle: 'h3'});
-		$(document.body).bind('click', function(event) {
-			$('.context:visible').trigger('hide').hide();
-		});
-	},
 	/**
-	 * Ajax options
+	 *
 	 */
-	ajaxSetup: {
-		url: 'php/',
-		dataType: 'json',
-		type: 'POST',
-		beforeSend: function() {
-			Juxta.loading();
-		},
-		data: {
-			debug: true
-		},
-		complete: function() {
-			Juxta.loading(false);
-		},
-		error: function(xhr, status) {
-			if (status == 'parsererror') {
-				Juxta.error('Answer parsing error');
-			} else {
-				Juxta.error(xhr.status + ' ' + xhr.statusText);
-			}
-		}
-	},
-	queryString: function(action) {
-		var query = action;
-		if (query && $.isPlainObject(query) && !$.isEmptyObject(query)) {
-			query = $.param(query);
-		}
-		return query;
-	},
-	/**
-	 * Common Ajax request/response interface
-	 */
-	request: function(params) {
-		// URL
-		var queryString = Juxta.queryString(params.action);
-		params.url = this.ajaxSetup.url + '?' + queryString;
-
-		// Set message for loading notification
-		if (params.loading) {
-			params.beforeSend = function () {
-				Juxta.loading(params.loading);
-			}
-		}
-
-		// Cache options
-		var cache = {};
-		if (params.cache !== undefined && params.cache !== false) {
-			cache = {key: queryString, time: params.cache};
-			if (params.index) {
-				cache.index = params.index;
-			}
-		}
-
-		// Collect response callbacks
-		var callbacks = {};
-		if ($.isFunction(params.success)) {
-			callbacks.ok = params.context ? $.proxy(params.success, params.context) : params.success;
-			delete(params.success);
-		}
-		if ($.isFunction(params.error)) {
-			callbacks.error = params.error ? $.proxy(params.error, params.context) : params.error;
-			delete(params.error);
-		}
-
-		// Response
-		params.success = function (data) {
-			Juxta.response(data, callbacks, cache);
-		}
-
-		// Response from cache or make request
-		var fromCache = null;
-		if (params.refresh !== true) {
-			fromCache = this.cache.get(queryString);
-		}
-		if (fromCache) {
-			params.success(fromCache);
-			return;
-		} else {
-			$.ajax(params);
-		}
-	},
-	response: function(response, callbacks, cache) {
-		switch (response.status) {
-			case 'ok':
-				if (cache.key) {
-					Juxta.cache.set(cache.key, response, cache.time, cache.index);
-				}
-				if ($.isFunction(callbacks.ok)) {
-					callbacks.ok(response);
-				}
-				break;
-			case 'session_not_found':
-				document.location.hash = '#login';
-				break;
-			case 'error':
-				if ($.isFunction(callbacks.error)) {
-					callbacks.error(response);
-				}
-				Juxta.error(response.error);
-				break;
-			case 'connect_error':
-				Juxta.error(response.error);
-				Juxta.auth.show();
-				break;
-			default:
-				Juxta.error('Fuck..');
-		}
-	},
-	//
 	checkLocation: function() {
-		var hash = location.hash.replace(/#/g, ''),
+		var hash = window.location.hash.replace(/#/g, ''),
 			params = hash.split('/'),
 			action = params.pop();
-		if (hash != Juxta.state) {
+		if (hash != this.state) {
 			switch (action) {
 				case 'databases':
 				case 'processlist':
 				case 'users':
-					Juxta.explore({show: action});
+					this.explore({show: action});
 					break;
 				case 'status':
 				case 'status-full':
 				case 'variables':
 				case 'charsets':
 				case 'engines':
-					Juxta.info({show: action});
+					this.info({show: action});
 					break;
 				case 'backup':
-					Juxta.sidebar.highlight('backup');
-					Juxta.exchange.show();
+					this.sidebar.highlight('backup');
+					this.exchange.show();
 					break;
 				case 'restore':
-					Juxta.sidebar.highlight('restore');
-					Juxta.dummy.show({header: 'Restore'});
+					this.sidebar.highlight('restore');
+					this.dummy.show({header: 'Restore'});
 					break;
 				case 'login':
-					Juxta.auth.show();
+					this.auth.show();
 					break;
 				//
 				case 'tables':
 				case 'views':
 				case 'routines':
 				case 'triggers':
-					Juxta.explore({show: action, from: params[0]});
+					this.explore({show: action, from: params[0]});
 					break;
 				//
 				case 'browse':
-					Juxta.browse({browse: params[1], from: params[0]});
+					this.browse({browse: params[1], from: params[0]});
 					break;
 				case 'columns':
-					Juxta.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
-					Juxta.edit({table: params[1], from: params[0]});
+					this.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
+					this.edit({table: params[1], from: params[0]});
 					break;
 				case 'foreign':
-					Juxta.sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});
-					Juxta.dummy.show();
+					this.sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});
+					this.dummy.show();
 					break;
 				case 'options':
-					Juxta.sidebar.highlight('options', {'database': params[0], 'table': params[1]});
-					Juxta.dummy.show({header: 'Options'});
+					this.sidebar.highlight('options', {'database': params[0], 'table': params[1]});
+					this.dummy.show({header: 'Options'});
 					break;
 				case 'maintenance':
-					Juxta.sidebar.highlight('maintenance', {'database': params[0], 'table': params[1]});
-					Juxta.dummy.show({header: {title: 'Maintenance Table', name: params[1]}});
+					this.sidebar.highlight('maintenance', {'database': params[0], 'table': params[1]});
+					this.dummy.show({header: {title: 'Maintenance Table', name: params[1]}});
 					break;
 				case 'flush':
-					Juxta.cache.flush();
+					this.cache.flush();
 				default:
-					document.location = '#databases';
+					window.location = '#databases';
 			}
-			Juxta.state = hash;
+			this.state = hash;
 		}
 	},
+
+
+	/**
+	 *
+	 */
 	show: function() {
 		$('#sidebar:not(.minimized)').slideDown(250);
 		$('.float-box').hide();
@@ -227,35 +161,75 @@ Juxta.prototype = {
 			$('#header h1, #header ul').fadeIn(250);
 		}
 	},
+
+
+	/**
+	 *
+	 */
 	hide: function() {
 		$('#header h1, #header ul, #sidebar, #applications').hide();
 	},
+
+
+	/**
+	 *
+	 */
 	explore: function(params) {
 		if (params.from) {
-			Juxta.sidebar.highlight(params.show, {'database': params.from});
-			Juxta.explorer.request(params);
+			this.sidebar.highlight(params.show, {'database': params.from});
+			this.explorer.explore(params);
 		} else {
-			Juxta.sidebar.highlight(params.show);
-			Juxta.explorer.request(params);
+			this.sidebar.highlight(params.show);
+			this.explorer.explore(params);
 		}
 	},
+
+
+	/**
+	 *
+	 */
 	drop: function(params) {
 		this.explorer.drop(params);
 	},
+
+
+	/**
+	 *
+	 */
 	kill: function(params) {
 		this.explorer.kill(params);
 	},
+
+
+	/**
+	 *
+	 */
 	confirm: function(message) {
 		return confirm(message);
 	},
+
+
+	/**
+	 *
+	 */
 	info: function(params) {
-		Juxta.sidebar.highlight('status');
-		Juxta.serverInfo.request(params);
+		this.sidebar.highlight('status');
+		this.server.info(params);
 	},
+
+
+	/**
+	 *
+	 */
 	browse: function(params) {
 		Juxta.sidebar.path({'database': params.from, 'table': params.browse});
-		this.browser.request(params);
+		this.browser.browse(params);
 	},
+
+
+	/**
+	 *
+	 */
 	edit: function(params) {
 		if (params) {
 			if (params.table) {
@@ -272,25 +246,45 @@ Juxta.prototype = {
 			}
 		}
 	},
+
+
 	/**
 	 * Notifications shortcuts
 	 */
 	notify: function(message, options) {
 		return this.notification.show(message, options);
 	},
+
+
+	/**
+	 *
+	 */
 	loading: function(message, options) {
 		return this.notification.loading(message, options);
 	},
+
+
+	/**
+	 *
+	 */
 	error: function(message, options) {
 		return this.notification.show(message, $.extend({}, {type: 'error', hide: false, fast: true}, options));
 	},
+
+
 	/**
 	 *
 	 */
 	message: function(message, options) {
 		this.messageBox.show(options, message);
 	},
+
+
+	/**
+	 *
+	 */
 	about: function() {
 		this.message($('#about').html(), {title: 'About Juxta'});
 	}
+
 };

@@ -4,13 +4,21 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	},
 	cache: null,
 	preparedFor: null,
-	init: function(element) {
+
+
+	/**
+	 *
+	 * @param {jQuery,String} element
+	 * @param {Juxta.Request} request
+	 */
+	init: function(element, request) {
 		this._super(element);
 		this.grid = new Juxta.Grid('#explorer .grid');
+		this.request = request;
 
 		$(window).bind('resize', {_this: this}, this.stretch);
 
-		this.createDatabase = new Juxta.CreateDatabase($('#create-database'));
+		this.createDatabase = new Juxta.CreateDatabase($('#create-database'), this.request);
 		this.createUser = new Juxta.CreateUser($('#create-user'));
 
 		var that = this;
@@ -54,6 +62,8 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			Juxta.explorer.status(status);
 		});
 	},
+
+
 	show: function(options) {
 		this._show(options);
 		this.stretch();
@@ -64,7 +74,31 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			_this.grid.height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(params) {
+	prepare: function(template) {
+		if (template === this.preparedFor) {
+			return true;
+		} else if (this.grid.prepare(this.templates[template].grid)) {
+			this.preparedFor = template;
+			return true;
+		} else {
+			return false;
+		}
+	},
+
+	/**
+	 * Explore
+	 *
+	 * @param {Object} params
+	 */
+	explore: function(params) {
+		this.requestExplore(params);
+	},
+	/**
+	 * Request for explore
+	 *
+	 * @param {Object} params
+	 */
+	requestExplore: function(params) {
 		if (this.templates[params.show]['head']['header']['from'] === null) {
 			this.templates[params.show]['head']['header']['from'] = params.from;
 		}
@@ -84,32 +118,22 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 			}
 		});
 		//
-		this.cache = Juxta.queryString(query);
+		this.cache = this.request.queryString(query);
 		if (this.prepare(query.show)) {
-			Juxta.request($.extend(
+			this.request.send($.extend(
 				{},
-				{action: query, context: this, success: this.response},
+				{action: query, context: this, success: this.responseExplore},
 				this.settings,
 				options
 			));
 		}
 	},
-	response: function(response) {
+	responseExplore: function(response) {
 		this.show();
 		if (this.preparedFor == response.contents) {
 			var params = $.extend({}, response, this.templates[response.contents].grid);
 			delete params.data;
 			this.grid.fill(response.data, params);
-		}
-	},
-	prepare: function(template) {
-		if (template === this.preparedFor) {
-			return true;
-		} else if (this.grid.prepare(this.templates[template].grid)) {
-			this.preparedFor = template;
-			return true;
-		} else {
-			return false;
 		}
 	},
 	drop: function(params) {
@@ -159,7 +183,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		}
 		data[params.drop] = params[params.drop];
 
-		Juxta.request({
+		this.request.send({
 			action: action,
 			data: data,
 			success: this.responseDrop,
@@ -197,7 +221,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 	},
 	requestProperties: function(query, options) {
 		//
-		Juxta.request({
+		this.request.send({
 			action: query,
 			success: this.responseDatabaseProperties,
 			context: this
@@ -222,7 +246,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		}
 	},
 	requestKill: function(params) {
-		Juxta.request({
+		this.request.send({
 			action: 'kill',
 			data: {processes: params['processes']},
 			success: this.responseKill,

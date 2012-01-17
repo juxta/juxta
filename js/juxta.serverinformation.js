@@ -1,13 +1,25 @@
 Juxta.ServerInformation = $.Class(Juxta.Application, {
+
+	/**
+	 *
+	 */
 	settings: {
 		cache: 60
 	},
-	init: function(element) {
+
+
+	/**
+	 *
+	 * @param {jQuery,String} element
+	 * @param {Juxta.Request} request
+	 */
+	init: function(element, request) {
 		this._super(element, {header: 'Server status', menu: {'Server status': null, 'System variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}})
 		this.grid = new Juxta.Grid(this.$application.find('.grid'));
-		
+		this.request = request;
+
 		$(window).bind('resize', {_this: this}, this.stretch);
-		
+
 		var _this = this;
 		this.$application.find('.switch').click(function(event) {
 			if (!$(event.target).hasClass('active')) {
@@ -17,15 +29,17 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		});
 		this.$application.find('.switch li').eq(0).click(function() {
 			if (!$(this).hasClass('active')) {
-				_this.request({show: 'status-full'}, {});
+				_this.info({show: 'status-full'}, {});
 			}
 		});
 		this.$application.find('.switch li').eq(1).click(function() {
 			if (!$(this).hasClass('active')) {
-				_this.request({show: 'status'}, {});
+				_this.info({show: 'status'}, {});
 			}
 		});
 	},
+
+
 	stretch: function(event) {
 		var _this = event && event.data._this || this;
 		if (_this.$application.find('.grid .body').is(':visible')) {
@@ -38,7 +52,10 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		this._show(options);
 		this.stretch();
 	},
-	request: function(params) {
+	info: function(params) {
+		this.requestInfo(params);
+	},
+	requestInfo: function(params) {
 		this.show(this.templates[params.show]['head']);
 		// Extend request options
 		if (this.templates[params.show].query) {
@@ -55,15 +72,15 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 		});
 		//
 		if (this.prepare(query.show)) {
-			Juxta.request($.extend(
+			this.request.send($.extend(
 				{},
-				{action: query, action: query, context: this, success: this.response},
+				{action: query, action: query, context: this, success: this.responseInfo},
 				this.settings,
 				options
 			));
 		}
 	},
-	response: function(response) {
+	responseInfo: function(response) {
 		if (response.contents == 'status') {
 			this.properStatus(response.data);
 		} else {

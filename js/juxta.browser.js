@@ -1,7 +1,8 @@
 Juxta.Browser = $.Class(Juxta.Application, {
-	init: function(element) {
+	init: function(element, request) {
 		this._super(element, {header: 'Browse', closable: true, maximized: true});
 		this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
+		this.request = request;
 		$(window).bind('resize', {_this: this}, this.stretch);
 	},
 	show: function(options) {
@@ -14,7 +15,10 @@ Juxta.Browser = $.Class(Juxta.Application, {
 			_this.$application.find('.grid .body').height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
 		}
 	},
-	request: function(params) {
+	browse: function(params) {
+		return this.requestBrowse(params);
+	},
+	requestBrowse: function(params) {
 		var query = $.extend({}, params),
 			options = {};
 
@@ -25,14 +29,14 @@ Juxta.Browser = $.Class(Juxta.Application, {
 			menu: {'Create Trigger': {click: 'return false;'}}*/
 		});
 
-		Juxta.request($.extend(
+		this.request.send($.extend(
 			{},
-			{action: query, context: this, success: this.response},
+			{action: query, context: this, success: this.responseBrowse},
 			this.settings,
 			options
 		));
 	},
-	response: function(response) {
+	responseBrowse: function(response) {
 		var params = $.extend(
 			{},
 			response,
