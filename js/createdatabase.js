@@ -39,7 +39,7 @@ Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 	},
 	requestGetCollations: function() {
 		this.request.send({
-			action: {get: 'collations'},
+			action: {show: 'collations'},
 			cache: true,
 			context: this,
 			success: this.responseGetCollations

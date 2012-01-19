@@ -164,6 +164,9 @@ class Juxta
 				case 'charsets':
 					$response = $this->_showCharsets();
 					break;
+				case 'collations':
+					$response = $this->_getCollations();
+					break;
 				case 'engines':
 					$response = $this->_showEngines();
 					break;
@@ -187,9 +190,6 @@ class Juxta
 			switch ($_GET['get']) {
 				case 'connections':
 					$response = $this->_getConnections();
-					break;
-				case 'collations':
-					$response = $this->collations();
 					break;
 			}
 		} elseif (isset($_GET['login'])) {
