@@ -188,6 +188,19 @@ class Juxta
 			}
 		} elseif (isset($_GET['get'])) {
 			switch ($_GET['get']) {
+				case 'session':
+					if (!empty($_SESSION['host'])) {
+						$response = array(
+							'connection' => array(
+								'host' => $_SESSION['host'],
+								'port' => $_SESSION['port'],
+								'user' => $_SESSION['user']
+							)
+						);
+					} else {
+						throw new JuxtaSessionException();
+					}
+					break;
 				case 'connections':
 					$response = $this->_getConnections();
 					break;

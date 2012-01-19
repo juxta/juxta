@@ -50,9 +50,10 @@ Juxta = function() {
 		}
 	});
 
+	this.connection = null;
+
 	this.notification = new Juxta.Notification();
 	this.sidebar = new Juxta.Sidebar();
-	this.sidebar.path({'connection': '127.0.0.1'});
 	this.explorer = new Juxta.Explorer('#explorer', this.request);
 	this.exchange = new Juxta.BackupRestore('#backup-restore');
 	this.browser = new Juxta.Browser('#data-browser', this.request);

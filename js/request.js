@@ -84,17 +84,50 @@ Juxta.Request.prototype.send = function (params) {
 		that._response(data, callbacks, cache);
 	}
 
-	// Response from cache or make request
-	var fromCache = null;
-	if (params.refresh !== true) {
-		fromCache = this.cache.get(queryString);
-	}
-	if (fromCache) {
-		params.success(fromCache);
-		return;
+	var getSession = new jQuery.Deferred();
+		getResponse = new jQuery.Deferred();
+
+	if (Juxta.connection === null
+		&& queryString !== 'get=connections'
+		&& queryString !== 'login'
+	) {
+		$.ajax({
+			url: this._ajaxSettings.url + '?get=session',
+			success: function(response) {
+				if (response.connection) {
+					Juxta.connection = response.connection;
+					Juxta.sidebar.path({connection: response.connection.host});
+					getSession.resolveWith(that);
+				} else if (response.status === 'session_not_found'
+					&& $.isFunction(that._responseCallbacks.sessionNotFound)
+				) {
+					that._responseCallbacks.sessionNotFound.call(that, response);
+				} else {
+					throw new Error('Getting connection information failed');
+				}
+			}
+		});
 	} else {
-		return $.ajax(params);
+		getSession.resolveWith(this);
 	}
+
+	// Response from cache or make request
+	getSession.done(function() {
+		var fromCache = null;
+		if (params.refresh !== true) {
+			fromCache = this.cache.get(queryString);
+		}
+		if (fromCache) {
+			params.success(fromCache);
+			getResponse.resolve();
+			return;
+		} else {
+			return $.ajax(params).done(function() { getResponse.resolve(); });
+		}
+	});
+
+	return getResponse;
+
 }
 
 
