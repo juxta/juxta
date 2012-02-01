@@ -90,6 +90,7 @@ Juxta.Request.prototype.send = function (params) {
 		fromCache = this.cache.get(queryString);
 	}
 	if (fromCache) {
+		fromCache.cache = true;
 		params.success(fromCache);
 		return;
 	} else {

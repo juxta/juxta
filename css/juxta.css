@@ -1041,28 +1041,13 @@ input[type=button][disabled].close {
 	line-height: 18px;
 	}
 
-span.timer{
-	font-size: 10.5pt;
-	}
-span.timer i{
-	font-size: 7.5pt;
+.server-status.proper span.uptime {
+	font-size: 14px;
 	font-style: normal;
-	color: #ccc;
-	}
-span.timer .d,
-span.timer .h,
-span.timer .m{
-	background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#444));
-	color: #fff;
-	background-color: #333;
-	padding: 4px 3px;
+	background-color: #DDD;
+	padding: 3px 4px;
 	border-radius: 3px;
-	}
-span.timer .d{
-	margin-right: 3px;
-	}
-span.timer .h{
-	margin-right: 1px;
+	box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 1px;
 	}
 
 /*
@@ -1149,7 +1134,6 @@ ul.striped li.stripe{
 	
 #server-info h2{
 	margin: 0 0 14px 0;
-	letter-spacing: -1px;
 	}
 #server-info .hidden{
 	color: #999;
