@@ -87,6 +87,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 			this.properStatus(response.data);
 			if (!response.cache) {
 				this.uptime.start(response.data.Uptime);
+				this.$application.find('.proper').find('.startup .time').text(this.uptime.getStartTime().toString());
 			}
 		} else {
 			var params = $.extend({}, response, this.templates[response.contents].grid);

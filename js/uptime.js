@@ -85,6 +85,8 @@ Juxta.Uptime = function(container) {
 
 		_container.text(uptimeString);
 	}
+	
+	var _startTime;
 
 	/**
 	 * Start timer
@@ -98,6 +100,7 @@ Juxta.Uptime = function(container) {
 
 		var that = this;
 		_time = uptime;
+		_startTime = new Date(Date.now() - uptime * 1000);
 		_timer();
 		_interval = setInterval(function() { _timer.call(that); }, 1000);
 	}
@@ -108,6 +111,15 @@ Juxta.Uptime = function(container) {
 	 */
 	this.stop = function () {
 		clearInterval(_interval);
+	}
+
+	/**
+	 * Returns start time
+	 * @method getStartTime
+	 * @return {Date}
+	 */
+	this.getStartTime = function() {
+		return _startTime;
 	}
 
 }
