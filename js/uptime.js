@@ -1,4 +1,5 @@
 /**
+ * Counts the time since the server was started
  * @class Server uptime
  * @param {jQuery, String} Container
  */
