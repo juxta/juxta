@@ -116,7 +116,11 @@ class Juxta
 		if ($this->_mysql->error) {
 			throw new JuxtaQueryException($this->_mysql->error, $this->_mysql->errno);
 		}
-		//
+
+		if (is_bool($result)) {
+			return $result;
+		}
+
 		$response = array();
 		if ($result) {
 			while ($row = mysqli_fetch_array($result, is_int($cols) ? $cols : MYSQLI_BOTH)) {
