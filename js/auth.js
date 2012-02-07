@@ -77,7 +77,14 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		}
 	},
 	logout: function() {
-		this.request.send({action: 'logout', success: function() { Juxta.cache.flush(); document.location.hash = '#login'; }});
+		this.request.send({
+			action: 'logout',
+			success: function() {
+				Juxta.cache.flush();
+				Juxta.connection = null;
+				document.location.hash = '#login';
+			}
+		});
 	},
 	getConnectionsResponse: function(response) {
 		if (!$.isEmptyObject(response.data)) {
