@@ -84,7 +84,7 @@ Juxta.Request.prototype.send = function (params) {
 		that._response(data, callbacks, cache);
 	}
 
-	var getSession = new jQuery.Deferred();
+	var getSession = new jQuery.Deferred(),
 		getResponse = new jQuery.Deferred();
 
 	if (Juxta.connection === null
