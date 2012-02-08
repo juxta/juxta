@@ -168,7 +168,7 @@ Juxta.prototype = {
 	 *
 	 */
 	hide: function() {
-		$('#header h1, #header ul, #sidebar, #applications').hide();
+		$('#header h1, #header ul, #sidebar, #applications, .float-box').hide();
 	},
 
 
