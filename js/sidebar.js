@@ -6,7 +6,7 @@ Juxta.Sidebar.prototype = {
 		this.$sidebar = $('#sidebar');
 		this.heads = this.$sidebar.find('ul:first-child > li');
 		this.values = {
-			'connection': this.$sidebar.find('li.connection span.value'),
+			'host': this.$sidebar.find('li.host span.value'),
 			'database': this.$sidebar.find('li.database span.value'),
 			'table': this.$sidebar.find('li.table span.value'),
 		}
@@ -63,15 +63,15 @@ Juxta.Sidebar.prototype = {
 
 		if (this.tree[link]) {
 			var level = this.$sidebar.find('ul:first-child > li.' + this.tree[link]);
-			if (level.is('.connection')) {
-				this.heads.filter('.connection').addClass('last').show().removeClass('fold').find('.buttons').show();
-				this.heads.not('.connection').removeClass('last').hide();
+			if (level.is('.host')) {
+				this.heads.filter('.host').addClass('last').show().removeClass('fold').find('.buttons').show();
+				this.heads.not('.host').removeClass('last').hide();
 			} else if (level.is('.database')) {
-				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
+				this.heads.filter('.host').removeClass('last').show().addClass('fold').find('.buttons').hide();
 				this.heads.filter('.database').addClass('last').show().removeClass('fold').find('.buttons').show();
 				this.heads.filter('.table').removeClass('last').hide();
 			} else if (level.is('.table')) {
-				this.heads.filter('.connection').removeClass('last').show().addClass('fold').find('.buttons').hide();
+				this.heads.filter('.host').removeClass('last').show().addClass('fold').find('.buttons').hide();
 				this.heads.filter('.database').removeClass('last').show().addClass('fold').find('.buttons').hide();
 				this.heads.filter('.table').addClass('last').show().removeClass('fold').find('.buttons').show();
 			}

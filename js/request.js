@@ -96,7 +96,7 @@ Juxta.Request.prototype.send = function (params) {
 			success: function(response) {
 				if (response.connection) {
 					Juxta.connection = response.connection;
-					Juxta.sidebar.path({connection: response.connection.host});
+					Juxta.sidebar.path({host: response.connection.host});
 					getSession.resolveWith(that);
 				} else if (response.status === 'session_not_found'
 					&& $.isFunction(that._responseCallbacks.sessionNotFound)

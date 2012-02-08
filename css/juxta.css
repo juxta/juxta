@@ -168,13 +168,13 @@ span.overflowed{
 	padding: 2px 0 3px 0;
 	}
 
-#sidebar li.connection,
+#sidebar li.host,
 #sidebar li.database,
 #sidebar li.table {
 	border-top: #F9F9F9 1px solid;
 	border-bottom: #E3E3E3 1px solid;
 	}
-#sidebar li.connection {
+#sidebar li.host {
 	border-top-color: #EEE;
 	}
 #sidebar li.last {
