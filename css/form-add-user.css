@@ -1,0 +1,39 @@
+/*
+ * Add user
+ */
+
+.privileges {
+	clear: left;
+	float: left;
+	width: 225px;
+	height: 200px;
+	margin: -3px 0 0 114px;
+	padding: 3px 0;
+	overflow-y: scroll;
+	background-color: #fff;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border: #b9b9b9 1px solid;
+	list-style-type: none;
+	font-size: 10pt;
+	}
+
+.privileges li {
+	clear: left;
+	}
+
+ul.privileges input[type=checkbox] {
+	float: left;
+	}
+
+.privileges label {
+	padding: 0 3px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+
+.privileges [type=checkbox]:checked + label {
+	background-color: #bfd4e6;;
+	}

@@ -1,0 +1,40 @@
+/*
+ * Notifications
+ */
+
+#notify {
+	position: absolute;
+	z-index: 99;
+	top: 0;
+	width: 100%;
+	font-size: 12pt;
+	text-align: center;
+	}
+
+#notify ul {
+	list-style-type: none;
+	margin: 1px 0 0 0;
+	padding: 1px;
+	}
+
+#notify li {
+	line-height: 21px;
+	margin-bottom: 2px;
+	}
+
+#notify li span {
+	padding: 1px 11px;
+	background-color: #f6f6f6;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+
+	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.3);
+	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.3);
+	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.3);
+	}
+
+#notify li .error {
+	background-color: #f99;
+	}

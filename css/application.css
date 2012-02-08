@@ -1,0 +1,77 @@
+/*
+ * Application base styles
+ */
+
+.application {
+	clear: left;
+	}
+
+.application h1 {
+	float: left;
+	height: 52px;
+	line-height: 52px;
+	margin: 0 0 1px 7px;
+	font-size: 16.5pt;
+	font-weight: normal;
+	color: #000;
+	cursor: default;
+	}
+
+.application h1 a {
+	text-decoration: none;
+	}
+
+.application h1 .from {
+	font-size: 13pt;
+	}
+
+.application h2 {
+	font-size: 13.5pt;
+	font-weight: normal;
+	margin: 21px 0 11px 7px;
+	}
+
+.application .menu {
+	float: left;
+	height: 46px;
+	line-height: 50px;
+	margin: 3px 0 0 28px;
+	font-size: 13pt;
+	font-weight: normal;
+	color: #000;
+	cursor: default;
+	}
+
+.application .menu a {
+	margin-left: 21px;
+	}
+
+.application .menu a {
+	color: #999;
+	text-decoration: none;
+	}
+
+.application .menu a[href] {
+	color: #00559c;
+	}
+
+.application .menu a[href]:hover {
+	text-decoration: underline;
+	}
+
+.application .close {
+	display: none;
+	float: right;
+	width: 18px;
+	height: 18px;
+	margin: 13px 11px 0 0;
+	cursor: pointer;
+	}
+
+.application .status {
+	height: 15px;
+	margin-top: 8px;
+	padding: 0 7px;
+	font-size: 9pt;
+	color: #666;
+	}
