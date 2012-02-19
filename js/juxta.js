@@ -1,14 +1,10 @@
-/*
- * Juxta 0.0.1 http://juxta.ru
+/**
+ * Juxta 0.0.1
  *
  * Copyright (c) 2010-2011 Alexey Golovnya
  * Licensed under the MIT license
- *
+ * http://juxta.ru
  */
-
-$(document).ready(function() {
-	Juxta = new Juxta();
-});
 
 /**
  * @class Juxta base application
@@ -61,7 +57,6 @@ Juxta = function() {
 	this.dummy = new Juxta.Dummy('#dummy');
 	this.server = new Juxta.ServerInformation('#server-info', this.request);
 	this.auth = new Juxta.Auth('#login', this.request);
-	this.codeEditor = new Juxta.RoutineEditor($('#edit-routine'));
 	this.messageBox = new Juxta.FloatBox('#message');
 
 	var that = this;
@@ -127,7 +122,7 @@ Juxta.prototype = {
 					break;
 				case 'columns':
 					this.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
-					this.edit({table: params[1], from: params[0]});
+					this.tableEditor.show({header: {title: 'Table', name: params[1]}});
 					break;
 				case 'foreign':
 					this.sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});
@@ -229,27 +224,6 @@ Juxta.prototype = {
 
 
 	/**
-	 *
-	 */
-	edit: function(params) {
-		if (params) {
-			if (params.table) {
-				this.tableEditor.show({header: {title: 'Table', name: params.table}});
-			} else if (params.view) {
-				this.codeEditor.edit('View ' + params.view + ' from ' + params.from);
-				this.codeEditor.show({title: 'Edit view', name: params.view});
-			} else if (params.routine) {
-				this.codeEditor.edit('Routine' + params.routine + ' from ' + params.from);
-				this.codeEditor.show();
-			} else if (params.trigger) {
-				this.codeEditor.edit('Trigger ' + params.trigger + ' from ' + params.from);
-				this.codeEditor.show();
-			}
-		}
-	},
-
-
-	/**
 	 * Notifications shortcuts
 	 */
 	notify: function(message, options) {
@@ -289,3 +263,7 @@ Juxta.prototype = {
 	}
 
 };
+
+$(document).ready(function() {
+	Juxta = new Juxta();
+});

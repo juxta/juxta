@@ -183,11 +183,23 @@ class Juxta
 				case 'views':
 					$response = $this->_showViews($_GET['from']);
 					break;
+				case 'view':
+					$response = $this->_showCreateView($_GET['view'], $_GET['from']);
+					break;
 				case 'routines':
 					$response = $this->_showRoutines($_GET['from']);
 					break;
+				case 'procedure':
+					$response = $this->_showCreateProcedure($_GET['procedure'], $_GET['from']);
+					break;
+				case 'function':
+					$response = $this->_showCreateFunction($_GET['function'], $_GET['from']);
+					break;
 				case 'triggers':
 					$response = $this->_showTriggers($_GET['from']);
+					break;
+				case 'trigger':
+					$response = $this->_showCreateTrigger($_GET['trigger'], $_GET['from']);
 					break;
 			}
 		} elseif (isset($_GET['get'])) {
@@ -636,6 +648,25 @@ class Juxta
 
 
 	/**
+	 * Return create view statement
+	 *
+	 * @param string $name View name
+	 * @param string $database Database name
+	 * @return array
+	 */
+	private function _showCreateView($name, $database)
+	{
+		$view = $this->_query("SHOW CREATE VIEW `{$database}`.`{$name}`");
+
+		return array(
+			'view' => $name,
+			'from' => $database,
+			'statement' => $view[0]['Create View']
+		);
+	}
+
+
+	/**
 	 * Drops views
 	 *
 	 * @param array $views List of views
@@ -683,6 +714,45 @@ class Juxta
 			'data' => $routines
 		);
 	}
+
+
+	/**
+	 * Return create procedure statement
+	 *
+	 * @param string $name Trigger name
+	 * @param string $database Database name
+	 * @return array
+	 */
+	private function _showCreateProcedure($name, $database)
+	{
+		$procedure = $this->_query("SHOW CREATE PROCEDURE `{$database}`.`{$name}`");
+
+		return array(
+			'procedure' => $name,
+			'from' => $database,
+			'statement' => $procedure[0]['Create Procedure']
+		);
+	}
+
+
+	/**
+	 * Return create function statement
+	 *
+	 * @param string $name Trigger name
+	 * @param string $database Database name
+	 * @return array
+	 */
+	private function _showCreateFunction($name, $database)
+	{
+		$function = $this->_query("SHOW CREATE FUNCTION `{$database}`.`{$name}`");
+
+		return array(
+			'function' => $name,
+			'from' => $database,
+			'statement' => $function[0]['Create Function']
+		);
+	}
+
 
 
 	/**
@@ -740,6 +810,25 @@ class Juxta
 			'contents' => 'triggers',
 			'from' => $database,
 			'data' => $triggers
+		);
+	}
+
+
+	/**
+	 * Return create trigger statement
+	 *
+	 * @param string $name Trigger name
+	 * @param string $database Database name
+	 * @return array
+	 */
+	private function _showCreateTrigger($name, $database)
+	{
+		$trigger = $this->_query("SHOW CREATE TRIGGER `{$database}`.`{$name}`");
+
+		return array(
+			'trigger' => $name,
+			'from' => $database,
+			'statement' => $trigger[0]['SQL Original Statement']
 		);
 	}
 
