@@ -28,12 +28,15 @@ Juxta.SqlEditor = function(textarea, options) {
 	 */
 	this.lines = 1;
 
-	this.numbers.css('height', this.textarea.attr('clientHeight'));
+	this.numbers.css('height', this.textarea.prop('clientHeight'));
 
 	var that = this;
-	this.textarea.resize(function() {	// Resize line numbers container on text area resize
+
+	this.textarea.resize(function() {
+		// Resize line numbers container on text area resize
 		that.numbers.css('height', this.clientHeight);
-	}).scroll(function() {	// Scroll line numbers with text area
+	}).scroll(function() {
+		// Scroll line numbers with text area
 		that.numbers.find('li:first-child').css({'margin-top': -this.scrollTop + 'px'});
 	});
 
@@ -54,7 +57,10 @@ Juxta.SqlEditor = function(textarea, options) {
 
 	});
 
-	var textAreaHeight = this.textarea.attr('clientHeight');
+	/*
+	 * @type {Number}
+	 */
+	var textAreaHeight = this.textarea.prop('clientHeight');
 
 	// Calculating line numbers
 	var t = setInterval(function() {
@@ -71,9 +77,9 @@ Juxta.SqlEditor = function(textarea, options) {
 			}
 		}
 
-		if (that.textarea.attr('clientHeight') != textAreaHeight) {
+		if (that.textarea.prop('clientHeight') != textAreaHeight) {
 			that.textarea.trigger('resize');
-			textAreaHeight = that.textarea.attr('clientHeight');
+			textAreaHeight = that.textarea.prop('clientHeight');
 		}
 	}, 100);
 
