@@ -322,7 +322,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		users: {
 			head: {
 				header: 'Users',
-				menu: {'Add User': {href: '#users/add', click: 'Juxta.explorer.createUser.show(); return false;'}, 'Flush Privileges': {href: '#users/flush', click: 'return false;'}}
+				menu: {'Create User': {href: '#users/add', click: 'Juxta.explorer.createUser.show(); return false;'}, 'Flush Privileges': {href: '#users/flush', click: 'return false;'}}
 			},
 			grid: {
 				head: {
@@ -335,7 +335,7 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="delete" value="Delete"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{user}"></td><td class="user"><a>{user}</td><td class="user-host">{host}</td><td class="user-password"><span class="{password}">{password}</span></td><td class="user-global-privileges">{privileges}</td><td class="user-grant">{grant}</td></tr>',
 				context: [['user', 'users'], 'host', 'password', 'privileges', 'grant'],
-				contextMenu: '<li>Edit Privileges</li><li>Change Password</li><li>Rename</li><li>Delete</li>'
+				contextMenu: '<li>Edit privileges</li><li>Change password</li><li>Rename</li><li>Delete</li>'
 			}
 		},
 		tables: {
@@ -376,7 +376,8 @@ Juxta.Explorer = $.Class(Juxta.Application, {
 		},
 		routines: {
 			head: {
-				header: {title: 'Procedures & Functions', from: null}
+				header: {title: 'Stored Routines', from: null},
+				menu: {'Create Routine': {click: 'return false;'}}
 			},
 			grid: {
 				'head': {

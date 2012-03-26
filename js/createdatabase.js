@@ -1,6 +1,6 @@
 Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 	init: function(element, request) {
-		this._super(element, {title: 'Create database'});
+		this._super(element);
 
 		this.$form = this.$floatBox.find('form[name=create-database]');
 		this.$collations = this.$form.find('[name=collation]');

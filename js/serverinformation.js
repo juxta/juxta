@@ -14,7 +14,7 @@ Juxta.ServerInformation = $.Class(Juxta.Application, {
 	 * @param {Juxta.Request} request
 	 */
 	init: function(element, request) {
-		this._super(element, {header: 'Server status', menu: {'Server status': null, 'System variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}})
+		this._super(element, {header: 'Server Status', menu: {'Server Status': null, 'System Variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}})
 		this.grid = new Juxta.Grid(this.$application.find('.grid'));
 		this.request = request;
 
