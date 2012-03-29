@@ -33,7 +33,7 @@ Juxta.Application = $.Class({
 	},
 	show: function(options) {
 		if (!options) {
-			Juxta.show();
+			Jux.show();
 		} else {
 			options = $.extend({}, this.settings, options);
 			this.tune(options);

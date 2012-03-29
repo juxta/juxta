@@ -5,7 +5,7 @@ Juxta.CreateUser = $.Class(Juxta.FloatBox, {
 		var _this = this;
 		this.$floatBox.find('.buttons input[value=Create]').click(function() {
 			_this.hide();
-			Juxta.notify('User created');
+			Jux.notify('User created');
 		});
 	},
 	show: function(options) {

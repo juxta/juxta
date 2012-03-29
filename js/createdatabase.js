@@ -20,7 +20,7 @@ Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 		this.$floatBox.find('input[type=text]').focus().val(null);
 	},
 	hide: function() {
-		Juxta.notification.hide();
+		Jux.notification.hide();
 		this._hide();
 	},
 	requestCreateDatabase: function() {
@@ -35,7 +35,7 @@ Juxta.CreateDatabase = $.Class(Juxta.FloatBox, {
 	},
 	responseCreateDatabase: function(response) {
 		this.$floatBox.hide();
-		Juxta.explore({show: 'databases', refresh: true});
+		Jux.explore({show: 'databases', refresh: true});
 	},
 	requestGetCollations: function() {
 		this.request.send({

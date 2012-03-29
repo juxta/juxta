@@ -87,7 +87,7 @@ Juxta.Request.prototype.send = function (params) {
 	var getSession = new jQuery.Deferred(),
 		getResponse = new jQuery.Deferred();
 
-	if (Juxta.connection === null
+	if (Jux.connection === null
 		&& queryString !== 'get=connections'
 		&& queryString !== 'login'
 	) {
@@ -95,8 +95,8 @@ Juxta.Request.prototype.send = function (params) {
 			url: this._ajaxSettings.url + '?get=session',
 			success: function(response) {
 				if (response.connection) {
-					Juxta.connection = response.connection;
-					Juxta.sidebar.path({host: response.connection.host});
+					Jux.connection = response.connection;
+					Jux.sidebar.path({host: response.connection.host});
 					getSession.resolveWith(that);
 				} else if (response.status === 'session_not_found'
 					&& $.isFunction(that._responseCallbacks.sessionNotFound)

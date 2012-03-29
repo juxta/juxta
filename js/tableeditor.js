@@ -1,6 +1,6 @@
 Juxta.TableEditor = $.Class(Juxta.Application, {
 	init: function(element) {
-		this._super(element, {closable: false, mazimized: false, menu: {'Browse table' : {click: "Juxta.browse({browse: '123', from: 'Qq'}); return false;"}}});
+		this._super(element, {closable: false, mazimized: false, menu: {'Browse table' : {click: "Jux.browse({browse: '123', from: 'Qq'}); return false;"}}});
 		$(window).bind('resize', {_this: this}, this.stretch);
 	},
 	show: function(options) {

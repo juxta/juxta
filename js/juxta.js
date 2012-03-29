@@ -25,24 +25,24 @@ Juxta = function() {
 	this.request = new Juxta.Request(this.cache, {
 		request: {
 			beforeSend: function() {
-				Juxta.loading();
+				Jux.loading();
 			},
 			complete: function() {
-				Juxta.loading(false);
+				Jux.loading(false);
 			},
 			error: function(xhr, status) {
 				if (status == 'parsererror') {
-					Juxta.error('Answer parsing error');
+					Jux.error('Answer parsing error');
 				} else {
-					Juxta.error(xhr.status + ' ' + xhr.statusText);
+					Jux.error(xhr.status + ' ' + xhr.statusText);
 				}
 			}
 		},
 		response: {
-			connectionError: function(response) { Juxta.error(response.error); Juxta.auth.show(); },
+			connectionError: function(response) { Jux.error(response.error); Jux.auth.show(); },
 			sessionNotFound: function() { document.location.hash = '#login'; },
-			error: function(response) { Juxta.error(response.error); },
-			unknowStatus: function() { Juxta.error('Response with unknow status recived'); }
+			error: function(response) { Jux.error(response.error); },
+			unknowStatus: function() { Jux.error('Response with unknow status recived'); }
 		}
 	});
 
@@ -218,7 +218,7 @@ Juxta.prototype = {
 	 *
 	 */
 	browse: function(params) {
-		Juxta.sidebar.path({'database': params.from, 'table': params.browse});
+		this.sidebar.path({'database': params.from, 'table': params.browse});
 		this.browser.browse(params);
 	},
 
@@ -265,5 +265,5 @@ Juxta.prototype = {
 };
 
 $(document).ready(function() {
-	Juxta = new Juxta();
+	window.Jux = new Juxta();
 });

@@ -40,7 +40,7 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 			this.request.send({action: {get: 'connections'}, context: this, success: this.getConnectionsResponse});
 		}
 		//
-		Juxta.hide();
+		Jux.hide();
 		this.$submit.attr('disabled', false);
 		this.$password.val(null);
 		this._show();
@@ -60,17 +60,17 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		this.request.send({
 			action: 'login',
 			data: this.$form.serialize(),
-			beforeSend: function() { Juxta.loading('Connecting to ' + $('input[name=host]', this.$form).val()) },
+			beforeSend: function() { Jux.loading('Connecting to ' + $('input[name=host]', this.$form).val()) },
 			success: this.loginResponse,
 			context: this
 		});
 	},
 	loginResponse: function(response) {
 		if (response.result == 'connected') {
-			Juxta.state = null;
+			Jux.state = null;
 			document.location.hash = '#databases';
 		} else {
-			Juxta.error(response.message);
+			Jux.error(response.message);
 			//
 			this.$submit.attr('disabled', false);
 			this.$password.focus();
@@ -80,8 +80,8 @@ Juxta.Auth = $.Class(Juxta.FloatBox, {
 		this.request.send({
 			action: 'logout',
 			success: function() {
-				Juxta.cache.flush();
-				Juxta.connection = null;
+				Jux.cache.flush();
+				Jux.connection = null;
 				document.location.hash = '#login';
 			}
 		});
