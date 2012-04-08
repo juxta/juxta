@@ -1,26 +1,53 @@
-Juxta.BackupRestore = $.Class(Juxta.Application, {
-	init: function(element) {
-		this._super(element, {header: 'Backup', menu: {'Options': {href: '#backup/options', click: 'return false;'}}});
-		this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
-		
-		$(window).bind('resize', {_this: this}, this.stretch);
-	},
-	show: function(options) {
-		this._show(options);
-		this.stretch();
+/**
+ * @class Backup and Restore application
+ * @extends Juxta.Application
+ * @param {jQuery|String} element
+ * @param {Juxta.Request} request
+ */
+Juxta.BackupRestore = function(element) {
 
-		var params = {
-				head: {'database': 'Items for backup'},
-				row: '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
-				context: ['database']
-			};
-		var data = ['information_schema', 'mysql', 'sampdb', 'test'];
-		this.grid.fill(data, params);
-	},
-	stretch: function(event) {
-		var _this = event && event.data._this || this;
-		if (_this.$application.is(':visible')) {
-			_this.$application.find('.grid .body').height($('#applications').height() - _this.$application.find('.grid .body').position().top - _this.$statusBar.height() - 24);
-		}
+	Juxta.Application.prototype.constructor.call(this, element,  {header: 'Backup', menu: {'Options': {href: '#backup/options', click: 'return false;'}}});
+
+	/**
+	 * @type {Juxta.TreeGrid}
+	 */
+	this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
+
+	$(window).bind('resize', {that: this}, this.stretch);
+}
+
+Juxta.Lib.extend(Juxta.BackupRestore, Juxta.Application);
+
+/**
+ * Show application
+ * @param {Object} options
+ * @return {Juxta.BackupRestore}
+ */
+Juxta.BackupRestore.prototype.show = function(options) {
+
+	Juxta.Application.prototype.show.apply(this, arguments);
+	this.stretch();
+
+	var params = {
+			head: {'database': 'Items for backup'},
+			row: '<tr><td class="expand"></td><td class="check"><input type="checkbox"></td><td class="database"><a>{database}</a></td></tr>',
+			context: ['database']
+		},
+		data = ['information_schema', 'mysql', 'sampdb', 'test'];
+
+	this.grid.fill(data, params);
+
+	return this;
+}
+
+
+/**
+ * Stretch grid to window height
+ * @param {Event} event
+ */
+Juxta.BackupRestore.prototype.stretch = function(event) {
+	var that = event && event.data.that || this;
+	if (that.$application.is(':visible')) {
+		that.$application.find('.grid .body').height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
 	}
-});
+}
