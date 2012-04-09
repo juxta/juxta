@@ -1,17 +1,30 @@
-Juxta.CreateUser = $.Class(Juxta.FloatBox, {
-	init: function(element) {
-		this._super(element, {title: 'Add a User'});
+/**
+ * @class Create User
+ * @extend Juxta.FloatBox
+ * @constructor
+ * @param {jQuery} element
+ */
+Juxta.CreateUser = function(element) {
 
-		var _this = this;
-		this.$floatBox.find('.buttons input[value=Create]').click(function() {
-			_this.hide();
-			Jux.notify('User created');
-		});
-	},
-	show: function(options) {
-		this.$floatBox.find('input[type=text]').attr('value', null);
-		this._show(options);
-	}
-});
+	Juxta.FloatBox.prototype.constructor.call(this, element, {title: 'Add a User'});
 
+	var that = this;
+
+	this.$floatBox.find('.buttons input[value=Create]').click(function() {
+		that.hide();
+		Jux.notify('User created');
+	});
+}
+
+Juxta.Lib.extend(Juxta.CreateUser, Juxta.FloatBox);
+
+/**
+ * Show the box
+ */
+Juxta.CreateUser.prototype.show = function() {
+	this.$floatBox.find('input[type=text]').attr('value', null);
+	Juxta.FloatBox.prototype.show.apply(this, arguments);
+
+	return this;
+}
 
