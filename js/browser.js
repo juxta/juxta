@@ -9,17 +9,18 @@ Juxta.Browser = function(element, request) {
 	Juxta.Application.prototype.constructor.call(this, element, {header: 'Browse', closable: true, maximized: true});
 
 	/**
-	 * @type {Juxta.TreeGrid}
-	 */
-	this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
-
-
-	/**
 	 * @type {Juxta.Request}
 	 */
 	this.request = request;
 
+
+	/**
+	 * @type {Juxta.TreeGrid}
+	 */
+	this.grid = new Juxta.Grid2(this.$application.find('.grid'));
+
 	$(window).bind('resize', {that: this}, this.stretch);
+
 }
 
 Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
