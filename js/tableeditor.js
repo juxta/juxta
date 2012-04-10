@@ -1,3 +1,8 @@
+/**
+ * @class Table editor
+ * @extends {Juxta.Application}
+ * @param {jQuery} element
+ */
 Juxta.TableEditor = function(element) {
 
 	Juxta.Application.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse table' : {click: "Jux.browse({browse: '123', from: 'Qq'}); return false;"}}});
@@ -8,7 +13,9 @@ Juxta.TableEditor = function(element) {
 Juxta.Lib.extend(Juxta.TableEditor, Juxta.Application);
 
 /**
- * 
+ * Show editor
+ * @param {Object} options
+ * @return {Juxta.TableEditor}
  */
 Juxta.TableEditor.prototype.show = function(options) {
 	Juxta.Application.prototype.show.apply(this, arguments);
@@ -19,7 +26,8 @@ Juxta.TableEditor.prototype.show = function(options) {
 
 
 /**
- * 
+ * Stretch a grid
+ * @param {Event} event
  */
 Juxta.TableEditor.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;

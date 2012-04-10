@@ -5,6 +5,9 @@
  */
 Juxta.Application = function(element, options) {
 
+	/**
+	 * @type {Object}
+	 */
 	this.settings = {
 		closable: false,
 		maximized: false
@@ -12,8 +15,21 @@ Juxta.Application = function(element, options) {
 
 	this.settings = $.extend({}, this.settings, options);
 
+	/**
+	 * @type {jQuery}
+	 */
 	this.$application = $(element);
+
+
+	/**
+	 * @type {jQuery}
+	 */
 	this.$menu = this.$application.find('.menu');
+
+
+	/**
+	 * @type {jQuery}
+	 */
 	this.$statusBar = this.$application.find('.status');
 
 	this.tune(this.settings);
@@ -27,6 +43,10 @@ Juxta.Application = function(element, options) {
 
 }
 
+
+/**
+ * @param {Object} options
+ */
 Juxta.Application.prototype.tune = function(options) {
 	if ($.isPlainObject(options.header)) {
 		this.$application.find('h1').html(
@@ -40,6 +60,11 @@ Juxta.Application.prototype.tune = function(options) {
 	this.menu(options.menu);
 }
 
+
+/**
+ * Show application
+ * @param {Object} options
+ */
 Juxta.Application.prototype.show = function(options) {
 	if (!options) {
 		// @todo Remove global
@@ -63,11 +88,21 @@ Juxta.Application.prototype.show = function(options) {
 	return this;
 }
 
+
+/**
+ * Hide application
+ * @return {Juxta.Application}
+ */
 Juxta.Application.prototype.hide = function() {
 	this.$application.hide();
 	return this;
 }
 
+
+/**
+ * Set application menu
+ * @param {Object} menu
+ */
 Juxta.Application.prototype.menu = function(menu) {
 	this.$menu.empty();
 	var that = this;
@@ -86,12 +121,22 @@ Juxta.Application.prototype.menu = function(menu) {
 	return this;
 }
 
+
+/**
+ * Maximize window
+ * @return {Juxta.Applcation}
+ */
 Juxta.Application.prototype.maximize = function() {
 	$('#sidebar').addClass('minimized');
 	$('#applications').addClass('maximized');
 	return this;
 }
 
+
+/**
+ * Restore maximized application to standarts size
+ * @return {Juxta.Applcation}
+ */
 Juxta.Application.prototype.restore = function() {
 	$('#applications').removeClass('maximized');
 	$('#sidebar').removeClass('minimized');
@@ -99,6 +144,14 @@ Juxta.Application.prototype.restore = function() {
 	return this;
 }
 
+
+/**
+ * Set status text
+ * @param {String} text
+ * @return {Juxta.Application}
+ */
 Juxta.Application.prototype.status = function(text) {
 	this.$statusBar.text(text);
+
+	return this;
 }

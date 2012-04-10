@@ -10,28 +10,60 @@ Juxta.Auth = function(element, request) {
 
 	Juxta.Auth.prototype.constructor.call(this, element, {title: 'Connect to MySQL Server', closable: false});
 
+	/**
+	 * @type {jQuery}
+	 */
 	this.$form = this.$floatBox.find('form[name=login]');
+
+
+	/**
+	 * @type {HTMLFormElement}
+	 */
 	this.form = this.$form.get(0);
+
+
+	/**
+	 * @type {jQuery}
+	 */
 	this.$connections = $('select[name=connection]');
+
+
+	/**
+	 * @type {jQuery}
+	 */
 	this.$password = this.$form.find('input[type=password]');
+
+
+	/**
+	 * @type {jQuery}
+	 */
 	this.$submit = this.$form.find('input[type=submit]');
+
+
+	/**
+	 * @type {Juxta.REquest}
+	 */
 	this.request = request;
 
 	var that = this;
+
 	$('#header a[href=#logout]').click(function() {
 		that.logout();
 		return false;
 	});
+
 	this.$form.bind('submit', function() {
 		that.$submit.focus();
 		that.login();
 		return false;
 	});
+
 	this.$connections.bind('change', function() {
 		that.fillForm(that.storedConnections[this.value]);
 		that.$connections.find('option[value=0]').remove();
 		that.$password.focus().val(null);
 	});
+
 	$('input[name=host],input[name=user]', this.$form).bind('keyup', function() {
 		if (that.$connections.val() > 0) {
 			var curConnection = that.storedConnections[that.$connections.val()];
@@ -157,8 +189,8 @@ Juxta.Auth.prototype.getConnectionsResponse = function(response) {
  */
 Juxta.Auth.prototype.fillForm = function(values) {
 	if (values) {
-		this.form['host'].value = values['host'];
-		this.form['port'].value = values['port'];
-		this.form['user'].value = values['user'];
+		this.form.host.value = values.host;
+		this.form.port.value = values.port;
+		this.form.user.value = values.user;
 	}
 }

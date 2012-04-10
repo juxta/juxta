@@ -15,7 +15,7 @@ Juxta.FloatBox.prototype = {
 
 		this.$container = $(element);
 
-		// @depricated
+		// @deprecated
 		this.$floatBox = this.$container;
 
 		// Head

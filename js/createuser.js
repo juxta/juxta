@@ -1,7 +1,6 @@
 /**
  * @class Create User
  * @extend Juxta.FloatBox
- * @constructor
  * @param {jQuery} element
  */
 Juxta.CreateUser = function(element) {

@@ -1,6 +1,5 @@
 /**
  * @class Dummy application
- * @constructor
  * @param {jQuery} element
  */
 Juxta.Dummy = function(element) {

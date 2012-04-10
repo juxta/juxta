@@ -1,6 +1,5 @@
 /**
  * @class Simple grid
- * @constructor
  */
 Juxta.Grid = function(grid) {
 	this.init(grid);

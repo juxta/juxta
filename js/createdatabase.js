@@ -1,7 +1,6 @@
 /**
  * @class Create Database
  * @extends Juxta.FloatBox
- * @constructor
  * @param {jQuery} element
  * @param {Object} options
  */

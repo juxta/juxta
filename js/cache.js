@@ -3,10 +3,20 @@
  */
 Juxta.Cache = function() {
 
+	/**
+	 * @type {Number}
+	 */
 	var defaultLifeTime = 10000;
 
+	/**
+	 * @type {Object}
+	 */
 	this.cache = {};
 
+
+	/**
+	 * @param {String} key
+	 */
 	this.get = function(key) {
 		var timestamp = (new Date()).getTime();
 
@@ -20,6 +30,13 @@ Juxta.Cache = function() {
 		}
 	}
 
+
+	/**
+	 * @param {String} key
+	 * @param {} data
+	 * @param {Number} lifeTime
+	 * @param {Object} index
+	 */
 	this.set = function(key, data, lifeTime, index) {
 		var expire,
 			timestamp = (new Date()).getTime();
@@ -43,6 +60,11 @@ Juxta.Cache = function() {
 		}
 	}
 
+
+	/**
+	 * Flush data by key
+	 * @param {String} key
+	 */
 	this.flush = function(key) {
 		if (key) {
 			delete this.cache[key];
@@ -50,6 +72,7 @@ Juxta.Cache = function() {
 			this.cache = {};
 		}
 	}
+
 
 	/**
 	 * Index data in cache
@@ -90,6 +113,7 @@ Juxta.Cache = function() {
 			}
 		}
 	}
+
 
 	/**
 	 * Search data using index

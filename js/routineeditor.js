@@ -1,12 +1,4 @@
 /**
- * Juxta 0.0.1
- *
- * Copyright (c) 2010-2011 Alexey Golovnya
- * Licensed under the MIT license
- * http://juxta.ru
- */
-
-/**
  * @class Editor for views, stored procedures and triggers
  * @param {jQuery} element
  * @param {Juxta.Request} request

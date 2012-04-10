@@ -1,28 +1,29 @@
 /**
  * @class Grid context menu
- * @constructor
- * @param {jQuery, String} Page
- * @param {jQuery, String} Menu container
+ * @param {jQuery|String} Page
+ * @param {jQuery|String} Menu container
  */
 Juxta.ContextMenu = function(page, menu) {
 
 	/**
 	 * Grid body
-	 * @field
+	 * @type {jQuery}
 	 */
 	this.$page = $(page);
 
+
 	/**
 	 * Container
-	 * @field
+	 * @type {jQuery}
 	 */
 	this.$container = $(menu);
 
+
 	/**
-	 * Target (row)
-	 * @field
+	 * @type {HTMLElement}
 	 */
 	this.target = null;
+
 
 	/**
 	 * Value
@@ -39,6 +40,7 @@ Juxta.ContextMenu = function(page, menu) {
 	this.$container.bind('hide', $.proxy(this.hide, this));
 }
 
+
 /**
  * Hide menu
  */
@@ -51,6 +53,7 @@ Juxta.ContextMenu.prototype.hide = function() {
 
 	this.$page.trigger('change');
 }
+
 
 /**
  * Show menu
@@ -74,6 +77,7 @@ Juxta.ContextMenu.prototype.show = function(row, position) {
 	return false;
 }
 
+
 /**
  * Load menu
  * @param {String, Array} Menu template or items 
@@ -85,8 +89,8 @@ Juxta.ContextMenu.prototype.load = function(menu) {
 		var $menu = this.$container.find('ul').empty();
 		$.each(menu, function(i, item) {
 			var $item = $('<li>').text(item.title);
-			if (item.class) {
-				$item.addClass(item.class);
+			if (item['class']) {
+				$item.addClass(item['class']);
 			}
 			if (item.action && typeof item.action === 'function') {
 				$item.bind('click', item.action);

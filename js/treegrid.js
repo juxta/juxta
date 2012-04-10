@@ -1,16 +1,15 @@
 /**
  * @class Grid with expande/collapse rows
  * @extends Juxta.Grid
- * @constructor
- * @param {String, jQuery} Grid container
+ * @param {String|jQuery} Grid container
  */
 Juxta.TreeGrid = function(grid) {
 	Juxta.Grid.call(this, grid);
 }
 
+
 /**
  * Initialisation
- *
  * @param {String} grid
  */
 Juxta.TreeGrid.prototype.init = function(grid) {
@@ -48,9 +47,10 @@ Juxta.TreeGrid.prototype.init = function(grid) {
 
 }
 
+
 /**
  * Expand row
- * 
+ * @param {Selector} row
  */
 Juxta.TreeGrid.prototype.expand = function(row) {
 	var $row = $(row);
@@ -59,9 +59,10 @@ Juxta.TreeGrid.prototype.expand = function(row) {
 	$row.next('.content').hide();
 }
 
+
 /**
  * Collapse row
- * 
+ * @param {Selector} row
  */
 Juxta.TreeGrid.prototype.collapse = function(row) {
 	var $row = $(row);
@@ -75,9 +76,10 @@ Juxta.TreeGrid.prototype.collapse = function(row) {
 	}
 }
 
+
 /**
  * Select row
- * 
+ * @param {Selector} row
  */
 Juxta.TreeGrid.prototype.selectRow = function(row) {
 	this._selectRow(row);
@@ -106,9 +108,10 @@ Juxta.TreeGrid.prototype.selectRow = function(row) {
 		.parents('tr').find('a').addClass('checked');
 }
 
+
 /**
  * Deselect row
- * 
+ * @param {Selector} row
  */
 Juxta.TreeGrid.prototype.deselectRow = function(row) {
 	this._deselectRow(row);
