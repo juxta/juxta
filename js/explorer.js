@@ -6,24 +6,7 @@
  */
 Juxta.Explorer = function(element, request) {
 
-	var that = this;
-
-	this.settings = {
-		cache: 60
-	}
-
-	Juxta.Application.prototype.constructor.call(this, element);
-
-	/**
-	 * @type {String} cache
-	 */
-	this.cache = null;
-
-
-	/**
-	 * @type {String} preparedFor
-	 */
-	this.preparedFor = null;
+	Juxta.Application.prototype.constructor.call(this, element, {cache: 60});
 
 
 	/**
@@ -36,6 +19,42 @@ Juxta.Explorer = function(element, request) {
 	 * @type {Juxta.Grid} grid
 	 */
 	this.grid = new Juxta.Grid('#explorer .grid');
+
+
+	/**
+	 * @type {Juxta.RoutineEditor}
+	 */
+	this.routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this.request);
+
+
+	/**
+	 * @type {Juxta.CreateDatabase} createDatabase
+	 */
+	this.createDatabase = new Juxta.CreateDatabase($('#create-database'), this.request);
+
+
+	/**
+	 * @type {Juxta.CreateUser} createUser
+	 */
+	this.createUser = new Juxta.CreateUser($('#create-user'));
+
+
+	/**
+	 * @type {String} cache
+	 * @private
+	 */
+	this._cacheKey = null;
+
+
+	/**
+	 * @type {String} preparedFor
+	 * @private
+	 */
+	this.preparedFor = null;
+
+
+	// Bind for grid events
+	var that = this;
 
 	this.grid.$actions.bind('drop', function() {
 		var params = {
@@ -76,24 +95,7 @@ Juxta.Explorer = function(element, request) {
 		that.status(status);
 	});
 
-
-	/**
-	 * @type {Juxta.RoutineEditor}
-	 */
-	this.routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this.request);
-
-
-	/**
-	 * @type {Juxta.CreateDatabase} createDatabase
-	 */
-	this.createDatabase = new Juxta.CreateDatabase($('#create-database'), this.request);
-
-
-	/**
-	 * @type {Juxta.CreateUser} createUser
-	 */
-	this.createUser = new Juxta.CreateUser($('#create-user'));
-
+	// Stretch grid by height
 	$(window).bind('resize', {explorer: this}, this.stretch);
 
 }
@@ -173,8 +175,10 @@ Juxta.Explorer.prototype.requestExplore = function(params) {
 			options[value] = params[value];
 		}
 	});
-	//
-	this.cache = this.request.queryString(query);
+
+	// Store key cache for last request
+	this._cacheKey = this.request.queryString(query);
+
 	if (this.prepare(query.show)) {
 		this.request.send($.extend(
 			{},
@@ -286,8 +290,8 @@ Juxta.Explorer.prototype.responseDrop = function(response) {
 		this.grid.remove(response.dropped);
 	}
 
-	// @todo Remove global
-	Jux.cache.flush(this.cache);
+	// Flush last cached response
+	this.request.cache.flush(this._cacheKey);
 }
 
 

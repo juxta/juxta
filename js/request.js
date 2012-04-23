@@ -128,7 +128,6 @@ Juxta.Request.prototype.send = function (params) {
 	});
 
 	return getResponse;
-
 }
 
 
