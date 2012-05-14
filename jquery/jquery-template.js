@@ -54,28 +54,7 @@
 
 	jQuery.template.date = function(dateString) {
 		if (dateString) {
-			var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				date = new Date(dateString),
-				now = new Date(),
-				yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1),
-				today = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-				tommorow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
-				dateStringFormatted = '';
-
-			if (date >= yesterday && date < today) {
-				dateStringFormatted = 'Yesterday, '
-			} else if (date < today || date >= tommorow) {
-				dateStringFormatted += months[date.getMonth()] + ' ' + date.getDate();
-				if (date.getFullYear() != today.getFullYear()) {
-					dateStringFormatted += ' ' + date.getFullYear();
-				}
-				dateStringFormatted += ', ';
-			}
-			dateStringFormatted += date.getHours() + ':'
-			dateStringFormatted += date.getMinutes() < 10 ? '0' : '';
-			dateStringFormatted += date.getMinutes();
-
-			return dateStringFormatted;
+			return Juxta.Lib.Date.pretty(new Date(dateString));
 		} else {
 			return dateString;
 		}

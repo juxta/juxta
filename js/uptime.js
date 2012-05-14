@@ -1,93 +1,55 @@
 /**
  * Counts the time since the server was started
  * @class Server uptime
- * @param {jQuery|String} Container
+ * @param {jQuery|String} element
  */
-Juxta.Uptime = function(container) {
+Juxta.Uptime = function(element) {
 
 	/**
 	 * @type {jQuery}
 	 */
-	var _container = $(container);
+	var container = $(element);
 
 	/**
 	 * @type {String}
 	 */
-	var _selector = _container.selector;
+	var selector = container.selector;
 
 	/**
 	 * @type {Number}
 	 */
-	var _time;
+	var time;
+
+	/**
+	 * @type {Date}
+	 */
+	var startTime;
 
 	/**
 	 * @type {String}
 	 */
-	var _interval;
+	var interval;
 
 	/**
 	 * @type {String}
 	 */
-	var _state = null;
+	var state = null;
 
 	/**
 	 *  Timer
 	 */
-	var _timer = function() {
+	var timer = function() {
 		//
-		var days,
-			hours,
-			minutes,
-			seconds = _time;
+		time++;
 
-		days = Math.floor(seconds / (3600 * 24));
-		seconds = Math.round(seconds / (3600 * 24) % 1 * (3600 * 24));
-		hours = Math.floor(seconds / 3600);
-		seconds = Math.round(seconds / 3600 % 1 * 3600);
-		minutes = Math.floor(seconds / 60);
-		seconds = Math.round(seconds / 60 % 1 * 60);
-
-		_time++;
-
-		var state = [days, hours, minutes].join();
-		if (state === _state) {
+		var newState = Math.floor(time / 60);
+		if (state === newState) {
 			return;
 		}
-		
-		_state = state;
+		state = newState;
 
-		var uptimeString = '';
-		if (days === 0 && hours === 0) {
-			//
-			if (minutes === 0) {
-				minutes = 1;
-			}
-			uptimeString = minutes;
-			if (minutes === 1) {
-				uptimeString += ' minute';
-			} else {
-				uptimeString += ' minutes';
-			}
-		} else {
-			if (days) {
-				uptimeString += days;
-				if (days === 1) {
-					uptimeString += ' day, ';
-				} else {
-					uptimeString += ' days, ';
-				}
-			}
-
-			uptimeString += hours + ':';
-
-			// Minutes with leading zero
-			uptimeString += (minutes < 10 ? '0' : '') + minutes;
-		}
-
-		_container.text(uptimeString);
+		container.text(Juxta.Lib.Date.uptime(time * 1000));
 	}
-	
-	var _startTime;
 
 	/**
 	 * Start timer
@@ -97,13 +59,13 @@ Juxta.Uptime = function(container) {
 		//
 		this.stop();
 
-		_container = $(_selector);
+		container = $(selector);
 
 		var that = this;
-		_time = uptime;
-		_startTime = new Date(Date.now() - uptime * 1000);
-		_timer();
-		_interval = setInterval(function() { _timer.call(that); }, 1000);
+		time = uptime;
+		startTime = new Date(Date.now() - uptime * 1000);
+		timer();
+		interval = setInterval(function() { timer.call(that); }, 1000);
 	}
 
 	/**
@@ -111,7 +73,7 @@ Juxta.Uptime = function(container) {
 	 * @method stop
 	 */
 	this.stop = function () {
-		clearInterval(_interval);
+		clearInterval(interval);
 	}
 
 	/**
@@ -120,7 +82,7 @@ Juxta.Uptime = function(container) {
 	 * @return {Date}
 	 */
 	this.getStartTime = function() {
-		return _startTime;
+		return startTime;
 	}
 
 }

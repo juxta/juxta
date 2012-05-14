@@ -147,7 +147,11 @@ Juxta.ServerInformation.prototype.responseInfo = function(response) {
 		this.properStatus(response.data);
 		if (!response.cache) {
 			this.uptime.start(response.data.Uptime);
-			this.$application.find('.proper').find('.startup .time').text(this.uptime.getStartTime().toString());
+			this.$application
+				.find('.proper')
+				.find('.startup .time')
+				.text(Juxta.Lib.Date.format(this.uptime.getStartTime(), "%b %-d, %Y %T"));
+
 		}
 	} else {
 		var params = $.extend({}, response, this.templates[response.contents].grid);
