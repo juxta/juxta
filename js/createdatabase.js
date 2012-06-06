@@ -57,7 +57,7 @@ Juxta.CreateDatabase.prototype.show = function(options) {
 Juxta.CreateDatabase.prototype.hide = function() {
 	// @todo Remove global
 	Jux.notification.hide();
-	this._hide();
+	Juxta.FloatBox.prototype.hide.apply(this, arguments);
 }
 
 
