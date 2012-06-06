@@ -259,7 +259,7 @@ Juxta.prototype = {
 	 *
 	 */
 	about: function() {
-		this.message($('#about').html(), {title: 'About Juxta'});
+		this.message($('#about').html(), {title: ''});
 	}
 
 };

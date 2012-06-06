@@ -5,6 +5,8 @@
 
 .message .about {
 	width: 350px;
+	height: 175px;
+	margin-top: -20px;
 	}
 
 .message .about h4,
