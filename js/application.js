@@ -138,8 +138,11 @@ Juxta.Application.prototype.maximize = function() {
  * @return {Juxta.Applcation}
  */
 Juxta.Application.prototype.restore = function() {
-	$('#applications').removeClass('maximized');
 	$('#sidebar').removeClass('minimized');
+	if ($('#applications').removeClass('maximized').is(':visible')) {
+		$('#sidebar').show();
+	}
+	
 
 	return this;
 }
