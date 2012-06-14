@@ -6,6 +6,8 @@
  */
 Juxta.Browser = function(element, request) {
 
+	var that = this;
+
 	Juxta.Application.prototype.constructor.call(this, element, {header: 'Browse', closable: true, maximized: true});
 
 	/**
@@ -17,7 +19,16 @@ Juxta.Browser = function(element, request) {
 	/**
 	 * @type {Juxta.TreeGrid}
 	 */
-	this.grid = new Juxta.Grid2(this.$application.find('.grid'));
+	this.grid = new Juxta.Grid2(this.$application.find('.grid2'));
+
+
+	$(this.grid).bind('change', function () {
+		if (typeof that.grid.count == 'undefined') {
+			that.$statusBar.empty();
+		} else {
+			that.$statusBar.text(that.grid.count + (that.grid.count == 1 ? ' row' : ' rows'));
+		}
+	});
 
 	$(window).bind('resize', {that: this}, this.stretch);
 
@@ -45,7 +56,7 @@ Juxta.Browser.prototype.show = function(options) {
 Juxta.Browser.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
 	if (that.$application.is(':visible')) {
-		that.$application.find('.grid .body').height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
+		that.grid.setHeight($('#applications').height() - that.$application.find('.grid2-body').position().top - that.$statusBar.height() - 24);
 	}
 }
 
@@ -88,39 +99,22 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
  * @param {Object} response
  */
 Juxta.Browser.prototype.responseBrowse = function(response) {
-	var params = $.extend(
-		{},
-		response,
-		{
-			head: {},
-			row: null,
-			context: [],
-			contextMenu: [
-				{title: 'Delete', action: function() { console.log('Drop'); }},
-				{title: 'Edit', action: function() { console.log('Edit');  }}
-			]
-		}
-	);
 
-	if (response.columns) {
-		params.row = '<tr>';
-		$.each(response.columns, function(i, column) {
-			params.head[(
-				'column' +
-				(column[1] ? ' ' + column[1] : '') +
-				' ' + column[0]
-			).toLowerCase()] = column[0];
-			//
-			params.row += '<td class="column ' + column[0] + '"><div>{' + column[0] + '}</div></td>';
-			//params.row += '<td>{' + column[0] + '}</td>';
-			//
-			params.context.push(column[0]);
-		});
-		params.row += '</tr>';
-	}
-	delete params.data;
+	var params = {
+		columns: [],
+		contextMenu: [
+			{title: 'Delete', action: function() { console.log('Drop'); }},
+			{title: 'Edit', action: function() { console.log('Edit');  }}
+		],
+		head: {}
+	};
 
-	this.grid.prepare(params);
+	$.each(response.columns, function(i, column) {
+		params.columns.push({title: column[0], style: 'test'});
+	});
+
+	//params.columns = ['country_id', 'country', 'last_update'];
+
 	this.grid.fill(response.data, params);
 
 	this.show();

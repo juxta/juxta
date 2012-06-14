@@ -3,15 +3,20 @@
  *
  */
 
-.grid.rows .head .column {
-	width: 125px;
-	}
 
-.grid.rows .body table thead th.column{
-	//width: 125px;
+.grid-head-column {
+	width: 125px;
 	background-color: #9f9;
 	border-right: #F66 1px solid;
 	}
+
+.grid-body-column {
+	width: 122px;
+	}
+.grid-body-column.width-auto {
+	width: auto;
+	}
+
 
 .grid.rows .body table tbody td {
 	padding: 0;

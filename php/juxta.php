@@ -866,13 +866,13 @@ class Juxta
 	 * @param int $offset
 	 * @return array
 	 */
-	private function _browse($table, $database, $limit = null, $offset = null)
+	private function _browse($table, $database, $limit = 30, $offset = 0)
 	{
 		$columns = $this->_query(
 			"SHOW COLUMNS IN `{$table}` FROM `{$database}`",
 			array('Field', 'Key', 'Type')
 		);
-		$data = $this->_query("SELECT * FROM `{$database}`.`{$table}`");
+		$data = $this->_query("SELECT * FROM `{$database}`.`{$table}` LIMIT {$offset}, {$limit}");
 
 		return array('data' => $data, 'columns' => $columns);
 	}

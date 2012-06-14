@@ -1,236 +1,334 @@
 /**
  * @class Grid 2
  */
-Juxta.Grid2 = function(grid) {
+Juxta.Grid2 = function(grid, options) {
 
-	this.statistics = {
-		item: 'item',
-		items: 'items',
-		all: 0,
-		selected: 0
-	}
+	/* Containers */
 
-	this.content = null;
+	/**
+	 * @type {jQuery}
+	 */
+	this.container = $(grid);
 
-	this.from = null;
 
+	/**
+	 * Group actions panel
+	 * @type {jQuery}
+	 */
+	this.actions = this.container.find('.grid2-actions');
+
+
+	/**
+	 * @type {jQuery}
+	 */
+	this.head = this.container.find('.grid2-head thead');
+
+
+	/**
+	 * @type {jQuery}
+	 */
+	this.bodyContainer = this.container.find('.grid2-body');
+
+
+	/**
+	 * Grid body
+	 * @type {jQuery}
+	 */
+	this.body = this.bodyContainer.find('tbody');
+
+
+	/**
+	 * @type {jQuery}
+	 */
+	this.emptyMessage = this.bodyContainer.find('.grid2-body-empty');
+
+
+	/* Properties */
+
+	/**
+	 * @type {Array}
+	 */
 	this.columns = [];
 
+
+	/**
+	 * @type {Number}
+	 */
+	this.count = 0;
+
+
+	/**
+	 * @type {Number}
+	 */
+	this.selected = 0;
+
+
+	/**
+	 * @type {String}
+	 */
+	this.rowTemplate;
+
+
+	/**
+	 * @type {String}
+	 */
+	this.from = null;
+
+
+	/**
+	 * Cache for rows
+	 * @type {Object}
+	 */
 	this.cache = {};
 
-	this.$container = $(grid);
-	this.$bodyContainer = this.$container.find('.body');
-	this.$bodyHead = this.$bodyContainer.find('table thead');
-	this.$body = this.$bodyContainer.find('table tbody');
-	this.$notFound = this.$bodyContainer.find('.not-found')
-	this.head = this.$container.find('.head');
-	this.$actions = this.$container.find('.actions');
-	this.$context = this.$container.find('.context');
 
 	/**
 	 * @type {Juxta.ContextMenu}
 	 */
 	this.contextMenu = null;
 
+
 	var that = this;
 
-	this.$body.change(function(event) {
-		// Select/deselect row
-		if ($(event.target).is('[type=checkbox]')) {
-			$('.context:visible').hide();
-
-			var $row = $(event.target).parent().parent();
-			if ($(event.target).is('[type=checkbox]:checked')) {
-				that.select($row);
-			} else{
-				that.deselect($row);
-			}
-		}
-
-		// Count all and selected items
-		that.statistics.all = that.$body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]').length;
-		that.statistics.selected = that.$body.find('tr:not(tr tr):not(.content)').find('[type=checkbox]:checked').length;
-
-		// Change all, nothing links states
-		if (that.statistics.all > 0 && that.statistics.all == that.statistics.selected) {
-			that.$actions.find('.all').addClass('active');
-			that.$actions.find('.nothing').removeClass('active');
-		} else if(that.statistics.selected == 0) {
-			that.$actions.find('.all').removeClass('active');
-			that.$actions.find('.nothing').addClass('active');
-		} else{
-			that.$actions.find('.all').removeClass('active');
-			that.$actions.find('.nothing').removeClass('active');
-		}
-
-		// Disable group actions' buttons if nothing selected, enable else
-		if (that.statistics.selected < 1) {
-			that.$actions.find('input[type=button]').attr('disabled', true);
-		} else{
-			that.$actions.find('input[type=button]').attr('disabled', false);
-		}
+	this.bodyContainer.scroll(function() {
+		that.head.parent('table').css({marginLeft: -$(this).scrollLeft()});
 	});
 
 	// Trigger event with type equals action name
-	this.$actions.bind('click', function(event) {
-		var $button = $(event.target);
-		if ($button.is('span.like-a, input') && $button.attr('name')) {
-			that.$actions.trigger($button.attr('name'));
-			that.$body.trigger($button.attr('name'));
+	this.actions.find('.grid2-actions-link,.grid2-actions-button').bind('click', function(event) {
+		if ($(this).attr('name')) {
+			$(that).trigger('actions/' + $(this).attr('name'));
 		}
 	});
 
-	this.$actions.bind('all', function() {
+	// Select all/nothing
+	$(this).bind('actions/all', function() {
 		that.select();
-	});
-	this.$actions.bind('nothing', function() {
+	}).bind('actions/nothing', function() {
 		that.deselect();
 	});
 
-	if (this.$context.is('.context')) {
-		this.contextMenu = new Juxta.ContextMenu(this.$body, this.$context);
+	// Change all, nothing links states
+	if (that.count > 0 && that.count == that.selected) {
+		that.actions.find('[name=all]').addClass('active');
+		that.actions.find('[name=nothing]').removeClass('active');
+	} else if (that.selected == 0) {
+		that.actions.find('[name=all]').removeClass('active');
+		that.actions.find('[name=nothing]').addClass('active');
+	} else{
+		that.actions.find('[name=all]').removeClass('active');
+		that.actions.find('[name=nothing]').removeClass('active');
 	}
+
+	// Disable group actions buttons if nothing selected, enable else
+	if (that.selected < 1) {
+		that.actions.find('input[type=button]').attr('disabled', true);
+	} else{
+		that.actions.find('input[type=button]').attr('disabled', false);
+	}
+
 }
 
-
-Juxta.Grid2.prototype.height = function(height) {
-	if (height) {
-		this.$notFound.css('top', height / 2 - 14 + 'px');
-	}
-	return this.$bodyContainer.height(height);
-}
-
-Juxta.Grid2.prototype.prepare = function(template) {
-	if (template) {
-		var that = this;
-
-		this.$actions.empty();
-		if (template['actions']) {
-			this.$actions.html(template['actions']);
-		}
-
-		// Empty grid header and body
-		if (template['head']) {
-			this.empty();
-			this.head.empty().show();
-			this.$bodyContainer.show();
-			this.$container.find('.proper').hide();
-		} else {
-			this.empty();
-			this.head.empty().hide();
-			this.$bodyContainer.hide();
-		}
-
-		// Make grid header
-		if (template['head']) {
-			this.head.empty();
-			$.each(template['head'], function(i, value) {
-				that.head.append('<li class="' + i + '">' + value + '</li>');
-			});
-		}
-
-		// Define context for status bar
-		if ($.isArray(template.context[0])) {
-			this.statistics.item = template.context[0][0];
-			this.statistics.items = template.context[0][1];
-		} else{
-			this.statistics.item = template.context[0];
-			this.statistics.items = 'items';
-		}
-
-		//
-		this.statistics.all = 0;
-		this.$body.trigger('change');
-
-		return true;
-	} else {
-		return false;
-	}
-}
 
 /**
+ * Set grid body height
+ * @param {Number} height
+ * @return {Juxta.Grid2}
+ */
+Juxta.Grid2.prototype.setHeight = function(height) {
+	//
+	this.emptyMessage.css({top: height/2});
+	this.bodyContainer.height(height)
+
+	return this;
+}
+
+
+/**
+ * @todo Пресмотреть
+ * Prepeare grid for filling
+ */
+Juxta.Grid2.prototype.prepare = function(params) {
+	console.warn('Prepare', arguments);
+	
+	if (!params) {
+		return false;
+	}
+
+	var template = params,
+		that = this;
+
+	if (params.from) {
+		this.from = params.from;
+	}
+
+	// Columns
+	if (!params.columns) {
+		throw new ReferenceError('columns is not defined');
+	}
+	that.columns = params.columns;
+
+	if (params.row) {
+		this.rowTemplate = params.row;
+	} else {
+		//
+		this.rowTemplate = '<tr class="grid2-body-row"><td class="grid2-body-column checkbox"><input type="checkbox"></td>';
+
+		var first = true;
+		$.each(that.columns, function(i, column) {
+			var name,
+				styles = ['grid2-body-column'];
+
+			if (first) {
+				styles.push('first-column');
+			}
+			if (typeof column === 'object') {
+				name = column.title;
+				styles.push(column.style);
+			} else {
+				name = column;
+			}
+			styles.push(name);
+
+			that.rowTemplate += '<td class="' + styles.join(' ') + '"><div>{' + name + '}</div></td>';
+
+			first = false;
+		});
+
+		that.rowTemplate += '</tr>';
+	}
+
+	// Set actions panel
+	if (params.actions === null) {
+		this.clear();
+		this.actions.empty();
+	} else if (params.actions) {
+		this.clear();
+		this.actions.html(template.actions);
+	}
+
+
+	// Empty grid header and body
+	if (template.head) {
+		this.head.empty().show();
+		that.head.parent('table').css({marginLeft: 0});
+	} else {
+		this.clear();
+		this.head.empty().hide();
+	}
+
+	// Make grid header
+	$.each(that.columns, function(i, column) {
+		//
+		var name,
+			styles = ['grid2-head-column'];
+
+		if (typeof column === 'object') {
+			name = column.title;
+			styles.push(column.style);
+		} else {
+			name = column;
+		}
+
+		styles.push(name);
+
+		that.head.append(
+			$('<th>').addClass(styles.join(' ')).append($('<div>').text(name))
+		);
+	});
+
+	return true;
+}
+
+
+/**
+ * @todo Пресмотреть
  * Fill grid data
  * @param {Array} data
  * @param {Object} params
  */
 Juxta.Grid2.prototype.fill = function(data, params) {
+	//
+	if (params) {
+		this.prepare(params);
+	}
+
 	var that = this;
 
-	this.empty();
-	this.content = params.contents;
-	if (params.from) {
-		this.from = params.from;
-	}
-	if (data && (data.length > 0 || $.isPlainObject(data))) {
-		this.statistics.all = data.length;
+	if (data && data.length > 0) {
+		//
+		this.count = data.length;
 
-		var template = params.row;
-		jQuery.each(data, function(i, value) {
-			if ($.isPlainObject(data)) {
-				value = [i, value];
-			}
+		$.each(data, function(i, value) {
+			//
 			var forTemplate = {},
 				cacheName;
-			jQuery.each(params.context, function(j, valueName) {
+
+			jQuery.each(that.columns, function(j, column) {
 				var name;
-				if (params.context.length == 1) {
-					if ($.isArray(valueName)) {
-						name = valueName[0];
-					} else{
-						name = valueName;
-					}
-					forTemplate[name] = value;
-				} else{
-					if ($.isArray(valueName)) {
-						name = valueName[0];
-					} else{
-						name = valueName;
-					}
-					forTemplate[name] = value[j];
+				if (typeof column === 'object') {
+					name = column.title;
+				} else {
+					name = column;
 				}
+
+				forTemplate[name] = value[j];
+
 				if (!cacheName) {
 					cacheName = name;
 				}
 			});
-			// @todo Rewrite this
-			if (params.from) {
-				$.extend(forTemplate, {database: params['from']});
-			}
 
-			var $q = $($.template(template, forTemplate)).appendTo(that.$body);
-			that.cache[forTemplate[cacheName]] = $q;
+			that.cache[forTemplate[cacheName]] = $($.template(that.rowTemplate, forTemplate)).appendTo(that.body);
 		});
-		this.$body.trigger('change');
 
-		// Make context menu
-		if (params.contextMenu && this.contextMenu) {
-			if (params.from) {
-				var menu = $.template(params.contextMenu, {database: params.from});
-			} else {
-				var menu = params.contextMenu;
-			}
-			this.contextMenu.load(menu);
-		}
+		$(this).trigger('change');
+
 	} else {
-		this.$notFound.css('top', this.$container.find('.body').height() / 2 - 14 + 'px').show();
+		// Show empty grid message
+		this.emptyMessage.css({top: this.bodyContainer.height()/2}).show();
 	}
 }
 
+
 /**
  * Empty grid body
+ * @return {Juxta.Grid2}
  */
 Juxta.Grid2.prototype.empty = function() {
-	this.$body.empty();
-	this.$notFound.hide();
+	//
+	this.body.empty();
+
+	this.count = undefined;
+	this.selected = undefined;
+
+	$(this).trigger('change');
+
+	return this;
+}
+
+
+/**
+ * 
+ */
+Juxta.Grid2.prototype.clear = function() {
+	//
+	this.head.empty();
+	this.empty();
+
+	this.emptyMessage.hide();
 
 	this.cache = {};
 	this.content = null;
 	this.from = null;
-	this.statistics.all = 0;
-	this.statistics.selected = 0;
+	this.columns = [];
+
+	$(this).trigger('clear');
 }
 
+
 /**
+ * @todo Пресмотреть
  * Select rows
  */
 Juxta.Grid2.prototype.select = function(row) {
@@ -241,7 +339,9 @@ Juxta.Grid2.prototype.select = function(row) {
 	}
 }
 
+
 /**
+ * @todo Пресмотреть
  * Deselect rows
  */
 Juxta.Grid2.prototype.deselect = function(row) {
@@ -252,87 +352,62 @@ Juxta.Grid2.prototype.deselect = function(row) {
 	}
 }
 
+
 /**
  * Select all rows
  */
 Juxta.Grid2.prototype.selectAll = function() {
-	$('.context:visible').hide();
-	this.$body.find('input[type=checkbox]').attr('checked', 'checked').parent().next('td').find('a').addClass('checked');
-	this.$body.trigger('change');
 }
+
 
 /**
  * Deselect all rows
  */
 Juxta.Grid2.prototype.deselectAll = function() {
-	this.$body.find('input[type=checkbox]').removeAttr('checked', '');
-	this.$body.find('a.checked').removeClass('checked');
-	this.$body.trigger('change');
 }
+
 
 /**
  * Select one row
  */
 Juxta.Grid2.prototype.selectRow = function(row) {
-	var $row = $(row);
-
 	// Highlight link
-	$row.find('td.check').next('td').find('a').addClass('checked');
+	$(row).find('.grid-body-column.checkbox').next('td').find('a').addClass('checked');
 }
 
 /**
  * Deselect one row
  */
 Juxta.Grid2.prototype.deselectRow = function(row) {
-	var $row = $(row);
-
 	// Unhighlight link
-	$row.find('td.check').next('td').find('a').removeClass('checked');
+	$(row).find('td.check').next('td').find('a').removeClass('checked');
 }
 
 /**
+ * @todo Пресмотреть
  * Returns names of selected rows
  */
-Juxta.Grid2.prototype.selected = function(filter, group) {
-	var selected = this.$body.find('input[type=checkbox]:checked');
-
-	// Apply filter
-	if (filter) {
-		selected = selected.filter(filter);
-	}
-
-	// Collect to arrya and group by attribute
-	if (group) {
-		var grouped = {};
-		jQuery.each(selected, function() {
-			if (grouped[$(this).attr(group)] === undefined) {
-				grouped[$(this).attr(group)] = [];
-			}
-			grouped[$(this).attr(group)].push($(this).attr('name'));
-		});
-		selected = grouped;
-	} else {
-		selected = selected.map(function() { return $(this).attr('name'); }).toArray();
-	}
-
-	return !$.isEmptyObject(selected) ? selected : null;
+Juxta.Grid2.prototype.getSelectedRows = function(filter, group) {
 }
 
 /**
  * Removes rows by name
  */
 Juxta.Grid2.prototype.remove = function(names, filter) {
-	var that = this;
+}
 
-	if (!$.isArray(names)) {
-		names = [names];
-	}
 
-	$.each(names, function(i, name) {
-		if (that.cache[name] && (filter === undefined || that.cache[name].find('.check :checkbox').is(filter))) {
-			that.cache[name].remove();
-		}
+Juxta.Grid2.prototype.enableSelectRows = function() {
+	$.each(this.cache, function() {
+		this.find('.grid2-body-column.checkbox').show();
 	});
+	this.container.addClass('select-rows');
+}
 
-	that.$body.trigger('change');
+
+Juxta.Grid2.prototype.disableSelectRows = function() {
+	$.each(this.cache, function() {
+		this.find('.grid2-body-column.checkbox').hide();
+	});
+	this.container.removeClass('select-rows');
 }
