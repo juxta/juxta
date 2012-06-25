@@ -2,38 +2,3 @@
  * Data browser
  *
  */
-
-
-.grid-head-column {
-	width: 125px;
-	background-color: #9f9;
-	border-right: #F66 1px solid;
-	}
-
-.grid-body-column {
-	width: 122px;
-	}
-.grid-body-column.width-auto {
-	width: auto;
-	}
-
-
-.grid.rows .body table tbody td {
-	padding: 0;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: ignore;
-	-webkit-box-sizing: border-box;
-	}
-
-.grid.rows .body table tbody td div {
-	width: 125px;
-	padding: 0 3px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	-webkit-text-overflow: ellipsis;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: ignore;
-	-webkit-box-sizing: border-box;
-	}

@@ -76,6 +76,12 @@ Juxta.Grid2 = function(grid, options) {
 
 
 	/**
+	 * @type {jQuery}
+	 */
+	this.prepared = null
+
+
+	/**
 	 * Cache for rows
 	 * @type {Object}
 	 */
@@ -127,6 +133,14 @@ Juxta.Grid2 = function(grid, options) {
 		that.actions.find('input[type=button]').attr('disabled', false);
 	}
 
+	this.bodyContainer.bind('scroll', function(event) {
+		if (that.bodyContainer.scrollTop() < 10) {
+			$(that).trigger('scrollTop');
+		} else if (that.bodyContainer.scrollTop() > that.body.height()- that.bodyContainer.height() - 10) {
+			$(that).trigger('scrollBottom');
+		}
+	});
+
 }
 
 
@@ -149,8 +163,9 @@ Juxta.Grid2.prototype.setHeight = function(height) {
  * Prepeare grid for filling
  */
 Juxta.Grid2.prototype.prepare = function(params) {
-	console.warn('Prepare', arguments);
-	
+
+	this.clear();
+
 	if (!params) {
 		return false;
 	}
@@ -200,10 +215,8 @@ Juxta.Grid2.prototype.prepare = function(params) {
 
 	// Set actions panel
 	if (params.actions === null) {
-		this.clear();
 		this.actions.empty();
 	} else if (params.actions) {
-		this.clear();
 		this.actions.html(template.actions);
 	}
 
@@ -213,7 +226,6 @@ Juxta.Grid2.prototype.prepare = function(params) {
 		this.head.empty().show();
 		that.head.parent('table').css({marginLeft: 0});
 	} else {
-		this.clear();
 		this.head.empty().hide();
 	}
 
@@ -237,6 +249,8 @@ Juxta.Grid2.prototype.prepare = function(params) {
 		);
 	});
 
+	this.prepared = true;
+
 	return true;
 }
 
@@ -257,7 +271,7 @@ Juxta.Grid2.prototype.fill = function(data, params) {
 
 	if (data && data.length > 0) {
 		//
-		this.count = data.length;
+		this.count = this.count + data.length;
 
 		$.each(data, function(i, value) {
 			//
@@ -284,7 +298,7 @@ Juxta.Grid2.prototype.fill = function(data, params) {
 
 		$(this).trigger('change');
 
-	} else {
+	} else if (this.count == 0) {
 		// Show empty grid message
 		this.emptyMessage.css({top: this.bodyContainer.height()/2}).show();
 	}
@@ -299,7 +313,7 @@ Juxta.Grid2.prototype.empty = function() {
 	//
 	this.body.empty();
 
-	this.count = undefined;
+	this.count = 0;
 	this.selected = undefined;
 
 	$(this).trigger('change');
@@ -315,15 +329,17 @@ Juxta.Grid2.prototype.clear = function() {
 	//
 	this.head.empty();
 	this.empty();
-
 	this.emptyMessage.hide();
 
 	this.cache = {};
 	this.content = null;
 	this.from = null;
 	this.columns = [];
+	this.prepared = false;
 
-	$(this).trigger('clear');
+	//$(this).trigger('clear');
+
+	return this;
 }
 
 
@@ -410,4 +426,9 @@ Juxta.Grid2.prototype.disableSelectRows = function() {
 		this.find('.grid2-body-column.checkbox').hide();
 	});
 	this.container.removeClass('select-rows');
+}
+
+
+Juxta.Grid2.prototype.vertScrollEnabled = function() {
+	return this.bodyContainer.height() < this.body.height();
 }

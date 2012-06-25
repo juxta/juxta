@@ -82,13 +82,6 @@
 	}
 
 
-
-
-
-
-
-
-
 .grid2-body {
 	overflow-y: scroll;
 	height: 200px;
@@ -151,18 +144,12 @@
 	min-width: 125px;
 	}
 
-
-
-
-
 .grid2-body-column.checkbox {
 	display: none;
 	border-right-width: 0;
 	padding: 2px 0 2px 2px;
 	width: 24px;
 	}
-
-
 
 .grid2.select-rows .grid2-head-column:first-child div {
 	width: 144px;

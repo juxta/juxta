@@ -11,9 +11,44 @@ Juxta.Browser = function(element, request) {
 	Juxta.Application.prototype.constructor.call(this, element, {header: 'Browse', closable: true, maximized: true});
 
 	/**
+	 * Options
+	 * @type {Object}
+	 */
+	this.options = {
+		limit: 50
+	}
+
+
+	/**
+	 * Client
 	 * @type {Juxta.Request}
 	 */
 	this.request = request;
+
+
+	/**
+	 * Last request
+	 * @type {jqXHR}
+	 */
+	this._lastRequest = null;
+
+
+	/**
+	 * @type {Number}
+	 */
+	this.total;
+
+
+	/**
+	 * Last request params
+	 * @type {Object}
+	 */
+	this._lastQuery = {
+		browse: null,
+		from: null,
+		limit: 30,
+		offset: 0
+	}
 
 
 	/**
@@ -23,14 +58,17 @@ Juxta.Browser = function(element, request) {
 
 
 	$(this.grid).bind('change', function () {
-		if (typeof that.grid.count == 'undefined') {
-			that.$statusBar.empty();
-		} else {
-			that.$statusBar.text(that.grid.count + (that.grid.count == 1 ? ' row' : ' rows'));
-		}
+		that.updateStatus();
 	});
 
 	$(window).bind('resize', {that: this}, this.stretch);
+
+	$(this.grid).bind('scrollBottom', function() {
+		//
+		if (that.grid.count < that.total && that._lastRequest.isResolved()) {
+			that.requestNextRows();
+		}
+	});
 
 }
 
@@ -44,6 +82,20 @@ Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
 Juxta.Browser.prototype.show = function(options) {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
+
+	return this;
+}
+
+
+/**
+ * Reset browser state
+ * @return {Juxta.Browser}
+ */
+Juxta.Browser.prototype._reset = function () {
+	this._lastQuery = null;
+	this._lastQuery = {};
+	this.total = null;
+	this.grid.clear();
 
 	return this;
 }
@@ -64,33 +116,71 @@ Juxta.Browser.prototype.stretch = function(event) {
 /**
  * Browse a table
  * @param {Object} params
+ * @return {jqXHR}
  */
 Juxta.Browser.prototype.browse = function(params) {
+	//
+	this._reset();
+
+	this.show({
+		header: {title: 'Browse', name: params.browse, from: params.from}
+	});
+
 	return this.requestBrowse(params);
+}
+
+
+/**
+ * Request next rows
+ * @return {jqXHR}
+ */
+Juxta.Browser.prototype.requestNextRows = function() {
+	//
+	var query = this._lastQuery;
+	query.offset = query.offset + query.limit;
+
+	return this.requestBrowse(query);
 }
 
 
 /**
  * Request data
  * @param {Object} params
+ * @return {jqXHR}
  */
 Juxta.Browser.prototype.requestBrowse = function(params) {
 	var query = $.extend({}, params),
 		options = {};
 
-	this.grid.empty();
+	var that= this;
 
-	this.show({
-		header: {title: 'Browse', name: params.browse, from: params.from}/*,
-		menu: {'Create Trigger': {click: 'return false;'}}*/
-	});
+	if (query.limit == undefined) {
+		query.limit = this.options.limit;
+	}
+	if (query.offset === undefined) {
+		query.offset = 0;
+	}
 
-	this.request.send($.extend(
+	this._lastRequest = this.request.send($.extend(
 		{},
-		{action: query, context: this, success: this.responseBrowse},
+		{
+			action: query,
+			context: this,
+			success: function(response) {
+				that.responseBrowse(response, query);
+			}
+		},
 		this.settings,
 		options
 	));
+
+	$.when(this._lastRequest).then(function() {
+		if (!that.grid.vertScrollEnabled() && that.grid.count < that.total && that._lastRequest.isResolved()) {
+			that.requestNextRows();
+		}
+	});
+
+	return this._lastRequest;
 }
 
 
@@ -98,7 +188,12 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
  * Response
  * @param {Object} response
  */
-Juxta.Browser.prototype.responseBrowse = function(response) {
+Juxta.Browser.prototype.responseBrowse = function(response, query) {
+	//
+	var that = this;
+
+	that._lastQuery = query;
+	this.total = response.total;
 
 	var params = {
 		columns: [],
@@ -113,9 +208,38 @@ Juxta.Browser.prototype.responseBrowse = function(response) {
 		params.columns.push({title: column[0], style: 'test'});
 	});
 
-	//params.columns = ['country_id', 'country', 'last_update'];
+	if (this.grid.prepared === false) {
+		this.grid.prepare(params);
+	}
 
-	this.grid.fill(response.data, params);
+	this.grid.fill(response.data);
 
 	this.show();
+
+	this.updateStatus();
+}
+
+
+/**
+ * Change status bar text
+ * @param {Object} response
+ * @return {jqXHR}
+ */
+Juxta.Browser.prototype.updateStatus = function() {
+	var status = '';
+	if (this.grid.count) {
+		if (this.grid.count < this.total) {
+			status = this.grid.count + (this.grid.count == 1 ? ' row' : ' rows') + ' from ' + this.total;
+		} else {
+			status = this.grid.count + (this.grid.count == 1 ? ' row' : ' rows');
+		}
+	}
+
+	if (status) {
+		this.$statusBar.text(status);
+	} else {
+		this.$statusBar.text(status);
+	}
+
+	return this;
 }

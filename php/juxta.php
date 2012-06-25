@@ -306,7 +306,12 @@ class Juxta
 		} elseif (isset($_GET['kill'])) {
 			$response = $this->_kill((array)$_REQUEST['processes']);
 		} elseif (isset($_GET['browse'])) {
-			$response = $this->_browse($_GET['browse'], $_GET['from']);
+			$response = $this->_browse(
+				$_GET['browse'],
+				$_GET['from'],
+				isset($_GET['limit']) ? $_GET['limit'] : 30,
+				isset($_GET['offset']) ? $_GET['offset'] : 0
+			);
 		}
 		//
 		if (isset($response)) {
@@ -872,9 +877,10 @@ class Juxta
 			"SHOW COLUMNS IN `{$table}` FROM `{$database}`",
 			array('Field', 'Key', 'Type')
 		);
+		$total = $this->_query("SELECT COUNT(*) as `count` FROM `{$database}`.`{$table}`");
 		$data = $this->_query("SELECT * FROM `{$database}`.`{$table}` LIMIT {$offset}, {$limit}");
 
-		return array('data' => $data, 'columns' => $columns);
+		return array('data' => $data, 'columns' => $columns, 'total' => $total[0]['count']);
 	}
 
 }
