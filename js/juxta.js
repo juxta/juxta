@@ -11,6 +11,8 @@
  */
 Juxta = function() {
 
+	var that = this;
+
 	/**
 	 * Cache
 	 * @type Juxta.Cache
@@ -25,24 +27,33 @@ Juxta = function() {
 	this.request = new Juxta.Request(this.cache, {
 		request: {
 			beforeSend: function() {
-				Jux.loading();
+				that.loading();
 			},
 			complete: function() {
-				Jux.loading(false);
+				that.loading(false);
 			},
 			error: function(xhr, status) {
 				if (status == 'parsererror') {
-					Jux.error('Answer parsing error');
+					that.error('Answer parsing error');
 				} else {
-					Jux.error(xhr.status + ' ' + xhr.statusText);
+					that.error(xhr.status + ' ' + xhr.statusText);
 				}
 			}
 		},
 		response: {
-			connectionError: function(response) { Jux.error(response.error); Jux.auth.show(); },
-			sessionNotFound: function() { document.location.hash = '#login'; },
-			error: function(response) { Jux.error(response.error); },
-			unknowStatus: function() { Jux.error('Response with unknow status recived'); }
+			connectionError: function(response) {
+				that.error(response.error);
+				that.auth.show();
+			},
+			sessionNotFound: function() {
+				document.location.hash = '#login';
+			},
+			error: function(response) {
+				that.error(response.error);
+			},
+			unknowStatus: function() {
+				that.error('Response with unknow status recived');
+			}
 		}
 	});
 
