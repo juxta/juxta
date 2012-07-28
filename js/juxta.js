@@ -21,10 +21,16 @@ Juxta = function() {
 
 
 	/**
+	 * @type {Juxta.Connection}
+	 */
+	this.connection = new Juxta.Connection();
+
+
+	/**
 	 * Request/response
 	 * @type Juxta.Request
 	 */
-	this.request = new Juxta.Request(this.cache, {
+	this.request = new Juxta.Request(this.connection, this.cache, {
 		request: {
 			beforeSend: function() {
 				that.loading();
@@ -57,7 +63,6 @@ Juxta = function() {
 		}
 	});
 
-	this.connection = null;
 
 	this.notification = new Juxta.Notification();
 	this.sidebar = new Juxta.Sidebar();
