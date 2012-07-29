@@ -40,6 +40,11 @@ Juxta.Events.prototype.on = function(event, callback) {
  * @return {Boolean}
  */
 Juxta.Events.prototype.off = function(event, callback) {
+	if (!this._callbacks) {
+		this._callbacks = {};
+		return this;
+	}
+
 	if (!this._callbacks[event]) {
 		return this;
 	}
@@ -64,6 +69,11 @@ Juxta.Events.prototype.off = function(event, callback) {
  * @return {*}
  */
 Juxta.Events.prototype.trigger = function(event) {
+	if (!this._callbacks) {
+		this._callbacks = {};
+		return this;
+	}
+
 	if (!this._callbacks[event]) {
 		return this;
 	}
