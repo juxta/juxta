@@ -158,7 +158,7 @@ Juxta.ServerInformation.prototype.responseInfo = function(response) {
 		delete params.data;
 		this.grid.fill(response.data, params);
 	}
-	this.show();
+	this.ready();
 }
 
 

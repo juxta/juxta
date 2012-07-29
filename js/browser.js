@@ -214,7 +214,7 @@ Juxta.Browser.prototype.responseBrowse = function(response, query) {
 
 	this.grid.fill(response.data);
 
-	this.show();
+	this.ready();
 
 	this.updateStatus();
 }

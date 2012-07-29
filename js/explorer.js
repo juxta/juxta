@@ -107,7 +107,9 @@ Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
  * @param {Object} options
  */
 Juxta.Explorer.prototype.show = function(options) {
+	//
 	Juxta.Application.prototype.show.apply(this, arguments);
+
 	this.stretch();
 
 	return this;
@@ -195,7 +197,9 @@ Juxta.Explorer.prototype.requestExplore = function(params) {
  * @param {Object} response
  */
 Juxta.Explorer.prototype.responseExplore = function(response) {
-	this.show();
+	//
+	this.ready();
+
 	if (this.preparedFor == response.contents) {
 		var params = $.extend({}, response, this.templates[response.contents].grid);
 		delete params.data;
@@ -317,7 +321,6 @@ Juxta.Explorer.prototype.properties = function(params) {
  */
 Juxta.Explorer.prototype.requestProperties = function(query, options) {
 	//
-	console.log(query);
 	this.request.send({
 		action: query,
 		success: this.responseDatabaseProperties,

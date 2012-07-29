@@ -43,6 +43,7 @@ Juxta.Application = function(element, options) {
 
 }
 
+Juxta.Lib.extend(Juxta.Application, Juxta.Events);
 
 /**
  * @param {Object} options
@@ -64,14 +65,12 @@ Juxta.Application.prototype.tune = function(options) {
 /**
  * Show application
  * @param {Object} options
+ * @return {Juxta.Application}
  */
 Juxta.Application.prototype.show = function(options) {
-	if (!options) {
-		// @todo Remove global
-		Jux.show();
-	} else {
-		options = $.extend({}, this.settings, options);
-		this.tune(options);
+	//
+	if (options) {
+		this.tune($.extend({}, this.settings, options));
 	}
 
 	if (!this.$application.is(':visible')) {
@@ -81,9 +80,23 @@ Juxta.Application.prototype.show = function(options) {
 
 	if (this.settings.maximized) {
 		this.maximize();
-	} else{
+	} else {
 		this.restore();
 	}
+
+	return this;
+}
+
+
+/**
+ * Show application and trigger event 'ready'
+ * @param {Object} options
+ * @return {Juxta.Application}
+ */
+Juxta.Application.prototype.ready = function(options) {
+	//
+	this.trigger('ready');
+	this.show();
 
 	return this;
 }
@@ -95,6 +108,7 @@ Juxta.Application.prototype.show = function(options) {
  */
 Juxta.Application.prototype.hide = function() {
 	this.$application.hide();
+
 	return this;
 }
 
@@ -129,6 +143,7 @@ Juxta.Application.prototype.menu = function(menu) {
 Juxta.Application.prototype.maximize = function() {
 	$('#sidebar').addClass('minimized');
 	$('#applications').addClass('maximized');
+
 	return this;
 }
 
@@ -142,7 +157,6 @@ Juxta.Application.prototype.restore = function() {
 	if ($('#applications').removeClass('maximized').is(':visible')) {
 		$('#sidebar').show();
 	}
-	
 
 	return this;
 }

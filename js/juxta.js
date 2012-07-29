@@ -84,7 +84,10 @@ Juxta = function() {
 	this.auth = new Juxta.Auth('#login', this.request);
 	this.messageBox = new Juxta.FloatBox('#message');
 
-	var that = this;
+	// Show Juxta when application ready to show
+	$.each([this.explorer, this.server, this.browser], function(i, application) {
+		application.on('ready', $.proxy(that.show, that));
+	});
 
 	$('#header a[name=about]').bind('click', function() { that.about(); return false; });
 
@@ -98,7 +101,7 @@ Juxta = function() {
 	$(document.body).bind('click', function(event) {
 		$('.context:visible').trigger('hide').hide();
 	});
-}
+};
 
 Juxta.prototype = {
 
