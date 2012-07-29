@@ -27,6 +27,15 @@ Juxta = function() {
 
 
 	/**
+	 * @type {Juxta.Sidebar}
+	 */
+	this.sidebar = new Juxta.Sidebar();
+
+	this.connection.on('change', function() {
+		that.sidebar.path(that.connection.get());
+	});
+
+	/**
 	 * Request/response
 	 * @type Juxta.Request
 	 */
@@ -65,7 +74,7 @@ Juxta = function() {
 
 
 	this.notification = new Juxta.Notification();
-	this.sidebar = new Juxta.Sidebar();
+
 	this.explorer = new Juxta.Explorer('#explorer', this.request);
 	this.exchange = new Juxta.BackupRestore('#backup-restore');
 	this.browser = new Juxta.Browser('#data-browser', this.request);

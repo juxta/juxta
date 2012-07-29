@@ -16,6 +16,7 @@ Juxta.Connection = function() {
 	 */
 	this.set = function(connection) {
 		this._connection = connection;
+		this.trigger('change');
 	}
 
 
@@ -44,3 +45,5 @@ Juxta.Connection = function() {
 	}
 
 }
+
+Juxta.Lib.extend(Juxta.Connection, Juxta.Events);
