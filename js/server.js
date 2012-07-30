@@ -4,7 +4,7 @@
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
-Juxta.ServerInformation = function (element, request) {
+Juxta.Server = function (element, request) {
 
 	/**
 	 * @type {Object}
@@ -55,13 +55,13 @@ Juxta.ServerInformation = function (element, request) {
 
 }
 
-Juxta.Lib.extend(Juxta.ServerInformation, Juxta.Application);
+Juxta.Lib.extend(Juxta.Server, Juxta.Application);
 
 /**
  * Show application
  * @param {Object} options
  */
-Juxta.ServerInformation.prototype.show = function(options) {
+Juxta.Server.prototype.show = function(options) {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
@@ -73,7 +73,7 @@ Juxta.ServerInformation.prototype.show = function(options) {
  * Stretch grid to window height
  * @param {Event} event
  */
-Juxta.ServerInformation.prototype.stretch = function(event) {
+Juxta.Server.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
 	if (that.$application.find('.grid .body').is(':visible')) {
 		that.$application.find('.grid .body').height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
@@ -87,7 +87,7 @@ Juxta.ServerInformation.prototype.stretch = function(event) {
  * Prepare grid for response data
  * @param {String} template
  */
-Juxta.ServerInformation.prototype.prepare = function(template) {
+Juxta.Server.prototype.prepare = function(template) {
 	if (this.grid.prepare(this.templates[template].grid)) {
 		this.preparedFor = template;
 		this.stretch();
@@ -102,7 +102,7 @@ Juxta.ServerInformation.prototype.prepare = function(template) {
  * Request information shortcut
  * @param {Object} params
  */
-Juxta.ServerInformation.prototype.info = function(params) {
+Juxta.Server.prototype.info = function(params) {
 	this.requestInfo(params);
 }
 
@@ -111,7 +111,7 @@ Juxta.ServerInformation.prototype.info = function(params) {
  * Server information request
  * @param {Object} params
  */
-Juxta.ServerInformation.prototype.requestInfo = function(params) {
+Juxta.Server.prototype.requestInfo = function(params) {
 	this.show(this.templates[params.show]['head']);
 	// Extend request options
 	if (this.templates[params.show].query) {
@@ -142,7 +142,7 @@ Juxta.ServerInformation.prototype.requestInfo = function(params) {
  * Response callback
  * @param {Object} response
  */
-Juxta.ServerInformation.prototype.responseInfo = function(response) {
+Juxta.Server.prototype.responseInfo = function(response) {
 	if (response.contents == 'status') {
 		this.properStatus(response.data);
 		if (!response.cache) {
@@ -166,7 +166,7 @@ Juxta.ServerInformation.prototype.responseInfo = function(response) {
  * Show status in compact way
  * @param {Array} data
  */
-Juxta.ServerInformation.prototype.properStatus = function(data) {
+Juxta.Server.prototype.properStatus = function(data) {
 	this.$application.find('.proper.server-status [class^=value_]').each(function() {
 		$(this).text(data[this.className.split(' ', 1)[0].substr(6)]);
 	});
@@ -178,7 +178,7 @@ Juxta.ServerInformation.prototype.properStatus = function(data) {
  * Resources
  * @type {Object}
  */
-Juxta.ServerInformation.prototype.templates = {
+Juxta.Server.prototype.templates = {
 	status: {
 		head: {
 			header: 'Server Status'

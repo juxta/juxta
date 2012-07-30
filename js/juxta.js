@@ -80,7 +80,7 @@ Juxta = function() {
 	this.browser = new Juxta.Browser('#data-browser', this.request);
 	this.tableEditor = new Juxta.TableEditor('#table-editor');
 	this.dummy = new Juxta.Dummy('#dummy');
-	this.server = new Juxta.ServerInformation('#server-info', this.request);
+	this.server = new Juxta.Server('#server-info', this.request);
 	this.auth = new Juxta.Auth('#login', this.request);
 	this.messageBox = new Juxta.FloatBox('#message');
 
