@@ -170,8 +170,7 @@ Juxta.Grid2.prototype.prepare = function(params) {
 		return false;
 	}
 
-	var template = params,
-		that = this;
+	var that = this;
 
 	if (params.from) {
 		this.from = params.from;
@@ -198,12 +197,18 @@ Juxta.Grid2.prototype.prepare = function(params) {
 				styles.push('first-column');
 			}
 			if (typeof column === 'object') {
-				name = column.title;
+				if (column.title) {
+					name = column.title;
+				} else {
+					name = column.name;
+				}
 				styles.push(column.style);
 			} else {
 				name = column;
 			}
-			styles.push(name);
+
+			name = name.toLowerCase();
+			styles.push(name.toLowerCase());
 
 			that.rowTemplate += '<td class="' + styles.join(' ') + '"><div>{' + name + '}</div></td>';
 
@@ -217,12 +222,11 @@ Juxta.Grid2.prototype.prepare = function(params) {
 	if (params.actions === null) {
 		this.actions.empty();
 	} else if (params.actions) {
-		this.actions.html(template.actions);
+		this.actions.html(params.actions);
 	}
 
-
 	// Empty grid header and body
-	if (template.head) {
+	if (params.head) {
 		this.head.empty().show();
 		that.head.parent('table').css({marginLeft: 0});
 	} else {
@@ -233,21 +237,36 @@ Juxta.Grid2.prototype.prepare = function(params) {
 	$.each(that.columns, function(i, column) {
 		//
 		var name,
-			styles = ['grid2-head-column'];
+			styles = ['grid2-head-column'],
+			hint,
+			th;
 
 		if (typeof column === 'object') {
-			name = column.title;
+			if (column.title) {
+				name = column.title;
+			} else {
+				name = column.name;
+			}
 			styles.push(column.style);
+			if (column.hint) {
+				hint = column.hint;
+			}
 		} else {
 			name = column;
 		}
 
-		styles.push(name);
+		styles.push(name.toLowerCase());
 
-		that.head.append(
-			$('<th>').addClass(styles.join(' ')).append($('<div>').text(name))
-		);
+		th = $('<th>').addClass(styles.join(' ')).append($('<div>').html(name));
+
+		if (hint) {
+			th.attr('title', hint)
+		}
+
+		that.head.append(th);
 	});
+
+	this.head.show();
 
 	this.prepared = true;
 
@@ -281,10 +300,11 @@ Juxta.Grid2.prototype.fill = function(data, params) {
 			jQuery.each(that.columns, function(j, column) {
 				var name;
 				if (typeof column === 'object') {
-					name = column.title;
+					name = column.name;
 				} else {
 					name = column;
 				}
+				name = name.toLowerCase();
 
 				forTemplate[name] = value[j];
 
@@ -293,7 +313,15 @@ Juxta.Grid2.prototype.fill = function(data, params) {
 				}
 			});
 
-			that.cache[forTemplate[cacheName]] = $($.template(that.rowTemplate, forTemplate)).appendTo(that.body);
+			var row;
+
+			if (typeof that.rowTemplate === 'function') {
+				row = that.rowTemplate(forTemplate);
+			} else {
+				row = $.template(that.rowTemplate, forTemplate);
+			}
+
+			that.cache[forTemplate[cacheName]] = $(row).appendTo(that.body);
 		});
 
 		$(this).trigger('change');
