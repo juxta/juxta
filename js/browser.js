@@ -205,7 +205,7 @@ Juxta.Browser.prototype.responseBrowse = function(response, query) {
 	};
 
 	$.each(response.columns, function(i, column) {
-		params.columns.push({title: column[0], style: 'test'});
+		params.columns.push(column[0]);
 	});
 
 	if (this.grid.prepared === false) {
