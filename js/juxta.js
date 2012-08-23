@@ -78,7 +78,7 @@ Juxta = function() {
 	this.explorer = new Juxta.Explorer('#explorer', this.request);
 	this.exchange = new Juxta.BackupRestore('#backup-restore');
 	this.browser = new Juxta.Browser('#data-browser', this.request);
-	this.tableEditor = new Juxta.TableEditor('#table-editor');
+	this.table = new Juxta.TableEditor('#table', this.request);
 	this.dummy = new Juxta.Dummy('#dummy');
 	this.server = new Juxta.Server('#server-info', this.request);
 	this.auth = new Juxta.Auth('#login', this.request);
@@ -150,7 +150,7 @@ Juxta.prototype = {
 					break;
 				case 'columns':
 					this.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
-					this.tableEditor.show({header: {title: 'Table', name: params[1]}});
+					this.table.edit({table: params[1], from: params[0]});
 					break;
 				case 'foreign':
 					this.sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});

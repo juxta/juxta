@@ -12,6 +12,7 @@
 @import url('form-database-properties.css');
 @import url('form-add-user.css');
 @import url('code-editor.css');
+@import url('table-editor.css');
 
 
 * { 
@@ -28,7 +29,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: #e6e6e6;
-	font: 9pt Arial, "Trebuchet MS", Helvetica, sans-serif;
+	font: 9pt "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #000;
 	}
 
@@ -63,7 +64,7 @@ span.overflowed {
 
 #explorer,
 #backup-restore,
-#table-editor,
+#table,
 #data-browser,
 #dummy {
 	display: none;

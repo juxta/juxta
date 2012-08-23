@@ -102,7 +102,7 @@ class Juxta
 			|| !isset($_SESSION['user'])
 			|| !isset($_SESSION['password'])
 		) {
-			throw new JuxtaSessionException('Please login');
+			throw new JuxtaSessionException();
 		}
 		//
 		$this->_connect(array(
@@ -179,6 +179,9 @@ class Juxta
 					break;
 				case 'tables':
 					$response = $this->_showTables($_GET['from']);
+					break;
+				case 'table':
+					$response = $this->_showTable($_GET['table'], $_GET['from']);
 					break;
 				case 'views':
 					$response = $this->_showViews($_GET['from']);
@@ -633,6 +636,68 @@ class Juxta
 		}
 
 		return array('dropped' => $dropped);
+	}
+
+
+	/**
+	 * Returns information about tables in a database
+	 *
+	 * @return array
+	 */
+	private function _showTable($table, $database = '')
+	{
+		$table = $this->_query(
+			"SHOW COLUMNS FROM `{$table}` FROM `{$database}`",
+			MYSQLI_BOTH
+		);
+
+		$columns = array();
+
+		while (list($field, $type, $isNull, $key, $default, $extra) = current($table)) {
+			// Name
+			$column = array($field);
+
+			// type
+			$column[] = trim(preg_replace('/unsigned|zerofill/', '', $type));
+
+			// in_null
+			$column[] = $isNull;
+
+			// attributes
+			preg_match_all('/unsigned|zerofill/', $type, $matches);
+			if (!empty($matches[0])) {
+				$column[] = $matches[0];
+			} else {
+				$column[] = null;
+			}
+
+			// default
+			$column[] = $default;
+
+			// options
+			$options = null;
+			if ($key === 'PRI') {
+				$options[] = 'primary';
+			}
+			if (preg_match('/auto_increment/', $extra)) {
+				$options[] = 'auto_increment';
+			}
+			if (preg_match('/on update CURRENT_TIMESTAMP/', $extra)) {
+				$options[] = 'on update current_timestamp';
+			}
+			$column[] = $options;
+
+			$columns[] = $column;
+
+			next($table);
+		}
+
+		return array(
+			'content' => array('column', 'type', 'is_null', 'atributes', 'default', 'options'),
+			'from' => $database,
+			'columns' => $columns,
+			'table' => $table,
+		);
 	}
 
 
