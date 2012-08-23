@@ -150,9 +150,7 @@ Juxta.TableEditor.prototype.requestShowTable = function(params) {
 
 Juxta.TableEditor.prototype.responseShowTable = function(response, query) {
 	//
-
 	this.columns.fill(response.columns);
-	console.log(response);
 
-	this.show();
+	this.ready();
 }

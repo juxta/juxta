@@ -85,7 +85,7 @@ Juxta = function() {
 	this.messageBox = new Juxta.FloatBox('#message');
 
 	// Show Juxta when application ready to show
-	$.each([this.explorer, this.server, this.browser], function(i, application) {
+	$.each([this.explorer, this.server, this.browser, this.table], function(i, application) {
 		application.on('ready', $.proxy(that.show, that));
 	});
 
