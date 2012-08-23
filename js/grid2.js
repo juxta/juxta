@@ -221,6 +221,8 @@ Juxta.Grid2.prototype.prepare = function(params) {
 	// Set actions panel
 	if (params.actions === null) {
 		this.actions.empty();
+	} else if (params.actions === false) {
+		this.actions.hide();
 	} else if (params.actions) {
 		this.actions.html(params.actions);
 	}
