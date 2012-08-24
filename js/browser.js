@@ -65,7 +65,7 @@ Juxta.Browser = function(element, request) {
 
 	$(this.grid).bind('scrollBottom', function() {
 		//
-		if (that.grid.count < that.total && that._lastRequest.isResolved()) {
+		if (that.grid.count < that.total && that._lastRequest.state() == 'resolved') {
 			that.requestNextRows();
 		}
 	});
@@ -175,7 +175,7 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 	));
 
 	$.when(this._lastRequest).then(function() {
-		if (!that.grid.vertScrollEnabled() && that.grid.count < that.total && that._lastRequest.isResolved()) {
+		if (!that.grid.vertScrollEnabled() && that.grid.count < that.total && that._lastRequest.state() == 'resolved') {
 			that.requestNextRows();
 		}
 	});
