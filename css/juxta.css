@@ -91,6 +91,11 @@ span.overflowed {
 	font-weight: normal;
 	}
 
+#header h1 a {
+	color: #000;
+	text-decoration: none;
+	}
+
 #header ul.links {
 	display: none;
 	float: right;
