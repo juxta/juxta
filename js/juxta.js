@@ -33,7 +33,9 @@ Juxta = function() {
 
 	this.connection.on('change', function() {
 		that.sidebar.path(that.connection.get());
+		that.changeTitle(that.connection.get());
 	});
+
 
 	/**
 	 * Request/response
@@ -171,6 +173,17 @@ Juxta.prototype = {
 			}
 			this.state = hash;
 		}
+	},
+
+
+	/**
+	 * Change window title
+	 * @param {Object} connection
+	 * @return {Juxta}
+	 */
+	changeTitle: function(connection) {
+		window.document.title = connection.user + '@' +  connection.host + ' - Juxta';
+		return this;
 	},
 
 
