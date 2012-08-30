@@ -14,6 +14,12 @@ Juxta = function() {
 	var that = this;
 
 	/**
+	 * Appliaction state
+	 * @type {String}
+	 */
+	this.state = 'default';
+
+	/**
 	 * Cache
 	 * @type Juxta.Cache
 	 */
@@ -144,30 +150,51 @@ Juxta = function() {
 		application.on('ready', $.proxy(that.show, that));
 	});
 
-	$('#header a[name=about]').bind('click', function() { that.about(); return false; });
+	//
+	$('#header a[name=about]').bind('click', function() {
+		that.about();
+		return false;
+	});
 
-	if (location.hash == '') {
-		location.hash = 'databases';
-	}
-	this.state = 'default';
-	setInterval($.proxy(this.checkLocation, this), 200);
-
+	// @todo Remove this from here
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
 
+	// @todo Remove this from here
 	$(document.body).bind('click', function(event) {
 		$('.context:visible').trigger('hide').hide();
 	});
+
+	this.run();
+
 };
 
 Juxta.prototype = {
 
 	/**
+	 * Run
+	 * @return Juxta
+	 */
+	run: function() {
+		//
+		if (location.hash === '') {
+			location.hash = 'databases';
+		}
+
+		setInterval($.proxy(this.route, this), 200);
+
+		return this;
+	},
+
+
+	/**
 	 *
 	 */
-	checkLocation: function() {
+	route: function() {
+		//
 		var hash = window.location.hash.replace(/#/g, ''),
 			params = hash.split('/'),
 			action = params.pop();
+
 		if (hash != this.state) {
 			switch (action) {
 				case 'databases':
