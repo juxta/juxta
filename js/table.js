@@ -3,7 +3,7 @@
  * @extends {Juxta.Application}
  * @param {jQuery} element
  */
-Juxta.TableEditor = function(element, request) {
+Juxta.Table = function(element, request) {
 
 	Juxta.Application.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse Table': null}});
 
@@ -22,7 +22,7 @@ Juxta.TableEditor = function(element, request) {
 
 }
 
-Juxta.Lib.extend(Juxta.TableEditor, Juxta.Application);
+Juxta.Lib.extend(Juxta.Table, Juxta.Application);
 
 
 /**
@@ -30,7 +30,7 @@ Juxta.Lib.extend(Juxta.TableEditor, Juxta.Application);
  * @param {Object} options
  * @return {Juxta.TableEditor}
  */
-Juxta.TableEditor.prototype.show = function(options) {
+Juxta.Table.prototype.show = function(options) {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
@@ -42,7 +42,7 @@ Juxta.TableEditor.prototype.show = function(options) {
  * Stretch a grid
  * @param {Event} event
  */
-Juxta.TableEditor.prototype.stretch = function(event) {
+Juxta.Table.prototype.stretch = function(event) {
 	/*var that = event && event.data.that || this;
 	if (that.$application.is(':visible')) {
 		if ($('#applications').height() < 500) {
@@ -64,7 +64,7 @@ Juxta.TableEditor.prototype.stretch = function(event) {
  * @param {Object} params
  * @return {jqXHR}
  */
-Juxta.TableEditor.prototype.edit = function(params) {
+Juxta.Table.prototype.edit = function(params) {
 	this.show({
 		header: {title: 'Table ', name: params.table},
 		menu: {'Browse Table': {href: '#' + params.from + '/' + params.table + '/browse'}}
@@ -79,7 +79,7 @@ Juxta.TableEditor.prototype.edit = function(params) {
  * @param {Object} params
  * @return {jqXHR}
  */
-Juxta.TableEditor.prototype.requestShowTable = function(params) {
+Juxta.Table.prototype.requestShowTable = function(params) {
 	//
 	var that = this,
 		query = {show: 'table', table: params.table, from: params.from},
@@ -148,7 +148,7 @@ Juxta.TableEditor.prototype.requestShowTable = function(params) {
 
 
 
-Juxta.TableEditor.prototype.responseShowTable = function(response, query) {
+Juxta.Table.prototype.responseShowTable = function(response, query) {
 	//
 	this.columns.fill(response.columns);
 

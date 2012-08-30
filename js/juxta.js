@@ -31,11 +31,6 @@ Juxta = function() {
 	 */
 	this.sidebar = new Juxta.Sidebar();
 
-	this.connection.on('change', function() {
-		that.sidebar.path(that.connection.get());
-		that.changeTitle(that.connection.get());
-	});
-
 
 	/**
 	 * Request/response
@@ -75,16 +70,74 @@ Juxta = function() {
 	});
 
 
+	/**
+	 * Notification messages
+	 * @type {Juxta.Notification}
+	 */
 	this.notification = new Juxta.Notification();
 
+
+	/**
+	 * Server explorer
+	 * @type {Juxta.Explorer}
+	 */
 	this.explorer = new Juxta.Explorer('#explorer', this.request);
-	this.exchange = new Juxta.BackupRestore('#backup-restore');
+
+
+	/**
+	 * Table data browser
+	 * @type {Juxta.Browser}
+	 */
 	this.browser = new Juxta.Browser('#data-browser', this.request);
-	this.table = new Juxta.TableEditor('#table', this.request);
-	this.dummy = new Juxta.Dummy('#dummy');
+
+
+	/**
+	 * Table editor
+	 * @type {Juxta.Table}
+	 */
+	this.table = new Juxta.Table('#table', this.request);
+
+
+	/**
+	 * Server inofrmation
+	 * @type {Juxta.Server}
+	 */
 	this.server = new Juxta.Server('#server-info', this.request);
+
+
+	/**
+	 * Backup and restore
+	 * @type {Juxta.BackupRestore}
+	 */
+	this.exchange = new Juxta.BackupRestore('#backup-restore');
+
+
+	/**
+	 * Connect to server form
+	 * @type {Juxta.Auth}
+	 */
 	this.auth = new Juxta.Auth('#login', this.request);
+
+
+	/**
+	 * Float box
+	 * @type {Juxta.FloatBox}
+	 */
 	this.messageBox = new Juxta.FloatBox('#message');
+
+
+	/**
+	 * Dummy appliaction
+	 * @type {Juxta.Dummy}
+	 */
+	this.dummy = new Juxta.Dummy('#dummy');
+
+
+	// Change sidebar state and window title on connection
+	this.connection.on('change', function() {
+		that.sidebar.path(that.connection.get());
+		that.changeTitle(that.connection.get());
+	});
 
 	// Show Juxta when application ready to show
 	$.each([this.explorer, this.server, this.browser, this.table], function(i, application) {
@@ -100,6 +153,7 @@ Juxta = function() {
 	setInterval($.proxy(this.checkLocation, this), 200);
 
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
+
 	$(document.body).bind('click', function(event) {
 		$('.context:visible').trigger('hide').hide();
 	});
