@@ -151,9 +151,6 @@ class Juxta
 				case 'databases':
 					$response = $this->_showDatabases();
 					break;
-				case 'database-properties':
-					$response = $this->_showDatabaseProperties($_REQUEST['database']);
-					break;
 				case 'processlist':
 					$response = $this->_showProcesslist();
 					break;
@@ -203,6 +200,13 @@ class Juxta
 					break;
 				case 'trigger':
 					$response = $this->_showCreateTrigger($_GET['trigger'], $_GET['from']);
+					break;
+				case 'properties':
+					if (isset($_GET['database'])) {
+						$response = $this->_showDatabaseProperties($_GET['database']);
+					} elseif (isset($_GET['table'])) {
+						$response = $this->_showTableProperties($_GET['table'], $_GET['from']);
+					}
 					break;
 			}
 		} elseif (isset($_GET['get'])) {
@@ -605,8 +609,8 @@ class Juxta
 			 . "AND `TABLE_TYPE` <> 'VIEW'";
 
 		$tables = $this->_query($sql, array('TABLE_NAME', 'ENGINE',
-										   'TABLE_ROWS', 'DATA_LENGTH',
-										   'UPDATE_TIME'));
+											'TABLE_ROWS', 'DATA_LENGTH',
+											'UPDATE_TIME'));
 
 		return array('contents' => 'tables',
 			'from' => $database, 'data' => $tables
@@ -698,6 +702,25 @@ class Juxta
 			'columns' => $columns,
 			'table' => $table,
 		);
+	}
+
+
+	/**
+	 * Return tables's properties
+	 *
+	 * @param string $table Table name
+	 * @param string $database Database
+	 * @return array
+	 */
+	private function _showTableProperties($table, $database)
+	{
+		$properties = $this->_query("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", MYSQLI_ASSOC);
+
+		if (!empty($properties)) {
+			$properties = array_change_key_case($properties[0], CASE_LOWER);
+		}
+
+		return array('properties' => $properties);
 	}
 
 

@@ -9,10 +9,10 @@
 @import url('form-about.css');
 @import url('form-auth.css');
 @import url('form-create-database.css');
-@import url('form-database-properties.css');
 @import url('form-add-user.css');
 @import url('code-editor.css');
 @import url('table-editor.css');
+@import url('properties.css');
 
 
 * { 

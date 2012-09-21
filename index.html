@@ -702,16 +702,96 @@
 
 	<script type="text/html" id="database-properties">
 		<ul class="properties database">
-			<li><h4>Name</h4><p>{name}</p></li>
-			<li><h4>Charset</h4><p>{charset}</p></li>
-			<li><h4>Collation</h4><p>{collation}</p></li>
-			<li><h4>Tables</h4><p>{tables|empty:n/a}</p></li>
-			<li><h4>Rows</h4><p>{rows|empty:n/a}</p></li>
-			<li><h4>Data length</h4><p>{data_length|size}</p></li>
-			<li><h4>Index length</h4><p>{index_length|size}</p></li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Name</h4>
+				<p class="properties-property-value">{name}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Charset</h4>
+				<p class="properties-property-value">{charset}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Collation</h4>
+				<p class="properties-property-value">{collation}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Tables</h4>
+				<p class="properties-property-value">{tables|empty:n/a}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Rows</h4>
+				<p class="properties-property-value">{rows|empty:n/a}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Data length</h4>
+				<p class="properties-property-value">{data_length|size}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Index length</h4>
+				<p class="properties-property-value">{index_length|size}</p>
+			</li>
 		</ul>
 		<p class="buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
 	</script>
+
+	<script type="text/html" id="table-properties">
+		<ul class="properties table">
+			<li class="properties-property">
+				<h4 class="properties-property-name">Name</h4>
+				<p class="properties-property-value">{name}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Engine</h4>
+				<p class="properties-property-value">{engine} v.{version}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Row format</h4>
+				<p class="properties-property-value">{row_format}</p>
+			</li>
+			<li class="properties-property" title="Character set and collation">
+				<h4 class="properties-property-name">Collation</h4>
+				<p class="properties-property-value">{collation}</p>
+			</li>
+			<li class="properties-property">
+				<h4 class="properties-property-name">Rows</h4>
+				<p class="properties-property-value">{rows|empty:n/a}</p>
+			</li>
+			<li class="properties-property" title="The next AUTO_INCREMENT value">
+				<h4 class="properties-property-name">Auto Increment</h4>
+				<p class="properties-property-value">{auto_increment}</p>
+			</li>
+			<li class="properties-property" title="The length of the data file">
+				<h4 class="properties-property-name">Data length</h4>
+				<p class="properties-property-value">{data_length|size}</p>
+			</li>
+			<li class="properties-property" title="The maximum length of the data file">
+				<h4 class="properties-property-name">Max data length</h4>
+				<p class="properties-property-value">{max_data_length|size}</p>
+			</li>
+			<li class="properties-property" title="The number of allocated but unused bytes">
+				<h4 class="properties-property-name">Data free length</h4>
+				<p class="properties-property-value">{data_free|size}</p>
+			</li>
+			<li class="properties-property" title="The length of the index file">
+				<h4 class="properties-property-name">Index length</h4>
+				<p class="properties-property-value">{index_length|size}</p>
+			</li>
+			<li class="properties-property" title="When the table was created">
+				<h4 class="properties-property-name">Created</h4>
+				<p class="properties-property-value">{create_time|date}</p>
+			</li>
+			<li class="properties-property" title="When the data file was last updated">
+				<h4 class="properties-property-name">Updated</h4>
+				<p class="properties-property-value">{update_time|date}</p>
+			</li>
+			<li class="properties-property" title="When the table was last checked">
+				<h4 class="properties-property-name">Checked</h4>
+				<p class="properties-property-value">{check_time|date}</p>
+			</li>
+		</ul>
+		<p class="buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
+	</script>
+
 
 	<div id="create-user" class="float-box">
 		<h3>Add a new user</h3>

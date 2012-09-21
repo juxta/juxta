@@ -302,30 +302,35 @@ Juxta.Explorer.prototype.responseDrop = function(response) {
 /**
  * Show objects' properties
  * @param {Object} params
+ * @return {jqXHR}
  */
 Juxta.Explorer.prototype.properties = function(params) {
-	var query = {},
-		options = {};
-
+	//
 	if (params.database) {
-		query = {show: 'database-properties', database: params.database};
+		//
+		return this.requestProperties(
+			query = {show: 'properties', database: params.database},
+			this.responseDatabaseProperties);
+
+	} else if (params.table) {
+		//
+		return this.requestProperties(
+			query = {show: 'properties', table: params.table, from: params.from},
+			this.responseTableProperties);
+
 	}
-	this.requestProperties(query, options);
 }
 
 
 /**
  * Request for properties
  * @param {Object} query
- * @param {Object} options
+ * @param {Function} callback
+ * @return {jqXHR}
  */
-Juxta.Explorer.prototype.requestProperties = function(query, options) {
+Juxta.Explorer.prototype.requestProperties = function(query, callback) {
 	//
-	this.request.send({
-		action: query,
-		success: this.responseDatabaseProperties,
-		context: this
-	});
+	return this.request.send({action: query, success: callback, context: this});
 }
 
 
@@ -338,6 +343,19 @@ Juxta.Explorer.prototype.responseDatabaseProperties = function(response) {
 	Jux.message(
 		$.template($('#database-properties').html(), response.properties),
 		{title: 'Database {name}', name: response.properties.name}
+	);
+}
+
+
+/**
+ * Table properties
+ * @param {Object} response
+ */
+Juxta.Explorer.prototype.responseTableProperties = function(response) {
+	// @todo Remove global
+	Jux.message(
+		$.template($('#table-properties').html(), response.properties),
+		{title: 'Table {name}', name: response.properties.name}
 	);
 }
 
@@ -464,12 +482,12 @@ Juxta.Explorer.prototype.templates = {
 				'table-engine': 'Engine',
 				'table-rows': 'Rows',
 				'table-size': 'Size',
-				'table-update-date': 'Update',
+				'table-update-date': 'Update'
 			},
 			actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 			row: '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><span class="overflowed"><a href="#{database}/{table}/columns">{table}</a></span></td><td class="table-engine">{engine}</td><td class="table-rows">{rows}</td><td class="table-size">{size|size}</td><td class="table-update-date">{updateDate|date}</td></tr>',
 			'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
-			'contextMenu': '<li onclick="location.hash = \'{database}/\' + Jux.explorer.grid.contextMenu.value.attr(\'name\') + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'{database}/\' + Jux.explorer.grid.contextMenu.value.attr(\'name\') + \'/browse\'">Browse</li><li class="drop" onclick="Jux.drop({drop: \'table\', item: \'table\', table: Jux.explorer.grid.contextMenu.value.attr(\'name\'), from: Jux.explorer.grid.from});">Drop</li><li>Properties</li>'
+			'contextMenu': '<li onclick="location.hash = \'{database}/\' + Jux.explorer.grid.contextMenu.value.attr(\'name\') + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'{database}/\' + Jux.explorer.grid.contextMenu.value.attr(\'name\') + \'/browse\'">Browse</li><li class="drop" onclick="Jux.drop({drop: \'table\', item: \'table\', table: Jux.explorer.grid.contextMenu.value.attr(\'name\'), from: Jux.explorer.grid.from});">Drop</li><li onclick="Jux.explorer.properties({table: Jux.explorer.grid.contextMenu.value.attr(\'name\'), from: \'{database}\'}); ">Properties</li>'
 		}
 	},
 	views: {
@@ -481,7 +499,7 @@ Juxta.Explorer.prototype.templates = {
 			head: {
 				'view': 'View',
 				'view-definer': 'Definer',
-				'view-updatable': 'Updatable',
+				'view-updatable': 'Updatable'
 			},
 			actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 			row: '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',

@@ -57,7 +57,7 @@ Juxta.Request = function(connection, cache, options) {
 
 /**
  * Make an AJAX request
- * @return jqXHR
+ * @return {jqXHR}
  */
 Juxta.Request.prototype.send = function (params) {
 	var that = this,
