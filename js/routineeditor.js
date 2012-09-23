@@ -15,10 +15,10 @@ Juxta.RoutineEditor = function(element, request) {
 	/**
 	 * @type {Juxta.SqlEditor}
 	 */
-	this.editor = new Juxta.SqlEditor(this.$floatBox.find('textarea'));
+	this.editor = new Juxta.SqlEditor(this.container.find('textarea'));
 
 	/**
-	 * @param {Object} [arams
+	 * @param {Object} params
 	 */
 	this.edit = function(params) {
 		var query;

@@ -17,7 +17,7 @@ Juxta.CreateDatabase = function(element, request) {
 	/**
 	 * @type {jQuery}
 	 */
-	this.$form = this.$floatBox.find('form[name=create-database]');
+	this.$form = this.container.find('form[name=create-database]');
 	
 	
 	/**
@@ -47,7 +47,7 @@ Juxta.CreateDatabase.prototype.show = function(options) {
 	//this.requestGetCollations();
 	Juxta.FloatBox.prototype.show.apply(this, arguments);
 	this.$submit.attr('disabled', false);
-	this.$floatBox.find('input[type=text]').focus().val(null);
+	this.container.find('input[type=text]').focus().val(null);
 }
 
 
@@ -81,7 +81,7 @@ Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
  * @param {Object} response
  */
 Juxta.CreateDatabase.prototype.responseCreateDatabase = function(response) {
-	this.$floatBox.hide();
+	this.container.hide();
 	// @todo Remove global
 	Jux.explore({show: 'databases', refresh: true});
 }

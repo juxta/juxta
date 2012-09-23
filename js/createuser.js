@@ -9,7 +9,7 @@ Juxta.CreateUser = function(element) {
 
 	var that = this;
 
-	this.$floatBox.find('.buttons input[value=Create]').click(function() {
+	this.container.find('.buttons input[value=Create]').click(function() {
 		that.hide();
 		Jux.notify('User created');
 	});
@@ -21,7 +21,7 @@ Juxta.Lib.extend(Juxta.CreateUser, Juxta.FloatBox);
  * Show the box
  */
 Juxta.CreateUser.prototype.show = function() {
-	this.$floatBox.find('input[type=text]').attr('value', null);
+	this.container.find('input[type=text]').attr('value', null);
 	Juxta.FloatBox.prototype.show.apply(this, arguments);
 
 	return this;

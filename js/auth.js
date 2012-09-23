@@ -13,7 +13,7 @@ Juxta.Auth = function(element, request) {
 	/**
 	 * @type {jQuery}
 	 */
-	this.$form = this.$floatBox.find('form[name=login]');
+	this.$form = this.container.find('form[name=login]');
 
 
 	/**

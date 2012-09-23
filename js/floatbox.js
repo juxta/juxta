@@ -1,91 +1,126 @@
 Juxta.FloatBox = function(element, options) {
-	this.init(element, options);
-}
 
-Juxta.FloatBox.prototype = {
-	settings: {
+	/**
+	 * Settings
+	 * @type {Object}
+	 */
+	this.settings = {
 		title: 'New window',
 		closable: true,
 		center: true
-	},
-	init: function(element, options) {
-		var that = this;
+	};
 
-		this.settings = $.extend({}, this.settings, options);
+	this.settings = $.extend({}, this.settings, options);
 
-		this.$container = $(element);
 
-		// @deprecated
-		this.$floatBox = this.$container;
-
-		// Head
-		if (this.$container.find('h3').is('h3')) {
-			this.$head = this.$container.find('h3');
-		} else {
-			this.$head = this.$container.prepend('<h3>'+ this.settings.title + '</h3>').find('h3');
-		}
-
-		this.settings.title = this.$head.html();
-
-		// Close button
-		if (this.$container.find('input[type=button].close').is('input')) {
-			this.$terminator = this.$container.find('input[type=button].close');
-		} else {
-			this.$terminator = $('<input type="button" class="close"/>').insertAfter(this.$head).attr('disabled', !this.settings.closable);
-		}
-
-		this.$terminator.click(function() { that.hide(); });
-
-		// Drag options
-		this.$container.draggable({scroll: false, handle: 'h3'});
-
-		this.center();
-	},
-	show: function(options, content) {
-		options = $.extend({}, this.settings, options);
-
-		if (options.name) {
-			options.name = '<a href="">' + options.name + '</a>'; 
-		}
-		if (options.from) {
-			options.from = '<span class="from">from <a>' + options.from + '</a></span>'; 
-		}
-
-		this.$head.html($.template(options.title, options));
-
-		// Append content
-		if (content) {
-			this.clear();
-			$(content).insertAfter(this.$terminator);
-		}
-
-		this.$container.show();
-
-		if (options.center) {
-			this.center();
-		}
-	},
-	hide: function() {
-		this.$floatBox.hide();
-	},
 	/**
-	 * Center box
+	 * @type {jQuery}
 	 */
-	center: function() {
-		var body = {
-			height: $(document.body).height(),
-			width: $(document.body).width()
-		};
+	this.container = $(element);
 
-		this.$floatBox.css({
-			left: (body.width - this.$floatBox.width()) / 2,
-			top: parseInt(0.75 * (body.height - this.$floatBox.height()) / 2)
-		});
-	},
+
 	/**
-	 * Clear content
+	 * @type {jQuery}
 	 */
-	clear: function() {
-		this.$container.find('> *:not(h3):not([type=button].close)').remove();
+	this.header =  this.container.find('h3');
+
+	if (!this.header.is('h3')) {
+		this.header = this.container.prepend('<h3>'+ this.settings.title + '</h3>').find('h3');
 	}
-};
+
+
+	/**
+	 * Close button
+	 * @type {jQuery}
+	 */
+	this.close = this.container.find('input[type=button].close');
+
+	if (!this.close.is('input')) {
+		this.close = $('<input>').attr('type', 'button').addClass('close').insertAfter(this.header).attr('disabled', !this.settings.closable);
+	}
+
+
+	this.settings.title = this.header.html();
+
+	this.close.click($.proxy(this.hide, this));
+
+	this.container.draggable({scroll: false, handle: 'h3'});
+
+	this.center();
+}
+
+
+/**
+ * Show a float box
+ * @param {} options
+ * @param {} content
+ * @return {Juxta.FloatBox}
+ */
+Juxta.FloatBox.prototype.show = function(options, content) {
+	//
+	options = $.extend({}, this.settings, options);
+
+	if (options.name) {
+		options.name = '<a href="">' + options.name + '</a>';
+	}
+	if (options.from) {
+		options.from = '<span class="from">from <a>' + options.from + '</a></span>';
+	}
+
+	this.header.html($.template(options.title, options));
+
+	// Append content
+	if (content) {
+		this.clear();
+		$(content).insertAfter(this.close);
+	}
+
+	this.container.show();
+
+	if (options.center) {
+		this.center();
+	}
+
+	return this;
+}
+
+
+/**
+ * Hide a float box
+ * @return {Juxta.FloatBox}
+ */
+Juxta.FloatBox.prototype.hide = function() {
+	this.container.hide();
+	return this;
+}
+
+
+/**
+ * Center a box
+ * @return {Juxta.FloatBox}
+ */
+Juxta.FloatBox.prototype.center = function() {
+	//
+	var height = $(document.body).height(),
+		width = $(document.body).width(),
+		left = (width - this.container.width()) / 2,
+		top = parseInt(0.75 * (height - this.container.height()) / 2);
+
+	if (top <= 5) {
+		top = 5;
+	}
+
+	this.container.css({left: left, top: top});
+
+	return this;
+}
+
+
+/**
+ * Clear a box
+ * @return {Juxta.FloatBox}
+ */
+Juxta.FloatBox.prototype.clear = function() {
+	this.container.find('> *:not(h3):not([type=button].close)').remove();
+	return this;
+}
