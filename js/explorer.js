@@ -8,7 +8,6 @@ Juxta.Explorer = function(element, request) {
 
 	Juxta.Application.prototype.constructor.call(this, element, {cache: 60});
 
-
 	/**
 	 * @type {Juxta.Request} request
 	 */
@@ -98,6 +97,19 @@ Juxta.Explorer = function(element, request) {
 	// Stretch grid by height
 	$(window).bind('resize', {explorer: this}, this.stretch);
 
+	// Hide notifications on float box hide
+	$.each([this.createDatabase], function(i, application) {
+		application.on('hide', function() {
+			// @todo Remove global
+			Jux.notification.hide();
+		});
+	});
+
+	// Refresh databases list after create
+	this.createDatabase.on('created', function() {
+		that.explore({show: 'databases', refresh: true});
+	});
+
 }
 
 Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
@@ -109,7 +121,6 @@ Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
 Juxta.Explorer.prototype.show = function(options) {
 	//
 	Juxta.Application.prototype.show.apply(this, arguments);
-
 	this.stretch();
 
 	return this;

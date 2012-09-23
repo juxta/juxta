@@ -49,6 +49,7 @@ Juxta.FloatBox = function(element, options) {
 	this.center();
 }
 
+Juxta.Lib.extend(Juxta.FloatBox, Juxta.Events);
 
 /**
  * Show a float box
@@ -81,6 +82,8 @@ Juxta.FloatBox.prototype.show = function(options, content) {
 		this.center();
 	}
 
+	this.trigger('show');
+
 	return this;
 }
 
@@ -90,7 +93,10 @@ Juxta.FloatBox.prototype.show = function(options, content) {
  * @return {Juxta.FloatBox}
  */
 Juxta.FloatBox.prototype.hide = function() {
+	//
 	this.container.hide();
+	this.trigger('hide');
+
 	return this;
 }
 

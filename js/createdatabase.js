@@ -17,22 +17,24 @@ Juxta.CreateDatabase = function(element, request) {
 	/**
 	 * @type {jQuery}
 	 */
-	this.$form = this.container.find('form[name=create-database]');
-	
-	
+	this.form = this.container.find('form[name=create-database]');
+
+
 	/**
 	 * @type {jQuery}
 	 */
-	this.$collations = this.$form.find('[name=collation]');
-	
-	
+	this.collations = this.form.find('[name=collation]');
+
+
 	/**
 	 * @type {jQuery}
 	 */
-	this.$submit = this.$form.find('input[type=submit]');
+	this.submit = this.form.find('input[type=submit]');
+
 
 	var that = this;
-	this.$form.bind('submit', function() {
+
+	this.form.bind('submit', function() {
 		that.requestCreateDatabase();
 		return false;
 	});
@@ -41,36 +43,34 @@ Juxta.CreateDatabase = function(element, request) {
 Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.FloatBox);
 
 /**
+ * Show dialog window
  * @param {Object} options
+ * @return {Juxta.FloatBox}
  */
 Juxta.CreateDatabase.prototype.show = function(options) {
 	//this.requestGetCollations();
 	Juxta.FloatBox.prototype.show.apply(this, arguments);
-	this.$submit.attr('disabled', false);
+
+	this.submit.attr('disabled', false);
 	this.container.find('input[type=text]').focus().val(null);
-}
 
-
-/**
- * Hide window
- */
-Juxta.CreateDatabase.prototype.hide = function() {
-	// @todo Remove global
-	Jux.notification.hide();
-	Juxta.FloatBox.prototype.hide.apply(this, arguments);
+	return this;
 }
 
 
 /**
  * Request
+ * @return {jqXHR}
  */
 Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
-	this.$submit.attr('disabled', true);
-	this.request.send({
+	//
+	this.submit.attr('disabled', true);
+
+	return this.request.send({
 		action: {create: 'database'},
-		data: this.$form.serialize(),
+		data: this.form.serialize(),
 		success: this.responseCreateDatabase,
-		error: function() { this.$submit.attr('disabled', false); },
+		error: function() { this.submit.attr('disabled', false); },
 		context: this
 	});
 }
@@ -79,19 +79,24 @@ Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
 /**
  * Response
  * @param {Object} response
+ * @return {Juxta.FloatBox}
  */
 Juxta.CreateDatabase.prototype.responseCreateDatabase = function(response) {
+	//
 	this.container.hide();
-	// @todo Remove global
-	Jux.explore({show: 'databases', refresh: true});
+	this.trigger('created');
+
+	return this;
 }
 
 
 /**
  * Get collations request
+ * @return {jqXHR}
  */
 Juxta.CreateDatabase.prototype.requestGetCollations = function() {
-	this.request.send({
+	//
+	return this.request.send({
 		action: {show: 'collations'},
 		cache: true,
 		context: this,
@@ -105,10 +110,13 @@ Juxta.CreateDatabase.prototype.requestGetCollations = function() {
  * @param {Object} response
  */
 Juxta.CreateDatabase.prototype.responseGetCollations = function(response) {
+	//
 	var that = this;
+
 	if (!$.isEmptyObject(response.data)) {
-		var $collations = this.$collations;
-		this.$collations.empty().append('<option>Default</option>');
+		//
+		this.collations.empty().append('<option>Default</option>');
+
 		$.each(response.data, function(charset, collations) {
 			var $charset = $('<optgroup>').attr('label', charset);
 			if (!$.isEmptyObject(collations)) {
@@ -116,7 +124,7 @@ Juxta.CreateDatabase.prototype.responseGetCollations = function(response) {
 					$charset.append($('<option>').text(charset));
 				});
 			}
-			that.$collations.append($charset);
+			that.collations.append($charset);
 		});
 	}
 }
