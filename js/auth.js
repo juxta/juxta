@@ -41,7 +41,7 @@ Juxta.Auth = function(element, request) {
 
 
 	/**
-	 * @type {Juxta.REquest}
+	 * @type {Juxta.Request}
 	 */
 	this.request = request;
 
@@ -83,11 +83,11 @@ Juxta.Lib.extend(Juxta.Auth, Juxta.FloatBox);
  * Show window
  */
 Juxta.Auth.prototype.show = function() {
+
 	if (!this.storedConnections) {
 		this.request.send({action: {get: 'connections'}, context: this, success: this.getConnectionsResponse});
 	}
-	// @todo Remove global
-	Jux.hide();
+
 	this.$submit.attr('disabled', false);
 	this.$password.val(null);
 

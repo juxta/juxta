@@ -151,6 +151,9 @@ Juxta = function() {
 	});
 
 	//
+	this.auth.on('before-show', $.proxy(this.hide, this));
+
+	//
 	$('#header a[name=about]').bind('click', function() {
 		that.about();
 		return false;

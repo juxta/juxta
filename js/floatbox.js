@@ -59,8 +59,9 @@ Juxta.Lib.extend(Juxta.FloatBox, Juxta.Events);
  */
 Juxta.FloatBox.prototype.show = function(options, content) {
 	//
-	options = $.extend({}, this.settings, options);
+	this.trigger('before-show');
 
+	options = $.extend({}, this.settings, options);
 	if (options.name) {
 		options.name = '<a href="">' + options.name + '</a>';
 	}
