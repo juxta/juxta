@@ -109,13 +109,13 @@ Juxta.Auth.prototype.login = function() {
 	if (jQuery.trim($('input[name=port]', this.$form).val()) == '') {
 		$('input[name=port]', this.$form).val('3306');
 	}
-	//
+
 	this.$submit.attr('disabled', true);
-	// @todo Remove Window.Jux
+
 	this.request.send({
 		action: 'login',
 		data: this.$form.serialize(),
-		beforeSend: function() { Jux.loading('Connecting to ' + $('input[name=host]', this.$form).val()) },
+		beforeSend: function() { this.trigger('loading', 'Connecting to ' + $('input[name=host]', this.$form).val()); },
 		success: this.loginResponse,
 		context: this
 	});
