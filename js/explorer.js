@@ -255,8 +255,7 @@ Juxta.Explorer.prototype.drop = function(params) {
 		message = 'Drop ' + countItemsForDrop + ' ' + params.items;
 	}
 
-	// @todo Remove global
-	if (Jux.confirm(message + '?')) {
+	if (confirm(message + '?')) {
 		this.requestDrop(params);
 	}
 }
@@ -381,8 +380,8 @@ Juxta.Explorer.prototype.kill = function(params) {
 	} else {
 		var message = 'Kill ' + params.processes.length;
 	}
-	// @todo Remove global
-	if (Jux.confirm(message + '?')) {
+
+	if (confirm(message + '?')) {
 		this.requestKill(params);
 	}
 }

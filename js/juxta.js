@@ -321,15 +321,6 @@ Juxta.prototype = {
 		this.explorer.kill(params);
 	},
 
-
-	/**
-	 *
-	 */
-	confirm: function(message) {
-		return confirm(message);
-	},
-
-
 	/**
 	 *
 	 */
