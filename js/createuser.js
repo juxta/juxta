@@ -11,7 +11,7 @@ Juxta.CreateUser = function(element) {
 
 	this.container.find('.buttons input[value=Create]').click(function() {
 		that.hide();
-		Jux.notify('User created');
+		that.trigger('notify', 'User created');
 	});
 }
 
@@ -19,6 +19,7 @@ Juxta.Lib.extend(Juxta.CreateUser, Juxta.FloatBox);
 
 /**
  * Show the box
+ * @return {Juxta.CreateUser}
  */
 Juxta.CreateUser.prototype.show = function() {
 	this.container.find('input[type=text]').attr('value', null);
@@ -26,4 +27,3 @@ Juxta.CreateUser.prototype.show = function() {
 
 	return this;
 }
-
