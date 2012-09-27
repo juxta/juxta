@@ -19,6 +19,7 @@ Juxta = function() {
 	 */
 	this.state = 'default';
 
+
 	/**
 	 * Cache
 	 * @type Juxta.Cache
@@ -153,7 +154,26 @@ Juxta = function() {
 	//
 	this.auth
 		.on('before-show', $.proxy(this.hide, this))
-		.on('loading', function(message) { that.loading(message); });
+		.on('login', function() {
+			that.state = null;
+			document.location.hash = '#databases';
+		})
+		.on('logout', function() {
+			that.cache.flush();
+			that.connection = null;
+			document.location.hash = '#login';
+		});
+
+	// Notifications
+	this.auth.on('notify', function(message, type, options) {
+		if (type === 'error') {
+			that.error(message, options);
+		} else if (type === 'loading') {
+			that.loading(message, options);
+		} else {
+			that.notify(message, options);
+		}
+	});
 
 	//
 	$('#header a[name=about]').bind('click', function() {
