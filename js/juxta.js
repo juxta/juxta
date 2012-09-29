@@ -154,13 +154,13 @@ Juxta = function() {
 	//
 	this.auth
 		.on('before-show', $.proxy(this.hide, this))
-		.on('login', function() {
+		.on('login', function(connection) {
+			that.connection.set(connection);
 			that.state = null;
 			document.location.hash = '#databases';
 		})
 		.on('logout', function() {
 			that.cache.flush();
-			that.connection = null;
 			document.location.hash = '#login';
 		});
 

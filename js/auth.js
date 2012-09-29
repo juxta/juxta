@@ -136,7 +136,7 @@ Juxta.Auth.prototype.login = function() {
  */
 Juxta.Auth.prototype.loginResponse = function(response) {
 	if (response.result == 'connected') {
-		this.trigger('login');
+		this.trigger('login', response.to);
 	} else {
 		this.trigger('notify', response.message, 'error');
 		this.submit.attr('disabled', false);
