@@ -11,7 +11,7 @@ Juxta.BackupRestore = function(element) {
 	/**
 	 * @type {Juxta.TreeGrid}
 	 */
-	this.grid = new Juxta.TreeGrid(this.$application.find('.grid'));
+	this.grid = new Juxta.TreeGrid(this.find('.grid'));
 
 	$(window).bind('resize', {that: this}, this.stretch);
 }
@@ -47,7 +47,7 @@ Juxta.BackupRestore.prototype.show = function(options) {
  */
 Juxta.BackupRestore.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
-	if (that.$application.is(':visible')) {
-		that.$application.find('.grid .body').height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
+	if (that.is(':visible')) {
+		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._statusBar.height() - 24);
 	}
 }

@@ -9,7 +9,7 @@ Juxta.Server = function (element, request) {
 	/**
 	 * @type {Object}
 	 */
-	this.settings ={
+	this._settings ={
 		cache: 60
 	}
 
@@ -24,28 +24,28 @@ Juxta.Server = function (element, request) {
 	/**
 	 * @type {Juxta.Grid}
 	 */
-	this.grid = new Juxta.Grid(this.$application.find('.grid'));
+	this.grid = new Juxta.Grid(this.find('.grid'));
 
 
 	/**
 	 * @type {Juxta.Uptime}
 	 */
-	this.uptime = new Juxta.Uptime(this.$application.find('.proper').find('.uptime'));
+	this.uptime = new Juxta.Uptime(this.find('.proper').find('.uptime'));
 
 	var that = this;
 
-	this.$application.find('.switch').click(function(event) {
+	this.find('.switch').click(function(event) {
 		if (!$(event.target).hasClass('active')) {
 			$(this).find('.active').removeClass('active');
 			$(event.target).addClass('active');
 		}
 	});
-	this.$application.find('.switch li').eq(0).click(function() {
+	this.find('.switch li').eq(0).click(function() {
 		if (!$(this).hasClass('active')) {
 			that.info({show: 'status-full'}, {});
 		}
 	});
-	this.$application.find('.switch li').eq(1).click(function() {
+	this.find('.switch li').eq(1).click(function() {
 		if (!$(this).hasClass('active')) {
 			that.info({show: 'status'}, {});
 		}
@@ -75,9 +75,9 @@ Juxta.Server.prototype.show = function(options) {
  */
 Juxta.Server.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
-	if (that.$application.find('.grid .body').is(':visible')) {
-		that.$application.find('.grid .body').height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
-	} else if(that.$application.find('.proper').is(':visible')) {
+	if (that.find('.grid .body').is(':visible')) {
+		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._statusBar.height() - 24);
+	} else if(that.find('.proper').is(':visible')) {
 		$('#server-info .proper').height($('#applications').height() - $('#server-info .proper').get(0).offsetTop - 32);
 	}
 }
@@ -131,7 +131,7 @@ Juxta.Server.prototype.requestInfo = function(params) {
 		this.request.send($.extend(
 			{},
 			{action: query, action: query, context: this, success: this.responseInfo},
-			this.settings,
+			this._settings,
 			options
 		));
 	}
@@ -147,8 +147,7 @@ Juxta.Server.prototype.responseInfo = function(response) {
 		this.properStatus(response.data);
 		if (!response.cache) {
 			this.uptime.start(response.data.Uptime);
-			this.$application
-				.find('.proper')
+			this.find('.proper')
 				.find('.startup .time')
 				.text(Juxta.Lib.Date.format(this.uptime.getStartTime(), "%b %-d, %Y %T"));
 
@@ -167,10 +166,10 @@ Juxta.Server.prototype.responseInfo = function(response) {
  * @param {Array} data
  */
 Juxta.Server.prototype.properStatus = function(data) {
-	this.$application.find('.proper.server-status [class^=value_]').each(function() {
+	this.find('.proper.server-status [class^=value_]').each(function() {
 		$(this).text(data[this.className.split(' ', 1)[0].substr(6)]);
 	});
-	this.$application.find('.proper.server-status').show();
+	this.find('.proper.server-status').show();
 }
 
 

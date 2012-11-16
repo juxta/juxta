@@ -8,12 +8,12 @@ Juxta.Application = function(element, options) {
 	/**
 	 * @type {Object}
 	 */
-	this.settings = {
+	this._settings = {
 		closable: false,
 		maximized: false
 	}
 
-	this.settings = $.extend({}, this.settings, options);
+	this._settings = $.extend({}, this._settings, options);
 
 
 	/**
@@ -22,33 +22,28 @@ Juxta.Application = function(element, options) {
 	 */
 	this._container = $(element);
 
-	/**
-	 * @type {jQuery}
-	 * @deprecated
-	 */
-	this.$application = this._container;
-
 
 	/**
-	 * @type {jQuery}
+	 * @type {Object}
+	 * @private
 	 */
-	this.$menu = this.$application.find('.menu');
+	this._menu = this.find('.menu');
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.$statusBar = this.$application.find('.status');
+	this._statusBar = this.find('.status');
 
-	this.tune(this.settings);
 
-	if (this.settings.closable) {
-		this.$application.find('.close').show();
-		this.$application.find('.close').click(function() { history.back(); });
+	if (this._settings.closable) {
+		this.find('.close').show();
+		this.find('.close').click(function() { history.back(); });
 	} else {
-		this.$application.find('.close').hide();
+		this.find('.close').hide();
 	}
 
+	this.tune(this._settings);
 }
 
 Juxta.Lib.extend(Juxta.Application, Juxta.Events);
@@ -58,15 +53,16 @@ Juxta.Lib.extend(Juxta.Application, Juxta.Events);
  */
 Juxta.Application.prototype.tune = function(options) {
 	if ($.isPlainObject(options.header)) {
-		this.$application.find('h1').html(
+		this.find('h1').html(
 			options.header.title + 
 			(options.header.name ? ' <a>' + options.header.name + '</a>' : '') +
 			(options.header.from ? ' <span class="from">from <a>' + options.header.from + '</a></span>' : '')
 		);
 	} else{
-		this.$application.find('h1').html(options.header);
+		this.find('h1').html(options.header);
 	}
-	this.menu(options.menu);
+
+	this.setMenu(options.menu);
 }
 
 
@@ -78,15 +74,15 @@ Juxta.Application.prototype.tune = function(options) {
 Juxta.Application.prototype.show = function(options) {
 	//
 	if (options) {
-		this.tune($.extend({}, this.settings, options));
+		this.tune($.extend({}, this._settings, options));
 	}
 
-	if (!this.$application.is(':visible')) {
+	if (!this.is(':visible')) {
 		$('#applications .application').hide();
-		this.$application.show();
+		this._container.show();
 	}
 
-	if (this.settings.maximized) {
+	if (this._settings.maximized) {
 		this.maximize();
 	} else {
 		this.restore();
@@ -115,7 +111,7 @@ Juxta.Application.prototype.ready = function(options) {
  * @return {Juxta.Application}
  */
 Juxta.Application.prototype.hide = function() {
-	this.$application.hide();
+	this._container.hide();
 
 	return this;
 }
@@ -124,10 +120,14 @@ Juxta.Application.prototype.hide = function() {
 /**
  * Set application menu
  * @param {Object} menu
+ * @return {Juxta.Application}
  */
-Juxta.Application.prototype.menu = function(menu) {
-	this.$menu.empty();
+Juxta.Application.prototype.setMenu = function(menu) {
+	//
 	var that = this;
+
+	this._menu.empty();
+
 	if ($.isPlainObject(menu)) {
 		$.each(menu, function(title, action) {
 			var item = $('<a>').html(title);
@@ -141,7 +141,7 @@ Juxta.Application.prototype.menu = function(menu) {
 			} else if (action) {
 				item.attr('href', action);
 			}
-			that.$menu.append(item);
+			that._menu.append(item);
 		});
 	}
 
@@ -170,18 +170,6 @@ Juxta.Application.prototype.restore = function() {
 	if ($('#applications').removeClass('maximized').is(':visible')) {
 		$('#sidebar').show();
 	}
-
-	return this;
-}
-
-
-/**
- * Set status text
- * @param {String} text
- * @return {Juxta.Application}
- */
-Juxta.Application.prototype.status = function(text) {
-	this.$statusBar.text(text);
 
 	return this;
 }

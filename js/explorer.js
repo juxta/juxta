@@ -91,7 +91,7 @@ Juxta.Explorer = function(element, request) {
 				status += ' ' + that.grid.statistics.items;
 			}
 		}
-		that.status(status);
+		that._statusBar.text(status);
 	});
 
 	// Stretch grid by height
@@ -133,9 +133,9 @@ Juxta.Explorer.prototype.show = function(options) {
  */
 Juxta.Explorer.prototype.stretch = function(event) {
 	var that = event && event.data.explorer || this;
-	if (that.$application.is(':visible')) {
+	if (that.is(':visible')) {
 		// @todo Remove hardcoded number
-		that.grid.height($('#applications').height() - that.$application.find('.grid .body').position().top - that.$statusBar.height() - 24);
+		that.grid.height($('#applications').height() - that.find('.grid .body').position().top - that._statusBar.height() - 24);
 	}
 }
 
@@ -196,7 +196,7 @@ Juxta.Explorer.prototype.requestExplore = function(params) {
 		return this.request.send($.extend(
 			{},
 			{action: query, context: this, success: this.responseExplore},
-			this.settings,
+			this._settings,
 			options
 		));
 	}

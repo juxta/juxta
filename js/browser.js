@@ -55,14 +55,14 @@ Juxta.Browser = function(element, request) {
 	/**
 	 * @type {Juxta.TreeGrid}
 	 */
-	this.grid = new Juxta.Grid2(this.$application.find('.grid2'));
+	this.grid = new Juxta.Grid2(this.find('.grid2'));
 
 
 	/**
 	 * Juxta.SqlEditor
 	 * @type {Juxta.SqlEditor}
 	 */
-	this._editor = new Juxta.SqlEditor(this.$application.find('textarea[name=browser]'));
+	this._editor = new Juxta.SqlEditor(this.find('textarea[name=browser]'));
 
 
 	/**
@@ -131,11 +131,11 @@ Juxta.Browser.prototype.stretch = function(event) {
 				that.find('.sql').height(that.options.sqlEditorHeight);
 				that._editor.setHeight(that.options.sqlEditorHeight);
 			}
-			height = $('#applications').height() - that.find('.grid2-body').position().top - that.$statusBar.height() - 24;
+			height = $('#applications').height() - that.find('.grid2-body').position().top - that._statusBar.height() - 24;
 			that.grid.setHeight(height);
 
 		} else {
-			height = $('#applications').height() - that.find('.sql').position().top - that.$statusBar.height() - 19;
+			height = $('#applications').height() - that.find('.sql').position().top - that._statusBar.height() - 19;
 			that.find('.sql').height(height);
 			that._editor.setHeight(height);
 		}
@@ -245,7 +245,7 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 				that.responseBrowse(response, query);
 			}
 		},
-		this.settings,
+		this._settings,
 		options
 	));
 
@@ -332,11 +332,7 @@ Juxta.Browser.prototype.updateStatus = function() {
 		}
 	}
 
-	if (status) {
-		this.$statusBar.text(status);
-	} else {
-		this.$statusBar.text(status);
-	}
+	this._statusBar.text(status);
 
 	return this;
 }

@@ -16,7 +16,7 @@ Juxta.Table = function(element, request) {
 	/**
 	 * @type {Juxta.Grid2}
 	 */
-	this.columns = new Juxta.Grid2(this.$application.find('.grid2'));
+	this.columns = new Juxta.Grid2(this.find('.grid2'));
 
 	$(window).bind('resize', {that: this}, this.stretch);
 
@@ -44,17 +44,17 @@ Juxta.Table.prototype.show = function(options) {
  */
 Juxta.Table.prototype.stretch = function(event) {
 	/*var that = event && event.data.that || this;
-	if (that.$application.is(':visible')) {
+	if (that.is(':visible')) {
 		if ($('#applications').height() < 500) {
-			that.$application.find('.grid.indexes .body').height(72);
+			that.find('.grid.indexes .body').height(72);
 		} else{
-			that.$application.find('.grid.indexes .body').height($('#applications').height() * 0.225);
+			that.find('.grid.indexes .body').height($('#applications').height() * 0.225);
 		}
-		that.$application.find('.grid.columns .body').height($('#applications').height() - that.$application.find('.grid.columns .body').position().top - that.$statusBar.height() - 24 - that.$application.find('.grid.indexes')[0].offsetHeight - 54);
+		that.find('.grid.columns .body').height($('#applications').height() - that.find('.grid.columns .body').position().top - that._statusBar.height() - 24 - that.find('.grid.indexes')[0].offsetHeight - 54);
 	}*/
 	var that = event && event.data.that || this;
-	if (that.$application.is(':visible')) {
-		that.columns.setHeight($('#applications').height() - that.$application.find('.grid2-body').position().top - that.$statusBar.height() - 24);
+	if (that.is(':visible')) {
+		that.columns.setHeight($('#applications').height() - that.find('.grid2-body').position().top - that._statusBar.height() - 24);
 	}
 }
 
@@ -141,7 +141,7 @@ Juxta.Table.prototype.requestShowTable = function(params) {
 				that.responseShowTable(response, query);
 			}
 		},
-		this.settings,
+		this._settings,
 		options
 	));
 }
