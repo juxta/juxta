@@ -181,6 +181,15 @@ Juxta = function() {
 		return false;
 	});
 
+	//
+	$('#header .sql a').bind('click', function() {
+		console.log(that.browser.mode);
+		if (that.browser.is(':visible') && that.browser.mode == 'browse') {
+			that.browser.toggleEditor();
+			return false;
+		}
+	});
+
 	// @todo Remove this from here
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
 
@@ -196,8 +205,8 @@ Juxta = function() {
 Juxta.prototype = {
 
 	/**
-	 * Run
-	 * @return Juxta
+	 * Run application
+	 * @return {Juxta}
 	 */
 	run: function() {
 		//
@@ -219,6 +228,8 @@ Juxta.prototype = {
 		var hash = window.location.hash.replace(/#/g, ''),
 			params = hash.split('/'),
 			action = params.pop();
+
+		var that = this;
 
 		if (hash != this.state) {
 			switch (action) {
@@ -254,7 +265,10 @@ Juxta.prototype = {
 					break;
 				//
 				case 'browse':
-					this.browse({browse: params[1], from: params[0]});
+					this.browser.browse({browse: params[1], from: params[0]});
+					break;
+				case 'sql':
+					this.browser.sql({db: params[0]});
 					break;
 				case 'columns':
 					this.sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
@@ -320,10 +334,10 @@ Juxta.prototype = {
 	explore: function(params) {
 		if (params.from) {
 			this.sidebar.highlight(params.show, {'database': params.from});
-			this.explorer.explore(params);
+			return this.explorer.explore(params);
 		} else {
 			this.sidebar.highlight(params.show);
-			this.explorer.explore(params);
+			return this.explorer.explore(params);
 		}
 	},
 
@@ -349,15 +363,6 @@ Juxta.prototype = {
 	info: function(params) {
 		this.sidebar.highlight('status');
 		this.server.info(params);
-	},
-
-
-	/**
-	 *
-	 */
-	browse: function(params) {
-		this.sidebar.path({'database': params.from, 'table': params.browse});
-		this.browser.browse(params);
 	},
 
 

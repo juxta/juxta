@@ -2,3 +2,14 @@
  * Data browser
  *
  */
+
+.browser .sql {
+	display: none;
+	background-color: #FFF;
+	border-top: #CCC 1px solid;
+	border-bottom: #EEE 1px solid;
+}
+
+.browser .CodeMirror {
+	width: 100%;
+}

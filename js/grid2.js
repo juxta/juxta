@@ -462,3 +462,15 @@ Juxta.Grid2.prototype.disableSelectRows = function() {
 Juxta.Grid2.prototype.vertScrollEnabled = function() {
 	return this.bodyContainer.height() < this.body.height();
 }
+
+Juxta.Grid2.prototype.is = function() {
+	return $.fn.is.apply(this.container, arguments);
+}
+
+Juxta.Grid2.prototype.show = function() {
+	this.container.show();
+}
+
+Juxta.Grid2.prototype.hide = function() {
+	this.container.hide();
+}

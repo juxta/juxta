@@ -15,10 +15,18 @@ Juxta.Application = function(element, options) {
 
 	this.settings = $.extend({}, this.settings, options);
 
+
 	/**
 	 * @type {jQuery}
+	 * @private
 	 */
-	this.$application = $(element);
+	this._container = $(element);
+
+	/**
+	 * @type {jQuery}
+	 * @deprecated
+	 */
+	this.$application = this._container;
 
 
 	/**
@@ -121,14 +129,19 @@ Juxta.Application.prototype.menu = function(menu) {
 	this.$menu.empty();
 	var that = this;
 	if ($.isPlainObject(menu)) {
-		jQuery.each(menu, function(title, action) {
+		$.each(menu, function(title, action) {
+			var item = $('<a>').html(title);
 			if ($.isPlainObject(action)) {
-				that.$menu.append('<a href="' + (action.href ? action.href : '') + (action.click ? '" onclick="' + action.click + '"' : '"') + '>' + title + '</a>');
+				if (action.href) {
+					item.attr('href', action.href);
+				}
+				if (action.click && typeof action.click == 'function') {
+					item.click(action.click);
+				}
 			} else if (action) {
-				that.$menu.append('<a href="' + action + '">' + title + '</a>');
-			} else{
-				that.$menu.append('<a>' + title + '</a>');
+				item.attr('href', action);
 			}
+			that.$menu.append(item);
 		});
 	}
 
@@ -171,4 +184,22 @@ Juxta.Application.prototype.status = function(text) {
 	this.$statusBar.text(text);
 
 	return this;
+}
+
+
+/**
+ * Check container element against a selector
+ * @return {Object}
+ */
+Juxta.Application.prototype.is = function() {
+	return $.fn.is.apply(this._container, arguments);
+}
+
+
+/**
+ * Find elements by selectors in current container
+ * @return {Object}
+ */
+Juxta.Application.prototype.find = function() {
+	return $.fn.find.apply(this._container, arguments);
 }

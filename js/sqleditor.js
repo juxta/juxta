@@ -43,6 +43,7 @@ Juxta.SqlEditor = function(textarea, options) {
 	this.edit = function(text) {
 		//
 		this._editor.setValue(text);
+
 		return this;
 	}
 
@@ -53,7 +54,20 @@ Juxta.SqlEditor = function(textarea, options) {
 	 */
 	this.refresh = function() {
 		this._editor.refresh();
+
 		return this;
+	}
+
+
+	this.setHeight = function(height) {
+		this._editor.setSize(null, height);
+
+		return this;
+	}
+
+
+	this.is = function() {
+		return $.fn.is.apply($(this._editor.getWrapperElement()), arguments);
 	}
 
 }

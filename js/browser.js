@@ -15,7 +15,8 @@ Juxta.Browser = function(element, request) {
 	 * @type {Object}
 	 */
 	this.options = {
-		limit: 50
+		limit: 50,
+		sqlEditorHeight: 100
 	}
 
 
@@ -55,6 +56,20 @@ Juxta.Browser = function(element, request) {
 	 * @type {Juxta.TreeGrid}
 	 */
 	this.grid = new Juxta.Grid2(this.$application.find('.grid2'));
+
+
+	/**
+	 * Juxta.SqlEditor
+	 * @type {Juxta.SqlEditor}
+	 */
+	this._editor = new Juxta.SqlEditor(this.$application.find('textarea[name=browser]'));
+
+
+	/**
+	 * Mode (browse or sql)
+	 * @type {String}
+	 */
+	this.mode = null;
 
 
 	$(this.grid).bind('change', function () {
@@ -106,10 +121,62 @@ Juxta.Browser.prototype._reset = function () {
  * @param {Event} event
  */
 Juxta.Browser.prototype.stretch = function(event) {
-	var that = event && event.data.that || this;
-	if (that.$application.is(':visible')) {
-		that.grid.setHeight($('#applications').height() - that.$application.find('.grid2-body').position().top - that.$statusBar.height() - 24);
+	//
+	var that = event && event.data.that || this,
+		height = 0;
+
+	if (that.is(':visible')) {
+		if (that.grid.is(':visible')) {
+			if (that._editor.is(':visible')) {
+				that.find('.sql').height(that.options.sqlEditorHeight);
+				that._editor.setHeight(that.options.sqlEditorHeight);
+			}
+			height = $('#applications').height() - that.find('.grid2-body').position().top - that.$statusBar.height() - 24;
+			that.grid.setHeight(height);
+
+		} else {
+			height = $('#applications').height() - that.find('.sql').position().top - that.$statusBar.height() - 19;
+			that.find('.sql').height(height);
+			that._editor.setHeight(height);
+		}
 	}
+}
+
+
+/**
+ * Show SQL editor
+ * @return {Juxta.Browser}
+ */
+Juxta.Browser.prototype.showEditor = function() {
+	this.find('.sql').show();
+	this.stretch();
+
+	return this;
+}
+
+
+/**
+ * Hide SQL editor
+ * @return {Juxta.Browser}
+ */
+Juxta.Browser.prototype.hideEditor = function() {
+	this.find('.sql').hide();
+	this.stretch();
+
+	return this;
+}
+
+
+/**
+ * Toggle editor
+ * @return {Juxta.Browser}
+ * @private
+ */
+Juxta.Browser.prototype.toggleEditor = function() {
+	this.find('.sql').toggle();
+	this.stretch();
+
+	return this;
 }
 
 
@@ -122,9 +189,17 @@ Juxta.Browser.prototype.browse = function(params) {
 	//
 	this._reset();
 
+	this.grid.show();
+	this.find('.sql').hide();
+
+	var that = this;
+
 	this.show({
-		header: {title: 'Browse', name: params.browse, from: params.from}
+		header: {title: 'Browse', name: params.browse, from: params.from},
+		menu: {'SQL': {href: '#databases/create', click: function() { that.toggleEditor(); return false; }}}
 	});
+
+	this.mode = 'browse';
 
 	return this.requestBrowse(params);
 }
@@ -174,6 +249,8 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 		options
 	));
 
+	this._editor.edit('SELECT * FROM `' + query.browse + '`;');
+
 	$.when(this._lastRequest).then(function() {
 		if (!that.grid.vertScrollEnabled() && that.grid.count < that.total && that._lastRequest.state() == 'resolved') {
 			that.requestNextRows();
@@ -192,7 +269,7 @@ Juxta.Browser.prototype.responseBrowse = function(response, query) {
 	//
 	var that = this;
 
-	that._lastQuery = query;
+	this._lastQuery = query;
 	this.total = response.total;
 
 	var params = {
@@ -213,10 +290,30 @@ Juxta.Browser.prototype.responseBrowse = function(response, query) {
 	}
 
 	this.grid.fill(response.data);
+	this.ready().updateStatus();
+}
 
+
+/**
+ * Show the Browser in 'Run SQL' mode
+ * @param {Object} params
+ * @return {jqXHR}
+ */
+Juxta.Browser.prototype.sql = function(params) {
+	//
+	this._reset().showEditor();
+	this.grid.hide();
+
+	if (params.db) {
+		this.show({header: {title: 'Run SQL query on', name: params.db}});
+	} else {
+		this.show({header: {title: 'Run SQL query'}});
+	}
+
+	this.mode = 'sql';
 	this.ready();
 
-	this.updateStatus();
+	return this;
 }
 
 

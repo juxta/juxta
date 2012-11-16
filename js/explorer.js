@@ -161,7 +161,7 @@ Juxta.Explorer.prototype.prepare = function(template) {
  * @param {Object} params
  */
 Juxta.Explorer.prototype.explore = function(params) {
-	this.requestExplore(params);
+	return this.requestExplore(params);
 }
 
 
@@ -193,7 +193,7 @@ Juxta.Explorer.prototype.requestExplore = function(params) {
 	this._cacheKey = this.request.queryString(query);
 
 	if (this.prepare(query.show)) {
-		this.request.send($.extend(
+		return this.request.send($.extend(
 			{},
 			{action: query, context: this, success: this.responseExplore},
 			this.settings,
