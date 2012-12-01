@@ -143,7 +143,7 @@ Juxta = function() {
 	// Change sidebar state and window title on connection
 	this.connection.on('change', function() {
 		that.sidebar.path(that.connection.get());
-		that.changeTitle(that.connection.get());
+		that.setTitle(that.connection.get());
 	});
 
 	// Show Juxta when application ready to show
@@ -161,6 +161,7 @@ Juxta = function() {
 		})
 		.on('logout', function() {
 			that.cache.flush();
+			that.setTitle();
 			document.location.hash = '#login';
 		});
 
@@ -301,8 +302,13 @@ Juxta.prototype = {
 	 * @param {Object} connection
 	 * @return {Juxta}
 	 */
-	changeTitle: function(connection) {
-		window.document.title = connection.user + '@' +  connection.host + ' - Juxta';
+	setTitle: function(connection) {
+		var title = 'Juxta';
+		if (connection) {
+			title = connection.user + '@' +  connection.host + ' - ' + title;
+		}
+		window.document.title = title;
+
 		return this;
 	},
 

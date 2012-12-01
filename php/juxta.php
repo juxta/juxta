@@ -245,11 +245,10 @@ class Juxta
 				//
 				$response = array(
 					'status' => 'ok',
-					'result' => 'connected',
-					'to' => array('host' => $_SESSION['host'], 'port' => $_SESSION['port'])
+					'to' => array('host' => $_SESSION['host'], 'port' => $_SESSION['port'], 'user' => $_SESSION['user'])
 				);
 			} catch (JuxtaConnectionException $e) {
-				$response = array('status' => 'ok', 'result' => 'failed', 'message' => $e->getMessage());
+				$response = array('status' => 'ok', 'message' => $e->getMessage());
 			}
 		} elseif (isset($_GET['logout'])) {
 			session_destroy();

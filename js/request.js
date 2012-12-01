@@ -150,16 +150,19 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
 				callbacks.ok(response);
 			}
 			break;
-		case 'connect_error':
+
+		case 'connection_error':
 			if ($.isFunction(this._responseCallbacks.connectionError)) {
 				this._responseCallbacks.connectionError.call(this, response);
 			}
 			break;
+
 		case 'session_not_found':
 			if ($.isFunction(this._responseCallbacks.sessionNotFound)) {
 				this._responseCallbacks.sessionNotFound.call(this, response);
 			}
 			break;
+
 		case 'error':
 			if ($.isFunction(callbacks.error)) {
 				callbacks.error(response);
@@ -168,6 +171,7 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
 				this._responseCallbacks.error.call(this, response);
 			}
 			break;
+
 		default:
 			if ($.isFunction(this._responseCallbacks.unknowStatus)) {
 				this._responseCallbacks.unknowStatus.call(this, response);

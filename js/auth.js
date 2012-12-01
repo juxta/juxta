@@ -131,11 +131,12 @@ Juxta.Auth.prototype.login = function() {
 
 
 /**
+ * Response for action login
  * @param {Object} response
- * @todo Remove globals
  */
 Juxta.Auth.prototype.loginResponse = function(response) {
-	if (response.result == 'connected') {
+	//
+	if (response.to) {
 		this.trigger('login', response.to);
 	} else {
 		this.trigger('notify', response.message, 'error');
@@ -147,7 +148,6 @@ Juxta.Auth.prototype.loginResponse = function(response) {
 
 /**
  * Logout
- * @todo Remove globals
  */
 Juxta.Auth.prototype.logout = function() {
 
