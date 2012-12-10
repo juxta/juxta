@@ -130,17 +130,26 @@ Juxta.Application.prototype.setMenu = function(menu) {
 
 	if ($.isPlainObject(menu)) {
 		$.each(menu, function(title, action) {
-			var item = $('<a>').html(title);
-			if ($.isPlainObject(action)) {
+			//
+			var item = $('<a>')
+				.html(title)
+				.attr('disabled', true);
+
+			if (action && typeof action == 'object') {
 				if (action.href) {
-					item.attr('href', action.href);
+					item.attr('href', action.href).attr('disabled', false);
 				}
 				if (action.click && typeof action.click == 'function') {
-					item.click(action.click);
+					item.click(action.click).attr('disabled', false);
 				}
+
+			} else if (typeof action == 'function') {
+				item.click(action).attr('disabled', false);
+
 			} else if (action) {
-				item.attr('href', action);
+				item.attr('href', action).attr('disabled', false);
 			}
+
 			that._menu.append(item);
 		});
 	}

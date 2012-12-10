@@ -43,21 +43,22 @@
 	}
 
 .application .menu a {
+	color: #00559c;
+	cursor: pointer;
 	margin-left: 21px;
-	}
-
-.application .menu a {
-	color: #999;
 	text-decoration: none;
 	}
 
-.application .menu a[href] {
-	color: #00559c;
-	}
-
-.application .menu a[href]:hover {
+.application .menu a:hover {
 	text-decoration: underline;
 	}
+
+.application .menu a[disabled] {
+	color: #999;
+	cursor: default;
+	text-decoration: none;
+	}
+
 
 .application .close {
 	display: none;

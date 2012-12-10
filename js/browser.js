@@ -196,7 +196,7 @@ Juxta.Browser.prototype.browse = function(params) {
 
 	this.show({
 		header: {title: 'Browse', name: params.browse, from: params.from},
-		menu: {'SQL': {href: '#databases/create', click: function() { that.toggleEditor(); return false; }}}
+		menu: {'SQL': {click: function() { that.toggleEditor(); return false; }}}
 	});
 
 	this.mode = 'browse';
