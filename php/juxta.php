@@ -84,6 +84,10 @@ class Juxta
 					$this->_mysql->connect_errno
 				);
 			}
+
+			if (!empty($connection['charset'])) {
+				$this->_mysql->set_charset($connection['charset']);
+			}
 		}
 	}
 
@@ -109,8 +113,9 @@ class Juxta
 			'host' => $_SESSION['host'],
 			'user' => $_SESSION['user'],
 			'password' => $_SESSION['password'],
-			'port' => $_SESSION['port'])
-		);
+			'port' => $_SESSION['port'],
+			'charset' =>  isset($_SESSION['charset']) ? $_SESSION['charset'] : null,
+		));
 
 		$result = $this->_mysql->query($sql);
 		if ($this->_mysql->error) {
@@ -217,7 +222,8 @@ class Juxta
 							'connection' => array(
 								'host' => $_SESSION['host'],
 								'port' => $_SESSION['port'],
-								'user' => $_SESSION['user']
+								'user' => $_SESSION['user'],
+								'charset' => isset($_SESSION['charset']) ? $_SESSION['charset'] : null,
 							)
 						);
 					} else {
@@ -231,21 +237,24 @@ class Juxta
 		} elseif (isset($_GET['login'])) {
 			try {
 				$_POST['port'] = $_POST['port'] ? $_POST['port'] : 3306;
+				$_POST['charset'] = $_POST['charset'] ? $_POST['charset'] : 'utf8';
 				$this->_connect(array(
 					'host' => $_POST['host'],
 					'port' => $_POST['port'],
 					'user' => $_POST['user'],
-					'password' => $_POST['password']
+					'password' => $_POST['password'],
+					'charset' => $_POST['charset'],
 				));
 				//
 				$_SESSION['host'] = $_POST['host'];
 				$_SESSION['port'] = $_POST['port'];
 				$_SESSION['user'] = $_POST['user'];
 				$_SESSION['password'] = $_POST['password'];
+				$_SESSION['charset'] = $_POST['charset'];
 				//
 				$response = array(
 					'status' => 'ok',
-					'to' => array('host' => $_SESSION['host'], 'port' => $_SESSION['port'], 'user' => $_SESSION['user'])
+					'to' => array('host' => $_SESSION['host'], 'port' => $_SESSION['port'], 'user' => $_SESSION['user'], 'charset' => $_SESSION['charset'])
 				);
 			} catch (JuxtaConnectionException $e) {
 				$response = array('status' => 'ok', 'message' => $e->getMessage());
