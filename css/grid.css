@@ -257,6 +257,9 @@
 .grid .body .process-user{
 	width: 175px;
 	}
+.grid .body .process-user .overflowed {
+	width: 175px;
+	}
 .grid .head .process-database,
 .grid .body .process-database{
 	width: 125px;
