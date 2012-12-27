@@ -1,16 +1,19 @@
-Juxta.FloatBox = function(element, options) {
+/**
+ * @class Modal dialog
+ * @param element
+ * @param options
+ */
+Juxta.Modal = function(element, options) {
 
 	/**
 	 * Settings
 	 * @type {Object}
 	 */
-	this.settings = {
+	this._settings = {
 		title: 'New window',
 		closable: true,
 		center: true
 	};
-
-	this.settings = $.extend({}, this.settings, options);
 
 
 	/**
@@ -25,7 +28,7 @@ Juxta.FloatBox = function(element, options) {
 	this.header =  this.container.find('h3');
 
 	if (!this.header.is('h3')) {
-		this.header = this.container.prepend('<h3>'+ this.settings.title + '</h3>').find('h3');
+		this.header = this.container.prepend('<h3>'+ this._settings.title + '</h3>').find('h3');
 	}
 
 
@@ -35,12 +38,14 @@ Juxta.FloatBox = function(element, options) {
 	 */
 	this.close = this.container.find('input[type=button].close');
 
+
+	$.extend(this._settings, options);
+
 	if (!this.close.is('input')) {
-		this.close = $('<input>').attr('type', 'button').addClass('close').insertAfter(this.header).attr('disabled', !this.settings.closable);
+		this.close = $('<input>').attr('type', 'button').addClass('close').insertAfter(this.header).attr('disabled', !this._settings.closable);
 	}
 
-
-	this.settings.title = this.header.html();
+	this._settings.title = this.header.html();
 
 	this.close.click($.proxy(this.hide, this));
 
@@ -49,19 +54,19 @@ Juxta.FloatBox = function(element, options) {
 	this.center();
 }
 
-Juxta.Lib.extend(Juxta.FloatBox, Juxta.Events);
+Juxta.Lib.extend(Juxta.Modal, Juxta.Events);
 
 /**
  * Show a float box
- * @param {} options
- * @param {} content
- * @return {Juxta.FloatBox}
+ * @param {Object} options
+ * @param {String} content
+ * @return {Juxta.Modal}
  */
-Juxta.FloatBox.prototype.show = function(options, content) {
+Juxta.Modal.prototype.show = function(options, content) {
 	//
 	this.trigger('before-show');
 
-	options = $.extend({}, this.settings, options);
+	options = $.extend({}, this._settings, options);
 	if (options.name) {
 		options.name = '<a href="">' + options.name + '</a>';
 	}
@@ -91,9 +96,9 @@ Juxta.FloatBox.prototype.show = function(options, content) {
 
 /**
  * Hide a float box
- * @return {Juxta.FloatBox}
+ * @return {Juxta.Modal}
  */
-Juxta.FloatBox.prototype.hide = function() {
+Juxta.Modal.prototype.hide = function() {
 	//
 	this.container.hide();
 	this.trigger('hide');
@@ -104,9 +109,9 @@ Juxta.FloatBox.prototype.hide = function() {
 
 /**
  * Center a box
- * @return {Juxta.FloatBox}
+ * @return {Juxta.Modal}
  */
-Juxta.FloatBox.prototype.center = function() {
+Juxta.Modal.prototype.center = function() {
 	//
 	var height = $(document.body).height(),
 		width = $(document.body).width(),
@@ -125,9 +130,11 @@ Juxta.FloatBox.prototype.center = function() {
 
 /**
  * Clear a box
- * @return {Juxta.FloatBox}
+ * @return {Juxta.Modal}
  */
-Juxta.FloatBox.prototype.clear = function() {
+Juxta.Modal.prototype.clear = function() {
+	//
 	this.container.find('> *:not(h3):not([type=button].close)').remove();
+
 	return this;
 }

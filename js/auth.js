@@ -1,9 +1,12 @@
 /**
- * @class Connect to.. window
+ * @class Connect to..
+ * @extends Juxta.Modal
+ * @param {jQuery} element
+ * @param {Object} options
  */
 Juxta.Auth = function(element, request) {
 
-	Juxta.Auth.prototype.constructor.call(this, element, {title: 'Connect to MySQL Server', closable: false});
+	Juxta.Modal.prototype.constructor.call(this, element, {title: 'Connect to MySQL Server', closable: false});
 
 	/**
 	 * @type {Object}
@@ -81,7 +84,7 @@ Juxta.Auth = function(element, request) {
 
 }
 
-Juxta.Lib.extend(Juxta.Auth, Juxta.FloatBox);
+Juxta.Lib.extend(Juxta.Auth, Juxta.Modal);
 
 /**
  * Show window
@@ -96,7 +99,7 @@ Juxta.Auth.prototype.show = function() {
 	this.submit.attr('disabled', false);
 	this.password.val(null);
 
-	Juxta.FloatBox.prototype.show.apply(this, arguments);
+	Juxta.Modal.prototype.show.apply(this, arguments);
 
 	if (this.form.find('[name=host]').val() && this.form.find('[name=user]').val()) {
 		this.password.focus();

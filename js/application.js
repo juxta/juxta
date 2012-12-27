@@ -13,19 +13,17 @@ Juxta.Application = function(element, options) {
 		maximized: false
 	}
 
-	this._settings = $.extend({}, this._settings, options);
+	$.extend(this._settings, options);
 
 
 	/**
 	 * @type {jQuery}
-	 * @private
 	 */
 	this._container = $(element);
 
 
 	/**
 	 * @type {Object}
-	 * @private
 	 */
 	this._menu = this.find('.menu');
 
@@ -33,7 +31,7 @@ Juxta.Application = function(element, options) {
 	/**
 	 * @type {jQuery}
 	 */
-	this._statusBar = this.find('.status');
+	this._status = this.find('.status');
 
 
 	if (this._settings.closable) {
@@ -43,15 +41,19 @@ Juxta.Application = function(element, options) {
 		this.find('.close').hide();
 	}
 
-	this.tune(this._settings);
+	this._applySettings(this._settings);
+
 }
 
 Juxta.Lib.extend(Juxta.Application, Juxta.Events);
 
 /**
+ * Apply settings to application
  * @param {Object} options
+ * @return {Juxta.Application}
  */
-Juxta.Application.prototype.tune = function(options) {
+Juxta.Application.prototype._applySettings = function(options) {
+	//
 	if ($.isPlainObject(options.header)) {
 		this.find('h1').html(
 			options.header.title + 
@@ -62,56 +64,7 @@ Juxta.Application.prototype.tune = function(options) {
 		this.find('h1').html(options.header);
 	}
 
-	this.setMenu(options.menu);
-}
-
-
-/**
- * Show application
- * @param {Object} options
- * @return {Juxta.Application}
- */
-Juxta.Application.prototype.show = function(options) {
-	//
-	if (options) {
-		this.tune($.extend({}, this._settings, options));
-	}
-
-	if (!this.is(':visible')) {
-		$('#applications .application').hide();
-		this._container.show();
-	}
-
-	if (this._settings.maximized) {
-		this.maximize();
-	} else {
-		this.restore();
-	}
-
-	return this;
-}
-
-
-/**
- * Show application and trigger event 'ready'
- * @param {Object} options
- * @return {Juxta.Application}
- */
-Juxta.Application.prototype.ready = function(options) {
-	//
-	this.trigger('ready');
-	this.show();
-
-	return this;
-}
-
-
-/**
- * Hide application
- * @return {Juxta.Application}
- */
-Juxta.Application.prototype.hide = function() {
-	this._container.hide();
+	this._setMenu(options.menu);
 
 	return this;
 }
@@ -122,13 +75,14 @@ Juxta.Application.prototype.hide = function() {
  * @param {Object} menu
  * @return {Juxta.Application}
  */
-Juxta.Application.prototype.setMenu = function(menu) {
+Juxta.Application.prototype._setMenu = function(menu) {
 	//
-	var that = this;
-
 	this._menu.empty();
 
 	if ($.isPlainObject(menu)) {
+		//
+		var that = this;
+
 		$.each(menu, function(title, action) {
 			//
 			var item = $('<a>')
@@ -156,6 +110,55 @@ Juxta.Application.prototype.setMenu = function(menu) {
 
 	return this;
 }
+
+
+/**
+ * Show application
+ * @param {Object} options
+ * @return {Juxta.Application}
+ */
+Juxta.Application.prototype.show = function(options) {
+	//
+	if (options) {
+		this._applySettings($.extend({}, this._settings, options));
+	}
+
+	if (!this.is(':visible')) {
+		$('#applications .application').hide();
+		this._container.show();
+	}
+
+	if (this._settings.maximized) {
+		this.maximize();
+	} else {
+		this.restore();
+	}
+
+	return this;
+}
+
+
+/**
+ * Show application and trigger event 'ready'
+ * @param {Object} options
+ * @return {Juxta.Application}
+ */
+Juxta.Application.prototype.ready = function(options) {
+	//
+	return this.trigger('ready').show();
+}
+
+
+/**
+ * Hide application
+ * @return {Juxta.Application}
+ */
+Juxta.Application.prototype.hide = function() {
+	this._container.hide();
+
+	return this;
+}
+
 
 
 /**
@@ -187,6 +190,7 @@ Juxta.Application.prototype.restore = function() {
 /**
  * Check container element against a selector
  * @return {Object}
+ * @todo Move to abstract Juxta.Widget
  */
 Juxta.Application.prototype.is = function() {
 	return $.fn.is.apply(this._container, arguments);
@@ -196,6 +200,7 @@ Juxta.Application.prototype.is = function() {
 /**
  * Find elements by selectors in current container
  * @return {Object}
+ * @todo Move to abstract Juxta.Widget
  */
 Juxta.Application.prototype.find = function() {
 	return $.fn.find.apply(this._container, arguments);

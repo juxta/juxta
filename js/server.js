@@ -76,7 +76,7 @@ Juxta.Server.prototype.show = function(options) {
 Juxta.Server.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
 	if (that.find('.grid .body').is(':visible')) {
-		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._statusBar.height() - 24);
+		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._status.height() - 24);
 	} else if(that.find('.proper').is(':visible')) {
 		$('#server-info .proper').height($('#applications').height() - $('#server-info .proper').get(0).offsetTop - 32);
 	}

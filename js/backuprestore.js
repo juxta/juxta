@@ -24,8 +24,9 @@ Juxta.Lib.extend(Juxta.BackupRestore, Juxta.Application);
  * @return {Juxta.BackupRestore}
  */
 Juxta.BackupRestore.prototype.show = function(options) {
-
+	//
 	Juxta.Application.prototype.show.apply(this, arguments);
+
 	this.stretch();
 
 	var params = {
@@ -48,6 +49,6 @@ Juxta.BackupRestore.prototype.show = function(options) {
 Juxta.BackupRestore.prototype.stretch = function(event) {
 	var that = event && event.data.that || this;
 	if (that.is(':visible')) {
-		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._statusBar.height() - 24);
+		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._status.height() - 24);
 	}
 }

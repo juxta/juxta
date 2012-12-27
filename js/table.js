@@ -10,20 +10,19 @@ Juxta.Table = function(element, request) {
 	/**
 	 * @type {Juxta.Request}
 	 */
-	this.request = request;
+	this._request = request;
 
 
 	/**
 	 * @type {Juxta.Grid2}
 	 */
-	this.columns = new Juxta.Grid2(this.find('.grid2'));
+	this._columns = new Juxta.Grid2(this.find('.grid2'));
+
 
 	$(window).bind('resize', {that: this}, this.stretch);
-
 }
 
 Juxta.Lib.extend(Juxta.Table, Juxta.Application);
-
 
 /**
  * Show editor
@@ -43,18 +42,9 @@ Juxta.Table.prototype.show = function(options) {
  * @param {Event} event
  */
 Juxta.Table.prototype.stretch = function(event) {
-	/*var that = event && event.data.that || this;
-	if (that.is(':visible')) {
-		if ($('#applications').height() < 500) {
-			that.find('.grid.indexes .body').height(72);
-		} else{
-			that.find('.grid.indexes .body').height($('#applications').height() * 0.225);
-		}
-		that.find('.grid.columns .body').height($('#applications').height() - that.find('.grid.columns .body').position().top - that._statusBar.height() - 24 - that.find('.grid.indexes')[0].offsetHeight - 54);
-	}*/
 	var that = event && event.data.that || this;
 	if (that.is(':visible')) {
-		that.columns.setHeight($('#applications').height() - that.find('.grid2-body').position().top - that._statusBar.height() - 24);
+		that._columns.setHeight($('#applications').height() - that.find('.grid2-body').position().top - that._status.height() - 24);
 	}
 }
 
@@ -70,7 +60,7 @@ Juxta.Table.prototype.edit = function(params) {
 		menu: {'Browse Table': {href: '#' + params.from + '/' + params.table + '/browse'}}
 	});
 
-	return this.requestShowTable(params);
+	return this._requestShowTable(params);
 }
 
 
@@ -79,7 +69,7 @@ Juxta.Table.prototype.edit = function(params) {
  * @param {Object} params
  * @return {jqXHR}
  */
-Juxta.Table.prototype.requestShowTable = function(params) {
+Juxta.Table.prototype._requestShowTable = function(params) {
 	//
 	var that = this,
 		query = {show: 'table', table: params.table, from: params.from},
@@ -126,19 +116,19 @@ Juxta.Table.prototype.requestShowTable = function(params) {
 		return template;
 	}
 
-	this.columns.prepare({
+	this._columns.prepare({
 		columns: [{name: 'name', title: 'Column'}, 'Type', {name: 'is_null', title: 'NULL', 'hint': 'Allow NULL'}, 'Attributes', 'Default', 'Options'],
 		row: row,
 		actions: null
 	});
 
-	return this.request.send($.extend(
+	return this._request.send($.extend(
 		{},
 		{
 			action: query,
 			context: this,
 			success: function(response) {
-				that.responseShowTable(response, query);
+				that._responseShowTable(response, query);
 			}
 		},
 		this._settings,
@@ -148,9 +138,8 @@ Juxta.Table.prototype.requestShowTable = function(params) {
 
 
 
-Juxta.Table.prototype.responseShowTable = function(response, query) {
+Juxta.Table.prototype._responseShowTable = function(response, query) {
 	//
-	this.columns.fill(response.columns);
-
+	this._columns.fill(response.columns);
 	this.ready();
 }

@@ -1,12 +1,12 @@
 /**
  * @class Create Database
- * @extends Juxta.FloatBox
+ * @extends Juxta.Modal
  * @param {jQuery} element
  * @param {Object} options
  */
 Juxta.CreateDatabase = function(element, request) {
 
-	Juxta.Auth.prototype.constructor.call(this, element);
+	Juxta.Modal.prototype.constructor.call(this, element);
 
 	/**
 	 * @type {Juxta.Request}
@@ -40,16 +40,16 @@ Juxta.CreateDatabase = function(element, request) {
 	});
 }
 
-Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.FloatBox);
+Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.Modal);
 
 /**
  * Show dialog window
  * @param {Object} options
- * @return {Juxta.FloatBox}
+ * @return {Juxta.CreateDatabase}
  */
 Juxta.CreateDatabase.prototype.show = function(options) {
 	//this.requestGetCollations();
-	Juxta.FloatBox.prototype.show.apply(this, arguments);
+	Juxta.Modal.prototype.show.apply(this, arguments);
 
 	this.submit.attr('disabled', false);
 	this.container.find('input[type=text]').focus().val(null);
@@ -79,7 +79,7 @@ Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
 /**
  * Response
  * @param {Object} response
- * @return {Juxta.FloatBox}
+ * @return {Juxta.CreateDatabase}
  */
 Juxta.CreateDatabase.prototype.responseCreateDatabase = function(response) {
 	//

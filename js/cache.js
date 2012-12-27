@@ -11,7 +11,7 @@ Juxta.Cache = function() {
 	/**
 	 * @type {Object}
 	 */
-	this.cache = {};
+	this._cache = {};
 
 
 	/**
@@ -20,9 +20,9 @@ Juxta.Cache = function() {
 	this.get = function(key) {
 		var timestamp = (new Date()).getTime();
 
-		if (this.cache[key] && this.cache[key]['expire'] >= timestamp) {
-			return this.cache[key]['data'];
-		} else if (this.cache[key]) {
+		if (this._cache[key] && this._cache[key]['expire'] >= timestamp) {
+			return this._cache[key]['data'];
+		} else if (this._cache[key]) {
 			this.flush(key);
 			return undefined;
 		} else {
@@ -50,7 +50,7 @@ Juxta.Cache = function() {
 		}
 
 		if (expire) {
-			this.cache[key] = {data: data, expire: expire};
+			this._cache[key] = {data: data, expire: expire};
 			if (index) {
 				this.index(key, index);
 			}
@@ -67,9 +67,9 @@ Juxta.Cache = function() {
 	 */
 	this.flush = function(key) {
 		if (key) {
-			delete this.cache[key];
+			delete this._cache[key];
 		} else {
-			this.cache = {};
+			this._cache = {};
 		}
 	}
 
@@ -80,8 +80,8 @@ Juxta.Cache = function() {
 	 * @param {Object} params
 	 */
 	this.index = function(key, params) {
-		if (this.cache[key]) {
-			var data = this.cache[key]['data'],
+		if (this._cache[key]) {
+			var data = this._cache[key]['data'],
 				path = params.path;
 			if (path && typeof path !== 'object') {
 				data = data[path];
@@ -93,20 +93,20 @@ Juxta.Cache = function() {
 				}
 			}
 
-			if (this.cache[key]['index'] === undefined) {
-				this.cache[key]['index'] = {};
+			if (this._cache[key]['index'] === undefined) {
+				this._cache[key]['index'] = {};
 			}
 
 			if (params.name && params.field !== undefined) {
 				var field = params.field,
 					index = params.name;
-				this.cache[key]['index'][index] = {};
+				this._cache[key]['index'][index] = {};
 				for (var row in data) {
 					if (data[row][field] !== undefined) {
 						if (path !== undefined) {
-							this.cache[key]['index'][index][data[row][field]] = [row, path];
+							this._cache[key]['index'][index][data[row][field]] = [row, path];
 						} else {
-							this.cache[key]['index'][index][data[row][field]] = row;
+							this._cache[key]['index'][index][data[row][field]] = row;
 						}
 					}
 				}
@@ -121,17 +121,17 @@ Juxta.Cache = function() {
 	 * @params {String} search
 	 */
 	this.search = function(key, search) {
-		if (this.cache[key]['index']) {
+		if (this._cache[key]['index']) {
 			if (typeof search === 'object') {
 				for (var index in search) break;
-				if (index && this.cache[key]['index'][index] && this.cache[key]['index'][index][search[index]]) {
-					if (typeof this.cache[key]['index'][index][search[index]] === 'object') {
-						var path = this.cache[key]['index'][index][search[index]][1],
-							row = this.cache[key]['index'][index][search[index]][0];
+				if (index && this._cache[key]['index'][index] && this._cache[key]['index'][index][search[index]]) {
+					if (typeof this._cache[key]['index'][index][search[index]] === 'object') {
+						var path = this._cache[key]['index'][index][search[index]][1],
+							row = this._cache[key]['index'][index][search[index]][0];
 					} else {
-						var row = this.cache[key]['index'][index][search[index]][0];
+						var row = this._cache[key]['index'][index][search[index]][0];
 					}
-					var data = this.cache[key]['data'];
+					var data = this._cache[key]['data'];
 					if (path) {
 						for (var i in path) {
 							if (data[path[i]]) {

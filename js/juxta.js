@@ -9,7 +9,7 @@
 /**
  * @class Juxta base application
  */
-Juxta = function() {
+var Juxta = function() {
 
 	var that = this;
 
@@ -17,7 +17,7 @@ Juxta = function() {
 	 * Appliaction state
 	 * @type {String}
 	 */
-	this.state = 'default';
+	this.state = null;
 
 
 	/**
@@ -128,9 +128,9 @@ Juxta = function() {
 
 	/**
 	 * Float box
-	 * @type {Juxta.FloatBox}
+	 * @type {Juxta.Modal}
 	 */
-	this.messageBox = new Juxta.FloatBox('#message');
+	this.messageBox = new Juxta.Modal('#message');
 
 
 	/**
@@ -228,9 +228,8 @@ Juxta.prototype = {
 		//
 		var hash = window.location.hash.replace(/#/g, ''),
 			params = hash.split('/'),
-			action = params.pop();
-
-		var that = this;
+			action = params.pop(),
+			that = this;
 
 		if (hash != this.state) {
 			switch (action) {
