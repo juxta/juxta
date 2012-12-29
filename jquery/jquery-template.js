@@ -60,4 +60,12 @@
 		}
 	}
 
+	jQuery.template.number = function(number) {
+		if (number) {
+			return Juxta.Lib.Number.format(number, 0, ',', '&thinsp;');
+		} else {
+			return number;
+		}
+	}
+
 })(jQuery);
