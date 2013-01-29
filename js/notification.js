@@ -28,7 +28,7 @@ Juxta.Notification = function() {
 		hide: true,
 		delay: 3000,
 		hideSpeed: 300
-	}
+	};
 
 
 	/**
@@ -39,9 +39,9 @@ Juxta.Notification = function() {
 		delay: 250,
 		hideSpeed: 100,
 		type: 'loading'
-	}
+	};
 
-}
+};
 
 
 /**
@@ -50,24 +50,29 @@ Juxta.Notification = function() {
  * @return {jQuery}
  */
 Juxta.Notification.prototype.show = function(message, options) {
-	var that = this;
+	//
+	var that = this, notify;
+
 	options = $.extend({}, that.settings, options);
+
 	if (options.fast) {
 		this.container.empty();
 	}
+
 	if (options.element) {
-		var notify = options.element;
+		notify = options.element;
 	} else {
-		var notify = $('<li><span></span></li>').appendTo(this.container);
+		notify = $('<li><span></span></li>').appendTo(this.container);
 	}
+
 	notify.show().find('span').text(message);
+
 	if (options.hide) {
 		this.hide(notify, options);
 	}
-	notify.find('span').addClass(options.type);
 
-	return notify;
-}
+	return notify.find('span').addClass(options.type);
+};
 
 
 /**
@@ -83,7 +88,7 @@ Juxta.Notification.prototype.hide = function(element, options) {
 		this.loads = 0;
 		this.container.empty();
 	}
-}
+};
 
 
 /**
@@ -94,11 +99,11 @@ Juxta.Notification.prototype.loading = function(message, options) {
 	var that = this;
 	options = $.extend({}, that.loadingSettings, options);
 	if (message === false && this.load) {
-		if (--this.loads == 0) {
+		if (--this.loads === 0) {
 			this.hide(this.load, options);
 		}
 	} else if(message !== false) {
-		if (this.loads++ == 0) {
+		if (this.loads++ === 0) {
 			this.container.empty();
 			message = message || 'Loading..'; 
 			if (this.load) {
@@ -107,4 +112,4 @@ Juxta.Notification.prototype.loading = function(message, options) {
 			this.load = this.show(message, options);
 		}
 	}
-}
+};

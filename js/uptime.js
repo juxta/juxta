@@ -1,3 +1,5 @@
+/*global setInterval, clearInterval */
+
 /**
  * Counts the time since the server was started
  * @class Server uptime
@@ -38,7 +40,7 @@ Juxta.Uptime = function(element) {
 	/**
 	 *  Timer
 	 */
-	var timer = function() {
+	function timer(){
 		//
 		time++;
 
@@ -50,6 +52,7 @@ Juxta.Uptime = function(element) {
 
 		container.text(Juxta.Lib.Date.uptime(time * 1000));
 	}
+
 
 	/**
 	 * Start timer
@@ -66,7 +69,8 @@ Juxta.Uptime = function(element) {
 		startTime = new Date(Date.now() - uptime * 1000);
 		timer();
 		interval = setInterval(function() { timer.call(that); }, 1000);
-	}
+	};
+
 
 	/**
 	 * Stop timer
@@ -74,7 +78,8 @@ Juxta.Uptime = function(element) {
 	 */
 	this.stop = function () {
 		clearInterval(interval);
-	}
+	};
+
 
 	/**
 	 * Returns start time
@@ -83,6 +88,6 @@ Juxta.Uptime = function(element) {
 	 */
 	this.getStartTime = function() {
 		return startTime;
-	}
+	};
 
-}
+};

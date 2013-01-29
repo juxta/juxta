@@ -1,3 +1,5 @@
+/*global history */
+
 /**
  * @class Application base class
  * @param {jQuery|String} element
@@ -11,7 +13,7 @@ Juxta.Application = function(element, options) {
 	this._settings = {
 		closable: false,
 		maximized: false
-	}
+	};
 
 	$.extend(this._settings, options);
 
@@ -43,7 +45,7 @@ Juxta.Application = function(element, options) {
 
 	this._applySettings(this._settings);
 
-}
+};
 
 Juxta.Lib.extend(Juxta.Application, Juxta.Events);
 
@@ -67,7 +69,7 @@ Juxta.Application.prototype._applySettings = function(options) {
 	this._setMenu(options.menu);
 
 	return this;
-}
+};
 
 
 /**
@@ -109,7 +111,7 @@ Juxta.Application.prototype._setMenu = function(menu) {
 	}
 
 	return this;
-}
+};
 
 
 /**
@@ -135,18 +137,17 @@ Juxta.Application.prototype.show = function(options) {
 	}
 
 	return this;
-}
+};
 
 
 /**
  * Show application and trigger event 'ready'
- * @param {Object} options
  * @return {Juxta.Application}
  */
-Juxta.Application.prototype.ready = function(options) {
+Juxta.Application.prototype.ready = function() {
 	//
 	return this.trigger('ready').show();
-}
+};
 
 
 /**
@@ -157,7 +158,7 @@ Juxta.Application.prototype.hide = function() {
 	this._container.hide();
 
 	return this;
-}
+};
 
 
 
@@ -170,7 +171,7 @@ Juxta.Application.prototype.maximize = function() {
 	$('#applications').addClass('maximized');
 
 	return this;
-}
+};
 
 
 /**
@@ -184,7 +185,7 @@ Juxta.Application.prototype.restore = function() {
 	}
 
 	return this;
-}
+};
 
 
 /**
@@ -194,7 +195,7 @@ Juxta.Application.prototype.restore = function() {
  */
 Juxta.Application.prototype.is = function() {
 	return $.fn.is.apply(this._container, arguments);
-}
+};
 
 
 /**
@@ -204,4 +205,4 @@ Juxta.Application.prototype.is = function() {
  */
 Juxta.Application.prototype.find = function() {
 	return $.fn.find.apply(this._container, arguments);
-}
+};

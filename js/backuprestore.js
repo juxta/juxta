@@ -1,3 +1,5 @@
+/*global window */
+
 /**
  * @class Backup and Restore application
  * @extends Juxta.Application
@@ -14,7 +16,7 @@ Juxta.BackupRestore = function(element) {
 	this.grid = new Juxta.TreeGrid(this.find('.grid'));
 
 	$(window).bind('resize', {that: this}, this.stretch);
-}
+};
 
 Juxta.Lib.extend(Juxta.BackupRestore, Juxta.Application);
 
@@ -23,7 +25,7 @@ Juxta.Lib.extend(Juxta.BackupRestore, Juxta.Application);
  * @param {Object} options
  * @return {Juxta.BackupRestore}
  */
-Juxta.BackupRestore.prototype.show = function(options) {
+Juxta.BackupRestore.prototype.show = function() {
 	//
 	Juxta.Application.prototype.show.apply(this, arguments);
 
@@ -39,7 +41,7 @@ Juxta.BackupRestore.prototype.show = function(options) {
 	this.grid.fill(data, params);
 
 	return this;
-}
+};
 
 
 /**
@@ -51,4 +53,4 @@ Juxta.BackupRestore.prototype.stretch = function(event) {
 	if (that.is(':visible')) {
 		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._status.height() - 24);
 	}
-}
+};

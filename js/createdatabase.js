@@ -38,7 +38,7 @@ Juxta.CreateDatabase = function(element, request) {
 		that.requestCreateDatabase();
 		return false;
 	});
-}
+};
 
 Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.Modal);
 
@@ -47,7 +47,7 @@ Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.Modal);
  * @param {Object} options
  * @return {Juxta.CreateDatabase}
  */
-Juxta.CreateDatabase.prototype.show = function(options) {
+Juxta.CreateDatabase.prototype.show = function() {
 	//this.requestGetCollations();
 	Juxta.Modal.prototype.show.apply(this, arguments);
 
@@ -55,7 +55,7 @@ Juxta.CreateDatabase.prototype.show = function(options) {
 	this.container.find('input[type=text]').focus().val(null);
 
 	return this;
-}
+};
 
 
 /**
@@ -73,7 +73,7 @@ Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
 		error: function() { this.submit.attr('disabled', false); },
 		context: this
 	});
-}
+};
 
 
 /**
@@ -81,13 +81,13 @@ Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
  * @param {Object} response
  * @return {Juxta.CreateDatabase}
  */
-Juxta.CreateDatabase.prototype.responseCreateDatabase = function(response) {
+Juxta.CreateDatabase.prototype.responseCreateDatabase = function() {
 	//
 	this.container.hide();
 	this.trigger('created');
 
 	return this;
-}
+};
 
 
 /**
@@ -102,7 +102,7 @@ Juxta.CreateDatabase.prototype.requestGetCollations = function() {
 		context: this,
 		success: this.responseGetCollations
 	});
-}
+};
 
 
 /**
@@ -127,4 +127,4 @@ Juxta.CreateDatabase.prototype.responseGetCollations = function(response) {
 			that.collations.append($charset);
 		});
 	}
-}
+};

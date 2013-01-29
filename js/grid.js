@@ -2,8 +2,10 @@
  * @class Simple grid
  */
 Juxta.Grid = function(grid) {
+
 	this.init(grid);
-}
+
+};
 
 Juxta.Grid.prototype = {
 	statistics: {
@@ -29,7 +31,7 @@ Juxta.Grid.prototype = {
 		this.$bodyContainer = this.$container.find('.body');
 		this.$bodyHead = this.$bodyContainer.find('table thead');
 		this.$body = this.$bodyContainer.find('table tbody');
-		this.$notFound = this.$bodyContainer.find('.not-found')
+		this.$notFound = this.$bodyContainer.find('.not-found');
 		this.head = this.$container.find('.head');
 		this.$actions = this.$container.find('.actions');
 		this.$context = this.$container.find('.context');
@@ -57,7 +59,7 @@ Juxta.Grid.prototype = {
 			if (that.statistics.all > 0 && that.statistics.all == that.statistics.selected) {
 				that.$actions.find('.all').addClass('active');
 				that.$actions.find('.nothing').removeClass('active');
-			} else if(that.statistics.selected == 0) {
+			} else if(that.statistics.selected === 0) {
 				that.$actions.find('.all').removeClass('active');
 				that.$actions.find('.nothing').addClass('active');
 			} else{
@@ -105,12 +107,12 @@ Juxta.Grid.prototype = {
 			var that = this;
 
 			this.$actions.empty();
-			if (template['actions']) {
-				this.$actions.html(template['actions']);
+			if (template.actions) {
+				this.$actions.html(template.actions);
 			}
 
 			// Empty grid header and body
-			if (template['head']) {
+			if (template.head) {
 				this.empty();
 				this.head.empty().show();
 				this.$bodyContainer.show();
@@ -122,9 +124,9 @@ Juxta.Grid.prototype = {
 			}
 
 			// Make grid header
-			if (template['head']) {
+			if (template.head) {
 				this.head.empty();
-				$.each(template['head'], function(i, value) {
+				$.each(template.head, function(i, value) {
 					that.head.append('<li class="' + i + '">' + value + '</li>');
 				});
 			}
@@ -193,7 +195,7 @@ Juxta.Grid.prototype = {
 				});
 				// @todo Rewrite this
 				if (params.from) {
-					$.extend(forTemplate, {database: params['from']});
+					$.extend(forTemplate, {database: params.from});
 				}
 
 				var $q = $($.template(template, forTemplate)).appendTo(that.$body);
@@ -203,10 +205,11 @@ Juxta.Grid.prototype = {
 
 			// Make context menu
 			if (params.contextMenu && this.contextMenu) {
+				var menu;
 				if (params.from) {
-					var menu = $.template(params.contextMenu, {database: params.from});
+					menu = $.template(params.contextMenu, {database: params.from});
 				} else {
-					var menu = params.contextMenu;
+					menu = params.contextMenu;
 				}
 				this.contextMenu.load(menu);
 			}
@@ -326,4 +329,4 @@ Juxta.Grid.prototype = {
 
 		that.$body.trigger('change');
 	}
-}
+};

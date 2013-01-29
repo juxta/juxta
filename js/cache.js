@@ -20,15 +20,15 @@ Juxta.Cache = function() {
 	this.get = function(key) {
 		var timestamp = (new Date()).getTime();
 
-		if (this._cache[key] && this._cache[key]['expire'] >= timestamp) {
-			return this._cache[key]['data'];
+		if (this._cache[key] && this._cache[key].expire >= timestamp) {
+			return this._cache[key].data;
 		} else if (this._cache[key]) {
 			this.flush(key);
 			return undefined;
 		} else {
 			return undefined;
 		}
-	}
+	};
 
 
 	/**
@@ -58,7 +58,7 @@ Juxta.Cache = function() {
 		} else {
 			return false;
 		}
-	}
+	};
 
 
 	/**
@@ -71,7 +71,7 @@ Juxta.Cache = function() {
 		} else {
 			this._cache = {};
 		}
-	}
+	};
 
 
 	/**
@@ -81,7 +81,7 @@ Juxta.Cache = function() {
 	 */
 	this.index = function(key, params) {
 		if (this._cache[key]) {
-			var data = this._cache[key]['data'],
+			var data = this._cache[key].data,
 				path = params.path;
 			if (path && typeof path !== 'object') {
 				data = data[path];
@@ -93,26 +93,26 @@ Juxta.Cache = function() {
 				}
 			}
 
-			if (this._cache[key]['index'] === undefined) {
-				this._cache[key]['index'] = {};
+			if (this._cache[key].index === undefined) {
+				this._cache[key].index = {};
 			}
 
 			if (params.name && params.field !== undefined) {
 				var field = params.field,
 					index = params.name;
-				this._cache[key]['index'][index] = {};
+				this._cache[key].index[index] = {};
 				for (var row in data) {
 					if (data[row][field] !== undefined) {
 						if (path !== undefined) {
-							this._cache[key]['index'][index][data[row][field]] = [row, path];
+							this._cache[key].index[index][data[row][field]] = [row, path];
 						} else {
-							this._cache[key]['index'][index][data[row][field]] = row;
+							this._cache[key].index[index][data[row][field]] = row;
 						}
 					}
 				}
 			}
 		}
-	}
+	};
 
 
 	/**
@@ -121,15 +121,15 @@ Juxta.Cache = function() {
 	 * @params {String} search
 	 */
 	this.search = function(key, search) {
-		if (this._cache[key]['index']) {
+		if (this._cache[key].index) {
 			if (typeof search === 'object') {
 				for (var index in search) break;
-				if (index && this._cache[key]['index'][index] && this._cache[key]['index'][index][search[index]]) {
-					if (typeof this._cache[key]['index'][index][search[index]] === 'object') {
-						var path = this._cache[key]['index'][index][search[index]][1],
-							row = this._cache[key]['index'][index][search[index]][0];
+				if (index && this._cache[key].index[index] && this._cache[key].index[index][search[index]]) {
+					if (typeof this._cache[key].index[index][search[index]] === 'object') {
+						var path = this._cache[key].index[index][search[index]][1],
+							row = this._cache[key].index[index][search[index]][0];
 					} else {
-						var row = this._cache[key]['index'][index][search[index]][0];
+						var row = this._cache[key].index[index][search[index]][0];
 					}
 					var data = this._cache[key]['data'];
 					if (path) {
@@ -145,6 +145,6 @@ Juxta.Cache = function() {
 				}
 			}
 		}
-	}
+	};
 
-}
+};

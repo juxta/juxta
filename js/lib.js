@@ -1,8 +1,7 @@
 /**
  * @namespace Utility library
  */
-Juxta.Lib = {
-}
+Juxta.Lib = {};
 
 /**
  * Extend object
@@ -15,8 +14,8 @@ Juxta.Lib.extend = function (child, parent) {
 	var F = function() {};
 	F.prototype = parent.prototype;
 	F.prototype.constructor = parent;
-	return child.prototype = new F;
-}
+	return child.prototype = new F();
+};
 
 
 /**
@@ -48,7 +47,7 @@ Juxta.Lib.Date = (function() {
 			minute: '%-M minute',
 			less: '1 minute'
 		}
-	}
+	};
 
 	//
 	function padLeft(number, resultLength, symbol) {
@@ -111,8 +110,10 @@ Juxta.Lib.Date = (function() {
 				case 'e':
 					flag = '_';
 					width = 2;
+					/* falls through */
 				case 'd' :
 					return padLeft(day, flag == '-' ? 0 : width || 2, flag == '_' ? ' ' : '0');
+
 				// Day of the year
 				case 'j':
 					t1 = new Date(year, month, day);
@@ -125,6 +126,7 @@ Juxta.Lib.Date = (function() {
 				case 'k':
 					flag = '_';
 					return padLeft(hours, flag == '-' ? 0 : width || 2, flag == '_' ? ' ' : '0');
+
 				// 12-hour
 				case 'I':
 					return padLeft(hours % 12 || 12, flag == '-' ? 0 : width || 2, flag == '_' ? ' ' : '0');
@@ -143,6 +145,7 @@ Juxta.Lib.Date = (function() {
 				// AM/PM
 				case 'P' :
 					flag = '^';
+					/* falls through */
 				case 'p':
 					var ampm = typeof midday == 'function' ? midday(hours, minutes) : (hours > 11 ? 'pm' : 'am');
 					if (flag === '^') {
@@ -265,7 +268,7 @@ Juxta.Lib.Date = (function() {
 		format: strftime,
 		pretty: pretty,
 		uptime: uptime
-	}
+	};
 
 })();
 
@@ -314,6 +317,6 @@ Juxta.Lib.Number = (function() {
 
 	return {
 		format: format
-	}
+	};
 
 })();

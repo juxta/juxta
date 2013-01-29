@@ -1,3 +1,5 @@
+/*global window, confirm, Jux */
+
 /**
  * @class Explorer
  * @extends Juxta.Application
@@ -232,7 +234,7 @@ Juxta.Explorer = function(element, request) {
 					'trigger': 'Trigger',
 					'trigger-table': 'Table',
 					'trigger-event': 'Event',
-					'trigger-definer': 'Definer',
+					'trigger-definer': 'Definer'
 				},
 				'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
@@ -240,9 +242,9 @@ Juxta.Explorer = function(element, request) {
 				'contextMenu': '<li onclick=" Jux.explorer.edit({trigger: Jux.explorer._grid.contextMenu.value.attr(\'name\'), from: Jux.explorer._grid.from})">Edit</li><li class="drop" onclick="Jux.drop({drop: \'trigger\', item: \'trigger\', trigger: Jux.explorer._grid.contextMenu.value.attr(\'name\'), from: Jux.explorer._grid.from});">Drop</li><li>Properties</li>'
 			}
 		}
-	}
+	};
 
-}
+};
 
 Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
 
@@ -250,13 +252,13 @@ Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
  * Show explorer
  * @param {Object} options
  */
-Juxta.Explorer.prototype.show = function(options) {
+Juxta.Explorer.prototype.show = function() {
 	//
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -269,7 +271,7 @@ Juxta.Explorer.prototype.stretch = function(event) {
 		// @todo Remove hardcoded number
 		that._grid.height($('#applications').height() - that.find('.grid .body').position().top - that._status.height() - 24);
 	}
-}
+};
 
 
 /**
@@ -285,7 +287,7 @@ Juxta.Explorer.prototype._prepare = function(template) {
 	} else {
 		return false;
 	}
-}
+};
 
 
 /**
@@ -294,7 +296,7 @@ Juxta.Explorer.prototype._prepare = function(template) {
  */
 Juxta.Explorer.prototype.explore = function(params) {
 	return this._requestExplore(params);
-}
+};
 
 
 /**
@@ -302,10 +304,10 @@ Juxta.Explorer.prototype.explore = function(params) {
  * @param {Object} params
  */
 Juxta.Explorer.prototype._requestExplore = function(params) {
-	if (this._settings.templates[params.show]['head']['header']['from'] === null) {
-		this._settings.templates[params.show]['head']['header']['from'] = params.from;
+	if (this._settings.templates[params.show].head.header.from === null) {
+		this._settings.templates[params.show].head.header.from = params.from;
 	}
-	this.show(this._settings.templates[params.show]['head']);
+	this.show(this._settings.templates[params.show].head);
 	// Extend request options
 	if (this._settings.templates[params.show].query) {
 		params = $.extend({}, this._settings.templates[params.show].query, params);
@@ -333,7 +335,7 @@ Juxta.Explorer.prototype._requestExplore = function(params) {
 			options
 		));
 	}
-}
+};
 
 
 /**
@@ -349,7 +351,7 @@ Juxta.Explorer.prototype._responseExplore = function(response) {
 		delete params.data;
 		this._grid.fill(response.data, params);
 	}
-}
+};
 
 
 /**
@@ -391,7 +393,7 @@ Juxta.Explorer.prototype.drop = function(params) {
 	if (confirm(message + '?')) {
 		this._requestDrop(params);
 	}
-}
+};
 
 
 /**
@@ -404,7 +406,7 @@ Juxta.Explorer.prototype._requestDrop = function(params) {
 
 	//
 	if (params.from) {
-		action.from = params.from
+		action.from = params.from;
 	}
 	data[params.drop] = params[params.drop];
 
@@ -415,7 +417,7 @@ Juxta.Explorer.prototype._requestDrop = function(params) {
 		error: this._responseDrop,
 		context: this
 	});
-}
+};
 
 
 /**
@@ -439,7 +441,7 @@ Juxta.Explorer.prototype._responseDrop = function(response) {
 
 	// Flush last cached response
 	this._request.cache.flush(this._cacheKey);
-}
+};
 
 
 /**
@@ -452,17 +454,17 @@ Juxta.Explorer.prototype.properties = function(params) {
 	if (params.database) {
 		//
 		return this._requestProperties(
-			query = {show: 'properties', database: params.database},
+			{show: 'properties', database: params.database},
 			this._responseDatabaseProperties);
 
 	} else if (params.table) {
 		//
 		return this._requestProperties(
-			query = {show: 'properties', table: params.table, from: params.from},
+			{show: 'properties', table: params.table, from: params.from},
 			this._responseTableProperties);
 
 	}
-}
+};
 
 
 /**
@@ -474,7 +476,7 @@ Juxta.Explorer.prototype.properties = function(params) {
 Juxta.Explorer.prototype._requestProperties = function(query, callback) {
 	//
 	return this._request.send({action: query, success: callback, context: this});
-}
+};
 
 
 /**
@@ -487,7 +489,7 @@ Juxta.Explorer.prototype._responseDatabaseProperties = function(response) {
 		$.template($('#database-properties').html(), response.properties),
 		{title: 'Database {name}', name: response.properties.name}
 	);
-}
+};
 
 
 /**
@@ -500,7 +502,7 @@ Juxta.Explorer.prototype._responseTableProperties = function(response) {
 		$.template($('#table-properties').html(), response.properties),
 		{title: 'Table {name}', name: response.properties.name}
 	);
-}
+};
 
 
 /**
@@ -508,16 +510,17 @@ Juxta.Explorer.prototype._responseTableProperties = function(response) {
  * @param {Object} params
  */
 Juxta.Explorer.prototype.kill = function(params) {
+	var message;
 	if (params.processes.length === 1) {
-		var message = 'Kill process ' + params.processes;
+		message = 'Kill process ' + params.processes;
 	} else {
-		var message = 'Kill ' + params.processes.length;
+		message = 'Kill ' + params.processes.length;
 	}
 
 	if (confirm(message + '?')) {
 		this._requestKill(params);
 	}
-}
+};
 
 
 /**
@@ -532,7 +535,7 @@ Juxta.Explorer.prototype._requestKill = function(params) {
 		error: this._responseKill,
 		context: this
 	});
-}
+};
 
 
 /**
@@ -542,7 +545,7 @@ Juxta.Explorer.prototype._requestKill = function(params) {
 Juxta.Explorer.prototype._responseKill = function(response) {
 	this._grid.deselect();
 	this._grid.remove(response.killed);
-}
+};
 
 
 /**
@@ -551,4 +554,4 @@ Juxta.Explorer.prototype._responseKill = function(response) {
  */
 Juxta.Explorer.prototype.edit = function(params) {
 	this._routineEditor.edit(params);
-}
+};

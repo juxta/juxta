@@ -1,3 +1,5 @@
+/*global window */
+
 /**
  * @class Data browser
  * @extends Juxta.Application
@@ -15,7 +17,7 @@ Juxta.Browser = function(element, request) {
 	this.options = {
 		limit: 50,
 		sqlEditorHeight: 100
-	}
+	};
 
 
 	/**
@@ -35,7 +37,7 @@ Juxta.Browser = function(element, request) {
 	/**
 	 * @type {Number}
 	 */
-	this.total;
+	this.total = null;
 
 
 	/**
@@ -47,7 +49,7 @@ Juxta.Browser = function(element, request) {
 		from: null,
 		limit: 30,
 		offset: 0
-	}
+	};
 
 
 	/**
@@ -85,7 +87,7 @@ Juxta.Browser = function(element, request) {
 		}
 	});
 
-}
+};
 
 Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
 
@@ -94,12 +96,12 @@ Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
  * @param {Object} options
  * @retrun {Juxta.Browser}
  */
-Juxta.Browser.prototype.show = function(options) {
+Juxta.Browser.prototype.show = function() {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -113,7 +115,7 @@ Juxta.Browser.prototype._reset = function () {
 	this.grid.clear();
 
 	return this;
-}
+};
 
 
 /**
@@ -140,7 +142,7 @@ Juxta.Browser.prototype.stretch = function(event) {
 			that._editor.setHeight(height);
 		}
 	}
-}
+};
 
 
 /**
@@ -152,7 +154,7 @@ Juxta.Browser.prototype.showEditor = function() {
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -164,7 +166,7 @@ Juxta.Browser.prototype.hideEditor = function() {
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -177,7 +179,7 @@ Juxta.Browser.prototype.toggleEditor = function() {
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -202,7 +204,7 @@ Juxta.Browser.prototype.browse = function(params) {
 	this.mode = 'browse';
 
 	return this.requestBrowse(params);
-}
+};
 
 
 /**
@@ -215,7 +217,7 @@ Juxta.Browser.prototype.requestNextRows = function() {
 	query.offset = query.offset + query.limit;
 
 	return this.requestBrowse(query);
-}
+};
 
 
 /**
@@ -229,7 +231,7 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 
 	var that= this;
 
-	if (query.limit == undefined) {
+	if (query.limit === undefined) {
 		query.limit = this.options.limit;
 	}
 	if (query.offset === undefined) {
@@ -258,7 +260,7 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 	});
 
 	return this._lastRequest;
-}
+};
 
 
 /**
@@ -267,8 +269,6 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
  */
 Juxta.Browser.prototype.responseBrowse = function(response, query) {
 	//
-	var that = this;
-
 	this._lastQuery = query;
 	this.total = response.total;
 
@@ -291,7 +291,7 @@ Juxta.Browser.prototype.responseBrowse = function(response, query) {
 
 	this.grid.fill(response.data);
 	this.ready()._updateStatus();
-}
+};
 
 
 /**
@@ -314,7 +314,7 @@ Juxta.Browser.prototype.sql = function(params) {
 	this.ready();
 
 	return this;
-}
+};
 
 
 /**
@@ -334,4 +334,4 @@ Juxta.Browser.prototype._updateStatus = function() {
 	this._status.text(status);
 
 	return this;
-}
+};

@@ -1,7 +1,7 @@
 /**
  * @class Grid 2
  */
-Juxta.Grid2 = function(grid, options) {
+Juxta.Grid2 = function(grid) {
 
 	/* Containers */
 
@@ -66,7 +66,7 @@ Juxta.Grid2 = function(grid, options) {
 	/**
 	 * @type {String}
 	 */
-	this.rowTemplate;
+	this.rowTemplate = '';
 
 
 	/**
@@ -78,7 +78,7 @@ Juxta.Grid2 = function(grid, options) {
 	/**
 	 * @type {jQuery}
 	 */
-	this.prepared = null
+	this.prepared = null;
 
 
 	/**
@@ -101,7 +101,7 @@ Juxta.Grid2 = function(grid, options) {
 	});
 
 	// Trigger event with type equals action name
-	this.actions.find('.grid2-actions-link,.grid2-actions-button').bind('click', function(event) {
+	this.actions.find('.grid2-actions-link,.grid2-actions-button').bind('click', function() {
 		if ($(this).attr('name')) {
 			$(that).trigger('actions/' + $(this).attr('name'));
 		}
@@ -118,7 +118,7 @@ Juxta.Grid2 = function(grid, options) {
 	if (that.count > 0 && that.count == that.selected) {
 		that.actions.find('[name=all]').addClass('active');
 		that.actions.find('[name=nothing]').removeClass('active');
-	} else if (that.selected == 0) {
+	} else if (that.selected === 0) {
 		that.actions.find('[name=all]').removeClass('active');
 		that.actions.find('[name=nothing]').addClass('active');
 	} else{
@@ -133,7 +133,7 @@ Juxta.Grid2 = function(grid, options) {
 		that.actions.find('input[type=button]').attr('disabled', false);
 	}
 
-	this.bodyContainer.bind('scroll', function(event) {
+	this.bodyContainer.bind('scroll', function() {
 		if (that.bodyContainer.scrollTop() < 10) {
 			$(that).trigger('scrollTop');
 		} else if (that.bodyContainer.scrollTop() > that.body.height()- that.bodyContainer.height() - 10) {
@@ -141,7 +141,7 @@ Juxta.Grid2 = function(grid, options) {
 		}
 	});
 
-}
+};
 
 
 /**
@@ -152,10 +152,10 @@ Juxta.Grid2 = function(grid, options) {
 Juxta.Grid2.prototype.setHeight = function(height) {
 	//
 	this.emptyMessage.css({top: height/2});
-	this.bodyContainer.height(height)
+	this.bodyContainer.height(height);
 
 	return this;
-}
+};
 
 
 /**
@@ -262,7 +262,7 @@ Juxta.Grid2.prototype.prepare = function(params) {
 		th = $('<th>').addClass(styles.join(' ')).append($('<div>').html(name));
 
 		if (hint) {
-			th.attr('title', hint)
+			th.attr('title', hint);
 		}
 
 		that.head.append(th);
@@ -273,7 +273,7 @@ Juxta.Grid2.prototype.prepare = function(params) {
 	this.prepared = true;
 
 	return true;
-}
+};
 
 
 /**
@@ -328,11 +328,11 @@ Juxta.Grid2.prototype.fill = function(data, params) {
 
 		$(this).trigger('change');
 
-	} else if (this.count == 0) {
+	} else if (this.count === 0) {
 		// Show empty grid message
 		this.emptyMessage.css({top: this.bodyContainer.height()/2}).show();
 	}
-}
+};
 
 
 /**
@@ -349,7 +349,7 @@ Juxta.Grid2.prototype.empty = function() {
 	$(this).trigger('change');
 
 	return this;
-}
+};
 
 
 /**
@@ -370,7 +370,7 @@ Juxta.Grid2.prototype.clear = function() {
 	//$(this).trigger('clear');
 
 	return this;
-}
+};
 
 
 /**
@@ -383,7 +383,7 @@ Juxta.Grid2.prototype.select = function(row) {
 	} else {
 		this.selectAll();
 	}
-}
+};
 
 
 /**
@@ -396,21 +396,21 @@ Juxta.Grid2.prototype.deselect = function(row) {
 	} else {
 		this.deselectAll();
 	}
-}
+};
 
 
 /**
  * Select all rows
  */
 Juxta.Grid2.prototype.selectAll = function() {
-}
+};
 
 
 /**
  * Deselect all rows
  */
 Juxta.Grid2.prototype.deselectAll = function() {
-}
+};
 
 
 /**
@@ -419,7 +419,7 @@ Juxta.Grid2.prototype.deselectAll = function() {
 Juxta.Grid2.prototype.selectRow = function(row) {
 	// Highlight link
 	$(row).find('.grid-body-column.checkbox').next('td').find('a').addClass('checked');
-}
+};
 
 /**
  * Deselect one row
@@ -427,20 +427,23 @@ Juxta.Grid2.prototype.selectRow = function(row) {
 Juxta.Grid2.prototype.deselectRow = function(row) {
 	// Unhighlight link
 	$(row).find('td.check').next('td').find('a').removeClass('checked');
-}
+};
 
 /**
- * @todo Пресмотреть
  * Returns names of selected rows
+ * @todo Пресмотреть
+ * @param {String} filter
  */
-Juxta.Grid2.prototype.getSelectedRows = function(filter, group) {
-}
+Juxta.Grid2.prototype.getSelectedRows = function() {
+};
 
 /**
  * Removes rows by name
+ * @param {String} name
+ * @param {String} filter
  */
-Juxta.Grid2.prototype.remove = function(names, filter) {
-}
+Juxta.Grid2.prototype.remove = function() {
+};
 
 
 Juxta.Grid2.prototype.enableSelectRows = function() {
@@ -448,7 +451,7 @@ Juxta.Grid2.prototype.enableSelectRows = function() {
 		this.find('.grid2-body-column.checkbox').show();
 	});
 	this.container.addClass('select-rows');
-}
+};
 
 
 Juxta.Grid2.prototype.disableSelectRows = function() {
@@ -456,21 +459,21 @@ Juxta.Grid2.prototype.disableSelectRows = function() {
 		this.find('.grid2-body-column.checkbox').hide();
 	});
 	this.container.removeClass('select-rows');
-}
+};
 
 
 Juxta.Grid2.prototype.vertScrollEnabled = function() {
 	return this.bodyContainer.height() < this.body.height();
-}
+};
 
 Juxta.Grid2.prototype.is = function() {
 	return $.fn.is.apply(this.container, arguments);
-}
+};
 
 Juxta.Grid2.prototype.show = function() {
 	this.container.show();
-}
+};
 
 Juxta.Grid2.prototype.hide = function() {
 	this.container.hide();
-}
+};

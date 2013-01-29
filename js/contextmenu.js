@@ -38,7 +38,7 @@ Juxta.ContextMenu = function(page, menu) {
 	});
 
 	this.$container.bind('hide', $.proxy(this.hide, this));
-}
+};
 
 
 /**
@@ -52,7 +52,7 @@ Juxta.ContextMenu.prototype.hide = function() {
 	this.value = null;
 
 	this.$page.trigger('change');
-}
+};
 
 
 /**
@@ -75,7 +75,7 @@ Juxta.ContextMenu.prototype.show = function(row, position) {
 	this.$page.trigger('change');
 
 	return false;
-}
+};
 
 
 /**
@@ -98,4 +98,4 @@ Juxta.ContextMenu.prototype.load = function(menu) {
 			$item.appendTo($menu);
 		});
 	}
- }
+ };

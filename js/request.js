@@ -29,7 +29,7 @@ Juxta.Request = function(connection, cache, options) {
 		data: {
 			debug: true
 		}
-	}
+	};
 
 	if (options && !$.isEmptyObject(options.request)) {
 		$.extend(this._ajaxSettings, options.request);
@@ -46,13 +46,13 @@ Juxta.Request = function(connection, cache, options) {
 		sessionNotFound: null,
 		error: null,
 		unknowStatus: null
-	}
+	};
 
 	if (options && !$.isEmptyObject(options.response)) {
 		$.extend(this._responseCallbacks, options.response);
 	}
 
-}
+};
 
 
 /**
@@ -86,16 +86,16 @@ Juxta.Request.prototype.send = function (params) {
 	}
 
 	// Response
-	params.success = function (data) {
+	params.success = function(data) {
 		that._response(data, callbacks, cache);
-	}
+	};
 
 	var getSession = new jQuery.Deferred(),
 		getResponse = new jQuery.Deferred();
 
-	if (!this.connection.is()
-		&& queryString !== 'get=connections'
-		&& queryString !== 'login'
+	if (!this.connection.is() &&
+		queryString !== 'get=connections' &&
+		queryString !== 'login'
 	) {
 		$.ajax({
 			url: this._ajaxSettings.url + '?get=session',
@@ -103,8 +103,8 @@ Juxta.Request.prototype.send = function (params) {
 				if (response.connection) {
 					that.connection.set(response.connection);
 					getSession.resolveWith(that);
-				} else if (response.status === 'session_not_found'
-					&& $.isFunction(that._responseCallbacks.sessionNotFound)
+				} else if (response.status === 'session_not_found' &&
+					$.isFunction(that._responseCallbacks.sessionNotFound)
 				) {
 					that._responseCallbacks.sessionNotFound.call(that, response);
 				} else {
@@ -133,7 +133,7 @@ Juxta.Request.prototype.send = function (params) {
 	});
 
 	return getResponse;
-}
+};
 
 
 /**
@@ -177,7 +177,7 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
 				this._responseCallbacks.unknowStatus.call(this, response);
 			}
 	}
-}
+};
 
 
 /**
@@ -191,4 +191,4 @@ Juxta.Request.prototype.queryString = function(action) {
 	}
 
 	return query;
-}
+};

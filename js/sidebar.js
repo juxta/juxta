@@ -1,3 +1,5 @@
+/*global setTimeout, clearTimeout */
+
 /**
  * @class Sidebar
  */
@@ -29,32 +31,32 @@ Juxta.Sidebar = function() {
 	this.values = {
 		'host': this.$sidebar.find('li.host span.value'),
 		'database': this.$sidebar.find('li.database span.value'),
-		'table': this.$sidebar.find('li.table span.value'),
-	}
+		'table': this.$sidebar.find('li.table span.value')
+	};
 
 
 	this.$sidebar.find('.buttons li').each(function() {
 		$(this).html('<span>' + $(this).html() + '</span>')
 			.find('a').each(function() {
-				$(this).addClass($(this).attr('href').replace(/#/g, ''))
+				$(this).addClass($(this).attr('href').replace(/#/g, ''));
 			});
 		that.tree[this.className] = $(this).parent().parent().attr('class');
 	});
 
 	this.$sidebar.find('ul:first-child > li h2').click(function() {
-		$head = $(this).parent('li');
-		if ($head.is(':not(.fold):not(.last):visible')) {
-			$head.addClass('fold').find('.buttons').slideUp(250);
+		var head = $(this).parent('li');
+		if (head.is(':not(.fold):not(.last):visible')) {
+			head.addClass('fold').find('.buttons').slideUp(250);
 			that.$sidebar.find('.last .buttons').slideDown('250');
-		} else if ($head.is('.fold')) {
+		} else if (head.is('.fold')) {
 			that.$sidebar.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold')
 				.find('.buttons').slideUp(250);
 			that.$sidebar.
 				find('ul:first-child > li.last').
 				find('.buttons').slideUp(250);
-			$head.removeClass('fold').find('.buttons').slideDown(250);
-		} else if ($head.is('.last') && $head.find('.buttons').not(':visible')) {
-			$head.find('.buttons').slideDown(250);
+			head.removeClass('fold').find('.buttons').slideDown(250);
+		} else if (head.is('.last') && head.find('.buttons').not(':visible')) {
+			head.find('.buttons').slideDown(250);
 			that.$sidebar.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold')
 				.find('.buttons').slideUp(250);
 		}
@@ -65,12 +67,12 @@ Juxta.Sidebar = function() {
 		function() {
 			clearTimeout(this.timer);
 		},
-		function(event) {
+		function() {
 			this.timer = setTimeout(function() { that.restore(); }, 2000);
 		}
 	);
 
-}
+};
 
 
 /**
@@ -81,7 +83,7 @@ Juxta.Sidebar.prototype.restore = function() {
 		.find('ul:first-child > li:not(.fold):not(.last):visible').addClass('fold').find('.buttons').slideUp(250);
 	this.$sidebar
 		.find('.last .buttons').slideDown(250);
-}
+};
 
 
 /**
@@ -112,7 +114,7 @@ Juxta.Sidebar.prototype.highlight = function(link, path) {
 	}
 	this.$sidebar.find('.buttons li').removeClass('active');
 	this.$sidebar.find('li.' + link).addClass('active');
-}
+};
 
 
 /**
@@ -125,7 +127,7 @@ Juxta.Sidebar.prototype.path = function(path) {
 		$(this).text(that.path[item]);
 	});
 	this.repairLinks();
-}
+};
 
 
 /**
@@ -139,4 +141,4 @@ Juxta.Sidebar.prototype.repairLinks = function() {
 	$('#sidebar').find('li.table a').each(function() {
 		this.href = '#' + that.path.database + '/' + that.path.table + '/' + this.className;
 	});
-}
+};

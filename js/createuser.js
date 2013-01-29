@@ -7,7 +7,7 @@ Juxta.CreateUser = function(element) {
 
 	Juxta.Modal.prototype.constructor.call(this, element, {title: 'Add a User'});
 
-}
+};
 
 Juxta.Lib.extend(Juxta.CreateUser, Juxta.Modal);
 
@@ -22,4 +22,4 @@ Juxta.CreateUser.prototype.show = function() {
 	Juxta.Modal.prototype.show.apply(this, arguments);
 
 	return this;
-}
+};

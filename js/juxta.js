@@ -1,3 +1,5 @@
+/*global document, window, setInterval */
+
 /**
  * Juxta 0.0.1
  *
@@ -65,7 +67,7 @@ var Juxta = function() {
 				that.auth.show();
 			},
 			sessionNotFound: function() {
-				document.location.hash = '#login';
+				window.location.hash = '#login';
 			},
 			error: function(response) {
 				that.error(response.error);
@@ -157,12 +159,12 @@ var Juxta = function() {
 		.on('login', function(connection) {
 			that.connection.set(connection);
 			that.state = null;
-			document.location.hash = '#databases';
+			window.location.hash = '#databases';
 		})
 		.on('logout', function() {
 			that.cache.flush();
 			that.setTitle();
-			document.location.hash = '#login';
+			window.location.hash = '#login';
 		});
 
 	// Notifications
@@ -184,7 +186,6 @@ var Juxta = function() {
 
 	//
 	$('#header .sql a').bind('click', function() {
-		console.log(that.browser.mode);
 		if (that.browser.is(':visible') && that.browser.mode == 'browse') {
 			that.browser.toggleEditor();
 			return false;
@@ -195,7 +196,7 @@ var Juxta = function() {
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
 
 	// @todo Remove this from here
-	$(document.body).bind('click', function(event) {
+	$(document.body).bind('click', function() {
 		$('.context:visible').trigger('hide').hide();
 	});
 
@@ -211,8 +212,8 @@ Juxta.prototype = {
 	 */
 	run: function() {
 		//
-		if (location.hash === '') {
-			location.hash = 'databases';
+		if (window.location.hash === '') {
+			window.location.hash = 'databases';
 		}
 
 		setInterval($.proxy(this.route, this), 200);
@@ -228,8 +229,7 @@ Juxta.prototype = {
 		//
 		var hash = window.location.hash.replace(/#/g, ''),
 			params = hash.split('/'),
-			action = params.pop(),
-			that = this;
+			action = params.pop();
 
 		if (hash != this.state) {
 			switch (action) {
@@ -288,6 +288,8 @@ Juxta.prototype = {
 					break;
 				case 'flush':
 					this.cache.flush();
+					window.location = '#databases';
+					break;
 				default:
 					window.location = '#databases';
 			}

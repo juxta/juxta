@@ -1,3 +1,6 @@
+/*global window */
+/*jshint camelcase: false */
+
 /**
  * @class Table editor
  * @extends {Juxta.Application}
@@ -20,7 +23,8 @@ Juxta.Table = function(element, request) {
 
 
 	$(window).bind('resize', {that: this}, this.stretch);
-}
+
+};
 
 Juxta.Lib.extend(Juxta.Table, Juxta.Application);
 
@@ -29,12 +33,12 @@ Juxta.Lib.extend(Juxta.Table, Juxta.Application);
  * @param {Object} options
  * @return {Juxta.TableEditor}
  */
-Juxta.Table.prototype.show = function(options) {
+Juxta.Table.prototype.show = function() {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -46,7 +50,7 @@ Juxta.Table.prototype.stretch = function(event) {
 	if (that.is(':visible')) {
 		that._columns.setHeight($('#applications').height() - that.find('.grid2-body').position().top - that._status.height() - 24);
 	}
-}
+};
 
 
 /**
@@ -61,7 +65,7 @@ Juxta.Table.prototype.edit = function(params) {
 	});
 
 	return this._requestShowTable(params);
-}
+};
 
 
 /**
@@ -96,12 +100,12 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 
 		// default
 		template += '<td class="grid2-body-column default"><div>';
-		if (column.default === null && column.is_null === 'YES') {
+		if (column['default'] === null && column.is_null === 'YES') {
 			template += '<span class="badge badge-null">NULL</span>';
-		} else if (column.default === 'CURRENT_TIMESTAMP') {
+		} else if (column['default'] === 'CURRENT_TIMESTAMP') {
 			template += '<span class="badge badge-current-timestamp">CURRENT_TIMESTAMP</span>';
-		} else if (column.default !== null) {
-			template += column.default;
+		} else if (column['default'] !== null) {
+			template += column['default'];
 		}
 		template += '</div></td>';
 
@@ -114,7 +118,7 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 		}
 
 		return template;
-	}
+	};
 
 	this._columns.prepare({
 		columns: [{name: 'name', title: 'Column'}, 'Type', {name: 'is_null', title: 'NULL', 'hint': 'Allow NULL'}, 'Attributes', 'Default', 'Options'],
@@ -134,12 +138,11 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 		this._settings,
 		options
 	));
-}
+};
 
 
-
-Juxta.Table.prototype._responseShowTable = function(response, query) {
+Juxta.Table.prototype._responseShowTable = function(response) {
 	//
 	this._columns.fill(response.columns);
 	this.ready();
-}
+};

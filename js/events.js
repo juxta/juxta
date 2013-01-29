@@ -9,7 +9,7 @@ Juxta.Events = function() {
 	 */
 	this._callbacks = {};
 
-}
+};
 
 
 /**
@@ -30,7 +30,7 @@ Juxta.Events.prototype.on = function(event, callback) {
 	this._callbacks[event].push(callback);
 
 	return this;
-}
+};
 
 
 /**
@@ -55,12 +55,11 @@ Juxta.Events.prototype.off = function(event, callback) {
 	}
 
 	for (var i = this._callbacks[event].length - 1; i >= 0; i--) {
-		subscription = this._callbacks[event][i];
 		if (this._callbacks[event][i] === callback) {
 			this._callbacks[event].splice(i, 1);
 		}
 	}
-}
+};
 
 
 /**
@@ -78,17 +77,19 @@ Juxta.Events.prototype.trigger = function(event) {
 		return this;
 	}
 
-	var args = [], callback;
-	for (var i = 1, length = arguments.length; i < length; i++) {
+	var args = [],
+		callback;
+
+	for (var i = 1, argumentsLength = arguments.length; i < argumentsLength; i++) {
 		args.push(arguments[i]);
 	}
 
-	for (var i = 0, length = this._callbacks[event].length; i < length; i++) {
-		callback = this._callbacks[event][i];
+	for (var j = 0, callbacksLength = this._callbacks[event].length; j <callbacksLength; j++) {
+		callback = this._callbacks[event][j];
 		if (typeof callback == 'function') {
 			callback.apply(this, args);
 		}
 	}
 
 	return this;
-}
+};

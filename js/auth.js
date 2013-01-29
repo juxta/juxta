@@ -81,8 +81,7 @@ Juxta.Auth = function(element, request) {
 			}
 		}
 	});
-
-}
+};
 
 Juxta.Lib.extend(Juxta.Auth, Juxta.Modal);
 
@@ -106,7 +105,7 @@ Juxta.Auth.prototype.show = function() {
 	}
 
 	return this;
-}
+};
 
 
 /**
@@ -114,10 +113,10 @@ Juxta.Auth.prototype.show = function() {
  * @return {jqXHR}
  */
 Juxta.Auth.prototype.login = function() {
-	if ($.trim(this.form.find('[name=host]').val()) == '') {
+	if ($.trim(this.form.find('[name=host]').val()) === '') {
 		this.form.find('[name=host]').val('localhost');
 	}
-	if ($.trim(this.form.find('[name=port]').val()) == '') {
+	if ($.trim(this.form.find('[name=port]').val()) === '') {
 		this.form.find('[name=port]').val(this._defaultPort);
 	}
 
@@ -130,7 +129,7 @@ Juxta.Auth.prototype.login = function() {
 		success: this.loginResponse,
 		context: this
 	});
-}
+};
 
 
 /**
@@ -146,7 +145,7 @@ Juxta.Auth.prototype.loginResponse = function(response) {
 		this.submit.attr('disabled', false);
 		this.password.focus();
 	}
-}
+};
 
 
 /**
@@ -160,7 +159,7 @@ Juxta.Auth.prototype.logout = function() {
 		action: 'logout',
 		success: function() { that.trigger('logout'); }
 	});
-}
+};
 
 
 /**
@@ -174,7 +173,7 @@ Juxta.Auth.prototype.getConnectionsResponse = function(response) {
 			connections = {};
 
 		$.each(response.data, function(i) {
-			if (this.name == undefined) {
+			if (this.name === undefined) {
 				this.name = this.user + '@' + this.host;
 			}
 			$('<option>', {val: i + 1, selected: this['default']}).html(this.name).appendTo(that.connections);
@@ -184,14 +183,14 @@ Juxta.Auth.prototype.getConnectionsResponse = function(response) {
 		//
 		this.storedConnections = connections;
 
-		if (this.form.find('[name=host]').val() == '' && this.form.find('[name=user]').val() == '') {
+		if (this.form.find('[name=host]').val() === '' && this.form.find('[name=user]').val() === '') {
 			this.fillForm(this.storedConnections[this.connections.val()]);
 			this.password.focus();
 		} else {
 			this.connections.prepend('<option value="0"></option>');
 		}
 	}
-}
+};
 
 
 /**
@@ -204,4 +203,4 @@ Juxta.Auth.prototype.fillForm = function(connection) {
 		this.form.find('[name=port]').val(connection.port);
 		this.form.find('[name=user]').val(connection.user);
 	}
-}
+};

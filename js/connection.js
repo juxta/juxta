@@ -7,9 +7,9 @@ Juxta.Connection = function() {
 	 * Connection data
 	 * @type {Object}
 	 */
-	this._connection;
+	this._connection = null;
 
-}
+};
 
 Juxta.Lib.extend(Juxta.Connection, Juxta.Events);
 
@@ -21,7 +21,7 @@ Juxta.Lib.extend(Juxta.Connection, Juxta.Events);
 Juxta.Connection.prototype.set = function(connection) {
 	this._connection = connection;
 	this.trigger('change');
-}
+};
 
 
 /**
@@ -37,7 +37,7 @@ Juxta.Connection.prototype.get = function(param) {
 	if (param && this._connection[param]) {
 		return this._connection[param];
 	}
-}
+};
 
 
 /**
@@ -45,5 +45,5 @@ Juxta.Connection.prototype.get = function(param) {
  * @return {Boolean}
  */
 Juxta.Connection.prototype.is = function () {
-	return typeof this._connection != 'undefined';
-}
+	return this._connection !== null;
+};

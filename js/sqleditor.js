@@ -1,3 +1,5 @@
+/*global CodeMirror */
+
 /**
  * @class SQL Editor
  * @param {jQuery} textarea
@@ -10,8 +12,8 @@ Juxta.SqlEditor = function(textarea, options) {
 	 * @private
 	 */
 	this._settings = {
-		mode: "text/x-mysql",
-		tabMode: "indent",
+		mode: 'text/x-mysql',
+		tabMode: 'indent',
 		tabSize: 4,
 		matchBrackets: true,
 		lineNumbers: true,
@@ -45,7 +47,7 @@ Juxta.SqlEditor = function(textarea, options) {
 		this._editor.setValue(text);
 
 		return this;
-	}
+	};
 
 
 	/**
@@ -56,18 +58,18 @@ Juxta.SqlEditor = function(textarea, options) {
 		this._editor.refresh();
 
 		return this;
-	}
+	};
 
 
 	this.setHeight = function(height) {
 		this._editor.setSize(null, height);
 
 		return this;
-	}
+	};
 
 
 	this.is = function() {
 		return $.fn.is.apply($(this._editor.getWrapperElement()), arguments);
-	}
+	};
 
-}
+};

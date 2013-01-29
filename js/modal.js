@@ -1,3 +1,5 @@
+/*global document */
+
 /**
  * @class Modal dialog
  * @param element
@@ -52,7 +54,7 @@ Juxta.Modal = function(element, options) {
 	this.container.draggable({scroll: false, handle: 'h3'});
 
 	this.center();
-}
+};
 
 Juxta.Lib.extend(Juxta.Modal, Juxta.Events);
 
@@ -91,7 +93,7 @@ Juxta.Modal.prototype.show = function(options, content) {
 	this.trigger('show');
 
 	return this;
-}
+};
 
 
 /**
@@ -104,7 +106,7 @@ Juxta.Modal.prototype.hide = function() {
 	this.trigger('hide');
 
 	return this;
-}
+};
 
 
 /**
@@ -116,7 +118,7 @@ Juxta.Modal.prototype.center = function() {
 	var height = $(document.body).height(),
 		width = $(document.body).width(),
 		left = (width - this.container.width()) / 2,
-		top = parseInt(0.75 * (height - this.container.height()) / 2);
+		top = parseInt(0.75 * (height - this.container.height()) / 2, 10);
 
 	if (top <= 5) {
 		top = 5;
@@ -125,7 +127,7 @@ Juxta.Modal.prototype.center = function() {
 	this.container.css({left: left, top: top});
 
 	return this;
-}
+};
 
 
 /**
@@ -137,4 +139,4 @@ Juxta.Modal.prototype.clear = function() {
 	this.container.find('> *:not(h3):not([type=button].close)').remove();
 
 	return this;
-}
+};

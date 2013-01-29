@@ -18,7 +18,7 @@ Juxta.RoutineEditor = function(element, request) {
 	 */
 	this._editor = new Juxta.SqlEditor(this.container.find('textarea'));
 
-}
+};
 
 Juxta.Lib.extend(Juxta.RoutineEditor, Juxta.Modal);
 
@@ -43,7 +43,7 @@ Juxta.RoutineEditor.prototype.edit = function(params) {
 	if (query) {
 		this._requestCreateRoutine(query);
 	}
-}
+};
 
 
 /**
@@ -55,7 +55,7 @@ Juxta.RoutineEditor.prototype._requestCreateRoutine = function(query) {
 		success: this._responseEditRoutine,
 		context: this
 	});
-}
+};
 
 
 /**
@@ -73,4 +73,4 @@ Juxta.RoutineEditor.prototype._responseEditRoutine = function(response) {
 	}
 
 	this._editor.edit(response.statement);
-}
+};

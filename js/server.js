@@ -1,3 +1,5 @@
+/*global window */
+
 /**
  * @class Server Information
  * @extends Juxta.Application
@@ -11,7 +13,7 @@ Juxta.Server = function (element, request) {
 	 */
 	this._settings ={
 		cache: 60
-	}
+	};
 
 	Juxta.Application.prototype.constructor.call(this, element, {header: 'Server Status', menu: {'Server Status': null, 'System Variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}});
 
@@ -53,7 +55,7 @@ Juxta.Server = function (element, request) {
 
 	$(window).bind('resize', {that: this}, this.stretch);
 
-}
+};
 
 Juxta.Lib.extend(Juxta.Server, Juxta.Application);
 
@@ -61,12 +63,12 @@ Juxta.Lib.extend(Juxta.Server, Juxta.Application);
  * Show application
  * @param {Object} options
  */
-Juxta.Server.prototype.show = function(options) {
+Juxta.Server.prototype.show = function() {
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
 
 	return this;
-}
+};
 
 
 /**
@@ -80,7 +82,7 @@ Juxta.Server.prototype.stretch = function(event) {
 	} else if(that.find('.proper').is(':visible')) {
 		$('#server-info .proper').height($('#applications').height() - $('#server-info .proper').get(0).offsetTop - 32);
 	}
-}
+};
 
 
 /**
@@ -95,7 +97,7 @@ Juxta.Server.prototype.prepare = function(template) {
 	} else {
 		return false;
 	}
-}
+};
 
 
 /**
@@ -104,7 +106,7 @@ Juxta.Server.prototype.prepare = function(template) {
  */
 Juxta.Server.prototype.info = function(params) {
 	this.requestInfo(params);
-}
+};
 
 
 /**
@@ -112,7 +114,7 @@ Juxta.Server.prototype.info = function(params) {
  * @param {Object} params
  */
 Juxta.Server.prototype.requestInfo = function(params) {
-	this.show(this.templates[params.show]['head']);
+	this.show(this.templates[params.show].head);
 	// Extend request options
 	if (this.templates[params.show].query) {
 		params = $.extend({}, this.templates[params.show].query, params);
@@ -130,12 +132,12 @@ Juxta.Server.prototype.requestInfo = function(params) {
 	if (this.prepare(query.show)) {
 		this.request.send($.extend(
 			{},
-			{action: query, action: query, context: this, success: this.responseInfo},
+			{action: query, context: this, success: this.responseInfo},
 			this._settings,
 			options
 		));
 	}
-}
+};
 
 
 /**
@@ -149,7 +151,7 @@ Juxta.Server.prototype.responseInfo = function(response) {
 			this.uptime.start(response.data.Uptime);
 			this.find('.proper')
 				.find('.startup .time')
-				.text(Juxta.Lib.Date.format(this.uptime.getStartTime(), "%b %-d, %Y %T"));
+				.text(Juxta.Lib.Date.format(this.uptime.getStartTime(), '%b %-d, %Y %T'));
 
 		}
 	} else {
@@ -158,7 +160,7 @@ Juxta.Server.prototype.responseInfo = function(response) {
 		this.grid.fill(response.data, params);
 	}
 	this.ready();
-}
+};
 
 
 /**
@@ -170,7 +172,7 @@ Juxta.Server.prototype.properStatus = function(data) {
 		$(this).text(data[this.className.split(' ', 1)[0].substr(6)]);
 	});
 	this.find('.proper.server-status').show();
-}
+};
 
 
 /**
@@ -247,4 +249,4 @@ Juxta.Server.prototype.templates = {
 		},
 		query: {cache: Infinity}
 	}
-}
+};
