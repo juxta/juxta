@@ -4,20 +4,8 @@
  * @param {String|jQuery} Grid container
  */
 Juxta.TreeGrid = function(grid) {
-	Juxta.Grid.call(this, grid);
-}
 
-
-/**
- * Initialisation
- * @param {String} grid
- */
-Juxta.TreeGrid.prototype.init = function(grid) {
-
-	this._selectRow = Juxta.Grid.prototype.selectRow;
-	this._deselectRow = Juxta.Grid.prototype.deselectRow;
-
-	Juxta.Grid.prototype.init.call(this, grid);
+	Juxta.Grid.prototype.constructor.call(this, grid);
 
 	var that = this;
 
@@ -25,6 +13,7 @@ Juxta.TreeGrid.prototype.init = function(grid) {
 		// Temporary
 		var $target = $(event.target),
 			$row = $target.parents('tr');
+
 		if (!$target.parents('tr').next('tr.content').get(0)) {
 			$target.parents('tr').after('<tr class="content"><td colspan="99"><table cellspacing="0"><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_1</a></td><td></td></tr><tr><td class="check"><input type="checkbox" /></td><td class="table"><a>test_2</a></td><td></td></tr></table></td></tr>');
 		}
@@ -45,24 +34,26 @@ Juxta.TreeGrid.prototype.init = function(grid) {
 		.bind('all', function() { that.$body.find('td + td a').removeClass('partial'); })
 		.bind('nothing', function() { that.$body.find('td + td a').removeClass('partial'); });
 
-}
+};
+
+Juxta.Lib.extend(Juxta.TreeGrid, Juxta.Grid);
 
 
 /**
  * Expand row
- * @param {Selector} row
+ * @param {jQuery} row
  */
 Juxta.TreeGrid.prototype.expand = function(row) {
 	var $row = $(row);
 
 	$row.find('td.collapse').removeClass('collapse').addClass('expand');
 	$row.next('.content').hide();
-}
+};
 
 
 /**
  * Collapse row
- * @param {Selector} row
+ * @param {jQuery} row
  */
 Juxta.TreeGrid.prototype.collapse = function(row) {
 	var $row = $(row);
@@ -74,21 +65,22 @@ Juxta.TreeGrid.prototype.collapse = function(row) {
 			.attr('checked', true)
 			.parents('tr').find('a').addClass('checked');
 	}
-}
+};
 
 
 /**
  * Select row
- * @param {Selector} row
+ * @param {jQuery} row
  */
 Juxta.TreeGrid.prototype.selectRow = function(row) {
-	this._selectRow(row);
-	var $row = $(row);
+	//
+	Juxta.Grid.prototype.selectRow.call(this, row);
+
+	var $row = $(row),
+		childs = $row.parents('tr.content').find('[type=checkbox]').length,
+		childsChecked = $row.parents('tr.content').find('[type=checkbox]:checked').length;
 
 	$row.find('a').removeClass('partial');
-
-	var childs = $row.parents('tr.content').find('[type=checkbox]').length,
-		childsChecked = $row.parents('tr.content').find('[type=checkbox]:checked').length;
 
 	// Check parent row if its child selected all
 	if (childs > 0) {
@@ -106,18 +98,19 @@ Juxta.TreeGrid.prototype.selectRow = function(row) {
 	$row.next('tr.content')
 		.find('[type=checkbox]').attr('checked', true)
 		.parents('tr').find('a').addClass('checked');
-}
+};
 
 
 /**
  * Deselect row
- * @param {Selector} row
+ * @param {jQuery} row
  */
 Juxta.TreeGrid.prototype.deselectRow = function(row) {
-	this._deselectRow(row);
-	var $row = $(row);
+	//
+	Juxta.Grid.prototype.deselectRow.call(this, row);
 
-	var childs = $row.parents('tr.content').find('[type=checkbox]').length,
+	var $row = $(row),
+		childs = $row.parents('tr.content').find('[type=checkbox]').length,
 		childsChecked = $row.parents('tr.content').find('[type=checkbox]:checked').length;
 
 	// Uncheck parent row if its child slected none
@@ -136,6 +129,4 @@ Juxta.TreeGrid.prototype.deselectRow = function(row) {
 	$row.next('tr.content')
 		.find('[type=checkbox]').attr('checked', false)
 		.parents('tr').find('a').removeClass('checked');
-}
-
-Juxta.TreeGrid.prototype.__proto__ = Juxta.Grid.prototype;
+};
