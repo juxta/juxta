@@ -1,7 +1,10 @@
 {
+	"name": "Juxta",
+	"version": "0.1.0",
 	"scripts": {
 		"test": "grunt default --verbose"
 	},
+	"dependencies": {},
 	"devDependencies": {
 		"grunt": "0.3.17",
 		"grunt-exec": "0.3.0"
