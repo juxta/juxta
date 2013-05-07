@@ -80,9 +80,10 @@ Juxta.ContextMenu.prototype.show = function(row, position) {
 
 /**
  * Load menu
- * @param {String, Array} Menu template or items 
+ * @param {String, Array} Menu template or items
  */
 Juxta.ContextMenu.prototype.load = function(menu) {
+	//
 	if (typeof menu === 'string') {
 		this.$container.find('ul').html(menu);
 	} else {

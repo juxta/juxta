@@ -39,6 +39,7 @@ require 'juxta.php';
 
 try {
 	new Juxta($config);
+
 } catch (JuxtaException $e) {
 	$response = array(
 		'status' => $e->getStatus(),

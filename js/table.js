@@ -61,7 +61,7 @@ Juxta.Table.prototype.stretch = function(event) {
 Juxta.Table.prototype.edit = function(params) {
 	this.show({
 		header: {title: 'Table ', name: params.table},
-		menu: {'Browse Table': {href: '#' + params.from + '/' + params.table + '/browse'}}
+		menu: {'Browse Table': {href: '#/' + params.cid + '/' + params.from + '/' + params.table + '/browse'}}
 	});
 
 	return this._requestShowTable(params);
@@ -76,10 +76,11 @@ Juxta.Table.prototype.edit = function(params) {
 Juxta.Table.prototype._requestShowTable = function(params) {
 	//
 	var that = this,
-		query = {show: 'table', table: params.table, from: params.from},
+		query = {cid: params.cid, show: 'table', table: params.table, from: params.from},
 		options = {};
 
 	var row = function(column) {
+
 		var template = '';
 
 		template += '<tr class="grid2-body-row"><td class="grid2-body-column checkbox"><input type="checkbox"></td>';
@@ -126,8 +127,7 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 		actions: null
 	});
 
-	return this._request.send($.extend(
-		{},
+	return this._request.send($.extend({},
 		{
 			action: query,
 			context: this,

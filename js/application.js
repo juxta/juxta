@@ -52,9 +52,10 @@ Juxta.Lib.extend(Juxta.Application, Juxta.Events);
 /**
  * Apply settings to application
  * @param {Object} options
+ * @param {Object} variables
  * @return {Juxta.Application}
  */
-Juxta.Application.prototype._applySettings = function(options) {
+Juxta.Application.prototype._applySettings = function(options, variables) {
 	//
 	if ($.isPlainObject(options.header)) {
 		this.find('h1').html(
@@ -66,7 +67,7 @@ Juxta.Application.prototype._applySettings = function(options) {
 		this.find('h1').html(options.header);
 	}
 
-	this._setMenu(options.menu);
+	this._setMenu(options.menu, variables);
 
 	return this;
 };
@@ -74,40 +75,54 @@ Juxta.Application.prototype._applySettings = function(options) {
 
 /**
  * Set application menu
+ *
  * @param {Object} menu
+ * @param {Object} variables
  * @return {Juxta.Application}
  */
-Juxta.Application.prototype._setMenu = function(menu) {
+Juxta.Application.prototype._setMenu = function(menu, variables) {
 	//
 	this._menu.empty();
 
 	if ($.isPlainObject(menu)) {
-		//
-		var that = this;
-
-		$.each(menu, function(title, action) {
+		$.each(menu, $.proxy(function(title, item) {
 			//
-			var item = $('<a>')
-				.html(title)
-				.attr('disabled', true);
+			var link = $('<a>').html(title).attr('disabled', true),
+				href,
+				action,
+				name;
 
-			if (action && typeof action == 'object') {
-				if (action.href) {
-					item.attr('href', action.href).attr('disabled', false);
+			if (item && typeof item == 'object') {
+				if (item.href) {
+					href= item.href;
 				}
-				if (action.click && typeof action.click == 'function') {
-					item.click(action.click).attr('disabled', false);
+				if (item.click && typeof item.click == 'function') {
+					action = item.click;
+				}
+				if (item.name) {
+					name = item.name;
 				}
 
-			} else if (typeof action == 'function') {
-				item.click(action).attr('disabled', false);
+			} else if (typeof item == 'function') {
+				action = item;
 
-			} else if (action) {
-				item.attr('href', action).attr('disabled', false);
+			} else if (item) {
+				href = item;
 			}
 
-			that._menu.append(item);
-		});
+			if (href) {
+				link.attr('href', $.template(href, variables)).attr('disabled', false);
+			}
+			if (action) {
+				link.on('click', $.proxy(function (event) { action.call(this, event, variables); }, this)).attr('disabled', false);
+			}
+			if (name) {
+				link.attr('name', name);
+			}
+
+			this._menu.append(link);
+
+		}, this));
 	}
 
 	return this;
@@ -116,13 +131,15 @@ Juxta.Application.prototype._setMenu = function(menu) {
 
 /**
  * Show application
+ *
  * @param {Object} options
+ * @param {Object} variables
  * @return {Juxta.Application}
  */
-Juxta.Application.prototype.show = function(options) {
+Juxta.Application.prototype.show = function(options, variables) {
 	//
 	if (options) {
-		this._applySettings($.extend({}, this._settings, options));
+		this._applySettings($.extend({}, this._settings, options), variables);
 	}
 
 	if (!this.is(':visible')) {

@@ -15,24 +15,25 @@ Juxta.Server = function (element, request) {
 		cache: 60
 	};
 
-	Juxta.Application.prototype.constructor.call(this, element, {header: 'Server Status', menu: {'Server Status': null, 'System Variables': {href: '#variables'}, 'Charsets': '#charsets', 'Engines': '#engines'}});
+	Juxta.Application.prototype.constructor.call(this, element);
 
 	/**
 	 * @type {Juxta.Request}
 	 */
-	this.request = request;
+	this._request = request;
 
 
 	/**
 	 * @type {Juxta.Grid}
 	 */
-	this.grid = new Juxta.Grid(this.find('.grid'));
+	this._grid = new Juxta.Grid(this.find('.grid'));
 
 
 	/**
 	 * @type {Juxta.Uptime}
 	 */
-	this.uptime = new Juxta.Uptime(this.find('.proper').find('.uptime'));
+	this._uptime = new Juxta.Uptime(this.find('.proper').find('.uptime'));
+
 
 	var that = this;
 
@@ -61,10 +62,13 @@ Juxta.Lib.extend(Juxta.Server, Juxta.Application);
 
 /**
  * Show application
+ *
  * @param {Object} options
  */
 Juxta.Server.prototype.show = function() {
+	//
 	Juxta.Application.prototype.show.apply(this, arguments);
+
 	this.stretch();
 
 	return this;
@@ -73,10 +77,13 @@ Juxta.Server.prototype.show = function() {
 
 /**
  * Stretch grid to window height
+ *
  * @param {Event} event
  */
 Juxta.Server.prototype.stretch = function(event) {
+	//
 	var that = event && event.data.that || this;
+
 	if (that.find('.grid .body').is(':visible')) {
 		that.find('.grid .body').height($('#applications').height() - that.find('.grid .body').position().top - that._status.height() - 24);
 	} else if(that.find('.proper').is(':visible')) {
@@ -87,21 +94,33 @@ Juxta.Server.prototype.stretch = function(event) {
 
 /**
  * Prepare grid for response data
+ *
  * @param {String} template
+ * @return {Boolean}
  */
-Juxta.Server.prototype.prepare = function(template) {
-	if (this.grid.prepare(this.templates[template].grid)) {
-		this.preparedFor = template;
+Juxta.Server.prototype._prepare = function(query) {
+	//
+	if (query.show && this.templates[query.show] && this._grid.prepare(this.templates[query.show].grid)) {
+		//
+		this.preparedFor = query.show;
 		this.stretch();
+
+		/*if (query.cid !== undefined) {
+			$('[name=variables],[name=charsets],[name=engines]', this._container.find('.menu')).each(function(i, element) {
+				$(element).attr('href', '#/' + query.cid + '/' + $(element).attr('name'))
+			});
+		}*/
+
 		return true;
-	} else {
-		return false;
 	}
+
+	return false;
 };
 
 
 /**
- * Request information shortcut
+ * Request information (shortcut)
+ *
  * @param {Object} params
  */
 Juxta.Server.prototype.info = function(params) {
@@ -111,26 +130,31 @@ Juxta.Server.prototype.info = function(params) {
 
 /**
  * Server information request
+ *
  * @param {Object} params
  */
 Juxta.Server.prototype.requestInfo = function(params) {
-	this.show(this.templates[params.show].head);
+	//
+	this.show(this.templates[params.show].head, params);
+
 	// Extend request options
 	if (this.templates[params.show].query) {
 		params = $.extend({}, this.templates[params.show].query, params);
 	}
+
 	// Move options values from query to options variable
 	var query = $.extend({}, params),
 		options = {};
+
 	$.each(['cache', 'refresh'], function(index, value) {
 		delete query[value];
 		if (params[value] !== undefined) {
 			options[value] = params[value];
 		}
 	});
-	//
-	if (this.prepare(query.show)) {
-		this.request.send($.extend(
+
+	if (this._prepare(query)) {
+		this._request.send($.extend(
 			{},
 			{action: query, context: this, success: this.responseInfo},
 			this._settings,
@@ -142,22 +166,23 @@ Juxta.Server.prototype.requestInfo = function(params) {
 
 /**
  * Response callback
+ *
  * @param {Object} response
  */
 Juxta.Server.prototype.responseInfo = function(response) {
 	if (response.contents == 'status') {
 		this.properStatus(response.data);
 		if (!response.cache) {
-			this.uptime.start(response.data.Uptime);
+			this._uptime.start(response.data.Uptime);
 			this.find('.proper')
 				.find('.startup .time')
-				.text(Juxta.Lib.Date.format(this.uptime.getStartTime(), '%b %-d, %Y %T'));
+				.text(Juxta.Lib.Date.format(this._uptime.getStartTime(), '%b %-d, %Y %T'));
 
 		}
 	} else {
 		var params = $.extend({}, response, this.templates[response.contents].grid);
 		delete params.data;
-		this.grid.fill(response.data, params);
+		this._grid.fill(response.data, params);
 	}
 	this.ready();
 };
@@ -165,6 +190,7 @@ Juxta.Server.prototype.responseInfo = function(response) {
 
 /**
  * Show status in compact way
+ *
  * @param {Array} data
  */
 Juxta.Server.prototype.properStatus = function(data) {
@@ -177,12 +203,14 @@ Juxta.Server.prototype.properStatus = function(data) {
 
 /**
  * Resources
+ *
  * @type {Object}
  */
 Juxta.Server.prototype.templates = {
 	status: {
 		head: {
-			header: 'Server Status'
+			header: 'Server Status',
+			menu: {'Server Status': null, 'System Variables': {href: '#/{cid}/variables'}, 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
 		},
 		grid: {
 			context: ['variable', 'value'],
@@ -191,7 +219,8 @@ Juxta.Server.prototype.templates = {
 	},
 	'status-full': {
 		head: {
-			header: 'Server Status'
+			header: 'Server Status',
+			menu: {'Server Status': null, 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
 		},
 		grid: {
 			head: {
@@ -206,7 +235,7 @@ Juxta.Server.prototype.templates = {
 	variables: {
 		head: {
 			header: 'System Variables',
-			menu: {'Server Status': '#status', 'System Variables': null, 'Charsets': '#charsets', 'Engines': '#engines'}
+			menu: {'Server Status': '#/{cid}/status', 'System Variables': null, 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
 		},
 		grid: {
 			head: {
@@ -220,7 +249,7 @@ Juxta.Server.prototype.templates = {
 	charsets: {
 		head: {
 			header: 'Charsets',
-			menu: {'Server Status': '#status', 'System Variables': '#variables', 'Charsets': null, 'Engines': '#engines'}
+			menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': null, 'Engines': '#/{cid}/engines'}
 		},
 		grid: {
 			head: {
@@ -236,7 +265,7 @@ Juxta.Server.prototype.templates = {
 	engines: {
 		head: {
 			header: 'Engines',
-			menu: {'Server Status': '#status', 'System Variables': '#variables', 'Charsets': '#charsets', 'Engines': null}
+			menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': null}
 		},
 		grid: {
 			head: {

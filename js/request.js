@@ -60,13 +60,36 @@ Juxta.Request = function(connection, cache, options) {
  * @return {jqXHR}
  */
 Juxta.Request.prototype.send = function (params) {
-	var that = this,
-		queryString = this.queryString(params.action);
 
-	params.url = this._ajaxSettings.url + '?' + queryString;
+	var that = this,
+		cid = Number(params.action.cid),
+		cache = {},
+		callbacks = {},
+		getSession = new jQuery.Deferred(),
+		getResponse = new jQuery.Deferred(),
+		fromCache = null,
+		queryString;
+
+	if (isNaN(cid)) {
+		cid = this.connection.get('cid');
+	}
+
+	if (cid !== undefined) {
+		if (typeof params.action === 'object') {
+			params.action.cid = cid;
+		} else {
+			params.action = 'cid=' + cid + '&' + params.action;
+		}
+	}
+
+	// Change current connection
+	if (this.connection.is(cid)) {
+		this.connection.set(cid);
+	}
+
+	queryString = this.queryString(params.action);
 
 	// Cache options
-	var cache = {};
 	if (params.cache !== undefined && params.cache !== false) {
 		cache = {key: queryString, time: params.cache};
 		if (params.index) {
@@ -75,7 +98,6 @@ Juxta.Request.prototype.send = function (params) {
 	}
 
 	// Collect response callbacks
-	var callbacks = {};
 	if ($.isFunction(params.success)) {
 		callbacks.ok = params.context ? $.proxy(params.success, params.context) : params.success;
 		delete(params.success);
@@ -90,18 +112,13 @@ Juxta.Request.prototype.send = function (params) {
 		that._response(data, callbacks, cache);
 	};
 
-	var getSession = new jQuery.Deferred(),
-		getResponse = new jQuery.Deferred();
-
-	if (!this.connection.is() &&
-		queryString !== 'get=connections' &&
-		queryString !== 'login'
-	) {
+	if (!this.connection.is(cid) && queryString !== 'get=connections' && queryString !== 'login') {
+		//
 		$.ajax({
-			url: this._ajaxSettings.url + '?get=session',
+			url: this._ajaxSettings.url + '?get=session&cid=' + cid,
 			success: function(response) {
 				if (response.connection) {
-					that.connection.set(response.connection);
+					that.connection.set(cid, response.connection);
 					getSession.resolveWith(that);
 				} else if (response.status === 'session_not_found' &&
 					$.isFunction(that._responseCallbacks.sessionNotFound)
@@ -112,16 +129,19 @@ Juxta.Request.prototype.send = function (params) {
 				}
 			}
 		});
+
 	} else {
 		getSession.resolveWith(this);
 	}
 
+	params.url = this._ajaxSettings.url + '?' + queryString;
+
 	// Response from cache or make request
 	getSession.done(function() {
-		var fromCache = null;
 		if (params.refresh !== true) {
 			fromCache = this.cache.get(queryString);
 		}
+
 		if (fromCache) {
 			fromCache.cache = true;
 			params.success(fromCache);
@@ -185,6 +205,7 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
  * @returns {String}
  */
 Juxta.Request.prototype.queryString = function(action) {
+
 	var query = action;
 	if (query && $.isPlainObject(query) && !$.isEmptyObject(query)) {
 		query = $.param(query);

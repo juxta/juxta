@@ -226,10 +226,10 @@ Juxta.Browser.prototype.requestNextRows = function() {
  * @return {jqXHR}
  */
 Juxta.Browser.prototype.requestBrowse = function(params) {
-	var query = $.extend({}, params),
-		options = {};
 
-	var that= this;
+	var query = $.extend({}, params),
+		options = {},
+		that= this;
 
 	if (query.limit === undefined) {
 		query.limit = this.options.limit;
@@ -238,8 +238,7 @@ Juxta.Browser.prototype.requestBrowse = function(params) {
 		query.offset = 0;
 	}
 
-	this._lastRequest = this.request.send($.extend(
-		{},
+	this._lastRequest = this.request.send($.extend({},
 		{
 			action: query,
 			context: this,

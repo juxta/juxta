@@ -21,7 +21,9 @@ Juxta.Modal = function(element, options) {
 	/**
 	 * @type {jQuery}
 	 */
-	this.container = $(element);
+	this._container = $(element);
+
+	this.container = this._container;
 
 
 	/**

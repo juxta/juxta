@@ -74,13 +74,13 @@ span.overflowed {
  * Header
  */
 
-#header {
+.header {
 	height: 35px;
 	margin: 11px;
 	padding: 0 0 0 7px;
 	}
 
-#header h1 {
+.header h1 {
 	display: none;
 	float: left;
 	height: 35px;
@@ -91,45 +91,40 @@ span.overflowed {
 	font-weight: normal;
 	}
 
-#header h1 a {
+.header h1 a {
 	color: #000;
 	text-decoration: none;
 	}
 
-#header ul.links {
+.header-links {
 	display: none;
 	float: right;
 	list-style-type: none;
 	height: 24px;
 	margin: 5px 0 0 21px;
 	padding: 0;
-	font-size: 10.5pt;
+	font-size: 14px;
 	}
 
-#header ul.links li {
+.header-link {
 	float: left;
 	height: 24px;
 	line-height: 24px;
-	margin-left: 0;
+	margin-left: 14px;
 	}
 
-#header ul.links li.sql {
-	margin-right: 14px;
+.header-link.sql {
+	margin-right: 28px;
 	}
 
-#header ul.links li span {
-	float: left;
-	padding: 0 7px 0 7px;
-	cursor: pointer;
-	border-radius: 7px;
-	-moz-border-radius: 7px;
-	-web-kit-border-radius: 7px;
+.header-link.connection a {
+	padding-right: 13px;
 	}
 
-#header ul.links li.active span {
-	background-color: #FCFCFC;
-	font-weight: bold;
+.header-link.logout {
 	}
+
+
 
 
 #applications {

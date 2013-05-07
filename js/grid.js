@@ -159,60 +159,66 @@ Juxta.Grid.prototype = {
 
 		this.empty();
 		this.content = params.contents;
+
 		if (params.from) {
 			this.from = params.from;
 		}
+
 		if (data && (data.length > 0 || $.isPlainObject(data))) {
 			this.statistics.all = data.length;
 
-			var template = params.row;
+			var template = params.row,
+				valuesForTemplate = {};
+
+			// @todo Rewrite this
+			if (params.cid !== undefined) {
+				valuesForTemplate.cid = params.cid;
+			}
+			if (params.from) {
+				valuesForTemplate.database = params.from;
+			}
+
 			jQuery.each(data, function(i, value) {
 				if ($.isPlainObject(data)) {
 					value = [i, value];
 				}
-				var forTemplate = {},
-					cacheName;
+
+				var name,
+					cacheName,
+					values = $.extend({}, valuesForTemplate);
+
 				jQuery.each(params.context, function(j, valueName) {
-					var name;
 					if (params.context.length == 1) {
 						if ($.isArray(valueName)) {
 							name = valueName[0];
 						} else{
 							name = valueName;
 						}
-						forTemplate[name] = value;
+						values[name] = value;
+
 					} else{
 						if ($.isArray(valueName)) {
 							name = valueName[0];
 						} else{
 							name = valueName;
 						}
-						forTemplate[name] = value[j];
+						values[name] = value[j];
 					}
 					if (!cacheName) {
 						cacheName = name;
 					}
 				});
-				// @todo Rewrite this
-				if (params.from) {
-					$.extend(forTemplate, {database: params.from});
-				}
 
-				var $q = $($.template(template, forTemplate)).appendTo(that.$body);
-				that.cache[forTemplate[cacheName]] = $q;
+				that.cache[valuesForTemplate[cacheName]] = $($.template(template, values)).appendTo(that.$body);
 			});
+
 			this.$body.trigger('change');
 
 			// Make context menu
 			if (params.contextMenu && this.contextMenu) {
-				var menu;
-				if (params.from) {
-					menu = $.template(params.contextMenu, {database: params.from});
-				} else {
-					menu = params.contextMenu;
-				}
-				this.contextMenu.load(menu);
+				this.contextMenu.load($.template(params.contextMenu, valuesForTemplate));
 			}
+
 		} else {
 			this.$notFound.css('top', this.$container.find('.body').height() / 2 - 14 + 'px').show();
 		}
