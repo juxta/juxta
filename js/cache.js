@@ -121,17 +121,29 @@ Juxta.Cache = function() {
 	 * @params {String} search
 	 */
 	this.search = function(key, search) {
+		//
+		var path,
+			row,
+			data;
+
 		if (this._cache[key].index) {
 			if (typeof search === 'object') {
-				for (var index in search) break;
+				//
+				for (var index in search) {
+					break;
+				}
+
 				if (index && this._cache[key].index[index] && this._cache[key].index[index][search[index]]) {
+
 					if (typeof this._cache[key].index[index][search[index]] === 'object') {
-						var path = this._cache[key].index[index][search[index]][1],
-							row = this._cache[key].index[index][search[index]][0];
+						path = this._cache[key].index[index][search[index]][1];
+						row = this._cache[key].index[index][search[index]][0];
 					} else {
-						var row = this._cache[key].index[index][search[index]][0];
+						row = this._cache[key].index[index][search[index]][0];
 					}
-					var data = this._cache[key]['data'];
+
+					data = this._cache[key].data;
+
 					if (path) {
 						for (var i in path) {
 							if (data[path[i]]) {
@@ -139,6 +151,7 @@ Juxta.Cache = function() {
 							}
 						}
 					}
+
 					if (row && data[row]) {
 						return data[row];
 					}

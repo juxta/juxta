@@ -132,7 +132,7 @@ Juxta.Explorer = function(element, request) {
 		processlist: {
 			head: {
 				header: 'Processlist',
-				menu: {'Refresh': {href: '#/{cid}/processlist', click: function(event, params) { this.explore({show: 'processlist'}); return false; }}}
+				menu: {'Refresh': {href: '#/{cid}/processlist', click: function() { this.explore({show: 'processlist'}); return false; }}}
 			},
 			grid: {
 				context: [['process', 'processes'], 'user', 'host', 'ondatabase', 'command', 'time'],
