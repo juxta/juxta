@@ -35,18 +35,7 @@ Juxta.Connection.prototype.set = function(cid, connection) {
 
 	if (this.is(cid) && this._current !== cid) {
 		this._current = Number(cid);
-		this.trigger('change');
-	}
-
-	return this;
-};
-
-
-Juxta.Connection.prototype.setCurrent = function(cid) {
-
-	if (this.is(cid) && this._current != cid) {
-		this._current = cid;
-		this.trigger('change');
+		this.trigger('change', this._current);
 	}
 
 	return this;
@@ -72,8 +61,23 @@ Juxta.Connection.prototype.get = function(param) {
 
 /**
  * Check connection
+ *
  * @return {Boolean}
  */
-Juxta.Connection.prototype.is = function (cid) {
+Juxta.Connection.prototype.is = function(cid) {
 	return this._connections[cid] !== undefined;
+};
+
+
+/**
+ * Reset current connection
+ *
+ * @return {Juxta}
+ */
+Juxta.Connection.prototype.reset = function() {
+	//
+	this._current = null;
+	this.trigger('change');
+
+	return this;
 };

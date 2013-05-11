@@ -143,14 +143,26 @@ var Juxta = function() {
 
 
 	// Change window title on connection
-	this._connection.on('change', function() {
+	this._connection.on('change', function(cid) {
 		//
-		that.setTitle(that._connection.get())
-			._repairHeaderLinks(that._connection.get());
+		if (cid !== undefined) {
+			//
+			var link = $('.header-link.connection a'),
+				text = that._connection.get('name');
 
-		$('.header-link.connection a')
-			.text(that._connection.get('user') + '@' + that._connection.get('host'))
-			.attr('href', '#/login');
+			if (!text) {
+				text = that._connection.get('user') + '@' + that._connection.get('host');
+
+				if (Number(that._connection.get('port')) !== Juxta.defaultPort) {
+					text += ':' + that._connection.get('port');
+				}
+			}
+
+			link.attr('href', '#/login').text(text);
+
+			that._updateWindowTitle(that._connection.get())
+				._repairHeaderLinks(that._connection.get());
+		}
 	});
 
 	// Show Juxta when application ready to show
@@ -160,14 +172,19 @@ var Juxta = function() {
 
 	//
 	this._auth
-		.on('before-show', $.proxy(this.hide, this))
+		.on('before-show', $.proxy(function() {
+			//
+			this.hide()._updateWindowTitle();
+			this._connection.reset();
+
+		}, this))
 		.on('login', function(connection) {
 			that._connection.set(connection.cid, connection);
 			that.redirect('databases', connection.cid);
 		})
 		.on('logout', function() {
 			that._cache.flush();
-			that.setTitle('').redirect('login');
+			that._updateWindowTitle().redirect('login');
 		})
 		.on('change', function(cid) {
 			that.redirect('', cid);
@@ -331,10 +348,11 @@ Juxta.prototype.route = function() {
 
 /**
  * Change window title
+ *
  * @param {Object} connection
  * @return {Juxta}
  */
-Juxta.prototype.setTitle = function(connection) {
+Juxta.prototype._updateWindowTitle = function(connection) {
 	//
 	var title = '';
 
@@ -369,7 +387,9 @@ Juxta.prototype._repairHeaderLinks = function(connection) {
 
 
 /**
+ * Show the appliaction
  *
+ * @return {Juxta}
  */
 Juxta.prototype.show = function() {
 	$('#sidebar:not(.minimized)').slideDown(250);
@@ -378,14 +398,21 @@ Juxta.prototype.show = function() {
 		$('#applications').fadeIn(250);
 		$('#header h1, #header ul').fadeIn(250);
 	}
+
+	return this;
 };
 
 
 /**
+ * Hide
  *
+ * @return {Juxta}
  */
 Juxta.prototype.hide = function() {
+	//
 	$('#header h1, #header ul, #sidebar, #applications, .float-box').hide();
+
+	return this;
 };
 
 
