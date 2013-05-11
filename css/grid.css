@@ -97,6 +97,7 @@
 	padding: 2px 3px;
 	border-right: #eee 1px dotted;
 	border-bottom: #f3f3f3 1px solid;
+	white-space: nowrap;
 	}
 
 .grid .body td.check,
@@ -328,12 +329,12 @@
 	}
 .grid .head .table-rows,
 .grid .body .table-rows{
-	width: 55px;
+	width: 70px;
 	text-align: right;
 	}
 .grid .head .table-size,
 .grid .body .table-size{
-	width: 55px;
+	width: 70px;
 	text-align: right;
 	}
 .grid .head .table-update-date
