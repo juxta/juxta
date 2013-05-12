@@ -357,10 +357,15 @@ Juxta.prototype._updateWindowTitle = function(connection) {
 	var title = '';
 
 	if (connection) {
-		title = connection.user + '@' +  connection.host;
+		//
+		title = this._connection.get('name');
 
-		if (Number(connection.port) != 3306) {
-			title += ':' + connection.port;
+		if (!title) {
+			title = connection.user + '@' +  connection.host;
+
+			if (Number(connection.port) != Juxta.defaultPort) {
+				title += ':' + connection.port;
+			}
 		}
 	}
 
