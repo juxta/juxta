@@ -207,9 +207,11 @@ class Juxta
 				case 'trigger':
 					$response = $this->_showCreateTrigger($cid, $_GET['trigger'], $_GET['from']);
 					break;
+
 				case 'properties':
 					if (isset($_GET['database'])) {
 						$response = $this->_showDatabaseProperties($cid, $_GET['database']);
+
 					} elseif (isset($_GET['table'])) {
 						$response = $this->_showTableProperties($cid, $_GET['table'], $_GET['from']);
 					}
@@ -420,7 +422,6 @@ class Juxta
 					}
 				}
 			}
-			//var_dump($connections);
 
 			usort($connections, function($prev, $next) { return strcmp($prev['name'], $next['name']); });
 		}
@@ -794,7 +795,7 @@ class Juxta
 
 
 	/**
-	 * Return tables's properties
+	 * Returns tables's properties
 	 *
 	 * @param int $cid
 	 * @param string $table Table name
@@ -803,7 +804,7 @@ class Juxta
 	 */
 	private function _showTableProperties($cid, $table, $database)
 	{
-		$properties = $this->_query("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", MYSQLI_ASSOC);
+		$properties = $this->_query($cid, "SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", MYSQLI_ASSOC);
 
 		if (!empty($properties)) {
 			$properties = array_change_key_case($properties[0], CASE_LOWER);
