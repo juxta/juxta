@@ -383,7 +383,7 @@ Juxta.prototype._updateWindowTitle = function(connection) {
  */
 Juxta.prototype._repairHeaderLinks = function(connection) {
 	//
-	$('.header-link a[href][name]').each(function(i, link) {
+	$('.header a[name]').each(function(i, link) {
 		$(link).attr('href', '#/' + connection.cid + '/' + $(link).attr('name'));
 	});
 
