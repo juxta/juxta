@@ -188,6 +188,7 @@ Juxta.Grid.prototype = {
 					values = $.extend({}, valuesForTemplate);
 
 				jQuery.each(params.context, function(j, valueName) {
+
 					if (params.context.length == 1) {
 						if ($.isArray(valueName)) {
 							name = valueName[0];
@@ -196,7 +197,7 @@ Juxta.Grid.prototype = {
 						}
 						values[name] = value;
 
-					} else{
+					} else {
 						if ($.isArray(valueName)) {
 							name = valueName[0];
 						} else{
@@ -204,12 +205,14 @@ Juxta.Grid.prototype = {
 						}
 						values[name] = value[j];
 					}
+
 					if (!cacheName) {
 						cacheName = name;
 					}
+
 				});
 
-				that.cache[valuesForTemplate[cacheName]] = $($.template(template, values)).appendTo(that.$body);
+				that.cache[values[cacheName]] = $($.template(template, values)).appendTo(that.$body);
 			});
 
 			this.$body.trigger('change');
@@ -317,10 +320,12 @@ Juxta.Grid.prototype = {
 
 		return !$.isEmptyObject(selected) ? selected : null;
 	},
+
 	/**
-	 * Removes rows by name
+	 * Remove rows by name
 	 */
 	remove: function(names, filter) {
+		//
 		var that = this;
 
 		if (!$.isArray(names)) {
