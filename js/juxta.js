@@ -215,7 +215,7 @@ var Juxta = function() {
 		}
 	});
 
-	$('#header a[href=#logout]').click(function() {
+	$('#header a[name=logout]').click(function() {
 		that._auth.logout();
 		return false;
 	});
