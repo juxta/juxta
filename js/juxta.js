@@ -16,14 +16,12 @@ var Juxta = function() {
 	var that = this;
 
 	/**
-	 * Appliaction state
 	 * @type {String}
 	 */
 	this._state = null;
 
 
 	/**
-	 * Cache
 	 * @type Juxta.Cache
 	 */
 	this._cache = new Juxta.Cache();
@@ -142,28 +140,25 @@ var Juxta = function() {
 	this.dummy = new Juxta.Dummy('#dummy');
 
 
-	// Change window title on connection
-	this._connection.on('change', function(cid) {
+	//
+	$('.header-change-connection-link').on('click', function() {
 		//
-		if (cid !== undefined) {
-			//
-			var link = $('.header-link.connection a'),
-				text = that._connection.get('name');
+		var container = $('.header-connections-container'),
+			list = container.find('.header-connections');
 
-			if (!text) {
-				text = that._connection.get('user') + '@' + that._connection.get('host');
+		container.css({right: ''}).toggle();
 
-				if (Number(that._connection.get('port')) !== Juxta.defaultPort) {
-					text += ':' + that._connection.get('port');
-				}
-			}
-
-			link.attr('href', '#/login').text(text);
-
-			that._updateWindowTitle(that._connection.get())
-				._repairHeaderLinks(that._connection.get());
+		if (container.is(':visible') && $('body').width() - container.offset().left < container.width()) {
+			container.css({right: 7})
 		}
+
+		list.toggleClass('scroll', list.prop('scrollHeight') > list.prop('offsetHeight'));
+
+		return false;
 	});
+
+	//
+	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
 
 	// Show Juxta when application ready to show
 	$.each([this._explorer, this.server, this.browser, this.table], function(i, application) {
@@ -257,11 +252,35 @@ Juxta.prototype.run = function() {
  */
 Juxta.prototype.route = function() {
 	//
-	var hash = window.location.hash.replace(/#\/?/g, ''),
-		query = hash.split('/'),
+	var hash = window.location.hash.replace(/#\/?/g, '').split('?'),
+		query = hash[0].split('/'),
+		paramsString = hash[1],
+		params = [],
+		pathParams = [],
 		cid,
-		action,
-		params = [];
+		action;
+	//console.log(paramsString);
+
+	function parseParamsString(str) {
+		//
+		var ret = {},
+			seg = str.replace(/^\?/,'').split('&'),
+			len = seg.length, i = 0, s;
+
+		for (; i<len; i++) {
+			if (!seg[i]) {
+				continue;
+			}
+			s = seg[i].split('=');
+			ret[decodeURIComponent(s[0])] = decodeURIComponent(s[1]);
+		}
+
+		return ret;
+	}
+
+	if (paramsString) {
+		params = parseParamsString(paramsString);
+	}
 
 	if (/^\d+$/.test(query[0])) {
 		cid = Number(query.shift());
@@ -269,7 +288,7 @@ Juxta.prototype.route = function() {
 
 	if (query.length > 0) {
 		action = query.pop();
-		params = query;
+		pathParams = query;
 	}
 
 	if (cid === undefined && action !== 'login') {
@@ -277,7 +296,7 @@ Juxta.prototype.route = function() {
 		return;
 	}
 
-	if (hash != this._state) {
+	if (hash[0] != this._state) {
 		switch (action) {
 			case 'databases':
 			case 'processlist':
@@ -300,37 +319,37 @@ Juxta.prototype.route = function() {
 				this.dummy.show({header: 'Restore'});
 				break;
 			case 'login':
-				this._auth.show();
+				this._auth.show(params.id);
 				break;
 			//
 			case 'tables':
 			case 'views':
 			case 'routines':
 			case 'triggers':
-				this.explore({cid: cid, show: action, from: params[0]});
+				this.explore({cid: cid, show: action, from: pathParams[0]});
 				break;
 			//
 			case 'browse':
-				this.browser.browse({cid: cid, browse: params[1], from: params[0]});
+				this.browser.browse({cid: cid, browse: pathParams[1], from: pathParams[0]});
 				break;
 			case 'sql':
-				this.browser.sql({cid: cid, db: params[0]});
+				this.browser.sql({cid: cid, db: pathParams[0]});
 				break;
 			case 'columns':
-				this._sidebar.highlight('columns', {'database': params[0], 'table': params[1]});
-				this.table.edit({cid: cid, table: params[1], from: params[0]});
+				this._sidebar.highlight('columns', {'database': pathParams[0], 'table': pathParams[1]});
+				this.table.edit({cid: cid, table: pathParams[1], from: pathParams[0]});
 				break;
 			case 'foreign':
-				this._sidebar.highlight('foreign', {'database': params[0], 'table': params[1]});
+				this._sidebar.highlight('foreign', {'database': pathParams[0], 'table': pathParams[1]});
 				this.dummy.show();
 				break;
 			case 'options':
-				this._sidebar.highlight('options', {'database': params[0], 'table': params[1]});
+				this._sidebar.highlight('options', {'database': pathParams[0], 'table': pathParams[1]});
 				this.dummy.show({header: 'Options'});
 				break;
 			case 'maintenance':
-				this._sidebar.highlight('maintenance', {'database': params[0], 'table': params[1]});
-				this.dummy.show({header: {title: 'Maintenance Table', name: params[1]}});
+				this._sidebar.highlight('maintenance', {'database': pathParams[0], 'table': pathParams[1]});
+				this.dummy.show({header: {title: 'Maintenance Table', name: pathParams[1]}});
 				break;
 			case 'flush':
 				this._cache.flush();
@@ -341,7 +360,7 @@ Juxta.prototype.route = function() {
 				return;
 		}
 
-		this._state = hash;
+		this._state = hash[0];
 	}
 };
 
@@ -401,7 +420,7 @@ Juxta.prototype.show = function() {
 	$('.float-box').hide();
 	if ($('#applications').not(':visible')) {
 		$('#applications').fadeIn(250);
-		$('#header h1, #header ul').fadeIn(250);
+		$('#header h1, #header .header-links').fadeIn(250);
 	}
 
 	return this;
@@ -415,7 +434,7 @@ Juxta.prototype.show = function() {
  */
 Juxta.prototype.hide = function() {
 	//
-	$('#header h1, #header ul, #sidebar, #applications, .float-box').hide();
+	$('#header h1, #header .header-links, #sidebar, #applications, .float-box, .context').hide();
 
 	return this;
 };
@@ -517,6 +536,58 @@ Juxta.prototype.redirect = function(action, cid) {
 };
 
 
-$(document).ready(function() {
-	window.Jux = new Juxta();
-});
+/**
+ *
+ * @param {Number} cid
+ */
+Juxta.prototype._changeConnectionCallback = function(cid) {
+	//
+	if (cid === undefined) {
+		return;
+	}
+
+	var text = this._connection.get('name'),
+		hide = this.hide,
+		connectionsList = $('.header-connections');
+
+	if (!text) {
+		text = this._connection.get('user') + '@' + this._connection.get('host');
+
+		if (Number(this._connection.get('port')) !== Juxta.defaultPort) {
+			text += ':' + this._connection.get('port');
+		}
+	}
+
+	$('.header-change-connection-link').text(text);
+
+	this._updateWindowTitle(this._connection.get())
+		._repairHeaderLinks(this._connection.get());
+
+	connectionsList.empty();
+
+	this._request.send({action: {get: 'connections'}, context: this, success: function(response) {
+		$.each(response.connections, $.proxy(function(i, connection) {
+			//
+			var li = $('<li>').addClass('header-connection'),
+				a = $('<a>');
+
+			if (connection.cid == undefined) {
+				a.attr('href', '#/login?id=' + connection.id);
+
+			} else if (!this._connection.isCurrent(connection.cid)) {
+				li.addClass('established');
+				a.attr('href', '#/' + connection.cid + '/');
+
+			} else {
+				li.addClass('current');
+			}
+
+			if (a.attr('href')) {
+				a.on('click', function() { hide(); } );
+			}
+
+			connectionsList.append(li.append(a.text(connection.name)));
+
+		}, this));
+	}});
+};

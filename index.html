@@ -1,6 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
 <head>
 	<title>Juxta</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -46,7 +44,14 @@
 		<h1><a name="databases">Juxta</a></h1>
 		<ul class="header-links">
 			<li class="header-link sql"><a name="sql">SQL</a></li>
-			<li class="header-link connection"><a></a></li>
+			<li class="header-link connection">
+				<a class="header-change-connection-link" href="#/login"></a>
+				<div class="header-connections-container context">
+					<ul class="header-connections"></ul>
+					<div class="header-connections-container-top"></div>
+					<div class="header-connections-container-bottom"></div>
+				</div>
+			</li>
 			<li class="header-link logout"><a name="logout">Logout</a></li>
 		</ul>
 	</div>
@@ -80,6 +85,7 @@
 			</li>
 		</ul>
 	</div>
+
 	<div id="applications">
 		<div id="explorer" class="application">
 			<h1>Databases</h1>
@@ -892,6 +898,12 @@
 		</div>
 		<div class="buttons"><input type="button" value="Run SQL"/></div>
 	</div>
+
+	<script>
+		$(document).ready(function() {
+			window.Jux = new Juxta();
+		});
+	</script>
 
 </body>
 </html>

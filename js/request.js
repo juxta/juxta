@@ -60,7 +60,7 @@ Juxta.Request = function(connection, cache, options) {
  * @return {jqXHR}
  */
 Juxta.Request.prototype.send = function (params) {
-
+	//
 	var that = this,
 		cid = Number(params.action.cid),
 		cache = {},
@@ -74,7 +74,7 @@ Juxta.Request.prototype.send = function (params) {
 		cid = this.connection.get('cid');
 	}
 
-	if (cid !== undefined) {
+	if (cid !== undefined && params.action !== 'login' && params.action !== 'get=connections' && params.action.get !== 'connections') {
 		if (typeof params.action === 'object') {
 			params.action.cid = cid;
 		} else {
@@ -112,7 +112,7 @@ Juxta.Request.prototype.send = function (params) {
 		that._response(data, callbacks, cache);
 	};
 
-	if (!this.connection.is(cid) && queryString !== 'get=connections' && queryString !== 'login') {
+	if (!this.connection.is(cid) && queryString.search('get=connections') < 0 && queryString.search('login') < 0) {
 		//
 		$.ajax({
 			url: this._ajaxSettings.url + '?get=session&cid=' + cid,

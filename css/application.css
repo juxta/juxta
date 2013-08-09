@@ -1,3 +1,33 @@
+#explorer,
+#backup-restore,
+#table,
+#data-browser,
+#dummy {
+	display: none;
+}
+
+#applications {
+	display: none;
+	position: absolute;
+	top: 57px;
+	right: 11px;
+	bottom: 11px;
+	left: 297px;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+}
+
+#applications.maximized {
+	left: 11px;
+}
+
 /*
  * Application base styles
  */

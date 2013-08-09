@@ -68,6 +68,15 @@ Juxta.Connection.prototype.is = function(cid) {
 	return this._connections[cid] !== undefined;
 };
 
+/**
+ * Check connection is current
+ *
+ * @return {Boolean}
+ */
+Juxta.Connection.prototype.isCurrent = function(cid) {
+	return this._current !== null && this._current === cid;
+};
+
 
 /**
  * Reset current connection
