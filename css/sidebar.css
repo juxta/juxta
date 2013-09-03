@@ -95,9 +95,15 @@
 #sidebar .buttons li a {
 	text-decoration: none;
 	color: #000;
+
 	}
 
-#sidebar .buttons li a:hover {
+#sidebar .buttons li a[disabled] {
+	cursor: default;
+	color: #999;
+}
+
+#sidebar .buttons li a[href]:hover {
 	color: #00559C;
 	}
 

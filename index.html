@@ -26,9 +26,7 @@
 	<script src="js/grid2.js"></script>
 	<script src="js/treegrid.js"></script>
 	<script src="js/application.js"></script>
-	<script src="js/backuprestore.js"></script>
 	<script src="js/browser.js"></script>
-	<script src="js/dummy.js"></script>
 	<script src="js/explorer.js"></script>
 	<script src="js/server.js"></script>
 	<script src="js/table.js"></script>
@@ -64,8 +62,7 @@
 					<li class="processlist"><a href="#processlist">Processlist</a></li>
 					<li class="users"><a href="#users">Users</a></li>
 					<li class="status"><a href="#status">Server&nbsp;Information</a></li>
-					<li class="backup"><a href="#backup">Backup</a></li>
-					<li class="restore"><a href="#restore">Restore</a></li>
+					<li class="backup"><a href="#backup" disabled>Backup</a></li>
 				</ul>
 			</li>
 			<li class="database"><h2><span class="level">Database</span><span class="value"></span></h2>
@@ -79,8 +76,8 @@
 			<li class="table"><h2><span class="level">Table</span><span class="value"></span></h2>
 				<ul class="buttons">
 					<li class="columns"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indexes</a></li>
-					<li class="options"><a href="#options">Options</a></li>
-					<li class="maintenance"><a href="#maintenance">Maintenance</a></li>
+					<li class="options"><a href="#options" disabled>Options</a></li>
+					<li class="maintenance"><a href="#maintenance" disabled>Maintenance</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -321,7 +318,7 @@
 										</table>
 									</div><br class="clear"/>
 								</li>
-							
+
 								<li>
 									<h3 title="Replication statements">Replication</h3>
 									<div class="table">
@@ -465,23 +462,6 @@
 			<div class="status">&nbsp;</div>
 		</div>
 
-		<div id="backup-restore" class="application">
-			<h1>Backup</h1>
-			<div class="menu"></div>
-			<div class="close"><img src="./images/close.png" /></div>
-			<div class="grid clear">
-				<div class="actions clear">Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span> <input type="button" value="Backup" /></div>
-				<ul class="head">
-					<li>Items for backup</li>
-				</ul>
-				<div class="body">
-					<table cellspacing="0"><tbody></tbody></table>
-					<div class="not-found">No items found</div>
-				</div>
-			</div>
-			<div class="status">&nbsp;</div>
-		</div>
-
 		<div id="data-browser" class="application browser">
 			<h1>Browse</h1>
 			<div class="menu"></div>
@@ -522,7 +502,6 @@
 				</div>
 			</div>
 			<div class="status">&nbsp;</div>
-
 
 			<div class="grid columns clear" style="display: none; ">
 				<div class="actions"></div>
@@ -665,12 +644,6 @@
 			</div>-->
 
 			<div class="status">&nbsp;</div>
-		</div>
-
-		<div id="dummy" class="application">
-			<h1>undefined</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/><br class="clear"/>
 		</div>
 	</div>
 

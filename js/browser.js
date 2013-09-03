@@ -48,7 +48,7 @@ Juxta.Browser = function(element, request) {
 
 
 	/**
-	 * @type {Juxta.TreeGrid}
+	 * @type {Juxta.Grid2}
 	 */
 	this._grid = new Juxta.Grid2(this.find('.grid2'));
 

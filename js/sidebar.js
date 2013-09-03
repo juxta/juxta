@@ -42,10 +42,17 @@ Juxta.Sidebar = function(connection) {
 	};
 
 	this._container.find('.buttons li').each(function() {
+		//
 		$(this).html('<span>' + $(this).html() + '</span>')
-			.find('a').each(function() {
-				$(this).addClass($(this).attr('href').replace(/#/g, ''));
+			.find('a').each(function(undefined, link) {
+				link = $(link);
+				if (!link.attr('disabled')) {
+					link.addClass(link.attr('href').replace(/#/g, ''));
+				} else {
+					link.removeAttr('href');
+				}
 			});
+
 		that.tree[this.className] = $(this).parent().parent().attr('class');
 	});
 
@@ -79,10 +86,7 @@ Juxta.Sidebar = function(connection) {
 	);
 
 	//
-	this._connection.on('change', function() {
-		//
-		that.path(that._connection.get());
-	});
+	this._connection.on('change', (function() { that.path(that._connection.get()); }).bind(this));
 
 };
 
@@ -151,15 +155,15 @@ Juxta.Sidebar.prototype.repairLinks = function() {
 
 	var that = this;
 
-	this._container.find('li.host a').each(function() {
+	this._container.find('li.host a[href]').each(function() {
 		this.href = '#/' + that.path.cid + '/' + this.className;
 	});
 
-	this._container.find('li.database a').each(function() {
+	this._container.find('li.database a[href]').each(function() {
 		this.href = '#/' + that.path.cid + '/' + that.path.database + '/' + this.className;
 	});
 
-	this._container.find('li.table a').each(function() {
+	this._container.find('li.table a[href]').each(function() {
 		this.href = '#/' + that.path.cid + '/' + that.path.database + '/' + that.path.table + '/' + this.className;
 	});
 };

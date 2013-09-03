@@ -113,13 +113,6 @@ var Juxta = function() {
 
 
 	/**
-	 * Backup and restore
-	 * @type {Juxta.BackupRestore}
-	 */
-	this.exchange = new Juxta.BackupRestore('#backup-restore');
-
-
-	/**
 	 * Connect to server form
 	 * @type {Juxta.Auth}
 	 */
@@ -131,13 +124,6 @@ var Juxta = function() {
 	 * @type {Juxta.Modal}
 	 */
 	this.messageBox = new Juxta.Modal('#message');
-
-
-	/**
-	 * Dummy appliaction
-	 * @type {Juxta.Dummy}
-	 */
-	this.dummy = new Juxta.Dummy('#dummy');
 
 
 	//
@@ -259,7 +245,6 @@ Juxta.prototype.route = function() {
 		pathParams = [],
 		cid,
 		action;
-	//console.log(paramsString);
 
 	function parseParamsString(str) {
 		//
@@ -310,14 +295,6 @@ Juxta.prototype.route = function() {
 			case 'engines':
 				this.info({cid: cid, show: action});
 				break;
-			case 'backup':
-				this._sidebar.highlight('backup');
-				this.exchange.show();
-				break;
-			case 'restore':
-				this._sidebar.highlight('restore');
-				this.dummy.show({header: 'Restore'});
-				break;
 			case 'login':
 				this._auth.show(params.id);
 				break;
@@ -338,18 +315,6 @@ Juxta.prototype.route = function() {
 			case 'columns':
 				this._sidebar.highlight('columns', {'database': pathParams[0], 'table': pathParams[1]});
 				this.table.edit({cid: cid, table: pathParams[1], from: pathParams[0]});
-				break;
-			case 'foreign':
-				this._sidebar.highlight('foreign', {'database': pathParams[0], 'table': pathParams[1]});
-				this.dummy.show();
-				break;
-			case 'options':
-				this._sidebar.highlight('options', {'database': pathParams[0], 'table': pathParams[1]});
-				this.dummy.show({header: 'Options'});
-				break;
-			case 'maintenance':
-				this._sidebar.highlight('maintenance', {'database': pathParams[0], 'table': pathParams[1]});
-				this.dummy.show({header: {title: 'Maintenance Table', name: pathParams[1]}});
 				break;
 			case 'flush':
 				this._cache.flush();
