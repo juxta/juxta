@@ -135,7 +135,7 @@ var Juxta = function() {
 		container.css({right: ''}).toggle();
 
 		if (container.is(':visible') && $('body').width() - container.offset().left < container.width()) {
-			container.css({right: 7})
+			container.css({right: 7});
 		}
 
 		list.toggleClass('scroll', list.prop('scrollHeight') > list.prop('offsetHeight'));
@@ -536,7 +536,7 @@ Juxta.prototype._changeConnectionCallback = function(cid) {
 			var li = $('<li>').addClass('header-connection'),
 				a = $('<a>');
 
-			if (connection.cid == undefined) {
+			if (connection.cid === undefined) {
 				a.attr('href', '#/login?id=' + connection.id);
 
 			} else if (!this._connection.isCurrent(connection.cid)) {
