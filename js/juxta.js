@@ -36,7 +36,7 @@ var Juxta = function() {
 	/**
 	 * @type {Juxta.Sidebar}
 	 */
-	this._sidebar = new Juxta.Sidebar(this._connection);
+	this._sidebar = new Juxta.Sidebar('#sidebar', this._connection);
 
 
 	/**
@@ -381,7 +381,7 @@ Juxta.prototype._repairHeaderLinks = function(connection) {
  * @return {Juxta}
  */
 Juxta.prototype.show = function() {
-	$('#sidebar:not(.minimized)').slideDown(250);
+	$('#sidebar:not(._minimized)').slideDown(250);
 	$('.float-box').hide();
 	if ($('#applications').not(':visible')) {
 		$('#applications').fadeIn(250);

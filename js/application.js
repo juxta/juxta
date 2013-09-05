@@ -184,7 +184,7 @@ Juxta.Application.prototype.hide = function() {
  * @return {Juxta.Applcation}
  */
 Juxta.Application.prototype.maximize = function() {
-	$('#sidebar').addClass('minimized');
+	$('#sidebar').addClass('_minimized');
 	$('#applications').addClass('maximized');
 
 	return this;
@@ -196,7 +196,7 @@ Juxta.Application.prototype.maximize = function() {
  * @return {Juxta.Applcation}
  */
 Juxta.Application.prototype.restore = function() {
-	$('#sidebar').removeClass('minimized');
+	$('#sidebar').removeClass('_minimized');
 	if ($('#applications').removeClass('maximized').is(':visible')) {
 		$('#sidebar').show();
 	}
