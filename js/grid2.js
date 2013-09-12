@@ -3,52 +3,67 @@
  */
 Juxta.Grid2 = function(grid) {
 
-	/* Containers */
-
 	/**
 	 * @type {jQuery}
 	 */
-	this.container = $(grid);
+	this._container = $(grid);
 
 
 	/**
 	 * Group actions panel
 	 * @type {jQuery}
 	 */
-	this.actions = this.container.find('.grid2-actions');
+	this._actions = this._container.find('.grid2-actions');
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.head = this.container.find('.grid2-head thead');
+	this._head = this._container.find('.grid2-head thead');
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.bodyContainer = this.container.find('.grid2-body');
+	this._bodyContainer = this._container.find('.grid2-body');
 
 
 	/**
 	 * Grid body
 	 * @type {jQuery}
 	 */
-	this.body = this.bodyContainer.find('tbody');
+	this._body = this._bodyContainer.find('tbody');
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.emptyMessage = this.bodyContainer.find('.grid2-body-empty');
+	this._emptyMessage = this._bodyContainer.find('.grid2-body-empty');
 
 
-	/* Properties */
+	/**
+	 * @type {Juxta.Grid2.ContextMenu}
+	 */
+	this._contextMenu = new Juxta.Grid2.ContextMenu(this);
+
 
 	/**
 	 * @type {Array}
 	 */
-	this.columns = [];
+	this._columns = [];
+
+
+	/**
+	 * @type {String}
+	 */
+	this._rowTemplate = '';
+
+
+	/**
+	 * Rows cache
+	 * @type {Object}
+	 */
+	this._cache = {};
 
 
 	/**
@@ -64,416 +79,349 @@ Juxta.Grid2 = function(grid) {
 
 
 	/**
-	 * @type {String}
-	 */
-	this.rowTemplate = '';
-
-
-	/**
-	 * @type {String}
-	 */
-	this.from = null;
-
-
-	/**
-	 * @type {jQuery}
+	 * @type {Boolean}
 	 */
 	this.prepared = null;
 
 
-	/**
-	 * Cache for rows
-	 * @type {Object}
-	 */
-	this.cache = {};
-
-
-	/**
-	 * @type {Juxta.ContextMenu}
-	 */
-	this.contextMenu = null;
-
-
-	var that = this;
-
-	this.bodyContainer.scroll(function() {
-		that.head.parent('table').css({marginLeft: -$(this).scrollLeft()});
-	});
-
 	// Trigger event with type equals action name
-	this.actions.find('.grid2-actions-link,.grid2-actions-button').bind('click', function() {
-		if ($(this).attr('name')) {
-			$(that).trigger('actions/' + $(this).attr('name'));
+	this._actions.find('.grid2-actions-link, .grid2-actions-button').bind('click', (function(event) {
+		if ($(event.target).attr('name')) {
+			this.trigger('actions/' + $(event.target).attr('name'));
 		}
-	});
+	}).bind(this));
 
 	// Select all/nothing
-	$(this).bind('actions/all', function() {
-		that.select();
-	}).bind('actions/nothing', function() {
-		that.deselect();
+	this.on('actions/all', function() {
+		this.select();
+	}).on('actions/nothing', function() {
+		this.deselect();
 	});
 
-	// Change all, nothing links states
-	if (that.count > 0 && that.count == that.selected) {
-		that.actions.find('[name=all]').addClass('active');
-		that.actions.find('[name=nothing]').removeClass('active');
-	} else if (that.selected === 0) {
-		that.actions.find('[name=all]').removeClass('active');
-		that.actions.find('[name=nothing]').addClass('active');
-	} else{
-		that.actions.find('[name=all]').removeClass('active');
-		that.actions.find('[name=nothing]').removeClass('active');
-	}
+	//
+	this._bodyContainer.bind('scroll', (function(event) {
+		//
+		this._head.parent('table').css({marginLeft: -$(event.target).scrollLeft()});
 
-	// Disable group actions buttons if nothing selected, enable else
-	if (that.selected < 1) {
-		that.actions.find('input[type=button]').attr('disabled', true);
-	} else{
-		that.actions.find('input[type=button]').attr('disabled', false);
-	}
+		if (this._bodyContainer.scrollTop() < 10) {
+			this.trigger('scrollTop');
 
-	this.bodyContainer.bind('scroll', function() {
-		if (that.bodyContainer.scrollTop() < 10) {
-			$(that).trigger('scrollTop');
-		} else if (that.bodyContainer.scrollTop() > that.body.height()- that.bodyContainer.height() - 10) {
-			$(that).trigger('scrollBottom');
+		} else if (this._bodyContainer.scrollTop() > this._body.height()- this._bodyContainer.height() - 10) {
+			this.trigger('scrollBottom');
 		}
-	});
+	}).bind(this));
+
+	// Hilight row on select
+	this._bodyContainer.on('change', '.grid2-body-column:first-child input[type=checkbox]', (function(event) {
+		//
+		var checkbox = $(event.target),
+			row = checkbox.closest('.grid2-body-row');
+
+		row.toggleClass('_selected', Boolean(checkbox.attr('checked')));
+		this.trigger('select', row, Boolean(checkbox.attr('name')));
+
+	}).bind(this));
+
+	//
+	this._contextMenu.on('click', (function(name, row) {
+		this.trigger('context', name, row);
+	}).bind(this));
 
 };
+
+Juxta.Lib.extend(Juxta.Grid2, Juxta.Events);
 
 
 /**
  * Set grid body height
+ *
  * @param {Number} height
  * @return {Juxta.Grid2}
  */
 Juxta.Grid2.prototype.setHeight = function(height) {
 	//
-	this.emptyMessage.css({top: height/2});
-	this.bodyContainer.height(height);
+	this._emptyMessage.css({top: height/2});
+	this._bodyContainer.height(height);
 
 	return this;
 };
 
 
 /**
- * @todo Пресмотреть
  * Prepeare grid for filling
  */
-Juxta.Grid2.prototype.prepare = function(params) {
-
-	this.clear();
-
+Juxta.Grid2.prototype.prepare = function(params, values) {
+	//
 	if (!params) {
 		return false;
 	}
 
-	var that = this;
-
-	if (params.from) {
-		this.from = params.from;
-	}
-
 	// Columns
 	if (!params.columns) {
-		throw new ReferenceError('columns is not defined');
+		throw new ReferenceError('Columns are not defined');
 	}
-	that.columns = params.columns;
 
+	this.clear();
+
+	//
+	$.each(params.columns, (function (i, column) {
+		//
+		if (typeof column !== 'object') {
+			column = {name: String(column), title: String(column)};
+
+		} else if (!column.name && column.title) {
+			column.name = String(column.title);
+		}
+
+		if (!column.title) {
+			column.title = column.name;
+		}
+
+		column.name = column.name.toLowerCase();
+
+		if (column.style && !$.isArray(column.style)) {
+			column.style = new Array(column.style);
+		}
+
+		this._columns.push(column);
+
+	}).bind(this));
+
+	//
 	if (params.row) {
-		this.rowTemplate = params.row;
+		this._rowTemplate = params.row;
+
 	} else {
 		//
-		this.rowTemplate = '<tr class="grid2-body-row"><td class="grid2-body-column checkbox"><input type="checkbox"></td>';
-
-		var first = true;
-		$.each(that.columns, function(i, column) {
-			var name,
-				styles = ['grid2-body-column'];
-
-			if (first) {
-				styles.push('first-column');
-			}
-			if (typeof column === 'object') {
-				if (column.title) {
-					name = column.title;
-				} else {
-					name = column.name;
-				}
-				styles.push(column.style);
-			} else {
-				name = column;
-			}
-
-			name = name.toLowerCase();
-			styles.push(name.toLowerCase());
-
-			that.rowTemplate += '<td class="' + styles.join(' ') + '"><div>{' + name + '}</div></td>';
-
-			first = false;
-		});
-
-		that.rowTemplate += '</tr>';
+		this._rowTemplate = '<tr>';
+		$.each(this._columns, (function(i, column) { this._rowTemplate += '<td>{' + column.name + '}</td>'; }).bind(this));
+		this._rowTemplate += '</tr>';
 	}
 
 	// Set actions panel
 	if (params.actions === null) {
-		this.actions.empty();
+		this._actions.empty();
 	} else if (params.actions === false) {
-		this.actions.hide();
+		this._actions.hide();
 	} else if (params.actions) {
-		this.actions.html(params.actions);
+		this._actions.html(params.actions);
 	}
 
 	// Empty grid header and body
 	if (params.head) {
-		this.head.empty().show();
-		that.head.parent('table').css({marginLeft: 0});
+		this._head.empty().show().parent('table').css({marginLeft: 0});
 	} else {
-		this.head.empty().hide();
+		this._head.empty().hide();
 	}
 
 	// Make grid header
-	$.each(that.columns, function(i, column) {
+	$.each(this._columns, (function(i, column) {
 		//
-		var name,
-			styles = ['grid2-head-column'],
-			hint,
-			th;
+		var th,
+			styles = ['grid2-head-column', '_column-' + column.name];
 
-		if (typeof column === 'object') {
-			if (column.title) {
-				name = column.title;
-			} else {
-				name = column.name;
-			}
-			styles.push(column.style);
-			if (column.hint) {
-				hint = column.hint;
-			}
-		} else {
-			name = column;
+		if (column.style) {
+			styles = styles.concat(column.style);
 		}
 
-		styles.push(name.toLowerCase());
+		th = $('<th>').addClass(styles.join(' ')).html(column.title);
 
-		th = $('<th>').addClass(styles.join(' ')).append($('<div>').html(name));
-
-		if (hint) {
-			th.attr('title', hint);
+		if (column.hint) {
+			th.attr('title', column.hint);
 		}
 
-		that.head.append(th);
-	});
+		this._head.append(th);
+	}).bind(this));
 
-	this.head.show();
+	this._head.show();
 
-	this.prepared = true;
+	//
+	if (params.contextMenu) {
+		this._contextMenu.load(params.contextMenu, values);
+	}
 
-	return true;
+	return this.prepared = true;
 };
 
 
 /**
- * @todo Пресмотреть
  * Fill grid data
+ *
  * @param {Array} data
  * @param {Object} params
+ * @param {Object} extra
  */
-Juxta.Grid2.prototype.fill = function(data, params) {
+Juxta.Grid2.prototype.fill = function(data, params, extra) {
 	//
 	if (params) {
-		this.prepare(params);
+		this.prepare(params, extra);
 	}
-
-	var that = this;
 
 	if (data && data.length > 0) {
 		//
 		this.count = this.count + data.length;
 
-		$.each(data, function(i, value) {
+		var valuesForTemplate,
+			cacheName,
+			row,
+			$row,
+			$headRow;
+
+		$.each(data, (function(i, value) {
 			//
-			var forTemplate = {},
-				cacheName;
+			valuesForTemplate = $.extend({}, extra),
+			cacheName = null;
 
-			jQuery.each(that.columns, function(j, column) {
-				var name;
-				if (typeof column === 'object') {
-					name = column.name;
-				} else {
-					name = column;
-				}
-				name = name.toLowerCase();
-
-				forTemplate[name] = value[j];
+			$.each(this._columns, function(j, column) {
+				//
+				valuesForTemplate[column.name] = value[j];
 
 				if (!cacheName) {
-					cacheName = name;
+					cacheName = column.name;
 				}
 			});
 
-			var row;
-
-			if (typeof that.rowTemplate === 'function') {
-				row = that.rowTemplate(forTemplate);
+			if (typeof this._rowTemplate === 'function') {
+				row = this._rowTemplate(valuesForTemplate);
 			} else {
-				row = $.template(that.rowTemplate, forTemplate);
+				row = $.template(this._rowTemplate, valuesForTemplate);
 			}
 
-			that.cache[forTemplate[cacheName]] = $(row).appendTo(that.body);
-		});
+			// Row for thead
+			if (!$headRow) {
+				//
+				$headRow = $(row);
+				$headRow.find('> td').addClass('grid2-head-column').empty();
 
-		$(this).trigger('change');
+				$.each($headRow.find('> td'), (function(i, td) {
+					//
+					if (this._columns[i]) {
+						$(td).addClass('_column-' + this._columns[i].name);
+
+						if (this._columns[i].style) {
+							$(td).addClass(this._columns[i].style.join(' '));
+						}
+					}
+				}).bind(this));
+
+				var th = $('<thead>').append($headRow),
+					table = this._bodyContainer.find('table');
+
+				if (table.find('thead').is('thead')) {
+					table.find('thead').replaceWith(th);
+				} else {
+					table.prepend(th);
+				}
+			}
+
+			// Render body row
+			$row = $(row);
+
+			if (!$row.find('td:first-child [type=checkbox]').is(':input')) {
+				$row.find('> td:first-child').prepend($('<input>').attr('type', 'checkbox'));
+			}
+
+			$row.find('td:first-child [type=checkbox]').attr('name', $row.find('td:first-child a').text());
+
+			$row.addClass('grid2-body-row')
+				.find('> td').addClass('grid2-body-column');
+
+			$.each($row.find('> td'), (function(i, td) {
+				//
+				if (this._columns[i]) {
+					$(td).addClass('_column-' + this._columns[i].name);
+
+					if (this._columns[i].style) {
+						$(td).addClass(this._columns[i].style.join(' '));
+					}
+				}
+			}).bind(this));
+
+			this._cache[valuesForTemplate[cacheName]] = $row.appendTo(this._body);
+
+		}).bind(this));
+
+		this.trigger('change');
 
 	} else if (this.count === 0) {
-		// Show empty grid message
-		this.emptyMessage.css({top: this.bodyContainer.height()/2}).show();
+		this._emptyMessage.css({top: this._bodyContainer.height()/2}).show();
 	}
 };
 
 
 /**
  * Empty grid body
+ *
  * @return {Juxta.Grid2}
  */
 Juxta.Grid2.prototype.empty = function() {
 	//
-	this.body.empty();
+	this._body.empty();
 
 	this.count = 0;
 	this.selected = undefined;
 
-	$(this).trigger('change');
+	this.trigger('change');
 
 	return this;
 };
 
 
 /**
- * 
+ *
  */
 Juxta.Grid2.prototype.clear = function() {
 	//
-	this.head.empty();
 	this.empty();
-	this.emptyMessage.hide();
+	this._head.empty();
+	this._contextMenu.clear();
+	this._emptyMessage.hide();
 
-	this.cache = {};
-	this.content = null;
-	this.from = null;
-	this.columns = [];
+	this._cache = {};
+	this._columns = [];
 	this.prepared = false;
-
-	//$(this).trigger('clear');
 
 	return this;
 };
 
 
 /**
- * @todo Пресмотреть
- * Select rows
+ *
  */
-Juxta.Grid2.prototype.select = function(row) {
-	if (row) {
-		this.selectRow(row);
-	} else {
-		this.selectAll();
-	}
-};
-
-
-/**
- * @todo Пресмотреть
- * Deselect rows
- */
-Juxta.Grid2.prototype.deselect = function(row) {
-	if (row) {
-		this.deselectRow(row);
-	} else {
-		this.deselectAll();
-	}
-};
-
-
-/**
- * Select all rows
- */
-Juxta.Grid2.prototype.selectAll = function() {
-};
-
-
-/**
- * Deselect all rows
- */
-Juxta.Grid2.prototype.deselectAll = function() {
-};
-
-
-/**
- * Select one row
- */
-Juxta.Grid2.prototype.selectRow = function(row) {
-	// Highlight link
-	$(row).find('.grid-body-column.checkbox').next('td').find('a').addClass('checked');
-};
-
-/**
- * Deselect one row
- */
-Juxta.Grid2.prototype.deselectRow = function(row) {
-	// Unhighlight link
-	$(row).find('td.check').next('td').find('a').removeClass('checked');
-};
-
-/**
- * Returns names of selected rows
- * @todo Пресмотреть
- * @param {String} filter
- */
-Juxta.Grid2.prototype.getSelectedRows = function() {
-};
-
-/**
- * Removes rows by name
- * @param {String} name
- * @param {String} filter
- */
-Juxta.Grid2.prototype.remove = function() {
-};
-
-
 Juxta.Grid2.prototype.enableSelectRows = function() {
-	$.each(this.cache, function() {
-		this.find('.grid2-body-column.checkbox').show();
+	$.each(this._cache, function() {
+		this.find('.grid2-body-column._checkbox').show();
 	});
-	this.container.addClass('select-rows');
+	this._container.removeClass('_select-rows-disabled');
 };
 
 
+/**
+ *
+ */
 Juxta.Grid2.prototype.disableSelectRows = function() {
-	$.each(this.cache, function() {
-		this.find('.grid2-body-column.checkbox').hide();
+	$.each(this._cache, function() {
+		this.find('.grid2-body-column._checkbox').hide();
 	});
-	this.container.removeClass('select-rows');
+	this._container.addClass('_select-rows-disabled');
 };
 
 
+/**
+ * @return {Boolean}
+ */
 Juxta.Grid2.prototype.vertScrollEnabled = function() {
-	return this.bodyContainer.height() < this.body.height();
+	return this._bodyContainer.height() < this._body.height();
 };
 
 Juxta.Grid2.prototype.is = function() {
-	return $.fn.is.apply(this.container, arguments);
+	return $.fn.is.apply(this._container, arguments);
 };
 
 Juxta.Grid2.prototype.show = function() {
-	this.container.show();
+	this._container.show();
 };
 
 Juxta.Grid2.prototype.hide = function() {
-	this.container.hide();
+	this._container.hide();
 };
