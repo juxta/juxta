@@ -72,18 +72,18 @@ Juxta.Browser = function(element, request) {
 	this.mode = null;
 
 
-	$(this._grid).bind('change', $.proxy(function () {
+	this._grid.on('change', $.proxy(function () {
 		this._updateStatus();
 	}, this));
 
 	$(window).bind('resize', {that: this}, this.stretch);
 
-	$(this._grid).bind('scrollBottom', $.proxy(function() {
+	this._grid.on('scrollBottom', (function() {
 		//
 		if (this._grid.count < this.total && this._lastRequest.state() == 'resolved') {
 			this._browseNextRowsRequest();
 		}
-	}, this));
+	}).bind(this));
 
 };
 
@@ -199,11 +199,9 @@ Juxta.Browser.prototype.browse = function(params) {
 	this._grid.show();
 	this.find('.sql').hide();
 
-	var that = this;
-
 	this.show({
 		header: {title: 'Browse', name: params.browse, from: params.from},
-		menu: {'SQL': {click: function() { that.toggleEditor(); return false; }}}
+		menu: {'SQL': {click: (function() { this.toggleEditor(); return false; }).bind(this)}}
 	});
 
 	this.mode = 'browse';
@@ -220,9 +218,7 @@ Juxta.Browser.prototype.browse = function(params) {
  */
 Juxta.Browser.prototype._browseRequest = function(params) {
 
-	var query = $.extend({}, params),
-		options = {},
-		that= this;
+	var query = $.extend({}, params);
 
 	if (query.limit === undefined) {
 		query.limit = this._options.limit;
@@ -236,20 +232,19 @@ Juxta.Browser.prototype._browseRequest = function(params) {
 			action: query,
 			context: this,
 			success: function(response) {
-				that._browseCallback(response, query);
+				this._browseCallback(response, query);
 			}
 		},
-		this._settings,
-		options
+		this._settings
 	));
 
 	this._editor.edit('SELECT * FROM `' + query.browse + '`;');
 
-	$.when(this._lastRequest).then(function() {
-		if (!that._grid.vertScrollEnabled() && that._grid.count < that.total && that._lastRequest.state() == 'resolved') {
-			that.requestNextRows();
+	$.when(this._lastRequest).then((function() {
+		if (!this._grid.vertScrollEnabled() && this._grid.count < this.total && this._lastRequest.state() == 'resolved') {
+			this.requestNextRows();
 		}
-	});
+	}).bind(this));
 
 	return this._lastRequest;
 };
@@ -276,7 +271,8 @@ Juxta.Browser.prototype._browseCallback = function(response, query) {
 		this._grid.prepare(params);
 	}
 
-	this._grid.fill(response.data);
+	this._grid.disableSelectRows().fill(response.data);
+
 	this.ready()._updateStatus();
 };
 
@@ -326,7 +322,9 @@ Juxta.Browser.prototype.sql = function(params) {
  * @return {jqXHR}
  */
 Juxta.Browser.prototype._updateStatus = function() {
+	//
 	var status = '';
+
 	if (this._grid.count) {
 		if (this._grid.count < this.total) {
 			status = this._grid.count + (this._grid.count == 1 ? ' row' : ' rows') + ' from ' + this.total;
@@ -334,6 +332,7 @@ Juxta.Browser.prototype._updateStatus = function() {
 			status = this._grid.count + (this._grid.count == 1 ? ' row' : ' rows');
 		}
 	}
+
 	this._status.text(status);
 
 	return this;

@@ -151,7 +151,7 @@
 
 }
 
-.grid-body._select-rows-disabled .grid2-body-column:first-child input[type=checkbox] {
+.grid2._select-rows-disabled .grid2-body-column:first-child input[type=checkbox] {
 	display: none;
 }
 

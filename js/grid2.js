@@ -389,10 +389,10 @@ Juxta.Grid2.prototype.clear = function() {
  *
  */
 Juxta.Grid2.prototype.enableSelectRows = function() {
-	$.each(this._cache, function() {
-		this.find('.grid2-body-column._checkbox').show();
-	});
+	//
 	this._container.removeClass('_select-rows-disabled');
+
+	return this;
 };
 
 
@@ -400,10 +400,10 @@ Juxta.Grid2.prototype.enableSelectRows = function() {
  *
  */
 Juxta.Grid2.prototype.disableSelectRows = function() {
-	$.each(this._cache, function() {
-		this.find('.grid2-body-column._checkbox').hide();
-	});
+	//
 	this._container.addClass('_select-rows-disabled');
+
+	return this;
 };
 
 
