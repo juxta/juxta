@@ -83,24 +83,23 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 
 		var template = '';
 
-		template += '<tr class="grid2-body-row"><td class="grid2-body-column checkbox"><input type="checkbox"></td>';
-		template += '<td class="grid2-body-column first-column column"><div>' + column.name + '</div></td>';
-		template += '<td class="grid2-body-column type"><div>' + column.type + '</div></td>';
+		template += '<tr><td>' + column.name + '</td>';
+		template += '<td>' + column.type + '</td>';
 
 		// IS NULL
-		template += '<td class="grid2-body-column null"><div><input type=checkbox disabled ' + (column.is_null === 'YES' ? 'checked' : '') + '></div></td>';
+		template += '<td><input type=checkbox disabled ' + (column.is_null === 'YES' ? 'checked' : '') + '></td>';
 
 		// attributes
-		template += '<td class="grid2-body-column attributes"><div>';
+		template += '<td>';
 		if ($.isArray(column.attributes)) {
 			$.each(column.attributes, function(i, attribute) {
 				template += '<span class="badge badge-hidden y">' + attribute + '</span>';
 			});
 		}
-		template += '</div></td>';
+		template += '</td>';
 
 		// default
-		template += '<td class="grid2-body-column default"><div>';
+		template += '<td>';
 		if (column['default'] === null && column.is_null === 'YES') {
 			template += '<span class="badge badge-null">NULL</span>';
 		} else if (column['default'] === 'CURRENT_TIMESTAMP') {
@@ -108,15 +107,16 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 		} else if (column['default'] !== null) {
 			template += column['default'];
 		}
-		template += '</div></td>';
+		template += '</td>';
 
 		// options
-		template += '<td class="grid2-body-column options"><div>';
+		template += '<td>';
 		if ($.isArray(column.options)) {
 			$.each(column.options, function(i, option) {
 				template += '<span class="badge badge-hidden y">' + option + '</span>';
 			});
 		}
+		template += '</td>';
 
 		return template;
 	};
@@ -143,6 +143,6 @@ Juxta.Table.prototype._requestShowTable = function(params) {
 
 Juxta.Table.prototype._responseShowTable = function(response) {
 	//
-	this._columns.fill(response.columns);
+	this._columns.disableSelectRows().fill(response.columns);
 	this.ready();
 };

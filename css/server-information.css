@@ -204,7 +204,7 @@ td.number {
 	text-align: right;
 	}
 
-div.table {
+#server-info div.table {
 	float: left;
 	margin: 0 28px 0 24px;
 	padding: 2px;
