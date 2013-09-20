@@ -83,7 +83,7 @@ Juxta.Auth = function(element, request) {
 	}, this));
 
 	this._form.find('[name=host]').attr('placeholder', 'localhost');
-	this._form.find('[name=port]').attr('placeholder', Juxta.defaultPort);
+	this._form.find('[name=port]').attr('placeholder', Juxta.DEFAULT_PORT);
 
 };
 
@@ -120,7 +120,7 @@ Juxta.Auth.prototype.login = function() {
 		this._form.find('[name=host]').val('localhost');
 	}
 	if ($.trim(this._form.find('[name=port]').val()) === '') {
-		this._form.find('[name=port]').val(Juxta.defaultPort);
+		this._form.find('[name=port]').val(Juxta.DEFAULT_PORT);
 	}
 
 	this._submit.attr('disabled', true);
@@ -185,7 +185,7 @@ Juxta.Auth.prototype._getConnectionsCallback = function(response, id) {
 			if (connection.name === undefined) {
 				connection.name = connection.user + '@' + connection.host;
 
-				if (connection.port !== Juxta.defaultPort) {
+				if (connection.port !== Juxta.DEFAULT_PORT) {
 					connection.name += ':' + connection.port;
 				}
 			}

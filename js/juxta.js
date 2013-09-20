@@ -216,13 +216,15 @@ var Juxta = function() {
 
 /**
  * Default MySQL port
+ *
  * @type {Number}
  */
-Juxta.defaultPort = 3306;
+Juxta.DEFAULT_PORT = 3306;
 
 
 /**
  * Run application
+ *
  * @return {Juxta}
  */
 Juxta.prototype.run = function() {
@@ -347,7 +349,7 @@ Juxta.prototype._updateWindowTitle = function(connection) {
 		if (!title) {
 			title = connection.user + '@' +  connection.host;
 
-			if (Number(connection.port) != Juxta.defaultPort) {
+			if (Number(connection.port) != Juxta.DEFAULT_PORT) {
 				title += ':' + connection.port;
 			}
 		}
@@ -518,7 +520,7 @@ Juxta.prototype._changeConnectionCallback = function(cid) {
 	if (!text) {
 		text = this._connection.get('user') + '@' + this._connection.get('host');
 
-		if (Number(this._connection.get('port')) !== Juxta.defaultPort) {
+		if (Number(this._connection.get('port')) !== Juxta.DEFAULT_PORT) {
 			text += ':' + this._connection.get('port');
 		}
 	}
