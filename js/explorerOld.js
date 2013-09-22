@@ -1,12 +1,12 @@
 /*global window, confirm, Jux */
 
 /**
- * @class Explorer
+ * @class ExplorerOld
  * @extends Juxta.Application
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
-Juxta.Explorer = function(element, request) {
+Juxta.ExplorerOld = function(element, request) {
 
 	Juxta.Application.prototype.constructor.call(this, element, {cache: 600});
 
@@ -126,7 +126,7 @@ Juxta.Explorer = function(element, request) {
 				context: [['database', 'databases']],
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="drop" value="Drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{database}"></td><td class="database"><a href="#/{cid}/{database}/tables">{database}</a></td></tr>',
-				contextMenu: '<li onclick="location.hash = \'/{cid}/\' + Jux._explorer._grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Jux.drop({drop: \'database\', item: \'database\', database: Jux._explorer._grid.contextMenu.value.attr(\'name\')});">Drop</li><li onclick="Jux._explorer.properties({database: Jux._explorer._grid.contextMenu.value.attr(\'name\')}); ">Properties</li>'
+				contextMenu: '<li onclick="location.hash = \'/{cid}/\' + Jux._explorerOld._grid.contextMenu.value.attr(\'name\') + \'/tables\'">Tables</li><li class="drop" onclick="Jux.drop({drop: \'database\', item: \'database\', database: Jux._explorerOld._grid.contextMenu.value.attr(\'name\')});">Drop</li><li onclick="Jux._explorerOld.properties({database: Jux._explorerOld._grid.contextMenu.value.attr(\'name\')}); ">Properties</li>'
 			}
 		},
 		processlist: {
@@ -145,7 +145,7 @@ Juxta.Explorer = function(element, request) {
 				},
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" name="kill" value="Kill"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{process}"></td><td class="process"><a>{process}</td><td class="process-user"><span class="overflowed">{user}@{host}</span></td><td class="process-database">{ondatabase}</td><td class="process-command">{command}</td><td class="process-time">{time}</td><td></td></tr>',
-				contextMenu: '<li>Information</li><li onclick="Jux.kill({cid: \'{cid}\', processes: [Jux._explorer._grid.contextMenu.value.attr(\'name\')]});">Kill</li>'
+				contextMenu: '<li>Information</li><li onclick="Jux.kill({cid: \'{cid}\', processes: [Jux._explorerOld._grid.contextMenu.value.attr(\'name\')]});">Kill</li>'
 			},
 			query: {cache: Infinity, index: {name: 'processId', field: 0, path: ['data']}, refresh: true}
 		},
@@ -187,7 +187,7 @@ Juxta.Explorer = function(element, request) {
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{table}"></td><td class="table"><span class="overflowed"><a href="#/{cid}/{database}/{table}/columns">{table}</a></span></td><td class="table-engine">{engine}</td><td class="table-rows">{rows|number}</td><td class="table-size">{size|size}</td><td class="table-update-date">{updateDate|date}</td></tr>',
 				'context': [['table', 'tables'], 'engine', 'rows', 'size', 'updateDate'],
-				'contextMenu': '<li onclick="location.hash = \'/{cid}/{database}/\' + Jux._explorer._grid.contextMenu.value.attr(\'name\') + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'/{cid}/{database}/\' + Jux._explorer._grid.contextMenu.value.attr(\'name\') + \'/browse\'">Browse</li><li class="drop" onclick="Jux.drop({drop: \'table\', item: \'table\', table: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: Jux._explorer._grid.from});">Drop</li><li onclick="Jux._explorer.properties({table: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: \'{database}\'}); ">Properties</li>'
+				'contextMenu': '<li onclick="location.hash = \'/{cid}/{database}/\' + Jux._explorerOld._grid.contextMenu.value.attr(\'name\') + \'/columns\'">Columns & Indexes</li><li onclick="location.hash = \'/{cid}/{database}/\' + Jux._explorerOld._grid.contextMenu.value.attr(\'name\') + \'/browse\'">Browse</li><li class="drop" onclick="Jux.drop({drop: \'table\', item: \'table\', table: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: Jux._explorerOld._grid.from});">Drop</li><li onclick="Jux._explorerOld.properties({table: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: \'{database}\'}); ">Properties</li>'
 			}
 		},
 		views: {
@@ -204,7 +204,7 @@ Juxta.Explorer = function(element, request) {
 				actions: 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{view}"></td><td class="view"><a href="#/{cid}/{database}/{view}/browse">{view}</a></td><td class="view-definer">{definer}</td><td class="view-updatable"><span class="{updatable}">{updatable}</span></td></tr>',
 				context: [['view', 'views'], 'definer', 'updatable'],
-				contextMenu: '<li>Browse</li><li onclick="Jux._explorer.edit({view: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: Jux._explorer._grid.from})">Edit</li><li class="drop" onclick="Jux.drop({drop: \'view\', item: \'view\', view: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: Jux._explorer._grid.from});">Drop</li><li>Properties</li>'
+				contextMenu: '<li>Browse</li><li onclick="Jux._explorerOld.edit({view: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: Jux._explorerOld._grid.from})">Edit</li><li class="drop" onclick="Jux.drop({drop: \'view\', item: \'view\', view: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: Jux._explorerOld._grid.from});">Drop</li><li>Properties</li>'
 			}
 		},
 		routines: {
@@ -221,7 +221,7 @@ Juxta.Explorer = function(element, request) {
 				'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{routine}" routine="{type}"></td><td class="routine"><a>{routine}</a></td><td class="routine-definer">{definer}</td><td class="routine-return">{return}</td></tr>',
 				'context': [['routine', 'routines'], 'type', 'definer', 'return'],
-				'contextMenu': '<li onclick="var params = {edit: Jux._explorer._grid.contextMenu.value.attr(\'routine\'), from: Jux._explorer._grid.from}; params[Jux._explorer._grid.contextMenu.value.attr(\'routine\')] = Jux._explorer._grid.contextMenu.value.attr(\'name\'); Jux._explorer.edit(params); ">Edit</li><li class="drop" onclick="var request = {drop: Jux._explorer._grid.contextMenu.value.attr(\'routine\'), item: Jux._explorer._grid.contextMenu.value.attr(\'routine\'), from: Jux._explorer._grid.from}; request[request.drop] = Jux._explorer._grid.contextMenu.value.attr(\'name\'); Jux.drop(request);">Drop</li><li>Properties</li>'
+				'contextMenu': '<li onclick="var params = {edit: Jux._explorerOld._grid.contextMenu.value.attr(\'routine\'), from: Jux._explorerOld._grid.from}; params[Jux._explorerOld._grid.contextMenu.value.attr(\'routine\')] = Jux._explorerOld._grid.contextMenu.value.attr(\'name\'); Jux._explorerOld.edit(params); ">Edit</li><li class="drop" onclick="var request = {drop: Jux._explorerOld._grid.contextMenu.value.attr(\'routine\'), item: Jux._explorerOld._grid.contextMenu.value.attr(\'routine\'), from: Jux._explorerOld._grid.from}; request[request.drop] = Jux._explorerOld._grid.contextMenu.value.attr(\'name\'); Jux.drop(request);">Drop</li><li>Properties</li>'
 			}
 		},
 		triggers: {
@@ -239,20 +239,20 @@ Juxta.Explorer = function(element, request) {
 				'actions': 'Select:&nbsp;<span name="all" class="like-a all">all</span>,&nbsp;<span name="nothing" class="like-a nothing">nothing</span>&nbsp;<input type="button" value="Drop" name="drop"/>',
 				row: '<tr><td class="check"><input type="checkbox" name="{trigger}"></td><td class="trigger"><a>{trigger}</a></td><td class="trigger-table">{table}</td><td class="trigger-event"><span>{timing}</span>&nbsp;<span>{event}</span></td><td class="trigger-definer">{definer}</td></tr>',
 				'context': [['trigger', 'triggers'], 'table', 'event', 'timing', 'definer', 'size'],
-				'contextMenu': '<li onclick=" Jux._explorer.edit({trigger: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: Jux._explorer._grid.from})">Edit</li><li class="drop" onclick="Jux.drop({drop: \'trigger\', item: \'trigger\', trigger: Jux._explorer._grid.contextMenu.value.attr(\'name\'), from: Jux._explorer._grid.from});">Drop</li><li>Properties</li>'
+				'contextMenu': '<li onclick=" Jux._explorerOld.edit({trigger: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: Jux._explorerOld._grid.from})">Edit</li><li class="drop" onclick="Jux.drop({drop: \'trigger\', item: \'trigger\', trigger: Jux._explorerOld._grid.contextMenu.value.attr(\'name\'), from: Jux._explorerOld._grid.from});">Drop</li><li>Properties</li>'
 			}
 		}
 	};
 
 };
 
-Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
+Juxta.Lib.extend(Juxta.ExplorerOld, Juxta.Application);
 
 /**
  * Show explorer
  * @param {Object} options
  */
-Juxta.Explorer.prototype.show = function() {
+Juxta.ExplorerOld.prototype.show = function() {
 	//
 	Juxta.Application.prototype.show.apply(this, arguments);
 	this.stretch();
@@ -265,7 +265,7 @@ Juxta.Explorer.prototype.show = function() {
  * Stretch grid to window height
  * @param {Event} event
  */
-Juxta.Explorer.prototype.stretch = function(event) {
+Juxta.ExplorerOld.prototype.stretch = function(event) {
 	var that = event && event.data.explorer || this;
 	if (that.is(':visible')) {
 		// @todo Remove hardcoded number
@@ -278,7 +278,8 @@ Juxta.Explorer.prototype.stretch = function(event) {
  * Prepare grid for response
  * @param {string} template
  */
-Juxta.Explorer.prototype._prepare = function(template) {
+Juxta.ExplorerOld.prototype._prepare = function(template) {
+	//
 	if (template === this._preparedFor) {
 		return true;
 	} else if (this._grid.prepare(this._settings.templates[template].grid)) {
@@ -294,7 +295,7 @@ Juxta.Explorer.prototype._prepare = function(template) {
  * Explore
  * @param {Object} params
  */
-Juxta.Explorer.prototype.explore = function(params) {
+Juxta.ExplorerOld.prototype.explore = function(params) {
 	return this._requestExplore(params);
 };
 
@@ -303,7 +304,7 @@ Juxta.Explorer.prototype.explore = function(params) {
  * Request for explore
  * @param {Object} params
  */
-Juxta.Explorer.prototype._requestExplore = function(params) {
+Juxta.ExplorerOld.prototype._requestExplore = function(params) {
 	//
 	if (this._settings.templates[params.show].head.header.from === null) {
 		this._settings.templates[params.show].head.header.from = params.from;
@@ -348,7 +349,7 @@ Juxta.Explorer.prototype._requestExplore = function(params) {
  * @param {Object} request
  * @return {Juxta.Explorer}
  */
-Juxta.Explorer.prototype._responseExplore = function(response, request) {
+Juxta.ExplorerOld.prototype._responseExplore = function(response, request) {
 	//
 	this.ready();
 
@@ -367,7 +368,7 @@ Juxta.Explorer.prototype._responseExplore = function(response, request) {
  * Drop item
  * @para {Object} params
  */
-Juxta.Explorer.prototype.drop = function(params) {
+Juxta.ExplorerOld.prototype.drop = function(params) {
 	var message = '',
 		countItemsForDrop = 0,
 		singleItemForDrop = null;
@@ -409,7 +410,7 @@ Juxta.Explorer.prototype.drop = function(params) {
  * Request for drop
  * @param {Object} params
  */
-Juxta.Explorer.prototype._requestDrop = function(params) {
+Juxta.ExplorerOld.prototype._requestDrop = function(params) {
 	var action = {drop: params.drop},
 		data = {};
 
@@ -433,7 +434,7 @@ Juxta.Explorer.prototype._requestDrop = function(params) {
  * Response for drop request
  * @param {Object} response
  */
-Juxta.Explorer.prototype._responseDrop = function(response) {
+Juxta.ExplorerOld.prototype._responseDrop = function(response) {
 	this._grid.deselect();
 
 	// @todo Remove `response.dropped.procedure` etc.
@@ -458,7 +459,7 @@ Juxta.Explorer.prototype._responseDrop = function(response) {
  * @param {Object} params
  * @return {jqXHR}
  */
-Juxta.Explorer.prototype.properties = function(params) {
+Juxta.ExplorerOld.prototype.properties = function(params) {
 	//
 	if (params.database) {
 		//
@@ -482,7 +483,7 @@ Juxta.Explorer.prototype.properties = function(params) {
  * @param {Function} callback
  * @return {jqXHR}
  */
-Juxta.Explorer.prototype._requestProperties = function(query, callback) {
+Juxta.ExplorerOld.prototype._requestProperties = function(query, callback) {
 	//
 	return this._request.send({action: query, success: callback, context: this});
 };
@@ -492,7 +493,7 @@ Juxta.Explorer.prototype._requestProperties = function(query, callback) {
  * Response for getting database properties request
  * @param {Object} response
  */
-Juxta.Explorer.prototype._responseDatabaseProperties = function(response) {
+Juxta.ExplorerOld.prototype._responseDatabaseProperties = function(response) {
 	// @todo Remove global
 	Jux.message(
 		$.template($('#database-properties').html(), response.properties),
@@ -505,7 +506,7 @@ Juxta.Explorer.prototype._responseDatabaseProperties = function(response) {
  * Table properties
  * @param {Object} response
  */
-Juxta.Explorer.prototype._responseTableProperties = function(response) {
+Juxta.ExplorerOld.prototype._responseTableProperties = function(response) {
 	// @todo Remove global
 	Jux.message(
 		$.template($('#table-properties').html(), response.properties),
@@ -518,7 +519,7 @@ Juxta.Explorer.prototype._responseTableProperties = function(response) {
  * Kill processes
  * @param {Object} params
  */
-Juxta.Explorer.prototype.kill = function(params) {
+Juxta.ExplorerOld.prototype.kill = function(params) {
 	//
 	var message;
 
@@ -538,7 +539,7 @@ Juxta.Explorer.prototype.kill = function(params) {
  * Request kill processes
  * @param {Object} params
  */
-Juxta.Explorer.prototype._requestKill = function(params) {
+Juxta.ExplorerOld.prototype._requestKill = function(params) {
 	this._request.send({
 		action: 'kill',
 		data: {processes: params.processes},
@@ -553,7 +554,7 @@ Juxta.Explorer.prototype._requestKill = function(params) {
  * Kill processes response
  * @param {Object} response
  */
-Juxta.Explorer.prototype._responseKill = function(response) {
+Juxta.ExplorerOld.prototype._responseKill = function(response) {
 	this._grid.deselect();
 	this._grid.remove(response.killed);
 };
@@ -563,6 +564,6 @@ Juxta.Explorer.prototype._responseKill = function(response) {
  * Run routine editing
  * @param {Object} params
  */
-Juxta.Explorer.prototype.edit = function(params) {
+Juxta.ExplorerOld.prototype.edit = function(params) {
 	this._routineEditor.edit(params);
 };

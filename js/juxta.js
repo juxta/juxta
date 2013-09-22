@@ -88,7 +88,7 @@ var Juxta = function() {
 	 * Server explorer
 	 * @type {Juxta.Explorer}
 	 */
-	this._explorer = new Juxta.Explorer('#explorer', this._request);
+	this._explorerOld = new Juxta.ExplorerOld('#explorer', this._request);
 
 
 	/**
@@ -147,7 +147,7 @@ var Juxta = function() {
 	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
 
 	// Show Juxta when application ready to show
-	$.each([this._explorer, this.server, this.browser, this.table], function(i, application) {
+	$.each([this._explorerOld, this.server, this.browser, this.table], function(i, application) {
 		application.on('ready', $.proxy(that.show, that));
 	});
 
@@ -288,7 +288,7 @@ Juxta.prototype.route = function() {
 			case 'databases':
 			case 'processlist':
 			case 'users':
-				this.explore({cid: cid, show: action});
+				this.exploreOld({cid: cid, show: action});
 				break;
 			case 'status':
 			case 'status-full':
@@ -305,7 +305,7 @@ Juxta.prototype.route = function() {
 			case 'views':
 			case 'routines':
 			case 'triggers':
-				this.explore({cid: cid, show: action, from: pathParams[0]});
+				this.exploreOld({cid: cid, show: action, from: pathParams[0]});
 				break;
 			//
 			case 'browse':
@@ -410,14 +410,14 @@ Juxta.prototype.hide = function() {
 /**
  *
  */
-Juxta.prototype.explore = function(params) {
+Juxta.prototype.exploreOld = function(params) {
 	if (params.from) {
 		this._sidebar.highlight(params.show, {'database': params.from});
-		return this._explorer.explore(params);
+		return this._explorerOld.explore(params);
 
 	} else {
 		this._sidebar.highlight(params.show);
-		return this._explorer.explore(params);
+		return this._explorerOld.explore(params);
 	}
 };
 
@@ -426,7 +426,7 @@ Juxta.prototype.explore = function(params) {
  *
  */
 Juxta.prototype.drop = function(params) {
-	this._explorer.drop(params);
+	this._explorerOld.drop(params);
 };
 
 
@@ -434,7 +434,7 @@ Juxta.prototype.drop = function(params) {
  *
  */
 Juxta.prototype.kill = function(params) {
-	this._explorer.kill(params);
+	this._explorerOld.kill(params);
 };
 
 
@@ -504,7 +504,6 @@ Juxta.prototype.redirect = function(action, cid) {
 
 
 /**
- *
  * @param {Number} cid
  */
 Juxta.prototype._changeConnectionCallback = function(cid) {
