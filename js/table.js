@@ -22,39 +22,47 @@ Juxta.Table = function(element, request) {
 	this._columns = new Juxta.Grid2(this.find('.grid2'));
 
 
-	$(window).bind('resize', {that: this}, this.stretch);
+	$(window).bind('resize', this._stretch.bind(this));
 
 };
 
 Juxta.Lib.extend(Juxta.Table, Juxta.Application);
 
+
 /**
  * Show editor
+ *
  * @param {Object} options
  * @return {Juxta.TableEditor}
  */
 Juxta.Table.prototype.show = function() {
 	Juxta.Application.prototype.show.apply(this, arguments);
-	this.stretch();
+	this._stretch();
 
 	return this;
 };
 
 
 /**
- * Stretch a grid
- * @param {Event} event
+ * Stretch grid to window height
  */
-Juxta.Table.prototype.stretch = function(event) {
-	var that = event && event.data.that || this;
-	if (that.is(':visible')) {
-		that._columns.setHeight($('#applications').height() - that.find('.grid2-body').position().top - that._status.height() - 24);
+Juxta.Table.prototype._stretch = function() {
+	//
+	var height = 0;
+
+	if (this.is(':visible')) {
+		height = this._applicationsContainer.height();
+		height -= this.find('.grid2-body').position().top + this._status.outerHeight(true); // minus padding from top, minus status bar height
+		height -= this.find('.grid2-body').outerHeight() - this.find('.grid2-body').height(); // minus grid body padding + border
+
+		this._columns.setHeight(height);
 	}
 };
 
 
 /**
  * Show table editor
+ *
  * @param {Object} params
  * @return {jqXHR}
  */
@@ -70,6 +78,7 @@ Juxta.Table.prototype.edit = function(params) {
 
 /**
  * Request data
+ *
  * @param {Object} params
  * @return {jqXHR}
  */

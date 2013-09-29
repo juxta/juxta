@@ -83,8 +83,6 @@ Juxta.Explorer.prototype.show = function() {
 
 /**
  * Stretch grid to window height
- *
- * @param {Event} event
  */
 Juxta.Explorer.prototype._stretch = function() {
 	//
