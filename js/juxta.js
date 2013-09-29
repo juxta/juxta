@@ -9,11 +9,9 @@
  */
 
 /**
- * @class Juxta base application
+ * @class Juxta
  */
 var Juxta = function() {
-
-	var that = this;
 
 	/**
 	 * @type {String}
@@ -22,7 +20,7 @@ var Juxta = function() {
 
 
 	/**
-	 * @type Juxta.Cache
+	 * @type {Juxta.Cache}
 	 */
 	this._cache = new Juxta.Cache();
 
@@ -45,34 +43,24 @@ var Juxta = function() {
 	 */
 	this._request = new Juxta.Request(this._connection, this._cache, {
 		request: {
-			beforeSend: function() {
-				that.loading();
-			},
-			complete: function() {
-				that.loading(false);
-			},
-			error: function(xhr, status) {
+			beforeSend: this.loading.bind(this, null),
+			complete: this.loading.bind(this, false),
+			error: (function(xhr, status) {
 				if (status == 'parsererror') {
-					that.error('Answer parsing error');
+					this.error('Answer parsing error');
 				} else {
-					that.error(xhr.status + ' ' + xhr.statusText);
+					this.error(xhr.status + ' ' + xhr.statusText);
 				}
-			}
+			}).bind(this)
 		},
 		response: {
-			connectionError: function(response) {
-				that.error(response.error);
-				that._auth.show();
-			},
-			sessionNotFound: function() {
-				that.redirect('login');
-			},
-			error: function(response) {
-				that.error(response.error);
-			},
-			unknowStatus: function() {
-				that.error('Response with unknow status recived');
-			}
+			connectionError: (function(response) {
+				this.error(response.error);
+				this._auth.show();
+			}).bind(this),
+			sessionNotFound: this.redirect.bind(this, 'login'),
+			error: (function(response) { this.error(response.error); }).bind(this),
+			unknowStatus: this.error.bind(this, 'Response with unknow status recived')
 		}
 	});
 
@@ -157,53 +145,50 @@ var Juxta = function() {
 
 	//
 	this._auth
-		.on('before-show', $.proxy(function() {
+		.on('before-show', (function() {
 			//
 			this.hide()._updateWindowTitle();
 			this._connection.reset();
 
-		}, this))
-		.on('login', function(connection) {
-			that._connection.set(connection.cid, connection);
-			that.redirect('databases', connection.cid);
-		})
-		.on('logout', function() {
-			that._cache.flush();
-			that._updateWindowTitle().redirect('login');
-		})
-		.on('change', function(cid) {
-			that.redirect('', cid);
-		});
+		}).bind(this))
+		.on('login', (function(connection) {
+			this._connection.set(connection.cid, connection);
+			this.redirect('databases', connection.cid);
+
+		}).bind(this))
+		.on('logout', (function() {
+
+			this._cache.flush();
+			this._updateWindowTitle().redirect('login');
+		}).bind(this))
+		.on('change', (function(cid) { this.redirect('', cid); }).bind(this));
 
 	// Notifications
-	this._auth.on('notify', function(message, type, options) {
+	this._auth.on('notify', (function(message, type, options) {
 		if (type === 'error') {
-			that.error(message, options);
+			this.error(message, options);
 		} else if (type === 'loading') {
-			that.loading(message, options);
+			this.loading(message, options);
 		} else {
-			that.notify(message, options);
+			this.notify(message, options);
 		}
-	});
+	}).bind(this));
 
 	//
-	$('#header a[name=about]').bind('click', function() {
-		that.about();
-		return false;
-	});
+	$('#header a[name=about]').on('click', (function() { this.message($('#about').html(), {title: ''}); return false; }).bind(this));
 
 	//
-	$('#header .sql a').bind('click', function() {
-		if (that.browser.is(':visible') && that.browser.mode == 'browse') {
-			that.browser.toggleEditor();
-			return false;
+	$('#header .sql a').on('click', (function() {
+		//
+		if (this.browser.is(':visible') && this.browser.mode == 'browse') {
+			this.browser.toggleEditor();
 		}
-	});
 
-	$('#header a[name=logout]').click(function() {
-		that._auth.logout();
 		return false;
-	});
+
+	}).bind(this));
+
+	$('#header a[name=logout]').on('click', (function() { this._auth.logout(); return false; }).bind(this));
 
 	// @todo Remove this from here
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
@@ -221,7 +206,7 @@ var Juxta = function() {
 /**
  * Default MySQL port
  *
- * @type {Number}
+ * @constant {Number}
  */
 Juxta.DEFAULT_PORT = 3306;
 
@@ -479,7 +464,10 @@ Juxta.prototype.notify = function(message, options) {
 
 
 /**
+ * Show the notification on loading
  *
+ * @param {String} message
+ * @param {Object} options
  */
 Juxta.prototype.loading = function(message, options) {
 	return this._notification.loading(message, options);
@@ -487,7 +475,11 @@ Juxta.prototype.loading = function(message, options) {
 
 
 /**
+ * Show error notification
  *
+ * @param {String} message
+ * @param {Object} options
+ * @return {jQuery}
  */
 Juxta.prototype.error = function(message, options) {
 	return this._notification.show(message, $.extend({}, {type: 'error', hide: false, fast: true}, options));
@@ -495,18 +487,14 @@ Juxta.prototype.error = function(message, options) {
 
 
 /**
+ * Show dialog box with message
  *
+ * @param {String} message
+ * @param {Object} options
+ * @return {Juxta.Modal}
  */
 Juxta.prototype.message = function(message, options) {
-	this.messageBox.show(options, message);
-};
-
-
-/**
- *
- */
-Juxta.prototype.about = function() {
-	this.message($('#about').html(), {title: ''});
+	return this.messageBox.show(options, message);
 };
 
 
