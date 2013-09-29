@@ -1,15 +1,15 @@
 /*global document */
 
 /**
- * @class Grid2 context menu
- * @param {Juxta.Grid2} Page
+ * @class Juxta.Grid2.ContextMenu
+ * @param {Juxta.Grid2} grid Grid
  */
 Juxta.Grid2.ContextMenu = function(grid) {
 
 
 	/**
 	 * @type {Juxta.Grid2}
-	 * @private
+	 * @protected
 	 */
 	this._grid = grid;
 
@@ -59,9 +59,9 @@ Juxta.Lib.extend(Juxta.Grid2.ContextMenu, Juxta.Events);
 
 
 /**
- * Show menu
- * @param {jQuery} Table row
- * @param {Object} Position
+ * Show a menu
+ * @param {jQuery} row Table row
+ * @param {Object} position Position
  */
 Juxta.Grid2.ContextMenu.prototype.show = function(row, position) {
 	//

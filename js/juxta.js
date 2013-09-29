@@ -85,9 +85,10 @@ var Juxta = function() {
 
 
 	/**
-	 * Server explorer
 	 * @type {Juxta.Explorer}
 	 */
+	this._explorer = new Juxta.Explorer('.application.explorer', this._request);
+
 	this._explorerOld = new Juxta.ExplorerOld('#explorer', this._request);
 
 
@@ -147,9 +148,12 @@ var Juxta = function() {
 	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
 
 	// Show Juxta when application ready to show
-	$.each([this._explorerOld, this.server, this.browser, this.table], function(i, application) {
-		application.on('ready', $.proxy(that.show, that));
-	});
+	$.each([this._explorer, this._explorerOld, this.server, this.browser, this.table], (function(i, application) {
+		application.on('ready', this.show.bind(this));
+	}).bind(this));
+
+	//
+	this._explorer.on('alert', this.message.bind(this));
 
 	//
 	this._auth
@@ -286,6 +290,8 @@ Juxta.prototype.route = function() {
 	if (hash[0] != this._state) {
 		switch (action) {
 			case 'databases':
+				this.explore({cid: cid, show: action});
+				break;
 			case 'processlist':
 			case 'users':
 				this.exploreOld({cid: cid, show: action});
@@ -404,6 +410,23 @@ Juxta.prototype.hide = function() {
 	$('#header h1, #header .header-links, #sidebar, #applications, .float-box, .context').hide();
 
 	return this;
+};
+
+
+/**
+ * @param {Object} params
+ * @return {jqXHR}
+ */
+Juxta.prototype.explore = function(params) {
+	//
+	if (params.from) {
+		this._sidebar.highlight(params.show, {'database': params.from});
+		return this._explorer.explore(params);
+
+	} else {
+		this._sidebar.highlight(params.show);
+		return this._explorer.explore(params);
+	}
 };
 
 

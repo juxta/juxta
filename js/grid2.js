@@ -235,11 +235,6 @@ Juxta.Grid2.prototype.prepare = function(params, values) {
 
 	this._head.show();
 
-	//
-	if (params.contextMenu) {
-		this._contextMenu.load(params.contextMenu, values);
-	}
-
 	return this.prepared = true;
 };
 
@@ -253,19 +248,24 @@ Juxta.Grid2.prototype.prepare = function(params, values) {
  */
 Juxta.Grid2.prototype.fill = function(data, params, extra) {
 	//
+	var valuesForTemplate,
+		cacheName,
+		row,
+		$row,
+		$headRow,
+		table = this._bodyContainer.find('table');
+
 	if (params) {
 		this.prepare(params, extra);
+
+		if (params.contextMenu) {
+			this._contextMenu.load(params.contextMenu, extra);
+		}
 	}
 
 	if (data && data.length > 0) {
 		//
 		this.count = this.count + data.length;
-
-		var valuesForTemplate,
-			cacheName,
-			row,
-			$row,
-			$headRow;
 
 		$.each(data, (function(i, value) {
 			//
@@ -304,13 +304,10 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 					}
 				}).bind(this));
 
-				var th = $('<thead>').append($headRow),
-					table = this._bodyContainer.find('table');
-
 				if (table.find('thead').is('thead')) {
-					table.find('thead').replaceWith(th);
+					table.find('thead').empty().append($headRow);
 				} else {
-					table.prepend(th);
+					table.prepend($('<thead>').append($headRow));
 				}
 			}
 
@@ -425,3 +422,24 @@ Juxta.Grid2.prototype.show = function() {
 Juxta.Grid2.prototype.hide = function() {
 	this._container.hide();
 };
+
+
+/**
+ * Remove rows by name
+ */
+Juxta.Grid2.prototype.remove = function(rows) {
+	//
+	if (!$.isArray(rows)) {
+		rows = [rows];
+	}
+
+	$.each(rows, (function(i, name) {
+		if (this._cache[name]) {
+			this.count = this.count - this._cache[name].remove().length;
+		}
+	}).bind(this));
+
+	this.trigger('change');
+
+	return this;
+}

@@ -2,6 +2,7 @@
 
 /**
  * @class Application base class
+ * @abstract
  * @param {jQuery|String} element
  * @param {Object} options
  */
@@ -22,6 +23,12 @@ Juxta.Application = function(element, options) {
 	 * @type {jQuery}
 	 */
 	this._container = $(element);
+
+
+	/**
+	 * @type {jQuery}
+	 */
+	this._applicationsContainer = $('#applications');
 
 
 	/**
@@ -48,6 +55,7 @@ Juxta.Application = function(element, options) {
 };
 
 Juxta.Lib.extend(Juxta.Application, Juxta.Events);
+
 
 /**
  * Apply settings to application
@@ -159,6 +167,7 @@ Juxta.Application.prototype.show = function(options, variables) {
 
 /**
  * Show application and trigger event 'ready'
+ *
  * @return {Juxta.Application}
  */
 Juxta.Application.prototype.ready = function() {
@@ -169,6 +178,7 @@ Juxta.Application.prototype.ready = function() {
 
 /**
  * Hide application
+ *
  * @return {Juxta.Application}
  */
 Juxta.Application.prototype.hide = function() {
@@ -181,6 +191,7 @@ Juxta.Application.prototype.hide = function() {
 
 /**
  * Maximize window
+ *
  * @return {Juxta.Applcation}
  */
 Juxta.Application.prototype.maximize = function() {
@@ -192,10 +203,12 @@ Juxta.Application.prototype.maximize = function() {
 
 
 /**
- * Restore maximized application to standarts size
- * @return {Juxta.Applcation}
+ * Restore maximized application to standards size
+ *
+ * @return {Juxta.Application}
  */
 Juxta.Application.prototype.restore = function() {
+	//
 	$('#sidebar').removeClass('_minimized');
 	if ($('#applications').removeClass('maximized').is(':visible')) {
 		$('#sidebar').show();
@@ -207,6 +220,7 @@ Juxta.Application.prototype.restore = function() {
 
 /**
  * Check container element against a selector
+ *
  * @return {Object}
  * @todo Move to abstract Juxta.Widget
  */
@@ -217,6 +231,7 @@ Juxta.Application.prototype.is = function() {
 
 /**
  * Find elements by selectors in current container
+ *
  * @return {Object}
  * @todo Move to abstract Juxta.Widget
  */

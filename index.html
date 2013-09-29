@@ -27,6 +27,7 @@
 	<script src="js/grid2contextmenu.js"></script>
 	<script src="js/application.js"></script>
 	<script src="js/browser.js"></script>
+	<script src="js/explorer.js"></script>
 	<script src="js/explorerOld.js"></script>
 	<script src="js/server.js"></script>
 	<script src="js/table.js"></script>
@@ -96,6 +97,25 @@
 					<div class="not-found">No items found</div>
 				</div>
 				<div class="context"><ul></ul></div>
+			</div>
+			<div class="status">&nbsp;</div>
+		</div>
+
+		<div class="application explorer">
+			<h1>Databases</h1>
+			<div class="menu"></div>
+			<input type="button" class="close"/><br class="clear"/>
+			<div class="grid2 clear">
+				<div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span>
+					<input type="button" value="Drop" name="drop" class="grid2-actions-button drop" />
+				</div>
+				<div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
+				<div class="grid2-body">
+					<table cellspacing="0">
+						<tbody></tbody>
+					</table>
+					<div class="grid2-body-empty">No items found</div>
+				</div>
 			</div>
 			<div class="status">&nbsp;</div>
 		</div>

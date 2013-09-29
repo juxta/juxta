@@ -1,0 +1,26 @@
+/*
+ * Explorer
+ */
+
+.application.explorer .grid2-head-column:first-child {
+	width: 200px;
+}
+
+.application.explorer .grid2-head-column._column-engine {
+	width: 100px;
+}
+
+.application.explorer .grid2-head-column._column-rows,
+.application.explorer .grid2-head-column._column-size {
+	width: 70px;
+	text-align: right;
+}
+
+.application.explorer .grid2-body-column._column-rows,
+.application.explorer .grid2-body-column._column-size {
+	text-align: right;
+}
+
+.application.explorer .grid2-body-column._column-size {
+	border-right-width: 0;
+}
