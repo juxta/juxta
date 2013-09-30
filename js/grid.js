@@ -38,7 +38,7 @@ Juxta.Grid.prototype = {
 
 		var that = this;
 
-		this.$body.change(function(event) {
+		this.$body.on('change', function(event) {
 			// Select/deselect row
 			if ($(event.target).is('[type=checkbox]')) {
 				$('.context:visible').hide();

@@ -68,7 +68,7 @@ Juxta.Sidebar = function(element, connection) {
 
 	}).bind(this));
 
-	this._container.find('.sidebar-level h2').click((function(event) {
+	this._container.find('.sidebar-level h2').on('click', (function(event) {
 		//
 		var head = $(event.target).closest('li');
 

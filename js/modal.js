@@ -51,7 +51,7 @@ Juxta.Modal = function(element, options) {
 
 	this._settings.title = this.header.html();
 
-	this.close.click($.proxy(this.hide, this));
+	this.close.on('click', $.proxy(this.hide, this));
 
 	this.container.draggable({scroll: false, handle: 'h3'});
 

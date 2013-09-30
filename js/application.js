@@ -45,7 +45,7 @@ Juxta.Application = function(element, options) {
 
 	if (this._settings.closable) {
 		this.find('.close').show();
-		this.find('.close').click(function() { history.back(); });
+		this.find('.close').on('click', function() { history.back(); });
 	} else {
 		this.find('.close').hide();
 	}

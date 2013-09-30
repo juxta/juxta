@@ -37,18 +37,18 @@ Juxta.Server = function (element, request) {
 
 	var that = this;
 
-	this.find('.switch').click(function(event) {
+	this.find('.switch').on('click', function(event) {
 		if (!$(event.target).hasClass('active')) {
 			$(this).find('.active').removeClass('active');
 			$(event.target).addClass('active');
 		}
 	});
-	this.find('.switch li').eq(0).click(function() {
+	this.find('.switch li').eq(0).on('click', function() {
 		if (!$(this).hasClass('active')) {
 			that.info({show: 'status-full'}, {});
 		}
 	});
-	this.find('.switch li').eq(1).click(function() {
+	this.find('.switch li').eq(1).on('click', function() {
 		if (!$(this).hasClass('active')) {
 			that.info({show: 'status'}, {});
 		}
