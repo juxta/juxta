@@ -34,7 +34,7 @@ Juxta.CreateDatabase = function(element, request) {
 
 	var that = this;
 
-	this.form.bind('submit', function() {
+	this.form.on('submit', function() {
 		that.requestCreateDatabase();
 		return false;
 	});

@@ -35,7 +35,7 @@ Juxta.Explorer = function(element, request) {
 
 
 	// Stretch grid by height
-	$(window).bind('resize', this._stretch.bind(this));
+	$(window).on('resize', this._stretch.bind(this));
 
 
 	//

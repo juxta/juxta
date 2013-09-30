@@ -22,7 +22,7 @@ Juxta.Table = function(element, request) {
 	this._columns = new Juxta.Grid2(this.find('.grid2'));
 
 
-	$(window).bind('resize', this._stretch.bind(this));
+	$(window).on('resize', this._stretch.bind(this));
 
 };
 

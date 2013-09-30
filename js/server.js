@@ -54,7 +54,7 @@ Juxta.Server = function (element, request) {
 		}
 	});
 
-	$(window).bind('resize', {that: this}, this.stretch);
+	$(window).on('resize', {that: this}, this.stretch);
 
 };
 

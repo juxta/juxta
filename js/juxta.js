@@ -194,7 +194,7 @@ var Juxta = function() {
 	$('.float-box').draggable({scroll: false, handle: 'h3'});
 
 	// @todo Remove this from here
-	$(document.body).bind('click', function() {
+	$(document.body).on('click', function() {
 		$('.context:visible').trigger('hide').hide();
 	});
 

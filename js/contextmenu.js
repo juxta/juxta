@@ -32,12 +32,12 @@ Juxta.ContextMenu = function(page, menu) {
 	this.value = null;
 
 	var that = this;
-	this.$page.bind('contextmenu', function(event) {
+	this.$page.on('contextmenu', function(event) {
 		that.show($(event.target).parents('tr'), {top: event.clientY, left: event.clientX});
 		return false;
 	});
 
-	this.$container.bind('hide', $.proxy(this.hide, this));
+	this.$container.on('hide', $.proxy(this.hide, this));
 };
 
 
@@ -94,7 +94,7 @@ Juxta.ContextMenu.prototype.load = function(menu) {
 				$item.addClass(item['class']);
 			}
 			if (item.action && typeof item.action === 'function') {
-				$item.bind('click', item.action);
+				$item.on('click', item.action);
 			}
 			$item.appendTo($menu);
 		});

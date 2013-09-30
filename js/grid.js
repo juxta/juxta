@@ -76,7 +76,7 @@ Juxta.Grid.prototype = {
 		});
 
 		// Trigger event with type equals action name
-		this.$actions.bind('click', function(event) {
+		this.$actions.on('click', function(event) {
 			var $button = $(event.target);
 			if ($button.is('span.like-a, input') && $button.attr('name')) {
 				that.$actions.trigger($button.attr('name'));
@@ -84,10 +84,10 @@ Juxta.Grid.prototype = {
 			}
 		});
 
-		this.$actions.bind('all', function() {
+		this.$actions.on('all', function() {
 			that.select();
 		});
-		this.$actions.bind('nothing', function() {
+		this.$actions.on('nothing', function() {
 			that.deselect();
 		});
 

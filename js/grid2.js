@@ -85,7 +85,7 @@ Juxta.Grid2 = function(grid) {
 
 
 	// Trigger event with type equals action name
-	this._actions.find('.grid2-actions-link, .grid2-actions-button').bind('click', (function(event) {
+	this._actions.find('.grid2-actions-link, .grid2-actions-button').on('click', (function(event) {
 		if ($(event.target).attr('name')) {
 			this.trigger('actions/' + $(event.target).attr('name'));
 		}
@@ -99,7 +99,7 @@ Juxta.Grid2 = function(grid) {
 	});
 
 	//
-	this._bodyContainer.bind('scroll', (function(event) {
+	this._bodyContainer.on('scroll', (function(event) {
 		//
 		this._head.parent('table').css({marginLeft: -$(event.target).scrollLeft()});
 

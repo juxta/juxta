@@ -57,7 +57,7 @@ Juxta.ExplorerOld = function(element, request) {
 	var that = this;
 
 	// Bind for grid events
-	this._grid.$actions.bind('drop', function() {
+	this._grid.$actions.on('drop', function() {
 		var params = {
 				drop: that._grid.content,
 				item: that._grid.statistics.item,
@@ -79,11 +79,11 @@ Juxta.ExplorerOld = function(element, request) {
 		that.drop(params);
 	});
 
-	this._grid.$actions.bind('kill', function() {
+	this._grid.$actions.on('kill', function() {
 		that.kill({processes: that._grid.selected()});
 	});
 
-	this._grid.$body.bind('change', function() {
+	this._grid.$body.on('change', function() {
 		var status = '';
 		if (that._grid.statistics.all > 0) {
 			status += that._grid.statistics.all;
@@ -97,7 +97,7 @@ Juxta.ExplorerOld = function(element, request) {
 	});
 
 	// Stretch grid by height
-	$(window).bind('resize', {explorer: this}, this.stretch);
+	$(window).on('resize', {explorer: this}, this.stretch);
 
 	// Hide notifications on float box hide
 	$.each([this._createDatabase], function(i, application) {

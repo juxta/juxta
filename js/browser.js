@@ -76,7 +76,7 @@ Juxta.Browser = function(element, request) {
 		this._updateStatus();
 	}, this));
 
-	$(window).bind('resize', {that: this}, this.stretch);
+	$(window).on('resize', {that: this}, this.stretch);
 
 	this._grid.on('scrollBottom', (function() {
 		//
