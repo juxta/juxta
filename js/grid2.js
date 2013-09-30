@@ -150,7 +150,7 @@ Juxta.Grid2.prototype.setHeight = function(height) {
 /**
  * Prepeare grid for filling
  */
-Juxta.Grid2.prototype.prepare = function(params, values) {
+Juxta.Grid2.prototype.prepare = function(params) {
 	//
 	if (!params) {
 		return false;
@@ -442,4 +442,4 @@ Juxta.Grid2.prototype.remove = function(rows) {
 	this.trigger('change');
 
 	return this;
-}
+};

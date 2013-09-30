@@ -1,4 +1,4 @@
-/*global window */
+/*global window, confirm */
 
 /**
  * @class Juxta.Explorer
