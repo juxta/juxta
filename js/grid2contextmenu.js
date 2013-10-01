@@ -6,7 +6,6 @@
  */
 Juxta.Grid2.ContextMenu = function(grid) {
 
-
 	/**
 	 * @type {Juxta.Grid2}
 	 * @protected
@@ -81,8 +80,9 @@ Juxta.Grid2.ContextMenu.prototype.show = function(row, position) {
 
 	}).bind(this));
 
-	this._grid._bodyContainer.find('.grid2-body-column:first-child input[type=checkbox]:checked').attr('checked', false).trigger('change');
-	this._target.find('.grid2-body-column:first-child input[type=checkbox]').attr('checked', true).trigger('change');
+	this._grid._bodyContainer.find('.grid2-body-column:first-child input[type=checkbox]:checked').prop('checked', false).trigger('change');
+	this._target.find('.grid2-body-column:first-child input[type=checkbox]').prop('checked', true).trigger('change');
+
 	this._container.show().offset(position);
 
 };
@@ -93,7 +93,7 @@ Juxta.Grid2.ContextMenu.prototype.show = function(row, position) {
 Juxta.Grid2.ContextMenu.prototype.hide = function() {
 	//
 	this._container.hide();
-	this._target.find('.grid2-body-column:first-child input[type=checkbox]').attr('checked', false).trigger('change');
+	this._target.find('.grid2-body-column:first-child input[type=checkbox]').prop('checked', false).trigger('change');
 };
 
 

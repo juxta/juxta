@@ -117,7 +117,7 @@ Juxta.Grid2 = function(grid) {
 		var checkbox = $(event.target),
 			row = checkbox.closest('.grid2-body-row');
 
-		row.toggleClass('_selected', Boolean(checkbox.attr('checked')));
+		row.toggleClass('_selected', Boolean(checkbox.prop('checked')));
 		this.trigger('select', row, Boolean(checkbox.attr('name')));
 
 	}).bind(this));
