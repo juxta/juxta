@@ -2,7 +2,7 @@
  * @class Create Database
  * @extends Juxta.Modal
  * @param {jQuery} element
- * @param {Object} options
+ * @param {Juxta.Request} request
  */
 Juxta.CreateDatabase = function(element, request) {
 
@@ -11,120 +11,73 @@ Juxta.CreateDatabase = function(element, request) {
 	/**
 	 * @type {Juxta.Request}
 	 */
-	this.request = request;
+	this._request = request;
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.form = this.container.find('form[name=create-database]');
+	this._form = this._container.find('form[name=create-database]');
 
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.collations = this.form.find('[name=collation]');
+	this._submit = this._form.find('input[type=submit]');
 
 
-	/**
-	 * @type {jQuery}
-	 */
-	this.submit = this.form.find('input[type=submit]');
+	this._form.on('submit', (function() { this._createDatabaseRequest(); return false; }).bind(this));
 
-
-	var that = this;
-
-	this.form.on('submit', function() {
-		that.requestCreateDatabase();
-		return false;
-	});
 };
 
 Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.Modal);
 
+
 /**
  * Show dialog window
- * @param {Object} options
+ *
+ * @see {Juxta.Modal.prototype.show}
  * @return {Juxta.CreateDatabase}
  */
 Juxta.CreateDatabase.prototype.show = function() {
-	//this.requestGetCollations();
+	//
 	Juxta.Modal.prototype.show.apply(this, arguments);
 
-	this.submit.attr('disabled', false);
-	this.container.find('input[type=text]').focus().val(null);
+	this._submit.attr('disabled', false);
+	this._container.find('input[type=text]').focus().val(null);
 
 	return this;
 };
 
 
 /**
- * Request
+ * Request to create database
+ *
  * @return {jqXHR}
  */
-Juxta.CreateDatabase.prototype.requestCreateDatabase = function() {
+Juxta.CreateDatabase.prototype._createDatabaseRequest = function() {
 	//
-	this.submit.attr('disabled', true);
+	this._submit.attr('disabled', true);
 
-	return this.request.send({
+	return this._request.send({
 		action: {create: 'database'},
-		data: this.form.serialize(),
-		success: this.responseCreateDatabase,
-		error: function() { this.submit.attr('disabled', false); },
+		data: this._form.serialize(),
+		success: this._createDatabaseCallback,
+		error: function() { this._submit.attr('disabled', false); },
 		context: this
 	});
 };
 
 
 /**
- * Response
- * @param {Object} response
+ * Callback on database create
+ *
  * @return {Juxta.CreateDatabase}
  */
-Juxta.CreateDatabase.prototype.responseCreateDatabase = function() {
+Juxta.CreateDatabase.prototype._createDatabaseCallback = function() {
 	//
-	this.container.hide();
+	this._container.hide();
 	this.trigger('created');
 
 	return this;
-};
-
-
-/**
- * Get collations request
- * @return {jqXHR}
- */
-Juxta.CreateDatabase.prototype.requestGetCollations = function() {
-	//
-	return this.request.send({
-		action: {show: 'collations'},
-		cache: true,
-		context: this,
-		success: this.responseGetCollations
-	});
-};
-
-
-/**
- * Response for get collations request
- * @param {Object} response
- */
-Juxta.CreateDatabase.prototype.responseGetCollations = function(response) {
-	//
-	var that = this;
-
-	if (!$.isEmptyObject(response.data)) {
-		//
-		this.collations.empty().append('<option>Default</option>');
-
-		$.each(response.data, function(charset, collations) {
-			var $charset = $('<optgroup>').attr('label', charset);
-			if (!$.isEmptyObject(collations)) {
-				$.each(collations, function(index, charset) {
-					$charset.append($('<option>').text(charset));
-				});
-			}
-			that.collations.append($charset);
-		});
-	}
 };

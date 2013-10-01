@@ -34,9 +34,14 @@ Juxta.Explorer = function(element, request) {
 	this._preparedFor = null;
 
 
+	/**
+	 * @type {Juxta.CreateDatabase}
+	 */
+	this._createDatabase = new Juxta.CreateDatabase($('#create-database'), this._request);
+
+
 	// Stretch grid by height
 	$(window).on('resize', this._stretch.bind(this));
-
 
 	//
 	this._grid.on('context', (function(event, name) {
@@ -61,6 +66,14 @@ Juxta.Explorer = function(element, request) {
 		this._status.html(status);
 
 	}).bind(this));
+
+	// Hide notifications on dialog box hide
+	$.each([this._createDatabase], (function(i, application) {
+		application.on('hide', this.trigger.bind(this, 'modal-hide'));
+	}).bind(this));
+
+	// Refresh databases list after create
+	this._createDatabase.on('created', this.explore.bind(this, {show: 'databases', refresh: true}));
 
 };
 

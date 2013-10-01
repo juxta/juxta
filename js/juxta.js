@@ -141,7 +141,8 @@ var Juxta = function() {
 	}).bind(this));
 
 	//
-	this._explorer.on('alert', this.message.bind(this));
+	this._explorer.on('alert', this.message.bind(this))
+		.on('modal-hide', this._notification.hide.bind(this._notification));
 
 	//
 	this._auth
