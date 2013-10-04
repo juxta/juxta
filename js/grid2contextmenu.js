@@ -49,7 +49,7 @@ Juxta.Grid2.ContextMenu = function(grid) {
 
 	//
 	this._container.on('click', 'a', (function(event) {
-		this.trigger('click', $(event.target).attr('name'), this._target.find('.grid2-body-column:first [type=checkbox]').attr('name'));
+		this.trigger('click', $(event.target).attr('name'), this._target.find('.grid2-body-column:first [type=checkbox]').attr('name'), this._values);
 	}).bind(this));
 
 };
@@ -66,15 +66,17 @@ Juxta.Grid2.ContextMenu.prototype.show = function(row, position) {
 	//
 	this._target = row;
 
+	var values = {},
+		item;
+
+	$.extend(values, this._values, {name: row.find('.grid2-body-column:first-child [type=checkbox]').attr('name')});
+
 	this._container.find('.grid2-context-menu-item a').each((function(i, link) {
 		//
 		link = $(link);
-
-		var item = this._menu[link.attr('name')],
-			values = {};
+		item = this._menu[link.attr('name')];
 
 		if (item && typeof item === 'object' && item.href) {
-			$.extend(values, this._values, {name: row.find('.grid2-body-column:first-child [type=checkbox]').attr('name')});
 			link.attr('href', $.template(item.href, values));
 		}
 
@@ -86,6 +88,7 @@ Juxta.Grid2.ContextMenu.prototype.show = function(row, position) {
 	this._container.show().offset(position);
 
 };
+
 
 /**
  * Hide menu

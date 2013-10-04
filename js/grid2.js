@@ -123,8 +123,8 @@ Juxta.Grid2 = function(grid) {
 	}).bind(this));
 
 	//
-	this._contextMenu.on('click', (function(name, row) {
-		this.trigger('context', name, row);
+	this._contextMenu.on('click', (function(name, row, context) {
+		this.trigger('context-menu-click', name, row, context);
 	}).bind(this));
 
 };
@@ -253,13 +253,22 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 		row,
 		$row,
 		$headRow,
-		table = this._bodyContainer.find('table');
+		table = this._bodyContainer.find('table'),
+		context = {};
+
+	if (extra && extra.cid !== undefined) {
+		context.cid = extra.cid;
+	}
+	if (extra && extra.from) {
+		context.from = extra.from;
+	}
 
 	if (params) {
-		this.prepare(params, extra);
+		//
+		this.prepare(params, context);
 
 		if (params.contextMenu) {
-			this._contextMenu.load(params.contextMenu, extra);
+			this._contextMenu.load(params.contextMenu, context);
 		}
 	}
 
@@ -269,7 +278,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 
 		$.each(data, (function(i, value) {
 			//
-			valuesForTemplate = $.extend({}, extra),
+			valuesForTemplate = $.extend({}, context),
 			cacheName = null;
 
 			$.each(this._columns, function(j, column) {

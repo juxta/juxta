@@ -44,12 +44,19 @@ Juxta.Explorer = function(element, request) {
 	$(window).on('resize', this._stretch.bind(this));
 
 	//
-	this._grid.on('context', (function(event, name) {
+	this._grid.on('context-menu-click', (function(event, name, context) {
+
 		if (event === 'database-properties') {
-			this._request.send({action: {show: 'properties', database: name}, success: this._showPropertiesCallback.bind(this, event)});
+			this._request.send({action: {show: 'properties', database: name, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 		} else if (event === 'drop-database') {
 			this.drop('databases', [name]);
+
+		} else if (event === 'table-properties') {
+			this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
+		} else if (event === 'drop-table') {
+			this.drop('tables', [name], context.from);
 		}
 
 	}).bind(this));
@@ -239,16 +246,17 @@ Juxta.Explorer.prototype._gridParams = {
 		columns: ['Table', 'Engine', 'Rows', 'Size'],
 		row: '<tr><td><a href="#/{cid}/{from}/{table}/browse">{table}</a></td><td>{engine}</td><td>{rows|number}</td><td>{size|size}</td><td></td></tr>',
 		contextMenu: {
-			browse: {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
-			columns: {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
-			drop: 'Drop',
-			properties: 'Properties'}
+			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
+			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
+			'drop-table': 'Drop',
+			'table-properties': 'Properties'
+		}
 	}
 };
 
 
 /**
- * Response for getting database properties request
+ * Response for getting database or table properties request
  *
  * @param {Object} response
  * @protected
@@ -259,6 +267,9 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
 
 	if (templateName === 'database-properties' && template.is('[type=text/html]')) {
 		this.trigger('alert', $.template(template.html(), response.properties), {title: 'Database {name}', name: response.properties.name});
+
+	} else if (templateName === 'table-properties' && template.is('[type=text/html]')) {
+		this.trigger('alert', $.template(template.html(), response.properties), {title: 'Table {name}', name: response.properties.name});
 	}
 
 };
@@ -269,29 +280,39 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
  *
  * @param {String} drop
  * @param {Array} items
+ * @param {String} from
  * @return {jqXHR}
  */
-Juxta.Explorer.prototype.drop = function(drop, items) {
+Juxta.Explorer.prototype.drop = function(drop, items, from) {
 	//
-	var message = 'Drop ';
+	var action = {drop: drop},
+		message = 'Drop ',
+		data = {},
+		text = {
+			databases: ['databse', 'databses'],
+			tables: ['table', 'tables']
+		};
 
-	if (drop === 'databases') {
-		if (items.length > 1) {
-			message += items.length + ' databases';
-		} else {
-			message += 'database ';
-			message += items[0];
-		}
+	data[drop] = items;
 
-		message += '?';
+	if (from) {
+		action.from = from;
 	}
+
+	if (text[drop] && items.length > 1) {
+		message += items.length + ' ' + text[drop][1];
+	} else if (text[drop]) {
+		message += text[drop][0] + ' '  + items[0];
+	}
+
+	message += '?';
 
 	if (confirm(message)) {
 		return this._request.send({
-			action: {drop: drop},
-			data: {database: items},
-			success: this._dropCallback.bind(this, 'database'),
-			error: this._dropCallback.bind(this, 'database')
+			action: action,
+			data: data,
+			success: this._dropCallback.bind(this, drop),
+			error: this._dropCallback.bind(this, drop)
 		});
 	}
 };
