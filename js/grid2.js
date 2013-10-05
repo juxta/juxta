@@ -177,7 +177,7 @@ Juxta.Grid2.prototype.prepare = function(params) {
 			column.title = column.name;
 		}
 
-		column.name = column.name.toLowerCase();
+		column.name = column.name.toLowerCase().replace(/\s+/, '_');
 
 		if (column.style && !$.isArray(column.style)) {
 			column.style = new Array(column.style);
@@ -220,6 +220,10 @@ Juxta.Grid2.prototype.prepare = function(params) {
 		var th,
 			styles = ['grid2-head-column', '_column-' + column.name];
 
+		if (column.hidden) {
+			return;
+		}
+
 		if (column.style) {
 			styles = styles.concat(column.style);
 		}
@@ -254,7 +258,8 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 		$row,
 		$headRow,
 		table = this._bodyContainer.find('table'),
-		context = {};
+		context = {},
+		columns = [];
 
 	if (extra && extra.cid !== undefined) {
 		context.cid = extra.cid;
@@ -262,6 +267,13 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 	if (extra && extra.from) {
 		context.from = extra.from;
 	}
+
+	// Filter visible columns
+	$.each(this._columns, function(i, column) {
+		if (!column.hidden) {
+			columns.push(column);
+		}
+	});
 
 	if (params) {
 		//
@@ -278,8 +290,9 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 
 		$.each(data, (function(i, value) {
 			//
-			valuesForTemplate = $.extend({}, context),
 			cacheName = null;
+
+			valuesForTemplate = $.extend({}, context);
 
 			$.each(this._columns, function(j, column) {
 				//
@@ -304,11 +317,11 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 
 				$.each($headRow.find('> td'), (function(i, td) {
 					//
-					if (this._columns[i]) {
-						$(td).addClass('_column-' + this._columns[i].name);
+					if (columns[i]) {
+						$(td).addClass('_column-' + columns[i].name);
 
-						if (this._columns[i].style) {
-							$(td).addClass(this._columns[i].style.join(' '));
+						if (columns[i].style) {
+							$(td).addClass(columns[i].style.join(' '));
 						}
 					}
 				}).bind(this));
@@ -334,11 +347,11 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 
 			$.each($row.find('> td'), (function(i, td) {
 				//
-				if (this._columns[i]) {
-					$(td).addClass('_column-' + this._columns[i].name);
+				if (columns[i]) {
+					$(td).addClass('_column-' + columns[i].name);
 
-					if (this._columns[i].style) {
-						$(td).addClass(this._columns[i].style.join(' '));
+					if (columns[i].style) {
+						$(td).addClass(columns[i].style.join(' '));
 					}
 				}
 			}).bind(this));
