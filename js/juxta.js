@@ -276,9 +276,9 @@ Juxta.prototype.route = function() {
 	if (hash[0] != this._state) {
 		switch (action) {
 			case 'databases':
+			case 'processlist':
 				this.explore({cid: cid, show: action});
 				break;
-			case 'processlist':
 			case 'users':
 				this.exploreOld({cid: cid, show: action});
 				break;

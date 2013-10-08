@@ -57,6 +57,8 @@ Juxta.Explorer = function(element, request) {
 
 		} else if (event === 'drop-table') {
 			this.drop('tables', [name], context.from);
+		} else if (event === 'kill') {
+			this.kill([name]);
 		}
 
 	}).bind(this));
@@ -221,6 +223,10 @@ Juxta.Explorer.prototype._explorerShowParams = {
 		header: 'Databases',
 		menu: {'Create Database': function() { this._createDatabase.show(); return false; }}
 	},
+	processlist: {
+		header: 'Processlist',
+		menu: {'Refresh': {href: '#/{cid}/processlist', click: function(event) { this.explore({show: 'processlist', cid: $(event.target).attr('href').match(/#\/(\d+)\//)[1]}); return false; }}}
+	},
 	tables: {
 		header: {title: 'Tables', from: null},
 		menu: {'Create Table': null}
@@ -240,6 +246,14 @@ Juxta.Explorer.prototype._gridParams = {
 			'tables': {title: 'Tables', href: '#/{cid}/{name}/tables'},
 			'drop-database': 'Drop',
 			'database-properties': 'Properties'
+		}
+	},
+	processlist: {
+		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
+		row: '<tr><td><a>{process_id}</td><td>{user}@{host}</td><td>{database}</td><td>{command}</td><td>{time}</td><td>{info}</td></tr>',
+		contextMenu: {
+			'information': 'Information',
+			'kill': 'Kill'
 		}
 	},
 	tables: {
@@ -332,4 +346,31 @@ Juxta.Explorer.prototype._dropCallback = function(entity, response) {
 
 	// Flush last cached response
 	this._request.cache.flush(this._cacheKey);
+};
+
+
+/**
+ * Kill processes
+ *
+ * @param {Array} pids
+ * @return jqXHR
+ */
+Juxta.Explorer.prototype.kill = function(pids) {
+	//
+	var message;
+
+	if (pids.length === 1) {
+		message = 'Kill process ' + pids;
+	} else {
+		message = 'Kill ' + pids.length;
+	}
+
+	if (confirm(message + '?')) {
+		return this._request.send({
+			action: 'kill',
+			data: {processes: pids},
+			success: (function(response) { this._grid.remove(response.killed); }).bind(this),
+			context: this
+		});
+	}
 };

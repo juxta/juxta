@@ -1,6 +1,4 @@
-/*
- * Explorer
- */
+/** Tables */
 
 .application.explorer .grid2-head-column:first-child {
 	width: 200px;
@@ -23,4 +21,28 @@
 
 .application.explorer .grid2-body-column._column-size {
 	border-right-width: 0;
+}
+
+/** Processlist */
+
+.application.explorer .grid2-head-column._column-process_id {
+	width: 100px;
+}
+
+.application.explorer .grid2-head-column._column-user {
+	width: 175px;
+}
+
+.application.explorer .grid2-head-column._column-database {
+	width: 125px;
+}
+
+.application.explorer .grid2-head-column._column-command,
+.application.explorer .grid2-head-column._column-time {
+	width: 75px;
+}
+
+.application.explorer .grid2-head-column._column-time,
+.application.explorer .grid2-body-column._column-time {
+	text-align: right;
 }

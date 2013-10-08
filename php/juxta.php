@@ -537,7 +537,7 @@ class Juxta
 	 */
 	private function _showProcesslist($cid)
 	{
-		$processlist = $this->_query($cid, "SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5));
+		$processlist = $this->_query($cid, "SHOW PROCESSLIST", array(0, 1, 2, 3, 4, 5, 7));
 
 		return array(
 			'contents' => 'processlist',
