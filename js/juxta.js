@@ -444,14 +444,6 @@ Juxta.prototype.drop = function(params) {
 /**
  *
  */
-Juxta.prototype.kill = function(params) {
-	this._explorerOld.kill(params);
-};
-
-
-/**
- *
- */
 Juxta.prototype.info = function(params) {
 	this._sidebar.highlight('status');
 	this.server.info(params);
