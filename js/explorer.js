@@ -227,6 +227,13 @@ Juxta.Explorer.prototype._explorerShowParams = {
 		header: 'Processlist',
 		menu: {'Refresh': {href: '#/{cid}/processlist', click: function(event) { this.explore({show: 'processlist', cid: $(event.target).attr('href').match(/#\/(\d+)\//)[1]}); return false; }}}
 	},
+	users: {
+		header: 'Users',
+		menu: {
+			'Create User': function() { this._createUser.show(); return false; },
+			'Flush': null
+		}
+	},
 	tables: {
 		header: {title: 'Tables', from: null},
 		menu: {'Create Table': null}
@@ -254,6 +261,16 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'information': 'Information',
 			'kill': 'Kill'
+		}
+	},
+	users: {
+		columns: ['Username', 'Host', 'Password', {name: 'privileges', title: 'Gloval privileges'}, 'Grant'],
+		row: '<tr><td>{username}<td>{host}</td><td>{password}</td><td>{privileges}</td><td>{grant}</td></tr>',
+		contextMenu: {
+			'edit-privileges': 'Edit privileges',
+			'change-password': 'Change password',
+			'rename': 'Rename',
+			'delete': 'Delete'
 		}
 	},
 	tables: {

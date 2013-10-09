@@ -1,4 +1,4 @@
-/** Tables */
+/* Tables */
 
 .application.explorer .grid2-head-column:first-child {
 	width: 200px;
@@ -23,7 +23,7 @@
 	border-right-width: 0;
 }
 
-/** Processlist */
+/* Processlist */
 
 .application.explorer .grid2-head-column._column-process_id {
 	width: 100px;
@@ -45,4 +45,18 @@
 .application.explorer .grid2-head-column._column-time,
 .application.explorer .grid2-body-column._column-time {
 	text-align: right;
+}
+
+/* Users */
+
+.application.explorer .grid2-head-column._column-host {
+	width: 125px;
+}
+
+.application.explorer .grid2-head-column._column-password {
+	width: 60px;
+}
+
+.application.explorer .grid2-head-column._column-privileges {
+	width: 175px;
 }

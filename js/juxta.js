@@ -277,10 +277,8 @@ Juxta.prototype.route = function() {
 		switch (action) {
 			case 'databases':
 			case 'processlist':
-				this.explore({cid: cid, show: action});
-				break;
 			case 'users':
-				this.exploreOld({cid: cid, show: action});
+				this.explore({cid: cid, show: action});
 				break;
 			case 'status':
 			case 'status-full':
