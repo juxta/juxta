@@ -292,9 +292,9 @@ Juxta.prototype.route = function() {
 				break;
 			//
 			case 'tables':
+			case 'views':
 				this.explore({cid: cid, show: action, from: pathParams[0]});
 				break;
-			case 'views':
 			case 'routines':
 			case 'triggers':
 				this.exploreOld({cid: cid, show: action, from: pathParams[0]});

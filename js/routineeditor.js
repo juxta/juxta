@@ -13,6 +13,7 @@ Juxta.RoutineEditor = function(element, request) {
 	 */
 	this._request = request;
 
+
 	/**
 	 * @type {Juxta.SqlEditor}
 	 */

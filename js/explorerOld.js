@@ -25,7 +25,7 @@ Juxta.ExplorerOld = function(element, request) {
 	/**
 	 * @type {Juxta.RoutineEditor}
 	 */
-	this._routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this._request);
+	//this._routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this._request);
 
 
 	/**

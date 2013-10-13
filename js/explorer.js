@@ -40,6 +40,12 @@ Juxta.Explorer = function(element, request) {
 	this._createDatabase = new Juxta.CreateDatabase($('#create-database'), this._request);
 
 
+	/**
+	 * @type {Juxta.RoutineEditor}
+	 */
+	this._routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this._request);
+
+
 	// Stretch grid by height
 	$(window).on('resize', this._stretch.bind(this));
 
@@ -57,8 +63,15 @@ Juxta.Explorer = function(element, request) {
 
 		} else if (event === 'drop-table') {
 			this.drop('tables', [name], context.from);
+
+		} else if (event === 'drop-view') {
+			this.drop('views', [name], context.from);
+
 		} else if (event === 'kill') {
 			this.kill([name]);
+
+		} else if (event === 'edit-view') {
+			this._routineEditor.edit({view: name, from: context.from});
 		}
 
 	}).bind(this));
@@ -237,6 +250,10 @@ Juxta.Explorer.prototype._explorerShowParams = {
 	tables: {
 		header: {title: 'Tables', from: null},
 		menu: {'Create Table': null}
+	},
+	views: {
+		header: {title: 'Views', from: null},
+		menu: {'Create View': null}
 	}
 };
 
@@ -282,6 +299,16 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-table': 'Drop',
 			'table-properties': 'Properties'
 		}
+	},
+	views: {
+		columns: ['View', 'Definer', 'Updatable'],
+		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{view}</a></td><td>{definer}</td><td>{updatable}</td></tr>',
+		contextMenu: {
+			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
+			'edit-view': 'Edit',
+			'drop-view': 'Drop',
+			'view-properties': 'Properties'
+		}
 	}
 };
 
@@ -321,7 +348,8 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		data = {},
 		text = {
 			databases: ['databse', 'databses'],
-			tables: ['table', 'tables']
+			tables: ['table', 'tables'],
+			views: ['view', 'views']
 		};
 
 	data[drop] = items;
