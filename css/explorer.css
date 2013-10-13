@@ -60,3 +60,9 @@
 .application.explorer .grid2-head-column._column-privileges {
 	width: 175px;
 }
+
+/* Views */
+
+.application.explorer  .grid2-head-column._column-definer {
+	width: 200px;
+}
