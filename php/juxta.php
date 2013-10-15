@@ -996,7 +996,7 @@ class Juxta
 		$triggers = $this->_query(
 			$cid,
 			"SHOW TRIGGERS FROM `{$database}`",
-			array('Trigger', 'Table', 'Event', 'Timing', 'Created')
+			array('Trigger', 'Table', 'Event', 'Timing')
 		);
 
 		return array(

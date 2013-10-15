@@ -66,3 +66,9 @@
 .application.explorer  .grid2-head-column._column-definer {
 	width: 200px;
 }
+
+/* Triggers */
+
+.application.explorer  .grid2-head-column._column-trigger_table {
+	width: 200px;
+}

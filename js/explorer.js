@@ -72,6 +72,12 @@ Juxta.Explorer = function(element, request) {
 
 		} else if (event === 'edit-view') {
 			this._routineEditor.edit({view: name, from: context.from});
+
+		} else if (event === 'drop-trigger') {
+			this.drop('triggers', [name], context.from);
+
+		} else if (event === 'edit-trigger') {
+			this._routineEditor.edit({trigger: name, from: context.from});
 		}
 
 	}).bind(this));
@@ -254,6 +260,10 @@ Juxta.Explorer.prototype._explorerShowParams = {
 	views: {
 		header: {title: 'Views', from: null},
 		menu: {'Create View': null}
+	},
+	triggers: {
+		header: {title: 'Triggers', from: null},
+		menu: {'Create Trigger': null}
 	}
 };
 
@@ -309,6 +319,15 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-view': 'Drop',
 			'view-properties': 'Properties'
 		}
+	},
+	triggers: {
+		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
+		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{trigger}</a></td><td>{trigger_table}</td><td>{timing}&nbsp;{event}</td></tr>',
+		contextMenu: {
+			'edit-trigger': 'Edit',
+			'drop-trigger': 'Drop',
+			'trigger-properties': 'Properties'
+		}
 	}
 };
 
@@ -349,7 +368,8 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		text = {
 			databases: ['databse', 'databses'],
 			tables: ['table', 'tables'],
-			views: ['view', 'views']
+			views: ['view', 'views'],
+			triggers: ['trigger', 'triggers']
 		};
 
 	data[drop] = items;

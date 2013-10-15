@@ -9,7 +9,6 @@ Juxta.SqlEditor = function(textarea, options) {
 
 	/**
 	 * @type {Object}
-	 * @private
 	 */
 	this._settings = {
 		mode: 'text/x-mysql',
@@ -23,9 +22,9 @@ Juxta.SqlEditor = function(textarea, options) {
 
 	$.extend(this._settings, options);
 
+
 	/**
 	 * @type {jQuery}
-	 * @private
 	 */
 	this._textarea = $(textarea);
 
@@ -73,3 +72,5 @@ Juxta.SqlEditor = function(textarea, options) {
 	};
 
 };
+
+
