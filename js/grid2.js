@@ -123,8 +123,8 @@ Juxta.Grid2 = function(grid) {
 	}).bind(this));
 
 	//
-	this._contextMenu.on('click', (function(name, row, context) {
-		this.trigger('context-menu-click', name, row, context);
+	this._contextMenu.on('click', (function(name, type, row, context) {
+		this.trigger('context-menu-click', name, type, row, context);
 	}).bind(this));
 
 };

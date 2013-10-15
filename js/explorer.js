@@ -50,7 +50,7 @@ Juxta.Explorer = function(element, request) {
 	$(window).on('resize', this._stretch.bind(this));
 
 	//
-	this._grid.on('context-menu-click', (function(event, name, context) {
+	this._grid.on('context-menu-click', (function(event, name, type, context) {
 
 		if (event === 'database-properties') {
 			this._request.send({action: {show: 'properties', database: name, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
@@ -73,11 +73,23 @@ Juxta.Explorer = function(element, request) {
 		} else if (event === 'edit-view') {
 			this._routineEditor.edit({view: name, from: context.from});
 
-		} else if (event === 'drop-trigger') {
-			this.drop('triggers', [name], context.from);
+		} else if (event === 'edit-routine' && type === 'procedure') {
+			this._routineEditor.edit({procedure: name, from: context.from});
+
+		}  else if (event === 'drop-routine' && type === 'procedure') {
+			this.drop('routines', {procedure: [name]}, context.from);
+
+		} else if (event === 'edit-routine' && type === 'function') {
+			this._routineEditor.edit({'function': name, from: context.from});
+
+		} else if (event === 'drop-routine' && type === 'function') {
+			this.drop('routines', {'function': [name]}, context.from);
 
 		} else if (event === 'edit-trigger') {
 			this._routineEditor.edit({trigger: name, from: context.from});
+
+		} else if (event === 'drop-trigger') {
+			this.drop('triggers', [name], context.from);
 		}
 
 	}).bind(this));
@@ -261,6 +273,10 @@ Juxta.Explorer.prototype._explorerShowParams = {
 		header: {title: 'Views', from: null},
 		menu: {'Create View': null}
 	},
+	routines: {
+		header: {title: 'Stored Routines', from: null},
+		menu: {'Create Routine': null}
+	},
 	triggers: {
 		header: {title: 'Triggers', from: null},
 		menu: {'Create Trigger': null}
@@ -320,6 +336,20 @@ Juxta.Explorer.prototype._gridParams = {
 			'view-properties': 'Properties'
 		}
 	},
+	routines: {
+		'head': {
+			'routine': 'Routine',
+			'routine-definer': 'Definer',
+			'routine-return': 'Returns'
+		},
+		columns: ['Routine', {title: 'Type', hiddne: true}, {name: 'routine_definer', title: 'Definer'}, 'Returns'],
+		row: '<tr><td><input type="checkbox" name="{routine}" item-type="{type}"><a>{routine}</a></td><td>{routine_definer}</td><td>{returns}</td></tr>',
+		contextMenu: {
+			'edit-routine': 'Edit',
+			'drop-routine': 'Drop',
+			'routine-properties': 'Properties'
+		}
+	},
 	triggers: {
 		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
 		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{trigger}</a></td><td>{trigger_table}</td><td>{timing}&nbsp;{event}</td></tr>',
@@ -366,22 +396,37 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		message = 'Drop ',
 		data = {},
 		text = {
-			databases: ['databse', 'databses'],
+			databases: ['database', 'databases'],
 			tables: ['table', 'tables'],
 			views: ['view', 'views'],
+			routines: ['routine', 'stored routines'],
 			triggers: ['trigger', 'triggers']
-		};
-
-	data[drop] = items;
+		},
+		dropItemsCount = 0,
+		dropItemName = null;
 
 	if (from) {
 		action.from = from;
 	}
 
-	if (text[drop] && items.length > 1) {
-		message += items.length + ' ' + text[drop][1];
+	data[drop] = items;
+
+	if ($.isArray(items)) {
+		dropItemsCount = items.length;
+		dropItemName = items[0];
+
+	} else if ($.isPlainObject(items)) {
+		$.each(items, function(i, items) {
+			dropItemsCount += items.length;
+			dropItemName = items[0];
+		});
+	}
+
+	if (dropItemsCount === 1) {
+		message += text[drop][0] + ' '  + dropItemName;
+
 	} else if (text[drop]) {
-		message += text[drop][0] + ' '  + items[0];
+		message += dropItemsCount + ' ' + text[drop][1];
 	}
 
 	message += '?';
