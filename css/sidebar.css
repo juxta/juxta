@@ -1,6 +1,4 @@
-/*
- * Sidebar
- */
+/* Sidebar */
 
 .sidebar {
 	display: none;
@@ -90,7 +88,7 @@
 }
 .sidebar-link a[disabled] {
 	cursor: default;
-	color: #999;
+	color: #737373;
 }
 
 .sidebar-link a[href]:hover {
