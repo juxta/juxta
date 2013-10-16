@@ -28,7 +28,6 @@
 	<script src="js/application.js"></script>
 	<script src="js/browser.js"></script>
 	<script src="js/explorer.js"></script>
-	<script src="js/explorerOld.js"></script>
 	<script src="js/server.js"></script>
 	<script src="js/table.js"></script>
 	<script src="js/uptime.js"></script>
@@ -85,22 +84,6 @@
 	</div>
 
 	<div id="applications">
-		<div id="explorer" class="application">
-			<h1>Databases</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/><br class="clear"/>
-			<div class="grid clear">
-				<div class="actions">Select:&nbsp;<span class="like-a all">all</span>,&nbsp;<span class="like-a nothing">nothing</span> <input type="button" value="Drop" /></div>
-				<ul class="head"></ul>
-				<div class="body">
-					<table cellspacing="0"><tbody></tbody></table>
-					<div class="not-found">No items found</div>
-				</div>
-				<div class="context"><ul></ul></div>
-			</div>
-			<div class="status">&nbsp;</div>
-		</div>
-
 		<div class="application explorer">
 			<h1>Databases</h1>
 			<div class="menu"></div>
@@ -668,7 +651,6 @@
 	<!-- -->
 
 	<div id="login" class="float-box">
-
 		<h3>Connect to Server</h3>
 
 		<form name="login" method="post" autocomplete="off">

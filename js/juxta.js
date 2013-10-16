@@ -77,8 +77,6 @@ var Juxta = function() {
 	 */
 	this._explorer = new Juxta.Explorer('.application.explorer', this._request);
 
-	this._explorerOld = new Juxta.ExplorerOld('#explorer', this._request);
-
 
 	/**
 	 * Table data browser
@@ -136,7 +134,7 @@ var Juxta = function() {
 	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
 
 	// Show Juxta when application ready to show
-	$.each([this._explorer, this._explorerOld, this.server, this.browser, this.table], (function(i, application) {
+	$.each([this._explorer, this.server, this.browser, this.table], (function(i, application) {
 		application.on('ready', this.show.bind(this));
 	}).bind(this));
 
@@ -411,29 +409,6 @@ Juxta.prototype.explore = function(params) {
 		this._sidebar.highlight(params.show);
 		return this._explorer.explore(params);
 	}
-};
-
-
-/**
- *
- */
-Juxta.prototype.exploreOld = function(params) {
-	if (params.from) {
-		this._sidebar.highlight(params.show, {'database': params.from});
-		return this._explorerOld.explore(params);
-
-	} else {
-		this._sidebar.highlight(params.show);
-		return this._explorerOld.explore(params);
-	}
-};
-
-
-/**
- *
- */
-Juxta.prototype.drop = function(params) {
-	this._explorerOld.drop(params);
 };
 
 
