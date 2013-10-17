@@ -106,7 +106,7 @@ Juxta.Server.prototype._prepare = function(query) {
 		this.stretch();
 
 		/*if (query.cid !== undefined) {
-			$('[name=variables],[name=charsets],[name=engines]', this._container.find('.menu')).each(function(i, element) {
+			$('[name=variables],[name=charsets],[name=engines]', this._container.find('.application-menu')).each(function(i, element) {
 				$(element).attr('href', '#/' + query.cid + '/' + $(element).attr('name'))
 			});
 		}*/

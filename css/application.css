@@ -1,9 +1,6 @@
-#table,
-#data-browser {
-	display: none;
-}
+/* Application */
 
-#applications {
+.application-container {
 	display: none;
 	position: absolute;
 	top: 57px;
@@ -14,93 +11,88 @@
 	padding: 0;
 	background-color: #fff;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
-	-moz-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
-	-webkit-box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
 }
 
-#applications.maximized {
+.application-container._maximized {
 	left: 11px;
 }
 
-/*
- * Application base styles
- */
+/* Base styles */
 
 .application {
 	clear: left;
-	}
+}
 
-.application h1 {
+.application-header {
 	float: left;
 	height: 52px;
 	line-height: 52px;
 	margin: 0 0 1px 7px;
-	font-size: 16.5pt;
+	font-size: 22px;
 	font-weight: normal;
-	color: #000;
+	color: #333;
 	cursor: default;
-	}
+}
 
-.application h1 a {
+.application-header-from {
+	font-size: 22px;
+	color: #999;
+}
+
+.application-header-from a {
 	text-decoration: none;
-	}
+}
 
-.application h1 .from {
-	font-size: 13pt;
-	}
 
-.application h2 {
-	font-size: 13.5pt;
-	font-weight: normal;
-	margin: 21px 0 11px 7px;
-	}
+/* Application menu */
 
-.application .menu {
+.application-menu {
 	float: left;
 	height: 46px;
 	line-height: 50px;
 	margin: 3px 0 0 28px;
-	font-size: 13pt;
+	font-size: 17px;
 	font-weight: normal;
 	color: #000;
 	cursor: default;
-	}
+}
 
-.application .menu a {
+.application-menu a {
 	color: #00559c;
 	cursor: pointer;
 	margin-left: 21px;
 	text-decoration: none;
-	}
+}
 
-.application .menu a:hover {
+.application-menu a:hover {
 	text-decoration: underline;
-	}
+}
 
-.application .menu a[disabled] {
+.application-menu a[disabled] {
 	color: #999;
 	cursor: default;
 	text-decoration: none;
-	}
+}
 
+/* Close button */
 
-.application .close {
+.application-close {
 	display: none;
 	float: right;
 	width: 18px;
 	height: 18px;
 	margin: 13px 11px 0 0;
 	cursor: pointer;
-	}
+}
 
-.application .status {
+/* Status bar */
+
+.application-status {
 	height: 15px;
 	margin-top: 8px;
 	margin-bottom: 8px;
 	padding: 0 7px;
-	font-size: 9pt;
+	font-size: 12px;
 	color: #666;
-	}
+}

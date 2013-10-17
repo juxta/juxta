@@ -84,11 +84,11 @@
 		</ul>
 	</div>
 
-	<div id="applications">
+	<div id="applications" class="application-container">
 		<div class="application explorer">
-			<h1>Databases</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/><br class="clear"/>
+			<h1 class="application-header">Databases</h1>
+			<div class="application-menu"></div>
+			<input type="button" class="application-close close"/><br class="clear"/>
 			<div class="grid2 clear">
 				<div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span>
 					<input type="button" value="Drop" name="drop" class="grid2-actions-button drop" />
@@ -101,13 +101,13 @@
 					<div class="grid2-body-empty">No items found</div>
 				</div>
 			</div>
-			<div class="status">&nbsp;</div>
+			<div class="application-status">&nbsp;</div>
 		</div>
 
 		<div id="server-info" class="application">
-			<h1>Server Information</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/><br class="clear"/>
+			<h1 class="application-header">Server Information</h1>
+			<div class="application-menu"></div>
+			<input type="button" class="application-close close"/><br class="clear"/>
 			<div class="grid clear">
 				<div class="actions clear"></div>
 				<ul class="head">
@@ -463,14 +463,13 @@
 					</ul>
 				</div>
 			</div>
-			<div class="status">&nbsp;</div>
+			<div class="application-status">&nbsp;</div>
 		</div>
 
 		<div id="data-browser" class="application browser">
-			<h1>Browse</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/>
-			<br class="clear"/>
+			<h1 class="application-header">Browse</h1>
+			<div class="application-menu"></div>
+			<input type="button" class="application-close close"/><br class="clear"/>
 			<div class="sql">
 				<textarea name="browser"></textarea>
 			</div>
@@ -486,14 +485,13 @@
 					<div class="grid2-body-empty">No items found</div>
 				</div>
 			</div>
-			<div class="status">&nbsp;</div>
+			<div class="application-status">&nbsp;</div>
 		</div>
 
 		<div id="table" class="application table">
-			<h1>Table</h1>
-			<div class="menu"></div>
-			<input type="button" class="close"/>
-			<br class="clear"/>
+			<h1 class="application-header">Table</h1>
+			<div class="application-menu"></div>
+			<input type="button" class="application-close close"/><br class="clear" />
 
 			<div class="grid2 clear">
 				<div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span> <input type="button" value="Drop" name="drop" class="grid2-actions-button drop" /></div>
@@ -505,7 +503,7 @@
 					<div class="grid2-body-empty">No items found</div>
 				</div>
 			</div>
-			<div class="status">&nbsp;</div>
+			<div class="application-status">&nbsp;</div>
 
 			<!--<div class="grid columns clear">
 				<div class="actions"></div>

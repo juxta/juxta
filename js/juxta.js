@@ -135,7 +135,14 @@ var Juxta = function() {
 
 	// Show Juxta when application ready to show
 	$.each([this._explorer, this.server, this.browser, this.table], (function(i, application) {
-		application.on('ready', this.show.bind(this));
+		application.on('ready', this.show.bind(this))
+			.on('maximize', function() { $('#sidebar').addClass('_hidden'); })
+			.on('restore', function() {
+				$('#sidebar').removeClass('_hidden');
+				if ($('#applications').is(':visible')) {
+					$('#sidebar').show();
+				}
+			});
 	}).bind(this));
 
 	//
@@ -371,7 +378,7 @@ Juxta.prototype._repairHeaderLinks = function(connection) {
  * @return {Juxta}
  */
 Juxta.prototype.show = function() {
-	$('#sidebar:not(._minimized)').slideDown(250);
+	$('#sidebar:not(._hidden)').slideDown(250);
 	$('.float-box').hide();
 	if ($('#applications').not(':visible')) {
 		$('#applications').fadeIn(250);

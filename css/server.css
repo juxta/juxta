@@ -80,13 +80,15 @@ ul.striped li.stripe {
 	background-color: #f6f6f6;
 }
 
-#server-info .menu {
+#server-info .application-menu {
 	float: right;
 	font-size: 10.5pt;
 	margin-right: 21px;
 }
 
 #server-info h2 {
+	font-size: 18px;
+	font-weight: normal;
 	margin: 0 0 14px 0;
 }
 

@@ -12,7 +12,7 @@
 	border-radius: 5px;
 }
 
-.sidebar._minimized {
+.sidebar._hidden {
 	display: none;
 }
 
