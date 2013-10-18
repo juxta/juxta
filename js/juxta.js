@@ -96,7 +96,7 @@ var Juxta = function() {
 	 * Server inofrmation
 	 * @type {Juxta.Server}
 	 */
-	this.server = new Juxta.Server('#server-info', this._request);
+	this._server = new Juxta.Server('#server-info', this._request);
 
 
 	/**
@@ -134,7 +134,7 @@ var Juxta = function() {
 	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
 
 	// Show Juxta when application ready to show
-	$.each([this._explorer, this.server, this.browser, this.table], (function(i, application) {
+	$.each([this._explorer, this._server, this.browser, this.table], (function(i, application) {
 		application.on('ready', this.show.bind(this))
 			.on('maximize', function() { $('#sidebar').addClass('_hidden'); })
 			.on('restore', function() {
@@ -286,11 +286,11 @@ Juxta.prototype.route = function() {
 				this.explore({cid: cid, show: action});
 				break;
 			case 'status':
-			case 'status-full':
 			case 'variables':
 			case 'charsets':
 			case 'engines':
-				this.info({cid: cid, show: action});
+				this._sidebar.highlight('status');
+				this._server.info({cid: cid, show: action});
 				break;
 			case 'login':
 				this._auth.show(params.id);
@@ -416,15 +416,6 @@ Juxta.prototype.explore = function(params) {
 		this._sidebar.highlight(params.show);
 		return this._explorer.explore(params);
 	}
-};
-
-
-/**
- *
- */
-Juxta.prototype.info = function(params) {
-	this._sidebar.highlight('status');
-	this.server.info(params);
 };
 
 

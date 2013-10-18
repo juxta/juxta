@@ -161,7 +161,6 @@ class Juxta
 					$response = $this->_showProcesslist($cid);
 					break;
 				case 'status':
-				case 'status-full':
 					$response = $this->_showStatus($cid);
 					$response['contents'] = $_GET['show'];
 					break;
@@ -579,14 +578,7 @@ class Juxta
 	 */
 	private function _showStatus($cid)
 	{
-		$response = array();
-
-		$status = $this->_query($cid, "SHOW STATUS", array(0, 1));
-		foreach ($status as $variable) {
-			$response[$variable[0]] = $variable[1];
-		}
-
-		return array('contents' => 'status', 'data' => $response);
+		return array('contents' => 'status', 'data' => $this->_query($cid, "SHOW STATUS", array(0, 1)));
 	}
 
 
@@ -613,7 +605,7 @@ class Juxta
 	private function _showCharsets($cid)
 	{
 		$charsets = $this->_query($cid, "SHOW CHARSET",
-			array('Charset', 'Description', 'Default collation', 'Maxlen'));
+			array('Charset', 'Default collation', 'Description'));
 
 		return array('contents' => 'charsets', 'data' => $charsets);
 	}
