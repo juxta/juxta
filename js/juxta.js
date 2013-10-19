@@ -58,9 +58,9 @@ var Juxta = function() {
 				this.error(response.error);
 				this._auth.show();
 			}).bind(this),
-			sessionNotFound: this.redirect.bind(this, 'login'),
+			sessionNotFound: this.redirect.bind(this, 'login', undefined),
 			error: (function(response) { this.error(response.error); }).bind(this),
-			unknowStatus: this.error.bind(this, 'Response with unknow status recived')
+			unknowStatus: this.error.bind(this, 'Unknown response status received')
 		}
 	});
 
@@ -472,6 +472,7 @@ Juxta.prototype.message = function(message, options) {
 Juxta.prototype.redirect = function(action, cid) {
 	//
 	this._state = null;
+
 	window.document.location.hash = '#/' + (typeof cid !== 'undefined' ? cid + '/' : '') + action;
 
 	return this;
