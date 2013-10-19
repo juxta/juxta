@@ -69,7 +69,7 @@ var Juxta = function() {
 	 * Notification messages
 	 * @type {Juxta.Notification}
 	 */
-	this._notification = new Juxta.Notification();
+	this._notification = new Juxta.Notification($('.notifications').eq(0));
 
 
 	/**
