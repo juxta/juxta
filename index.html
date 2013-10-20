@@ -18,7 +18,6 @@
 	<script src="js/modal.js"></script>
 	<script src="js/sqleditor.js"></script>
 	<script src="js/auth.js"></script>
-	<script src="js/createuser.js"></script>
 	<script src="js/routineeditor.js"></script>
 	<script src="js/createdatabase.js"></script>
 	<script src="js/grid2.js"></script>
@@ -448,66 +447,6 @@
 		</ul>
 		<p class="buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
 	</script>
-
-
-	<div id="create-user" class="float-box">
-		<h3>Add a new user</h3>
-		<input type="button" class="close" onclick="$('#create-user').hide();"/>
-		<form>
-			<p>
-				<label for="user-name" style="width: 100px; ">User name</label>
-				<input type="text" name="new-database-name" id="user-name" style="width: 125px;" value=""/>
-			</p>
-			<p>
-				<label for="database-name" style="width: 100px; ">Host</label>
-				<input type="text" name="new-database-name" id="database-name" style="width: 125px;" value=""/>&nbsp;
-				<span class="helper" title="Any host">%</span>&nbsp;
-				<span class="helper" title="localhost">localhost</span>
-			</p>
-			<p>
-				<label for="database-name" style="width: 100px; ">Password</label>
-				<input type="text" name="new-database-name" id="database-name" style="width: 125px;" value=""/>&nbsp;
-				<span class="helper">Generate</span>
-			</p>
-			<p>
-				<label for="database-name" style="width: 100px; ">Global privileges</label>
-				<span class="helper" title="ALL PRIVILEGES">All</span>&nbsp;
-				<span class="helper" title="USAGE">Usage</span>
-			</p>
-			
-			<ul class="privileges">
-				<li><input type="checkbox" id="Select_priv">&nbsp;<label for="Select_priv">Select</label></li>
-				<li><input type="checkbox" id="Insert_priv">&nbsp;<label for="Insert_priv">Insert</label></li>
-				<li><input type="checkbox" id="Update_priv">&nbsp;<label for="Update_priv">Update</label></li>
-				<li><input type="checkbox" id="Delete_priv">&nbsp;<label for="Delete_priv">Delete</label></li>
-				<li><input type="checkbox" id="Create_priv">&nbsp;<label for="Create_priv">Create</label></li>
-				<li><input type="checkbox" id="Drop_priv">&nbsp;<label for="Drop_priv">Drop</label></li>
-				<li><input type="checkbox" id="Alter_priv">&nbsp;<label for="Alter_priv">Alter</label></li>
-				<li><input type="checkbox" id="Index_priv">&nbsp;<label for="Index_priv">Index</label></li>
-				<li><input type="checkbox" id="Create_routine_priv">&nbsp;<label for="Create_routine_priv">Create Routine</label></li>
-				<li><input type="checkbox" id="Alter_routine_priv">&nbsp;<label for="Alter_routine_priv">Alter Routine</label></li>
-				<li><input type="checkbox" id="Execute_priv">&nbsp;<label for="Execute_priv">Execute</label></li>
-				<li><input type="checkbox" id="Create_view_priv">&nbsp;<label for="Create_view_priv">Create View</label></li>
-				<li><input type="checkbox" id="Show_view_priv">&nbsp;<label for="Show_view_priv">Show View</label></li>
-				<li><input type="checkbox" id="Event_priv">&nbsp;<label for="Event_priv">Event</label></li>
-				<li><input type="checkbox" id="Trigger_priv">&nbsp;<label for="Trigger_priv">Trigger</label></li>
-				<li><input type="checkbox" id="Grant_priv">&nbsp;<label for="Grant_priv">Grant</label></li>
-				<li><input type="checkbox" id="Process_priv">&nbsp;<label for="Process_priv">Process</label></li>
-				<li><input type="checkbox" id="Super_priv">&nbsp;<label for="Super_priv">Super</label></li>
-				<li><input type="checkbox" id="Shutdown_priv">&nbsp;<label for="Shutdown_priv">Shutdown</label></li>
-				<li><input type="checkbox" id="Reload_priv">&nbsp;<label for="Reload_priv">Reload</label></li>
-				<li><input type="checkbox" id="Create_tmp_table_priv">&nbsp;<label for="Create_tmp_table_priv">Create Temporary Tables</label></li>
-				<li><input type="checkbox" id="Lock_tables_priv">&nbsp;<label for="Lock_tables_priv">Lock Tables</label></li>
-				<li><input type="checkbox" id="File_priv">&nbsp;<label for="File_priv">File</label></li>
-				<li><input type="checkbox" id="References_priv">&nbsp;<label for="References_priv">References</label></li>
-				<li><input type="checkbox" id="Show_db_priv">&nbsp;<label for="Show_db_priv">Show Databases</label></li>
-				<li><input type="checkbox" id="Create_user_priv">&nbsp;<label for="Create_user_priv">Create User</label></li>
-				<li><input type="checkbox" id="Repl_client_priv">&nbsp;<label for="Repl_client_priv">Replication Client</label></li>
-				<li><input type="checkbox" id="Repl_slave_priv">&nbsp;<label for="Repl_slave_priv">Replication Slave</label></li>
-			</ul><br class="clear"/>
-			<div class="buttons"><input type="button" value="Create" /></div>
-		</form>
-	</div>
 
 	<div id="edit-routine" class="float-box">
 		<h3>Edit</h3>

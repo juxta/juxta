@@ -261,7 +261,7 @@ Juxta.Explorer.prototype._explorerShowParams = {
 	users: {
 		header: 'Users',
 		menu: {
-			'Create User': function() { this._createUser.show(); return false; },
+			'Create User': null,
 			'Flush': null
 		}
 	},
