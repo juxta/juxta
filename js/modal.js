@@ -32,7 +32,7 @@ Juxta.Modal = function(element, options) {
 	this._header =  this._container.find('.modal-header');
 
 	if (!this._header.is('.modal-header')) {
-		this._header = this._container.prepend('<h3>').find('h3').addClass('.modal-header').html(this._settings.title);
+		this._header = this._container.prepend('<h3>').find('h3').addClass('modal-header').html(this._settings.title);
 	}
 
 
