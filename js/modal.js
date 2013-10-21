@@ -2,13 +2,13 @@
 
 /**
  * @class Modal dialog
+ *
  * @param element
  * @param options
  */
 Juxta.Modal = function(element, options) {
 
 	/**
-	 * Settings
 	 * @type {Object}
 	 */
 	this._settings = {
@@ -17,22 +17,22 @@ Juxta.Modal = function(element, options) {
 		center: true
 	};
 
+	$.extend(this._settings, options);
+
 
 	/**
 	 * @type {jQuery}
 	 */
 	this._container = $(element);
 
-	this.container = this._container;
-
 
 	/**
 	 * @type {jQuery}
 	 */
-	this.header =  this.container.find('h3');
+	this._header =  this._container.find('.modal-header');
 
-	if (!this.header.is('h3')) {
-		this.header = this.container.prepend('<h3>'+ this._settings.title + '</h3>').find('h3');
+	if (!this._header.is('.modal-header')) {
+		this._header = this._container.prepend('<h3>').find('h3').addClass('.modal-header').html(this._settings.title);
 	}
 
 
@@ -40,28 +40,29 @@ Juxta.Modal = function(element, options) {
 	 * Close button
 	 * @type {jQuery}
 	 */
-	this.close = this.container.find('input[type=button].close');
+	this._close = this._container.find('input[type=button].modal-close');
 
-
-	$.extend(this._settings, options);
-
-	if (!this.close.is('input')) {
-		this.close = $('<input>').attr('type', 'button').addClass('close').insertAfter(this.header).attr('disabled', !this._settings.closable);
+	if (!this._close.is('input')) {
+		this._close = $('<input>').attr('type', 'button').addClass('modal-close close').insertAfter(this._header).attr('disabled', !this._settings.closable);
 	}
 
-	this._settings.title = this.header.html();
 
-	this.close.on('click', $.proxy(this.hide, this));
+	this._settings.title = this._header.html();
 
-	this.container.draggable({scroll: false, handle: 'h3'});
+	this._close.on('click', this.hide.bind(this));
+
+	this._container.draggable({scroll: false, handle: '.modal-header'});
 
 	this.center();
+
 };
 
 Juxta.Lib.extend(Juxta.Modal, Juxta.Events);
 
+
 /**
- * Show a float box
+ * Show a window
+ *
  * @param {Object} options
  * @param {String} content
  * @return {Juxta.Modal}
@@ -72,21 +73,18 @@ Juxta.Modal.prototype.show = function(options, content) {
 
 	options = $.extend({}, this._settings, options);
 	if (options.name) {
-		options.name = '<a href="">' + options.name + '</a>';
-	}
-	if (options.from) {
-		options.from = '<span class="from">from <a>' + options.from + '</a></span>';
+		options.name = '<a class="modal-header-link">' + options.name + '</a>';
 	}
 
-	this.header.html($.template(options.title, options));
+	this._header.html($.template(options.title, options));
 
 	// Append content
 	if (content) {
 		this.clear();
-		$(content).insertAfter(this.close);
+		$(content).insertAfter(this._close);
 	}
 
-	this.container.show();
+	this._container.show();
 
 	if (options.center) {
 		this.center();
@@ -99,12 +97,13 @@ Juxta.Modal.prototype.show = function(options, content) {
 
 
 /**
- * Hide a float box
+ * Hide a window
+ *
  * @return {Juxta.Modal}
  */
 Juxta.Modal.prototype.hide = function() {
 	//
-	this.container.hide();
+	this._container.hide();
 	this.trigger('hide');
 
 	return this;
@@ -112,33 +111,35 @@ Juxta.Modal.prototype.hide = function() {
 
 
 /**
- * Center a box
+ * Center a window
+ *
  * @return {Juxta.Modal}
  */
 Juxta.Modal.prototype.center = function() {
 	//
 	var height = $(document.body).height(),
 		width = $(document.body).width(),
-		left = (width - this.container.width()) / 2,
-		top = parseInt(0.75 * (height - this.container.height()) / 2, 10);
+		left = (width - this._container.width()) / 2,
+		top = parseInt(0.75 * (height - this._container.height()) / 2, 10);
 
 	if (top <= 5) {
 		top = 5;
 	}
 
-	this.container.css({left: left, top: top});
+	this._container.css({left: left, top: top});
 
 	return this;
 };
 
 
 /**
- * Clear a box
+ * Clear
+ *
  * @return {Juxta.Modal}
  */
 Juxta.Modal.prototype.clear = function() {
 	//
-	this.container.find('> *:not(h3):not([type=button].close)').remove();
+	this._container.find('> *:not(.modal-header):not(.modal-close)').remove();
 
 	return this;
 };

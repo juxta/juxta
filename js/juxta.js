@@ -197,9 +197,6 @@ var Juxta = function() {
 	$('#header a[name=logout]').on('click', (function() { this._auth.logout(); return false; }).bind(this));
 
 	// @todo Remove this from here
-	$('.float-box').draggable({scroll: false, handle: 'h3'});
-
-	// @todo Remove this from here
 	$(document.body).on('click', function() {
 		$('.context:visible').trigger('hide').hide();
 	});
@@ -379,7 +376,7 @@ Juxta.prototype._repairHeaderLinks = function(connection) {
  */
 Juxta.prototype.show = function() {
 	$('#sidebar:not(._hidden)').slideDown(250);
-	$('.float-box').hide();
+	$('.modal').hide();
 	if ($('#applications').not(':visible')) {
 		$('#applications').fadeIn(250);
 		$('#header h1, #header .header-links').fadeIn(250);
@@ -396,7 +393,7 @@ Juxta.prototype.show = function() {
  */
 Juxta.prototype.hide = function() {
 	//
-	$('#header h1, #header .header-links, #sidebar, #applications, .float-box, .context').hide();
+	$('#header h1, #header .header-links, #sidebar, #applications, .modal, .context').hide();
 
 	return this;
 };

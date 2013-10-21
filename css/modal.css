@@ -1,0 +1,48 @@
+/* Modal window */
+
+.modal {
+	display: none;
+	position: absolute;
+	top: 250px;
+	left: 400px;
+	padding: 0 0 21px 0;
+	background-color: #F6F6F6;
+	border-radius: 5px;
+	box-shadow: 0px 1px 1px rgba(127, 127, 127, 0.7);
+}
+
+.modal-header {
+	height: 52px;
+	line-height: 52px;
+	margin: 0 7px;
+	font-size: 22px;
+	font-weight: normal;
+	color: #333;
+	cursor: default;
+}
+
+.modal-header-link:hover {
+	text-decoration: none;
+}
+
+.modal-close {
+	position: absolute;
+	top: 16px;
+	right: 11px;
+}
+
+.modal-form {
+	margin: 21px 0 0 0;
+	padding: 0 14px;
+}
+
+.modal-buttons {
+	clear: both;
+	margin: 14px 0 0;
+	text-align: center;
+}
+
+.modal-buttons input[type=button],
+.modal-buttons input[type=submit] {
+	padding: 2px 7px;
+}
