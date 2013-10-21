@@ -36,7 +36,7 @@ a.fast:hover {
 	border-bottom: 0;
 }
 
-.clear{
+.clear {
 	clear: both;
 }
 
@@ -45,10 +45,7 @@ span.overflowed {
 	overflow: hidden;
 }
 
-
-/*
- * Forms
- */
+/* Forms */
 
 form p {
 	margin: 0 0 3px 0;
@@ -64,7 +61,7 @@ form p label {
 	line-height: 30px;
 	width: 125px;
 	padding-right: 14px;
-	font-size: 10pt;
+	font-size: 12px;
 	color: #333;
 	text-align: right;
 }
@@ -76,18 +73,16 @@ form select {
 	border: #ccc 1px solid;
 	border-top-color: #b9b9b9;
 	border-radius: 2px;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
 	color: #333;
 	float: left;
-	font-size: 10.5pt;
+	font-size: 13px;
 	padding: 3px 5px;
 }
 
 form input[type=text]:focus,
 form input[type=password]:focus,
 form select:focus {
-	-webkit-box-shadow: 0px 0px 1px rgba(24, 63, 122, 0.5);
+	box-shadow: 0px 0px 1px rgba(24, 63, 122, 0.5);
 }
 
 form select optgroup {
@@ -102,14 +97,9 @@ form .helper {
 	padding: 0 3px;
 	background-color: #E3E3E3;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 }
 
-
-/*
- * Buttons, others interface elements
- */
+/* Buttons, others interface elements */
 
 input[type=button],
 input[type=submit] {
@@ -121,11 +111,7 @@ input[type=submit] {
 	background: -moz-linear-gradient(top, #ffffff, #e3e3e3);
 	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e3e3e3));
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-	-moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 1px;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
 }
 
@@ -133,21 +119,21 @@ input[type=button]:hover,
 input[type=submit]:hover {
 	color: #00559C;
 	cursor: pointer;
-
 	background-color: #fcfcfc;
 	background: -moz-linear-gradient(top, #fcfcfc, #dcdcdc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dcdcdc));
 }
+
 input[type=button]:active,
 input[type=submit]:active {
 	cursor: pointer;
-
 	background-color: #f0f0f0;
 	background: -moz-linear-gradient(top, #e3e3e3, #fcfcfc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#fcfcfc));
 }
+
 input[type=button]:disabled,
-input[type=submit]:disabled{
+input[type=submit]:disabled {
 	cursor: default;
 	background: #eee;
 	color: #666;
@@ -158,8 +144,6 @@ input[type=button].close {
 	width: 18px;
 	background: transparent url('../images/close.png') center no-repeat;
 	box-shadow: none;
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
 }
 
 input[type=button].close:hover {

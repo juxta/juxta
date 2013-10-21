@@ -1,6 +1,4 @@
-/*
- * Code editor
- */
+/* Code editor */
 
 .code-editor {
 	margin-top: 1px;
@@ -8,13 +6,12 @@
 	border-bottom: #eee 1px solid;
 	background-color: #fff;
 	font-family: Courier;
-	line-height: 12pt;
-	}
+}
 
 .code-editor textarea {
 	height: 250px;
 	width: 400px;
-	}
+}
 
 
 .CodeMirror {

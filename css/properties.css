@@ -1,9 +1,7 @@
-/**
- * Properties
- */
+/* Properties */
 
 .properties {
-	font-size: 10pt;
+	font-size: 13px;
 	line-height: 24px;
 	list-style-type: none;
 	margin: 7px 0 14px 0;
@@ -13,11 +11,11 @@
 	background-color: #F9F9F9;
 	border-top: #DDD 1px solid;
 	border-bottom: #EEE 1px solid;
-	}
+}
 
 .properties-property {
 	clear: both;
-	}
+}
 
 .properties-property-name {
 	color: #333;
@@ -28,27 +26,27 @@
 	background-color: #EEE;
 	border-right: #E0E0E0 1px solid;
 	padding-right: 11px;
-	}
+}
 
 .properties.database .properties-property-name {
 	width: 90px;
-	}
+}
 
 .properties.table .properties-property-name {
 	width: 110px;
-	}
+}
 
 .properties-property:first-child .properties-property-name,
 .properties-property:first-child .properties-property-value {
 	padding-top: 5px;
-	}
+}
 
 .properties-property:last-child .properties-property-name,
 .properties-property:last-child .properties-property-value {
 	padding-bottom: 5px;
-	}
+}
 
 .properties-property-value {
 	float: left;
 	margin: 0;
-	}
+}

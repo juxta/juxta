@@ -78,8 +78,6 @@
 	float: left;
 	padding: 0 7px 0 21px;
 	border-radius: 7px;
-	-moz-border-radius: 7px;
-	-web-kit-border-radius: 7px;
 }
 
 .sidebar-link a {

@@ -1,6 +1,4 @@
-/*
- * Header
- */
+/* Header */
 
 .header {
 	height: 35px;
@@ -16,7 +14,7 @@
 	line-height: 35px;
 	margin: 0 0 0 18px;
 	padding: 0;
-	font-size: 18pt;
+	font-size: 24px;
 	font-weight: normal;
 }
 
@@ -54,9 +52,7 @@
 }
 
 
-/**
- * Connections
- */
+/* Connections */
 
 .header-change-connection-link {
 	float: left;

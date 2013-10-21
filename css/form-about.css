@@ -1,36 +1,33 @@
-/**
- * About window
- *
- */
+/** About window */
 
 .message .about {
 	width: 350px;
 	height: 175px;
 	margin-top: -20px;
-	}
+}
 
 .message .about h4,
 .message .about p {
-	font-size: 10.5pt;
+	font-size: 13px;
 	margin-bottom: 14px;
 	text-align: center;
 	width: 100%;
 	color: #111;
-	}
+}
 
 .message .about h4 {
-	font-size: 25.5pt;
+	font-size: 36px;
 	font-weight: bold;
 	margin: 14px 0 7px 0;
-	}
+}
 
 .message .about p.version {
 	color: #666;
-	font-size: 9pt;
+	font-size: 12px;
 	margin-top: 0;
-	}
+}
 
 .message .about p.site,
 .message .about p.buttons {
 	margin-top: 20px;
-	}
+}

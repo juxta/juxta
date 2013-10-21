@@ -1,16 +1,13 @@
-/**
- * Create Database form
- *
- */
+/* Create Database form */
 
 form[name=create-database] label {
 	width: 92px;
-	}
+}
 
 form[name=create-database] input[name=name] {
 	width: 175px;
-	}
+}
 
 form[name=create-database] select[name=collation] {
 	width: 187px;
-	}
+}

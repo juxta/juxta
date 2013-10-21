@@ -1,13 +1,11 @@
-/*
- * Grid 2
- */
+/* Grid 2 */
 
 .grid2-actions {
 	height: 28px;
 	line-height: 28px;
 	padding: 0 7px;
 	background-color: #ccc;
-	font-size: 10.5pt;
+	font-size: 14px;
 	color: #333;
 	border-bottom: #ccc 1px solid;
 }
