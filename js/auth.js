@@ -1,6 +1,7 @@
 /**
  * @class Connect to Server
  * @extends {Juxta.Modal}
+ *
  * @param {jQuery} element
  * @param {Object} options
  */

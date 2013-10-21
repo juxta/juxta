@@ -38,6 +38,7 @@ Juxta.Modal = function(element, options) {
 
 	/**
 	 * Close button
+	 *
 	 * @type {jQuery}
 	 */
 	this._close = this._container.find('input[type=button].modal-close');

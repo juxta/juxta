@@ -4,6 +4,7 @@
 /**
  * @class Table editor
  * @extends {Juxta.Application}
+ *
  * @param {jQuery} element
  */
 Juxta.Table = function(element, request) {

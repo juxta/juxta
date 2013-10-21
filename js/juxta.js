@@ -39,6 +39,7 @@ var Juxta = function() {
 
 	/**
 	 * Request/response
+	 *
 	 * @type Juxta.Request
 	 */
 	this._request = new Juxta.Request(this._connection, this._cache, {
@@ -67,6 +68,7 @@ var Juxta = function() {
 
 	/**
 	 * Notification messages
+	 *
 	 * @type {Juxta.Notification}
 	 */
 	this._notification = new Juxta.Notification($('.notifications').eq(0));
@@ -80,6 +82,7 @@ var Juxta = function() {
 
 	/**
 	 * Table data browser
+	 *
 	 * @type {Juxta.Browser}
 	 */
 	this.browser = new Juxta.Browser('#data-browser', this._request);
@@ -87,13 +90,15 @@ var Juxta = function() {
 
 	/**
 	 * Table editor
+	 *
 	 * @type {Juxta.Table}
 	 */
 	this.table = new Juxta.Table('#table', this._request);
 
 
 	/**
-	 * Server inofrmation
+	 * Server information
+	 *
 	 * @type {Juxta.Server}
 	 */
 	this._server = new Juxta.Server('#server-info', this._request);
@@ -101,13 +106,15 @@ var Juxta = function() {
 
 	/**
 	 * Connect to server form
+	 *
 	 * @type {Juxta.Auth}
 	 */
 	this._auth = new Juxta.Auth('#login', this._request);
 
 
 	/**
-	 * Float box
+	 * Modal window for dialogs
+	 *
 	 * @type {Juxta.Modal}
 	 */
 	this.messageBox = new Juxta.Modal('#message');

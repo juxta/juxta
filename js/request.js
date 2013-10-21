@@ -1,5 +1,6 @@
 /**
  * @class Common Ajax request/response interface
+ *
  * @param {Juxta.Cache} Cache
  * @param {Object} Request and reponse options
  */
@@ -12,14 +13,12 @@ Juxta.Request = function(connection, cache, options) {
 
 
 	/**
-	 * Cache
 	 * @type {Juxta.Cache}
 	 */
 	this.cache = cache;
 
 
 	/**
-	 * Ajax options
 	 * @type {Object}
 	 */
 	this._ajaxSettings = {
@@ -38,7 +37,6 @@ Juxta.Request = function(connection, cache, options) {
 	$.ajaxSetup(this._ajaxSettings);
 
 	/**
-	 * Response status callbacks
 	 * @type {Object}
 	 */
 	this._responseCallbacks = {
@@ -57,6 +55,8 @@ Juxta.Request = function(connection, cache, options) {
 
 /**
  * Make an AJAX request
+ *
+ * @param {Object} params
  * @return {jqXHR}
  */
 Juxta.Request.prototype.send = function (params) {
@@ -202,6 +202,7 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
 
 /**
  * Create a serialized representation of object for query
+ *
  * @returns {String}
  */
 Juxta.Request.prototype.queryString = function(action) {

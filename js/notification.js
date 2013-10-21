@@ -84,6 +84,7 @@ Juxta.Notification.prototype.show = function(message, options) {
 
 /**
  * Hide a notification
+ *
  * @param {jQuery} element
  * @param {Object} options
  */

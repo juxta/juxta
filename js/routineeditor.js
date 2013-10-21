@@ -1,6 +1,7 @@
 /**
  * @class Editor for views, stored procedures and triggers
  * @extends Juxta.Modal
+ *
  * @param {jQuery} element
  * @param {Juxta.Request} request
  */
@@ -22,6 +23,7 @@ Juxta.RoutineEditor = function(element, request) {
 };
 
 Juxta.Lib.extend(Juxta.RoutineEditor, Juxta.Modal);
+
 
 /**
  * Show editor

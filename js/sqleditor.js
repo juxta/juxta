@@ -2,6 +2,7 @@
 
 /**
  * @class SQL Editor
+ *
  * @param {jQuery} textarea
  * @param {Object} options
  */
@@ -31,7 +32,6 @@ Juxta.SqlEditor = function(textarea, options) {
 
 	/**
 	 * @type {CodeMirror}
-	 * @private
 	 */
 	this._editor = CodeMirror.fromTextArea(this._textarea.get(0), this._settings);
 
@@ -72,5 +72,3 @@ Juxta.SqlEditor = function(textarea, options) {
 	};
 
 };
-
-

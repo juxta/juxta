@@ -2,13 +2,13 @@
 
 /**
  * @class Juxta.Grid2.ContextMenu
+ *
  * @param {Juxta.Grid2} grid Grid
  */
 Juxta.Grid2.ContextMenu = function(grid) {
 
 	/**
 	 * @type {Juxta.Grid2}
-	 * @protected
 	 */
 	this._grid = grid;
 
@@ -63,6 +63,7 @@ Juxta.Lib.extend(Juxta.Grid2.ContextMenu, Juxta.Events);
 
 /**
  * Show a menu
+ *
  * @param {jQuery} row Table row
  * @param {Object} position Position
  */

@@ -11,6 +11,7 @@ Juxta.Grid2 = function(grid) {
 
 	/**
 	 * Group actions panel
+	 *
 	 * @type {jQuery}
 	 */
 	this._actions = this._container.find('.grid2-actions');
@@ -30,6 +31,7 @@ Juxta.Grid2 = function(grid) {
 
 	/**
 	 * Grid body
+	 *
 	 * @type {jQuery}
 	 */
 	this._body = this._bodyContainer.find('tbody');
@@ -61,6 +63,7 @@ Juxta.Grid2 = function(grid) {
 
 	/**
 	 * Rows cache
+	 *
 	 * @type {Object}
 	 */
 	this._cache = {};

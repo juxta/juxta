@@ -23,6 +23,7 @@ Juxta.Lib.extend(Juxta.Connection, Juxta.Events);
 
 /**
  * Set connection
+ *
  * @param {Number} cid
  * @param {Object} connection
  */
@@ -44,6 +45,7 @@ Juxta.Connection.prototype.set = function(cid, connection) {
 
 /**
  * Get connection object
+ *
  * @param param
  * @return {*}
  */

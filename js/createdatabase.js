@@ -1,6 +1,7 @@
 /**
  * @class Create Database
  * @extends Juxta.Modal
+ *
  * @param {jQuery} element
  * @param {Juxta.Request} request
  */

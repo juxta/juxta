@@ -3,6 +3,7 @@
 /**
  * @class Data browser
  * @extends Juxta.Application
+ *
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
@@ -88,6 +89,7 @@ Juxta.Browser = function(element, request) {
 };
 
 Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
+
 
 /**
  * Show explorer
@@ -176,7 +178,6 @@ Juxta.Browser.prototype.hideEditor = function() {
  * Toggle editor
  *
  * @return {Juxta.Browser}
- * @private
  */
 Juxta.Browser.prototype.toggleEditor = function() {
 	this.find('.sql').toggle();

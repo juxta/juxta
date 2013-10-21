@@ -45,6 +45,7 @@ Juxta.Server = function (element, request) {
 
 Juxta.Lib.extend(Juxta.Server, Juxta.Application);
 
+
 /**
  * Show application
  *

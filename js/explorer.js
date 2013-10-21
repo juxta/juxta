@@ -3,6 +3,7 @@
 /**
  * @class Juxta.Explorer
  * @extends {Juxta.Application}
+ *
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
@@ -164,10 +165,9 @@ Juxta.Explorer.prototype._prepare = function(template) {
 	} else if (this._grid.prepare(this._gridParams[template])) {
 		this._preparedFor = template;
 		return true;
-
-	} else {
-		return false;
 	}
+
+	return false;
 };
 
 
@@ -186,7 +186,6 @@ Juxta.Explorer.prototype.explore = function(params) {
  *
  * @param {Object} params
  * @return {jqXHR}
- * @protected
  */
 Juxta.Explorer.prototype._exploreRequest = function(params) {
 	//
@@ -231,7 +230,6 @@ Juxta.Explorer.prototype._exploreRequest = function(params) {
  * @param {Object} response
  * @param {Object} request
  * @return {Juxta.Explorer}
- * @protected
  */
 Juxta.Explorer.prototype._exploreCallback = function(response, request) {
 	//
@@ -247,7 +245,6 @@ Juxta.Explorer.prototype._exploreCallback = function(response, request) {
 
 /**
  * @type {Object}
- * @protected
  */
 Juxta.Explorer.prototype._explorerShowParams = {
 	databases: {
@@ -286,7 +283,6 @@ Juxta.Explorer.prototype._explorerShowParams = {
 
 /**
  * @type {Object}
- * @protected
  */
 Juxta.Explorer.prototype._gridParams = {
 	databases: {
@@ -366,7 +362,6 @@ Juxta.Explorer.prototype._gridParams = {
  * Response for getting database or table properties request
  *
  * @param {Object} response
- * @protected
  */
 Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, response) {
 	//
@@ -446,7 +441,6 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
  * Response for drop request
  *
  * @param {Object} response
- * @protected
  */
 Juxta.Explorer.prototype._dropCallback = function(entity, response) {
 	//

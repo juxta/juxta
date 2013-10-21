@@ -14,6 +14,7 @@ Juxta.Events = function() {
 
 /**
  * Bind a function to an event
+ *
  * @param {String} event
  * @param {Function} callback
  * @return {*}
@@ -35,6 +36,7 @@ Juxta.Events.prototype.on = function(event, callback) {
 
 /**
  * Unbind a callback
+ *
  * @param event
  * @param callback
  * @return {Boolean}
@@ -64,6 +66,7 @@ Juxta.Events.prototype.off = function(event, callback) {
 
 /**
  * Trigger an event
+ *
  * @param {String} event
  * @return {*}
  */
