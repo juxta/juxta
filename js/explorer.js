@@ -292,7 +292,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'tables': {title: 'Tables', href: '#/{cid}/{name}/tables'},
 			'drop-database': 'Drop',
 			'database-properties': 'Properties'
-		}
+		},
+		actions: {drop: 'Drop'}
 	},
 	processlist: {
 		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
@@ -300,7 +301,8 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'information': 'Information',
 			'kill': 'Kill'
-		}
+		},
+		actions: {kill: 'Kill'}
 	},
 	users: {
 		columns: ['Username', 'Host', 'Password', {name: 'privileges', title: 'Gloval privileges'}, 'Grant'],
@@ -310,7 +312,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'change-password': 'Change password',
 			'rename': 'Rename',
 			'delete': 'Delete'
-		}
+		},
+		actions: {drop: 'Drop'}
 	},
 	tables: {
 		columns: ['Table', 'Engine', 'Rows', 'Size'],
@@ -320,7 +323,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
 			'drop-table': 'Drop',
 			'table-properties': 'Properties'
-		}
+		},
+		actions: {drop: 'Drop'}
 	},
 	views: {
 		columns: ['View', 'Definer', 'Updatable'],
@@ -330,7 +334,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'edit-view': 'Edit',
 			'drop-view': 'Drop',
 			'view-properties': 'Properties'
-		}
+		},
+		actions: {drop: 'Drop'}
 	},
 	routines: {
 		'head': {
@@ -344,7 +349,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'edit-routine': 'Edit',
 			'drop-routine': 'Drop',
 			'routine-properties': 'Properties'
-		}
+		},
+		actions: {drop: 'Drop'}
 	},
 	triggers: {
 		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
@@ -353,7 +359,8 @@ Juxta.Explorer.prototype._gridParams = {
 			'edit-trigger': 'Edit',
 			'drop-trigger': 'Drop',
 			'trigger-properties': 'Properties'
-		}
+		},
+		actions: {drop: 'Drop'}
 	}
 };
 

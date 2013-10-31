@@ -15,28 +15,20 @@
 	border-bottom-color: #eee;
 }
 
+.grid2-actions-select_all {
+	margin-right: 11px;
+}
+
+.grid2-actions-select_all-checkbox {
+	margin: 8px 7px 0 1px;
+	float: left;
+}
+
 .grid2-actions .grid2-actions-button {
 	font-size: 13px;
 	height: 19px;
 	border-bottom-width: 0;
-}
-
-.grid2-actions-link {
-	text-decoration: none;
-	color: #00559c;
-}
-
-.grid2-actions-link.active {
-	color: #fff;
-}
-
-.grid2-actions-link:hover {
-	color: #f9f9f9;
-	cursor: pointer;
-}
-
-.grid2-actions-link.checked {
-	color: #fff;
+	padding-top: 0;
 }
 
 
