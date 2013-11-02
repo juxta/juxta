@@ -132,7 +132,7 @@ Juxta.Grid2 = function(grid) {
 		var button = $(event.target);
 
 		if (button.attr('name') && !button.prop('disabled')) {
-			this.trigger('action', button.attr('name'));
+			this.trigger('action', button.attr('name'), this.getSelected());
 		}
 	}).bind(this));
 
@@ -150,8 +150,8 @@ Juxta.Grid2 = function(grid) {
 	}).bind(this));
 
 	//
-	this._contextMenu.on('click', (function(name, type, row, context) {
-		this.trigger('context-menu-click', name, type, row, context);
+	this._contextMenu.on('click', (function(name, type, context) {
+		this.trigger('context-menu-click', name, type, context);
 	}).bind(this));
 
 };
@@ -501,4 +501,23 @@ Juxta.Grid2.prototype.remove = function(rows) {
 	this.trigger('change');
 
 	return this;
+};
+
+
+/**
+ * Return selected rows
+ *
+ * @ return {Array|Object}
+ */
+Juxta.Grid2.prototype.getSelected = function() {
+	//
+	var rows = [];
+
+	$.each(this._body.find('.grid2-body-column:first-child input[type=checkbox]:checked'), function (i, checkbox) {
+		if ($(checkbox).attr('name')) {
+			rows.push($(checkbox).attr('name'));
+		}
+	});
+
+	return rows;
 };

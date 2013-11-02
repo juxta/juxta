@@ -50,50 +50,9 @@ Juxta.Explorer = function(element, request) {
 	// Stretch grid by height
 	$(window).on('resize', this._stretch.bind(this));
 
-	//
-	this._grid.on('context-menu-click', (function(event, name, type, context) {
-
-		if (event === 'database-properties') {
-			this._request.send({action: {show: 'properties', database: name, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
-
-		} else if (event === 'drop-database') {
-			this.drop('databases', [name]);
-
-		} else if (event === 'table-properties') {
-			this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
-
-		} else if (event === 'drop-table') {
-			this.drop('tables', [name], context.from);
-
-		} else if (event === 'drop-view') {
-			this.drop('views', [name], context.from);
-
-		} else if (event === 'kill') {
-			this.kill([name]);
-
-		} else if (event === 'edit-view') {
-			this._routineEditor.edit({view: name, from: context.from});
-
-		} else if (event === 'edit-routine' && type === 'procedure') {
-			this._routineEditor.edit({procedure: name, from: context.from});
-
-		}  else if (event === 'drop-routine' && type === 'procedure') {
-			this.drop('routines', {procedure: [name]}, context.from);
-
-		} else if (event === 'edit-routine' && type === 'function') {
-			this._routineEditor.edit({'function': name, from: context.from});
-
-		} else if (event === 'drop-routine' && type === 'function') {
-			this.drop('routines', {'function': [name]}, context.from);
-
-		} else if (event === 'edit-trigger') {
-			this._routineEditor.edit({trigger: name, from: context.from});
-
-		} else if (event === 'drop-trigger') {
-			this.drop('triggers', [name], context.from);
-		}
-
-	}).bind(this));
+	this._grid
+		.on('context-menu-click', this._gridActionCallback.bind(this))
+		.on('action', this._gridActionCallback.bind(this));
 
 	// Update status bar text
 	this._grid.on('change', (function() {
@@ -293,7 +252,7 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-database': 'Drop',
 			'database-properties': 'Properties'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-database': 'Drop'}
 	},
 	processlist: {
 		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
@@ -361,6 +320,58 @@ Juxta.Explorer.prototype._gridParams = {
 			'trigger-properties': 'Properties'
 		},
 		actions: {drop: 'Drop'}
+	}
+};
+
+
+/**
+ * Callback on grid group action or context menu click
+ *
+ * @param {String} event Event name
+ * @param {String} name Object name
+ * @param {String} type Object type
+ * @param context Context
+ */
+Juxta.Explorer.prototype._gridActionCallback = function(event, name, type, context) {
+
+	if (event === 'database-properties') {
+		this._request.send({action: {show: 'properties', database: name, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
+	} else if (event === 'drop-database') {
+		this.drop('databases', $.isArray(name) ? name : [name]);
+
+	} else if (event === 'table-properties') {
+		this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
+	} else if (event === 'drop-table') {
+		this.drop('tables', [name], context.from);
+
+	} else if (event === 'drop-view') {
+		this.drop('views', [name], context.from);
+
+	} else if (event === 'kill') {
+		this.kill([name]);
+
+	} else if (event === 'edit-view') {
+		this._routineEditor.edit({view: name, from: context.from});
+
+	} else if (event === 'edit-routine' && type === 'procedure') {
+		this._routineEditor.edit({procedure: name, from: context.from});
+
+	}  else if (event === 'drop-routine' && type === 'procedure') {
+		this.drop('routines', {procedure: [name]}, context.from);
+
+	} else if (event === 'edit-routine' && type === 'function') {
+		this._routineEditor.edit({'function': name, from: context.from});
+
+	} else if (event === 'drop-routine' && type === 'function') {
+		this.drop('routines', {'function': [name]}, context.from);
+
+	} else if (event === 'edit-trigger') {
+		this._routineEditor.edit({trigger: name, from: context.from});
+
+	} else if (event === 'drop-trigger') {
+		this.drop('triggers', [name], context.from);
 	}
 };
 
