@@ -494,6 +494,8 @@ Juxta.Grid2.prototype.remove = function(rows) {
 
 	$.each(rows, (function(i, name) {
 		if (this._cache[name]) {
+			this._cache[name].find('.grid2-body-column:first-child input[type=checkbox]')
+				.prop('checked', false).trigger('change');
 			this.count = this.count - this._cache[name].remove().length;
 		}
 	}).bind(this));
@@ -513,7 +515,7 @@ Juxta.Grid2.prototype.getSelected = function() {
 	//
 	var rows = [];
 
-	$.each(this._body.find('.grid2-body-column:first-child input[type=checkbox]:checked'), function (i, checkbox) {
+	$.each(this._body.find('.grid2-body-column:first-child input[type=checkbox]:checked'), function(i, checkbox) {
 		if ($(checkbox).attr('name')) {
 			rows.push($(checkbox).attr('name'));
 		}
