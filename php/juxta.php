@@ -306,6 +306,12 @@ class Juxta
 					}
 					$response = $this->_dropDatabases($cid, (array)$_POST['databases']);
 					break;
+
+				//
+				case 'users':
+					$response = $this->_dropUsers($cid, (array)$_POST['users']);
+					break;
+
 				// Drop tables
 				case 'table':
 				case 'tables':
@@ -673,6 +679,31 @@ class Juxta
 		}
 
 		return array('contents' => 'users', 'data' => $response);
+	}
+
+
+	/**
+	 * Drops users
+	 *
+	 * @param int $cid
+	 * @param array $users List of users (in)
+	 * @return array
+	 */
+	private function _dropUsers($cid, array $users)
+	{
+		$dropped = array();
+
+		foreach ($users as $user) {
+			try {
+				$this->_query($cid, "DROP USER {$user}");
+				$dropped[] = $user;
+			} catch (JuxtaQueryException $e) {
+				$e->addtoResponse(array('dropped' => $dropped));
+				throw $e;
+			}
+		}
+
+		return array('dropped' => $dropped);
 	}
 
 

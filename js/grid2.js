@@ -289,7 +289,6 @@ Juxta.Grid2.prototype.prepare = function(params) {
 Juxta.Grid2.prototype.fill = function(data, params, extra) {
 	//
 	var valuesForTemplate,
-		cacheName,
 		row,
 		$row,
 		$headRow,
@@ -326,18 +325,9 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 
 		$.each(data, (function(i, value) {
 			//
-			cacheName = null;
-
 			valuesForTemplate = $.extend({}, context);
 
-			$.each(this._columns, function(j, column) {
-				//
-				valuesForTemplate[column.name] = value[j];
-
-				if (!cacheName) {
-					cacheName = column.name;
-				}
-			});
+			$.each(this._columns, function(j, column) { valuesForTemplate[column.name] = value[j]; });
 
 			if (typeof this._rowTemplate === 'function') {
 				row = this._rowTemplate(valuesForTemplate);
@@ -376,7 +366,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 				$row.find('> td:first-child').prepend($('<input>').attr('type', 'checkbox'));
 			}
 
-			$row.find('td:first-child [type=checkbox]').attr('name', $row.find('td:first-child a').text());
+			$row.find('td:first-child [type=checkbox]').attr('name', $row.find('td:first-child a').attr('name') ? $row.find('td:first-child a').attr('name') : $row.find('td:first-child a').text());
 
 			$row.addClass('grid2-body-row')
 				.find('> td').addClass('grid2-body-column');
@@ -392,7 +382,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 				}
 			}).bind(this));
 
-			this._cache[valuesForTemplate[cacheName]] = $row.appendTo(this._body);
+			this._cache[$row.find('td:first-child [type=checkbox]').attr('name')] = $row.appendTo(this._body);
 
 		}).bind(this));
 

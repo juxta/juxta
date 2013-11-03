@@ -265,14 +265,14 @@ Juxta.Explorer.prototype._gridParams = {
 	},
 	users: {
 		columns: ['Username', 'Host', 'Password', {name: 'privileges', title: 'Gloval privileges'}, 'Grant'],
-		row: '<tr><td>{username}<td>{host}</td><td>{password}</td><td>{privileges}</td><td>{grant}</td></tr>',
+		row: '<tr><td><a name="\'{username}\'@\'{host}\'">{username}</a><td>{host}</td><td>{password}</td><td>{privileges}</td><td>{grant}</td></tr>',
 		contextMenu: {
 			'edit-privileges': 'Edit privileges',
 			'change-password': 'Change password',
 			'rename': 'Rename',
-			'delete': 'Delete'
+			'drop-users': 'Drop'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-users': 'Drop'}
 	},
 	tables: {
 		columns: ['Table', 'Engine', 'Rows', 'Size'],
@@ -339,6 +339,9 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, name, type, conte
 
 	} else if (event === 'drop-database') {
 		this.drop('databases', $.isArray(name) ? name : [name]);
+
+	} else if (event === 'drop-users') {
+		this.drop('users', $.isArray(name) ? name : [name]);
 
 	} else if (event === 'table-properties') {
 		this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
@@ -410,6 +413,7 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		data = {},
 		text = {
 			databases: ['database', 'databases'],
+			users: ['user', 'users'],
 			tables: ['table', 'tables'],
 			views: ['view', 'views'],
 			routines: ['routine', 'stored routines'],
