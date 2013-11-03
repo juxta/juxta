@@ -350,7 +350,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, name, type, conte
 		this.drop('views', [name], context.from);
 
 	} else if (event === 'kill') {
-		this.kill([name]);
+		this.kill($.isArray(name) ? name : [name]);
 
 	} else if (event === 'edit-view') {
 		this._routineEditor.edit({view: name, from: context.from});
@@ -482,9 +482,9 @@ Juxta.Explorer.prototype.kill = function(pids) {
 	var message;
 
 	if (pids.length === 1) {
-		message = 'Kill process ' + pids;
+		message = 'Kill ' + pids;
 	} else {
-		message = 'Kill ' + pids.length;
+		message = 'Kill ' + pids.length + ' processes';
 	}
 
 	if (confirm(message + '?')) {
