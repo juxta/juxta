@@ -280,10 +280,10 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
-			'drop-table': 'Drop',
+			'drop-tables': 'Drop',
 			'table-properties': 'Properties'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-tables': 'Drop'}
 	},
 	views: {
 		columns: ['View', 'Definer', 'Updatable'],
@@ -346,8 +346,8 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, name, type, conte
 	} else if (event === 'table-properties') {
 		this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
-	} else if (event === 'drop-table') {
-		this.drop('tables', [name], context.from);
+	} else if (event === 'drop-tables') {
+		this.drop('tables', $.isArray(name) ? name : [name], context.from);
 
 	} else if (event === 'drop-view') {
 		this.drop('views', [name], context.from);
