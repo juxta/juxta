@@ -87,6 +87,12 @@ Juxta.Grid2 = function(grid) {
 	this.prepared = null;
 
 
+	/**
+	 * @type {Object}
+	 */
+	this._context = {};
+
+
 	// Select row
 	this._bodyContainer.on('change', '.grid2-body-column:first-child input[type=checkbox]', (function(event) {
 		//
@@ -132,7 +138,7 @@ Juxta.Grid2 = function(grid) {
 		var button = $(event.target);
 
 		if (button.attr('name') && !button.prop('disabled')) {
-			this.trigger('action', button.attr('name'), this.getSelected());
+			this.trigger('action', button.attr('name'), this.getSelected(), undefined, this._context);
 		}
 	}).bind(this));
 
@@ -150,8 +156,8 @@ Juxta.Grid2 = function(grid) {
 	}).bind(this));
 
 	//
-	this._contextMenu.on('click', (function(name, type, context) {
-		this.trigger('context-menu-click', name, type, context);
+	this._contextMenu.on('click', (function(event, name, type, context) {
+		this.trigger('context-menu-click', event, name, type, context);
 	}).bind(this));
 
 };
@@ -175,9 +181,13 @@ Juxta.Grid2.prototype.setHeight = function(height) {
 
 
 /**
- * Prepeare grid for filling
+ * Prepare a grid for data entry
+ *
+ * @param {Object} params
+ * @param {Object} context
+ * @return {Boolean}
  */
-Juxta.Grid2.prototype.prepare = function(params) {
+Juxta.Grid2.prototype.prepare = function(params, context) {
 	//
 	if (!params) {
 		return false;
@@ -189,6 +199,8 @@ Juxta.Grid2.prototype.prepare = function(params) {
 	}
 
 	this.clear();
+
+	this._context = context;
 
 	//
 	$.each(params.columns, (function (i, column) {
@@ -315,7 +327,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 		this.prepare(params, context);
 
 		if (params.contextMenu) {
-			this._contextMenu.load(params.contextMenu, context);
+			this._contextMenu.load(params.contextMenu, this._context);
 		}
 	}
 
@@ -425,6 +437,7 @@ Juxta.Grid2.prototype.clear = function() {
 	this._cache = {};
 	this._columns = [];
 	this.prepared = false;
+	this._context = {};
 
 	return this;
 };
