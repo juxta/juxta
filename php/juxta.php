@@ -308,7 +308,11 @@ class Juxta
 					break;
 
 				//
+				case 'user':
 				case 'users':
+					if (!empty($_POST['user'])) {
+						$_POST['users'] = $_POST['user'];
+					}
 					$response = $this->_dropUsers($cid, (array)$_POST['users']);
 					break;
 
@@ -340,7 +344,7 @@ class Juxta
 				case 'routine':
 				case 'routines':
 					if (!empty($_POST['routine'])) {
-						$_REQUEST['routines'] = $_REQUEST['routines'];
+						$_REQUEST['routines'] = $_REQUEST['routine'];
 					}
 					$response = $this->_dropRoutines($cid, (array)$_REQUEST['routines'], $_GET['from']);
 					break;

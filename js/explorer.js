@@ -270,9 +270,9 @@ Juxta.Explorer.prototype._gridParams = {
 			'edit-privileges': 'Edit privileges',
 			'change-password': 'Change password',
 			'rename': 'Rename',
-			'drop-users': 'Drop'
+			'drop-user': 'Drop'
 		},
-		actions: {'drop-users': 'Drop'}
+		actions: {'drop-user': 'Drop'}
 	},
 	tables: {
 		columns: ['Table', 'Engine', 'Rows', 'Size'],
@@ -280,10 +280,10 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
-			'drop-tables': 'Drop',
+			'drop-table': 'Drop',
 			'table-properties': 'Properties'
 		},
-		actions: {'drop-tables': 'Drop'}
+		actions: {'drop-table': 'Drop'}
 	},
 	views: {
 		columns: ['View', 'Definer', 'Updatable'],
@@ -294,7 +294,7 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-view': 'Drop',
 			'view-properties': 'Properties'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-view': 'Drop'}
 	},
 	routines: {
 		'head': {
@@ -309,7 +309,7 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-routine': 'Drop',
 			'routine-properties': 'Properties'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-routine': 'Drop'}
 	},
 	triggers: {
 		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
@@ -319,7 +319,7 @@ Juxta.Explorer.prototype._gridParams = {
 			'drop-trigger': 'Drop',
 			'trigger-properties': 'Properties'
 		},
-		actions: {drop: 'Drop'}
+		actions: {'drop-trigger': 'Drop'}
 	}
 };
 
@@ -328,54 +328,49 @@ Juxta.Explorer.prototype._gridParams = {
  * Callback on grid group action or context menu click
  *
  * @param {String} event Event name
- * @param {String} name Object name
- * @param {String} type Object type
+ * @param {String,Array,Object} row Object type and name
  * @param context Context
  */
-Juxta.Explorer.prototype._gridActionCallback = function(event, name, type, context) {
+Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 
 	if (event === 'database-properties') {
-		this._request.send({action: {show: 'properties', database: name, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'properties', database: row, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 	} else if (event === 'drop-database') {
-		this.drop('databases', $.isArray(name) ? name : [name]);
+		return this.drop('database', $.isArray(row) ? row : [row]);
 
-	} else if (event === 'drop-users') {
-		this.drop('users', $.isArray(name) ? name : [name]);
+	} else if (event === 'drop-user') {
+		return this.drop('user', $.isArray(row) ? row : [row]);
 
 	} else if (event === 'table-properties') {
-		this._request.send({action: {show: 'properties', table: name, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'properties', table: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
-	} else if (event === 'drop-tables') {
-		this.drop('tables', $.isArray(name) ? name : [name], context.from);
+	} else if (event === 'drop-table') {
+		return this.drop('table', $.isArray(row) ? row : [row], context.from);
 
 	} else if (event === 'drop-view') {
-		this.drop('views', [name], context.from);
+		return this.drop('view', $.isArray(row) ? row : [row], context.from);
 
 	} else if (event === 'kill') {
-		this.kill($.isArray(name) ? name : [name]);
+		return this.kill($.isArray(row) ? row : [row]);
 
 	} else if (event === 'edit-view') {
-		this._routineEditor.edit({view: name, from: context.from});
+		return this._routineEditor.edit({view: row, from: context.from});
 
-	} else if (event === 'edit-routine' && type === 'procedure') {
-		this._routineEditor.edit({procedure: name, from: context.from});
+	} else if (event === 'edit-routine' && (row.procedure || row['function'])) {
+		return this._routineEditor.edit($(row, {from: context.from}));
 
-	}  else if (event === 'drop-routine' && type === 'procedure') {
-		this.drop('routines', {procedure: [name]}, context.from);
-
-	} else if (event === 'edit-routine' && type === 'function') {
-		this._routineEditor.edit({'function': name, from: context.from});
-
-	} else if (event === 'drop-routine' && type === 'function') {
-		this.drop('routines', {'function': [name]}, context.from);
+	} else if (event === 'drop-routine') {
+		return this.drop('routine', row, context.from);
 
 	} else if (event === 'edit-trigger') {
-		this._routineEditor.edit({trigger: name, from: context.from});
+		return this._routineEditor.edit({trigger: row, from: context.from});
 
 	} else if (event === 'drop-trigger') {
-		this.drop('triggers', [name], context.from);
+		return this.drop('trigger', $.isArray(row) ? row : [row], context.from);
 	}
+
+
 };
 
 
@@ -412,12 +407,12 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		message = 'Drop ',
 		data = {},
 		text = {
-			databases: ['database', 'databases'],
-			users: ['user', 'users'],
-			tables: ['table', 'tables'],
-			views: ['view', 'views'],
-			routines: ['routine', 'stored routines'],
-			triggers: ['trigger', 'triggers']
+			database: ['database', 'databases'],
+			user: ['user', 'users'],
+			table: ['table', 'tables'],
+			view: ['view', 'views'],
+			routine: ['routine', 'stored routines'],
+			trigger: ['trigger', 'triggers']
 		},
 		dropItemsCount = 0,
 		dropItemName = null;
@@ -433,9 +428,15 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		dropItemName = items[0];
 
 	} else if ($.isPlainObject(items)) {
-		$.each(items, function(i, items) {
-			dropItemsCount += items.length;
-			dropItemName = items[0];
+		$.each(items, function(i, item) {
+			if ($.isArray(item)) {
+				dropItemsCount += item.length;
+				dropItemName = item[0];
+			} else {
+				dropItemsCount++;
+				dropItemName = item;
+			}
+
 		});
 	}
 
@@ -466,11 +467,9 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
  */
 Juxta.Explorer.prototype._dropCallback = function(entity, response) {
 	//
-	//this._grid.deselect();
-
+	this._grid.deselectAll();
 	this._grid.remove(response.dropped);
 
-	// Flush last cached response
 	this._request.cache.flush(this._cacheKey);
 };
 

@@ -62,14 +62,6 @@ Juxta.Grid2 = function(grid) {
 
 
 	/**
-	 * Rows cache
-	 *
-	 * @type {Object}
-	 */
-	this._cache = {};
-
-
-	/**
 	 * @type {Number}
 	 */
 	this.count = 0;
@@ -138,7 +130,7 @@ Juxta.Grid2 = function(grid) {
 		var button = $(event.target);
 
 		if (button.attr('name') && !button.prop('disabled')) {
-			this.trigger('action', button.attr('name'), this.getSelected(), undefined, this._context);
+			this.trigger('action', button.attr('name'), this.getSelected(), this._context);
 		}
 	}).bind(this));
 
@@ -156,8 +148,8 @@ Juxta.Grid2 = function(grid) {
 	}).bind(this));
 
 	//
-	this._contextMenu.on('click', (function(event, name, type, context) {
-		this.trigger('context-menu-click', event, name, type, context);
+	this._contextMenu.on('click', (function(event, name, context) {
+		this.trigger('context-menu-click', event, name, context);
 	}).bind(this));
 
 };
@@ -394,7 +386,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 				}
 			}).bind(this));
 
-			this._cache[$row.find('td:first-child [type=checkbox]').attr('name')] = $row.appendTo(this._body);
+			this._body.append($row);
 
 		}).bind(this));
 
@@ -434,7 +426,6 @@ Juxta.Grid2.prototype.clear = function() {
 	this._contextMenu.clear();
 	this._emptyMessage.hide();
 
-	this._cache = {};
 	this._columns = [];
 	this.prepared = false;
 	this._context = {};
@@ -488,20 +479,31 @@ Juxta.Grid2.prototype.hide = function() {
 
 /**
  * Remove rows by name
+ *
+ * @param {String|Array|Object} rows
  */
 Juxta.Grid2.prototype.remove = function(rows) {
 	//
-	if (!$.isArray(rows)) {
+	var checkboxes = this._bodyContainer
+			.find('.grid2-body-column:first-child input[type=checkbox]');
+
+	function removeRowByName(checkboxes, type, i, name) {
+		console.log(checkboxes.filter((type ? '[item-type=' + type + ']' : '') + '[name=' + name + ']')
+			.closest('.grid2-body-row').remove());
+	}
+
+	if (!$.isArray(rows) && !$.isPlainObject(rows)) {
 		rows = [rows];
 	}
 
-	$.each(rows, (function(i, name) {
-		if (this._cache[name]) {
-			this._cache[name].find('.grid2-body-column:first-child input[type=checkbox]')
-				.prop('checked', false).trigger('change');
-			this.count = this.count - this._cache[name].remove().length;
-		}
-	}).bind(this));
+	if ($.isArray(rows)) {
+		$.each(rows, removeRowByName.bind(this, checkboxes, undefined));
+
+	} else if ($.isPlainObject(rows)) {
+		$.each(rows, (function (type, rows) {
+			$.each(rows, removeRowByName.bind(this, checkboxes, type));
+		}).bind(this));
+	}
 
 	this.trigger('change');
 
@@ -516,13 +518,43 @@ Juxta.Grid2.prototype.remove = function(rows) {
  */
 Juxta.Grid2.prototype.getSelected = function() {
 	//
-	var rows = [];
+	var rows = [],
+		rowsByType = {};
 
 	$.each(this._body.find('.grid2-body-column:first-child input[type=checkbox]:checked'), function(i, checkbox) {
-		if ($(checkbox).attr('name')) {
-			rows.push($(checkbox).attr('name'));
+		//
+		checkbox = $(checkbox);
+
+		if (checkbox.attr('item-type')) {
+			if (!rowsByType[checkbox.attr('item-type')]) {
+				rowsByType[checkbox.attr('item-type')] = [];
+			}
+
+			rowsByType[checkbox.attr('item-type')].push(checkbox.attr('name'));
+
+		} else if (checkbox.attr('name')) {
+			rows.push(checkbox.attr('name'));
 		}
 	});
 
+	if (!$.isEmptyObject(rowsByType)) {
+		return rowsByType;
+	}
+
 	return rows;
+};
+
+
+/**
+ * Deselects all rows
+ *
+ * @return {Juxta.Grid2}
+ */
+Juxta.Grid2.prototype.deselectAll = function() {
+	//
+	this._bodyContainer.find('.grid2-body-column:first-child input[type=checkbox]:checked')
+		.prop('checked', false)
+		.trigger('change');
+
+	return this;
 };

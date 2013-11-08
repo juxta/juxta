@@ -50,9 +50,17 @@ Juxta.Grid2.ContextMenu = function(grid) {
 	//
 	this._container.on('click', 'a', (function(event) {
 		//
-		var checkbox = this._target.find('.grid2-body-column:first [type=checkbox]');
+		var checkbox = this._target.find('.grid2-body-column:first [type=checkbox]'),
+			row;
 
-		this.trigger('click', $(event.target).attr('name'), checkbox.attr('name'), checkbox.attr('item-type'), this._values);
+		if (checkbox.attr('item-type')) {
+			row = {};
+			row[checkbox.attr('item-type')] = checkbox.attr('name');
+		} else {
+			row = checkbox.attr('name');
+		}
+
+		this.trigger('click', $(event.target).attr('name'), row, this._values);
 
 	}).bind(this));
 
