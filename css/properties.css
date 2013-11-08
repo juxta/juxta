@@ -13,11 +13,11 @@
 	border-bottom: #EEE 1px solid;
 }
 
-.properties-property {
+.property {
 	clear: both;
 }
 
-.properties-property-name {
+.property-name {
 	color: #333;
 	float: left;
 	font-weight: normal;
@@ -28,25 +28,25 @@
 	padding-right: 11px;
 }
 
-.properties.database .properties-property-name {
+.properties._database .property-name {
 	width: 90px;
 }
 
-.properties.table .properties-property-name {
+.properties._table .property-name {
 	width: 110px;
 }
 
-.properties-property:first-child .properties-property-name,
-.properties-property:first-child .properties-property-value {
+.property:first-child .property-name,
+.property:first-child .property-value {
 	padding-top: 5px;
 }
 
-.properties-property:last-child .properties-property-name,
-.properties-property:last-child .properties-property-value {
+.property:last-child .property-name,
+.property:last-child .property-value {
 	padding-bottom: 5px;
 }
 
-.properties-property-value {
+.property-value {
 	float: left;
 	margin: 0;
 }
