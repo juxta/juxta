@@ -42,8 +42,8 @@ Juxta.Request = function(connection, cache, options) {
 	this._responseCallbacks = {
 		connectionError: null,
 		sessionNotFound: null,
-		error: null,
-		unknowStatus: null
+		queryError: null,
+		error: null
 	};
 
 	if (options && !$.isEmptyObject(options.response)) {
@@ -117,15 +117,14 @@ Juxta.Request.prototype.send = function (params) {
 		$.ajax({
 			url: this._ajaxSettings.url + '?get=session&cid=' + cid,
 			success: function(response) {
-				if (response.connection) {
-					that.connection.set(cid, response.connection);
+				if (response.cid !== undefined) {
+					that.connection.set(cid, response);
 					getSession.resolveWith(that);
-				} else if (response.status === 'session_not_found' &&
+
+				} else if (response.error === 'session_not_found' &&
 					$.isFunction(that._responseCallbacks.sessionNotFound)
 				) {
 					that._responseCallbacks.sessionNotFound.call(that, response);
-				} else {
-					throw new Error('Getting connection information failed');
 				}
 			}
 		});
@@ -161,41 +160,45 @@ Juxta.Request.prototype.send = function (params) {
  *
  */
 Juxta.Request.prototype._response = function(response, callbacks, cache) {
-	switch (response.status) {
-		case 'ok':
-			if (cache.key) {
-				this.cache.set(cache.key, response, cache.time, cache.index);
-			}
-			if ($.isFunction(callbacks.ok)) {
-				callbacks.ok(response);
-			}
-			break;
+	//
+	if (response.error) {
+		switch (response.error) {
+			case 'connection_error':
+				if ($.isFunction(this._responseCallbacks.connectionError)) {
+					this._responseCallbacks.connectionError.call(this, response);
+				}
+				break;
 
-		case 'connection_error':
-			if ($.isFunction(this._responseCallbacks.connectionError)) {
-				this._responseCallbacks.connectionError.call(this, response);
-			}
-			break;
+			case 'session_not_found':
+				if ($.isFunction(this._responseCallbacks.sessionNotFound)) {
+					this._responseCallbacks.sessionNotFound.call(this, response);
+				}
+				break;
 
-		case 'session_not_found':
-			if ($.isFunction(this._responseCallbacks.sessionNotFound)) {
-				this._responseCallbacks.sessionNotFound.call(this, response);
-			}
-			break;
+			case 'query_error':
+				if ($.isFunction(this._responseCallbacks.queryError)) {
+					this._responseCallbacks.queryError.call(this, response);
+				}
+				break;
 
-		case 'error':
-			if ($.isFunction(callbacks.error)) {
-				callbacks.error(response);
-			}
-			if ($.isFunction(this._responseCallbacks.error)) {
-				this._responseCallbacks.error.call(this, response);
-			}
-			break;
+			default:
+				if ($.isFunction(callbacks.error)) {
+					callbacks.error(response);
+				}
+				if ($.isFunction(this._responseCallbacks.error)) {
+					this._responseCallbacks.error.call(this, response);
+				}
+		}
 
-		default:
-			if ($.isFunction(this._responseCallbacks.unknowStatus)) {
-				this._responseCallbacks.unknowStatus.call(this, response);
-			}
+		return;
+	}
+
+	if (cache.key) {
+		this.cache.set(cache.key, response, cache.time, cache.index);
+	}
+
+	if ($.isFunction(callbacks.ok)) {
+		callbacks.ok(response);
 	}
 };
 

@@ -145,14 +145,15 @@ Juxta.Auth.prototype.login = function() {
  */
 Juxta.Auth.prototype._loginCallback = function(response) {
 	//
-	if (response.to) {
-		this.trigger('login', response.to);
-
-	} else {
+	if (response.message) {
 		this.trigger('notify', response.message, 'error');
 		this._submit.attr('disabled', false);
 		this._form.find('[name=password]').focus();
+
+		return;
 	}
+
+	this.trigger('login', response);
 };
 
 
@@ -165,7 +166,7 @@ Juxta.Auth.prototype.logout = function() {
 	//
 	return this._request.send({
 		action: 'logout',
-		success: $.proxy(function() { this.trigger('logout'); }, this)
+		success: this.trigger.bind(this, 'logout')
 	});
 };
 
@@ -180,20 +181,22 @@ Juxta.Auth.prototype._getConnectionsCallback = function(response, id) {
 	//
 	this._connections.empty().prepend($('<option>').text(''));
 
-	if (!$.isEmptyObject(response.connections)) {
-		$.each(response.connections, $.proxy(function(i, connection) {
+	if (!$.isEmptyObject(response)) {
+		$.each(response, $.proxy(function(key, connection) {
 			//
-			if (connection.name === undefined) {
-				connection.name = connection.user + '@' + connection.host;
+			connection.name = connection.user + '@' + connection.host;
 
-				if (connection.port !== Juxta.DEFAULT_PORT) {
-					connection.name += ':' + connection.port;
-				}
+			if (!connection.port) {
+				connection.port = Juxta.DEFAULT_PORT;
 			}
 
-			this._storedConnections[connection.id] = connection;
+			if (connection.port !== Juxta.DEFAULT_PORT) {
+				connection.name += ':' + connection.port;
+			}
 
-			$('<option>', {val: connection.id}).html(connection.name).appendTo(this._connections);
+			this._storedConnections[key] = connection;
+
+			$('<option>', {val: key}).html(connection.name).appendTo(this._connections);
 
 		}, this));
 

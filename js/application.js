@@ -66,15 +66,25 @@ Juxta.Lib.extend(Juxta.Application, Juxta.Events);
  */
 Juxta.Application.prototype._applySettings = function(options, variables) {
 	//
+	var header = this.find('.application-header'),
+		text = '';
+
 	if ($.isPlainObject(options.header)) {
-		this.find('.application-header').html(
-			options.header.title + 
-			(options.header.name ? ' <a>' + options.header.name + '</a>' : '') +
-			(options.header.from ? ' <span class="application-header-from">from <a>' + options.header.from + '</a></span>' : '')
-		);
-	} else{
-		this.find('.application-header').html(options.header);
+
+		text = options.header.title ;
+
+		if (options.header.name) {
+			text += ' <a>' + options.header.name + '</a>';
+		}
+		if (options.header.from !== undefined) {
+			text += ' <span class="application-header-from">from <a>' + variables.from + '</a></span>';
+		}
+
+	} else {
+		text = options.header;
 	}
+
+	header.html(text);
 
 	this._setMenu(options.menu, variables);
 
@@ -158,6 +168,7 @@ Juxta.Application.prototype.show = function(options, variables) {
 
 	if (this._settings.maximized) {
 		this.maximize();
+
 	} else {
 		this.restore();
 	}

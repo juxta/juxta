@@ -18,6 +18,7 @@ Juxta.Server = function (element, request) {
 
 	Juxta.Application.prototype.constructor.call(this, element);
 
+
 	/**
 	 * @type {Juxta.Request}
 	 */
@@ -89,7 +90,7 @@ Juxta.Server.prototype._prepare = function(template) {
 	if (template === this._preparedFor) {
 		return true;
 
-	} else if (this._grid.prepare(this._gridOptions[template])) {
+	} else if (this._grid.prepare(this._gridParams[template])) {
 		this._preparedFor = template;
 		return true;
 	}
@@ -135,11 +136,9 @@ Juxta.Server.prototype._serverInformationRequest = function(params) {
 	});
 
 	if (this._prepare(query.show)) {
-		return this._request.send($.extend(
-			{},
-			{action: query, context: this, success: this._serverInformationCallback},
-			this._settings,
-			options
+		return this._request.send($.extend({},
+			{action: query, context: this, success: function(response) { return this._serverInformationCallback(response, query); } },
+			this._settings, options
 		));
 	}
 };
@@ -149,14 +148,14 @@ Juxta.Server.prototype._serverInformationRequest = function(params) {
  * Response callback
  *
  * @param {Object} response
+ * @param {Object} request
+ * @return {Juxta.Explorer}
  */
-Juxta.Server.prototype._serverInformationCallback = function(response) {
+Juxta.Server.prototype._serverInformationCallback = function(response, request) {
 	//
-	var params = $.extend({}, response, this._gridOptions[response.contents]);
-	delete params.data;
+	this._grid.fill(response, this._gridParams[request.show]);
 
-	this._grid.fill(response.data, params);
-	this.ready();
+	return this.ready();
 };
 
 
@@ -188,7 +187,7 @@ Juxta.Server.prototype._headerOptions = {
  *
  * @type {Object}
  */
-Juxta.Server.prototype._gridOptions = {
+Juxta.Server.prototype._gridParams = {
 	status: {
 		columns: ['Variable', 'Value']
 	},

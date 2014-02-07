@@ -143,29 +143,25 @@ Juxta.Explorer.prototype.explore = function(params) {
 /**
  * Request for explore
  *
- * @param {Object} params
+ * @param {Object} request
  * @return {jqXHR}
  */
-Juxta.Explorer.prototype._exploreRequest = function(params) {
+Juxta.Explorer.prototype._exploreRequest = function(request) {
 	//
-	if (this._explorerShowParams[params.show].header.from === null) {
-		this._explorerShowParams[params.show].header.from = params.from;
-	}
+	var query = $.extend({}, request),
+		params = {};
 
-	this.show(this._explorerShowParams[params.show], params);
+	this.show(this._explorerShowParams[request.show], request);
 
-	if (params.show === 'processlist') {
-		params = $.extend({cache: Infinity, index: {name: 'processId', field: 0, path: ['data']}, refresh: true}, params);
+	if (request.show === 'processlist') {
+		request = $.extend({cache: Infinity, index: {name: 'processId', field: 0, path: ['data']}, refresh: true}, request);
 	}
 
 	// Move options values from query to options variable
-	var query = $.extend({}, params),
-		options = {};
-
 	$.each(['cache', 'index', 'refresh'], function(index, value) {
 		delete query[value];
-		if (params[value] !== undefined) {
-			options[value] = params[value];
+		if (request[value] !== undefined) {
+			params[value] = request[value];
 		}
 	});
 
@@ -173,11 +169,9 @@ Juxta.Explorer.prototype._exploreRequest = function(params) {
 	this._cacheKey = this._request.queryString(query);
 
 	if (this._prepare(query.show)) {
-		return this._request.send($.extend(
-			{},
+		return this._request.send($.extend({},
 			{action: query, context: this, success: function(response) { return this._exploreCallback(response, query); } },
-			this._settings,
-			options
+			this._settings, params
 		));
 	}
 };
@@ -192,11 +186,11 @@ Juxta.Explorer.prototype._exploreRequest = function(params) {
  */
 Juxta.Explorer.prototype._exploreCallback = function(response, request) {
 	//
-	if (response.contents !== this._preparedFor) {
+	if (request.show !== this._preparedFor) {
 		return this;
 	}
 
-	this._grid.fill(response.data, this._gridParams[response.contents], request);
+	this._grid.fill(response, this._gridParams[request.show], request);
 
 	return this.ready();
 };

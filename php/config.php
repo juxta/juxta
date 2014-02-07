@@ -1,7 +1,9 @@
 <?php
 
 $config = array(
-	'stored_connections' => array(
-		array('host' => 'localhost', 'user' => 'root')
+	'connections' => array(
+		array('host' => 'localhost', 'user' => 'root'),
 	)
 );
+
+return $config;

@@ -48,20 +48,17 @@ var Juxta = function() {
 			complete: this.loading.bind(this, false),
 			error: (function(xhr, status) {
 				if (status == 'parsererror') {
-					this.error('Answer parsing error');
+					this.error('Parse error');
 				} else {
 					this.error(xhr.status + ' ' + xhr.statusText);
 				}
 			}).bind(this)
 		},
 		response: {
-			connectionError: (function(response) {
-				this.error(response.error);
-				this._auth.show();
-			}).bind(this),
+			connectionError: (function(response) { this.error(response.errormsg); this._auth.show();}).bind(this),
 			sessionNotFound: this.redirect.bind(this, 'login', undefined),
-			error: (function(response) { this.error(response.error); }).bind(this),
-			unknowStatus: this.error.bind(this, 'Unknown response status received')
+			queryError: (function(response) { this.error(response.errormsg); }).bind(this),
+			error: this.error.bind(this, 'An error has occured')
 		}
 	});
 
@@ -138,7 +135,7 @@ var Juxta = function() {
 	});
 
 	//
-	this._connection.on('change', $.proxy(this._changeConnectionCallback, this));
+	this._connection.on('change', this._changeConnectionCallback.bind(this));
 
 	// Show Juxta when application ready to show
 	$.each([this._explorer, this._server, this.browser, this.table], (function(i, application) {
@@ -158,22 +155,12 @@ var Juxta = function() {
 
 	//
 	this._auth
-		.on('before-show', (function() {
-			//
-			this.hide()._updateWindowTitle();
-			this._connection.reset();
-
-		}).bind(this))
+		.on('before-show', (function() { this.hide()._updateWindowTitle(); this._connection.reset(); }).bind(this))
 		.on('login', (function(connection) {
 			this._connection.set(connection.cid, connection);
 			this.redirect('databases', connection.cid);
-
 		}).bind(this))
-		.on('logout', (function() {
-
-			this._cache.flush();
-			this._updateWindowTitle().redirect('login');
-		}).bind(this))
+		.on('logout', (function() { this._cache.flush(); this._updateWindowTitle().redirect('login'); }).bind(this))
 		.on('change', (function(cid) { this.redirect('', cid); }).bind(this));
 
 	// Notifications
@@ -512,13 +499,13 @@ Juxta.prototype._changeConnectionCallback = function(cid) {
 	connectionsList.empty();
 
 	this._request.send({action: {get: 'connections'}, context: this, success: function(response) {
-		$.each(response.connections, $.proxy(function(i, connection) {
+		$.each(response, $.proxy(function(key, connection) {
 			//
 			var li = $('<li>').addClass('header-connection'),
 				a = $('<a>');
 
 			if (connection.cid === undefined) {
-				a.attr('href', '#/login?id=' + connection.id);
+				a.attr('href', '#/login?id=' + key);
 
 			} else if (!this._connection.isCurrent(connection.cid)) {
 				li.addClass('established');
@@ -526,6 +513,16 @@ Juxta.prototype._changeConnectionCallback = function(cid) {
 
 			} else {
 				li.addClass('current');
+			}
+
+			connection.name = connection.user + '@' + connection.host;
+
+			if (!connection.port) {
+				connection.port = Juxta.DEFAULT_PORT;
+			}
+
+			if (connection.port !== Juxta.DEFAULT_PORT) {
+				connection.name += ':' + connection.port;
 			}
 
 			if (a.attr('href')) {
