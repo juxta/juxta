@@ -243,10 +243,10 @@ Juxta.Explorer.prototype._gridParams = {
 		row: '<tr><td><a href="#/{cid}/{database}/tables">{database}</a></td></tr>',
 		contextMenu: {
 			'tables': {title: 'Tables', href: '#/{cid}/{name}/tables'},
-			'drop-database': 'Drop',
+			'drop-databases': 'Drop',
 			'database-properties': 'Properties'
 		},
-		actions: {'drop-database': 'Drop'}
+		actions: {'drop-databases': 'Drop'}
 	},
 	processlist: {
 		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
@@ -264,9 +264,9 @@ Juxta.Explorer.prototype._gridParams = {
 			'edit-privileges': 'Edit privileges',
 			'change-password': 'Change password',
 			'rename': 'Rename',
-			'drop-user': 'Drop'
+			'drop-users': 'Drop'
 		},
-		actions: {'drop-user': 'Drop'}
+		actions: {'drop-users': 'Drop'}
 	},
 	tables: {
 		columns: ['Table', 'Engine', 'Rows', 'Size'],
@@ -274,10 +274,10 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
-			'drop-table': 'Drop',
+			'drop-tables': 'Drop',
 			'table-properties': 'Properties'
 		},
-		actions: {'drop-table': 'Drop'}
+		actions: {'drop-tables': 'Drop'}
 	},
 	views: {
 		columns: ['View', 'Definer', 'Updatable'],
@@ -285,10 +285,10 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'edit-view': 'Edit',
-			'drop-view': 'Drop',
+			'drop-views': 'Drop',
 			'view-properties': 'Properties'
 		},
-		actions: {'drop-view': 'Drop'}
+		actions: {'drop-views': 'Drop'}
 	},
 	routines: {
 		'head': {
@@ -300,10 +300,10 @@ Juxta.Explorer.prototype._gridParams = {
 		row: '<tr><td><input type="checkbox" name="{routine}" item-type="{type}"><a>{routine}</a></td><td>{routine_definer}</td><td>{returns}</td></tr>',
 		contextMenu: {
 			'edit-routine': 'Edit',
-			'drop-routine': 'Drop',
+			'drop-routines': 'Drop',
 			'routine-properties': 'Properties'
 		},
-		actions: {'drop-routine': 'Drop'}
+		actions: {'drop-routines': 'Drop'}
 	},
 	triggers: {
 		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
@@ -330,20 +330,20 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	if (event === 'database-properties') {
 		return this._request.send({action: {show: 'properties', database: row, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
-	} else if (event === 'drop-database') {
-		return this.drop('database', $.isArray(row) ? row : [row]);
+	} else if (event === 'drop-databases') {
+		return this.drop('databases', $.isArray(row) ? row : [row]);
 
-	} else if (event === 'drop-user') {
-		return this.drop('user', $.isArray(row) ? row : [row]);
+	} else if (event === 'drop-users') {
+		return this.drop('users', $.isArray(row) ? row : [row]);
 
 	} else if (event === 'table-properties') {
 		return this._request.send({action: {show: 'properties', table: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
-	} else if (event === 'drop-table') {
-		return this.drop('table', $.isArray(row) ? row : [row], context.from);
+	} else if (event === 'drop-tables') {
+		return this.drop('tables', $.isArray(row) ? row : [row], context.from);
 
-	} else if (event === 'drop-view') {
-		return this.drop('view', $.isArray(row) ? row : [row], context.from);
+	} else if (event === 'drop-views') {
+		return this.drop('views', $.isArray(row) ? row : [row], context.from);
 
 	} else if (event === 'kill') {
 		return this.kill($.isArray(row) ? row : [row]);
@@ -354,14 +354,14 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'edit-routine' && (row.procedure || row['function'])) {
 		return this._routineEditor.edit($(row, {from: context.from}));
 
-	} else if (event === 'drop-routine') {
-		return this.drop('routine', row, context.from);
+	} else if (event === 'drop-routines') {
+		return this.drop('routines', row, context.from);
 
 	} else if (event === 'edit-trigger') {
 		return this._routineEditor.edit({trigger: row, from: context.from});
 
-	} else if (event === 'drop-trigger') {
-		return this.drop('trigger', $.isArray(row) ? row : [row], context.from);
+	} else if (event === 'drop-triggers') {
+		return this.drop('triggers', $.isArray(row) ? row : [row], context.from);
 	}
 
 
@@ -401,12 +401,12 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 		message = 'Drop ',
 		data = {},
 		text = {
-			database: ['database', 'databases'],
-			user: ['user', 'users'],
-			table: ['table', 'tables'],
-			view: ['view', 'views'],
-			routine: ['routine', 'stored routines'],
-			trigger: ['trigger', 'triggers']
+			databases: ['database', 'databases'],
+			users: ['user', 'users'],
+			tables: ['table', 'tables'],
+			views: ['view', 'views'],
+			routines: ['routine', 'stored routines'],
+			triggers: ['trigger', 'triggers']
 		},
 		dropItemsCount = 0,
 		dropItemName = null;
@@ -448,7 +448,7 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 			action: action,
 			data: data,
 			success: this._dropCallback.bind(this, drop),
-			error: this._dropCallback.bind(this, drop)
+			error: (function (response) { this._dropCallback(drop, response.dropped || null); } ).bind(this)
 		});
 	}
 };
@@ -462,7 +462,10 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 Juxta.Explorer.prototype._dropCallback = function(entity, response) {
 	//
 	this._grid.deselectAll();
-	this._grid.remove(response.dropped);
+
+	if (response) {
+		this._grid.remove(response);
+	}
 
 	this._request.cache.flush(this._cacheKey);
 };

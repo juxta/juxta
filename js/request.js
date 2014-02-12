@@ -103,7 +103,7 @@ Juxta.Request.prototype.send = function (params) {
 		delete(params.success);
 	}
 	if ($.isFunction(params.error)) {
-		callbacks.error = params.error ? $.proxy(params.error, params.context) : params.error;
+		callbacks.error = params.context ? $.proxy(params.error, params.context) : params.error;
 		delete(params.error);
 	}
 
@@ -182,12 +182,13 @@ Juxta.Request.prototype._response = function(response, callbacks, cache) {
 				break;
 
 			default:
-				if ($.isFunction(callbacks.error)) {
-					callbacks.error(response);
-				}
 				if ($.isFunction(this._responseCallbacks.error)) {
 					this._responseCallbacks.error.call(this, response);
 				}
+		}
+
+		if ($.isFunction(callbacks.error)) {
+			callbacks.error(response);
 		}
 
 		return;

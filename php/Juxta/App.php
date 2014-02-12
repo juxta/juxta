@@ -156,7 +156,6 @@ class App
 						$response = $this->dropDatabases($cid, (array)$_POST['databases']);
 						break;
 
-					//
 					case 'users':
 						$response = $this->dropUsers($cid, (array)$_POST['users']);
 						break;
@@ -204,6 +203,8 @@ class App
 
 			$response = array('error' => isset($status[get_class($e)]) ? $status[get_class($e)] : 'error',
 				'errormsg' => $e->getMessage(), 'errorno' => $e->getCode());
+
+			$response += (array)$e->getAttachment();
 		}
 
 		return json_encode($response);
@@ -346,12 +347,16 @@ class App
 				$dropped[] = $database;
 
 			} catch (Db_Exception_Query $e) {
-				//$e->addtoResponse(array('dropped' => $dropped));
+
+				if (!empty($dropped)) {
+					$e->attach(array('dropped' => $dropped));
+				}
+
 				throw $e;
 			}
 		}
 
-		return array('dropped' => $dropped);
+		return $dropped;
 	}
 
 
@@ -428,7 +433,7 @@ class App
 				$killed[] = $process;
 
 			} catch (Db_Exception_Query $exception) {
-				//$exception->addtoResponse(array('killed' => $killed));
+				$exception->attach(array('killed' => $killed));
 				throw $exception;
 			}
 		}
@@ -481,12 +486,12 @@ class App
 				$dropped[] = $user;
 
 			} catch (Db_Exception_Query $e) {
-				//$e->addtoResponse(array('dropped' => $dropped));
+				$e->attach(array('dropped' => $dropped));
 				throw $e;
 			}
 		}
 
-		return array('dropped' => $dropped);
+		return $dropped;
 	}
 
 
@@ -572,12 +577,12 @@ class App
 				$dropped[] = $table;
 
 			} catch (Db_Exception_Query $e) {
-				//$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+				$e->attach(array('dropped' => $dropped, 'from' => $from));
 				throw $e;
 			}
 		}
 
-		return array('dropped' => $dropped);
+		return $dropped;
 	}
 
 
@@ -699,12 +704,12 @@ class App
 				$dropped[] = $view;
 
 			} catch (Db_Exception_Query $e) {
-				//$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+				$e->attach(array('dropped' => $dropped, 'from' => $from));
 				throw $e;
 			}
 		}
 
-		return array('dropped' => $dropped);
+		return $dropped;
 	}
 
 
@@ -763,7 +768,7 @@ class App
 					$dropped['function'][] = $function;
 
 				} catch (Db_Exception_Query $e) {
-					//$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+					$e->attach(array('dropped' => $dropped, 'from' => $from));
 					throw $e;
 				}
 			}
@@ -775,13 +780,13 @@ class App
 					$dropped['procedure'][] = $procedure;
 
 				} catch (Db_Exception_Query $e) {
-					//$e->addtoResponse(array('dropped' => $dropped, 'from' => $from));
+					$e->attach(array('dropped' => $dropped, 'from' => $from));
 					throw $e;
 				}
 			}
 		}
 
-		return array('dropped' => $dropped);
+		return $dropped;
 	}
 
 
@@ -874,12 +879,12 @@ class App
 				$dropped[] = $trigger;
 
 			} catch (Db_Exception_Query $e) {
-				//$e->addtoResponse(array('dropped' => $dropped));
+				$e->attach(array('dropped' => $dropped));
 				throw $e;
 			}
 		}
 
-		return array('triggers' => $triggers, 'dropped' => $dropped);
+		return $dropped;
 	}
 
 

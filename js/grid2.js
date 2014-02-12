@@ -488,8 +488,8 @@ Juxta.Grid2.prototype.remove = function(rows) {
 			.find('.grid2-body-column:first-child input[type=checkbox]');
 
 	function removeRowByName(checkboxes, type, i, name) {
-		console.log(checkboxes.filter((type ? '[item-type=' + type + ']' : '') + '[name=' + name + ']')
-			.closest('.grid2-body-row').remove());
+		checkboxes.filter((type ? '[item-type=' + type + ']' : '') + '[name=' + name + ']')
+			.closest('.grid2-body-row').remove();
 	}
 
 	if (!$.isArray(rows) && !$.isPlainObject(rows)) {
