@@ -436,7 +436,7 @@ class App
 			}
 		}
 
-		return array('killed' => $killed);
+		return $killed;
 	}
 
 

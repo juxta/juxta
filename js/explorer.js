@@ -491,7 +491,7 @@ Juxta.Explorer.prototype.kill = function(pids) {
 		return this._request.send({
 			action: 'kill',
 			data: {processes: pids},
-			success: (function(response) { this._grid.remove(response.killed); }).bind(this),
+			success: this._grid.remove.bind(this._grid),
 			context: this
 		});
 	}
