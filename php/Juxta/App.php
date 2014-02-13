@@ -374,7 +374,7 @@ class App
 			. "FROM `information_schema`.`SCHEMATA` "
 			. "WHERE `SCHEMA_NAME` = '{$database}'";
 
-		$charset = $this->getDb($cid)->query($sql1);
+		$charset = $this->getDb($cid)->query($sql1, MYSQL_BOTH);
 
 		if ($charset) {
 			$properties['charset'] = $charset[0]['name'];
@@ -387,7 +387,7 @@ class App
 			. "FROM `INFORMATION_SCHEMA`.`TABLES` "
 			. "WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'";
 
-		$statistics = $this->getDb($cid)->query($sql2);
+		$statistics = $this->getDb($cid)->query($sql2, MYSQL_ASSOC);
 
 		if ($statistics) {
 			$properties['tables']= $statistics[0]['tables'];
@@ -396,7 +396,7 @@ class App
 			$properties['index_length']= (int)$statistics[0]['index_length'];
 		}
 
-		return array('properties' => $properties, 'charset' => $statistics);
+		return $properties;
 	}
 
 
@@ -662,7 +662,7 @@ class App
 			$properties = array_change_key_case($properties[0], CASE_LOWER);
 		}
 
-		return array('properties' => $properties);
+		return $properties;
 	}
 
 

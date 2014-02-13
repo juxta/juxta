@@ -378,10 +378,10 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
 	var template = $('#' + templateName);
 
 	if (templateName === 'database-properties' && template.is('[type=text/html]')) {
-		this.trigger('alert', $.template(template.html(), response.properties), {title: 'Database {name}', name: response.properties.name});
+		this.trigger('alert', $.template(template.html(), response), {title: 'Database {name}', name: response.name});
 
 	} else if (templateName === 'table-properties' && template.is('[type=text/html]')) {
-		this.trigger('alert', $.template(template.html(), response.properties), {title: 'Table {name}', name: response.properties.name});
+		this.trigger('alert', $.template(template.html(), response), {title: 'Table {name}', name: response.name});
 	}
 
 };
