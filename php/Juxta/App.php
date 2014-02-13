@@ -318,13 +318,11 @@ class App
 	 *
 	 * @param $cid
 	 * @param $name
-	 * @return array
+	 * @return bool
 	 */
 	protected function createDatabase($cid, $name)
 	{
-		$this->getDb($cid)->query("CREATE DATABASE `{$name}`");
-
-		return array('database' => 'created', 'name' => $name);
+		return $this->getDb($cid)->query("CREATE DATABASE `{$name}`");
 	}
 
 
