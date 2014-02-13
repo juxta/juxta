@@ -161,7 +161,7 @@ Juxta.Request.prototype.send = function (params) {
  */
 Juxta.Request.prototype._response = function(response, callbacks, cache) {
 	//
-	if (response.error) {
+	if (response && response.error) {
 		switch (response.error) {
 			case 'connection_error':
 				if ($.isFunction(this._responseCallbacks.connectionError)) {
