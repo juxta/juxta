@@ -229,20 +229,28 @@ class App
 
 
 	/**
+	 * Connect to server and save connection
+	 *
 	 * @param array $connection
-	 * @return array
+	 * @return array|string
 	 */
 	protected function connect(array $connection)
 	{
-		Db::factory($this->driver, $connection);
+		try {
+			Db::factory($this->driver, $connection);
 
-		$cid = $this->connections->save($connection);
+			$cid = $this->connections->save($connection);
 
-		unset($connection['password']);
+			unset($connection['password']);
 
-		$connection['cid'] = $cid;
+			$connection['cid'] = $cid;
 
-		return $connection;
+			return $connection;
+
+		} catch (Db_Exception_Connect $e) {
+
+			return $e->getMessage();
+		}
 	}
 
 

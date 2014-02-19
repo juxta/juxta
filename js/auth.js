@@ -46,6 +46,7 @@ Juxta.Auth = function(element, request) {
 		this.login();
 
 		return false;
+
 	}, this));
 
 	//
@@ -145,15 +146,14 @@ Juxta.Auth.prototype.login = function() {
  */
 Juxta.Auth.prototype._loginCallback = function(response) {
 	//
-	if (response.message) {
-		this.trigger('notify', response.message, 'error');
+	if (response && response.cid !== undefined) {
+		this.trigger('login', response);
+
+	} else {
+		this.trigger('notify', response, 'error');
 		this._submit.attr('disabled', false);
 		this._form.find('[name=password]').focus();
-
-		return;
 	}
-
-	this.trigger('login', response);
 };
 
 
