@@ -136,7 +136,7 @@ class Connections
 	public function save(array $connection)
 	{
 		$cid = array_reduce((array)$this->getAll(), function($cid, $connection) {
-				return max($cid, $connection['cid']);
+			return max($cid, isset($connection['cid']) ? $connection['cid'] : -1);
 		}, -1) + 1;
 
 		$connection['cid'] = $cid;
