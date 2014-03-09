@@ -16,12 +16,6 @@ class App
 
 
 	/**
-	 * @var string
-	 */
-	protected $driver = 'Mysqli';
-
-
-	/**
 	 * @param Config $config
 	 */
 	public function __construct(Config $config)
@@ -224,7 +218,7 @@ class App
 			throw new Exception_SessionNotFound();
 		}
 
-		return Db::factory($this->driver, $connection);
+		return Db::factory($connection);
 	}
 
 
@@ -237,7 +231,8 @@ class App
 	protected function connect(array $connection)
 	{
 		try {
-			Db::factory($this->driver, $connection);
+
+			Db::factory($connection);
 
 			$cid = $this->connections->save($connection);
 
@@ -317,7 +312,7 @@ class App
 	 */
 	protected function showDatabases($cid)
 	{
-		return $this->getDb($cid)->query("SHOW DATABASES", array('Database'));
+		return $this->getDb($cid)->fetchAll("SHOW DATABASES", array('Database'));
 	}
 
 
@@ -382,7 +377,7 @@ class App
 			. "FROM `information_schema`.`SCHEMATA` "
 			. "WHERE `SCHEMA_NAME` = '{$database}'";
 
-		$charset = $this->getDb($cid)->query($sql1, MYSQL_BOTH);
+		$charset = $this->getDb($cid)->fetchAll($sql1, null, Db::FETCH_BOTH);
 
 		if ($charset) {
 			$properties['charset'] = $charset[0]['name'];
@@ -395,7 +390,7 @@ class App
 			. "FROM `INFORMATION_SCHEMA`.`TABLES` "
 			. "WHERE `TABLE_SCHEMA` = '{$database}' AND `TABLE_TYPE` <> 'VIEW'";
 
-		$statistics = $this->getDb($cid)->query($sql2, MYSQL_ASSOC);
+		$statistics = $this->getDb($cid)->fetchAll($sql2, null, Db::FETCH_BOTH);
 
 		if ($statistics) {
 			$properties['tables']= $statistics[0]['tables'];
@@ -416,7 +411,7 @@ class App
 	 */
 	protected function showProcesslist($cid)
 	{
-		return $this->getDb($cid)->query("SHOW PROCESSLIST", array('Id', 'User', 'Host', 'db', 'Command', 'Time', 'Info'));
+		return $this->getDb($cid)->fetchAll("SHOW PROCESSLIST", array('Id', 'User', 'Host', 'db', 'Command', 'Time', 'Info'));
 	}
 
 
@@ -456,7 +451,7 @@ class App
 	 */
 	protected function showUsers($cid)
 	{
-		$users = $this->getDb($cid)->query("SELECT * FROM mysql.user");
+		$users = $this->getDb($cid)->fetchAll("SELECT * FROM mysql.user", $type = Db::FETCH_ASSOC);
 
 		$response = null;
 
@@ -509,7 +504,7 @@ class App
 	 */
 	protected function showStatus($cid)
 	{
-		return $this->getDb($cid)->query("SHOW STATUS", array('Variable_name', 'Value'));
+		return $this->getDb($cid)->fetchAll("SHOW STATUS", array('Variable_name', 'Value'));
 	}
 
 
@@ -521,7 +516,7 @@ class App
 	 */
 	protected function showVariables($cid)
 	{
-		return $this->getDb($cid)->query("SHOW VARIABLES", array('Variable_name', 'Value'));
+		return $this->getDb($cid)->fetchAll("SHOW VARIABLES", array('Variable_name', 'Value'));
 	}
 
 
@@ -533,7 +528,7 @@ class App
 	 */
 	protected function showCharsets($cid)
 	{
-		return $this->getDb($cid)->query("SHOW CHARSET", array('Charset', 'Default collation', 'Description'));
+		return $this->getDb($cid)->fetchAll("SHOW CHARSET", array('Charset', 'Default collation', 'Description'));
 	}
 
 
@@ -545,7 +540,7 @@ class App
 	 */
 	private function showEngines($cid)
 	{
-		return $this->getDb($cid)->query("SHOW ENGINES", array('Engine', 'Support', 'Comment'));
+		return $this->getDb($cid)->fetchAll("SHOW ENGINES", array('Engine', 'Support', 'Comment'));
 	}
 
 
@@ -558,8 +553,8 @@ class App
 	 */
 	protected function showTables($cid, $database)
 	{
-		return $this->getDb($cid)
-			->query("SHOW TABLE STATUS FROM `{$database}`", array('Name', 'Engine', 'Rows', 'Data_length'));
+		return $this->getDb($cid)->fetchAll("SHOW TABLE STATUS FROM `{$database}`",
+			array('Name', 'Engine', 'Rows', 'Data_length'));
 	}
 
 
@@ -602,7 +597,7 @@ class App
 	 */
 	protected function showTable($cid, $table, $database)
 	{
-		$table = $this->getDb($cid)->query("SHOW COLUMNS FROM `{$table}` FROM `{$database}`", MYSQLI_BOTH);
+		$table = $this->getDb($cid)->fetchAll("SHOW COLUMNS FROM `{$table}` FROM `{$database}`");
 
 		$columns = array();
 
@@ -664,7 +659,7 @@ class App
 	 */
 	protected function showTableProperties($cid, $table, $database)
 	{
-		$properties = $this->getDb($cid)->query("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", MYSQLI_ASSOC);
+		$properties = $this->getDb($cid)->row("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", true, Db::FETCH_ASSOC);
 
 		if (!empty($properties)) {
 			$properties = array_change_key_case($properties[0], CASE_LOWER);
@@ -683,10 +678,8 @@ class App
 	 */
 	protected function showViews($cid, $database)
 	{
-		return $this->getDb($cid)->query(
-				"SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'",
-				array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE')
-			);
+		return $this->getDb($cid)->fetchAll("SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'",
+			array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
 	}
 
 
@@ -729,7 +722,7 @@ class App
 	 */
 	protected function showCreateView($cid, $name, $database)
 	{
-		$view = $this->getDb($cid)->query("SHOW CREATE VIEW `{$database}`.`{$name}`");
+		$view = $this->getDb($cid)->fetchAll("SHOW CREATE VIEW `{$database}`.`{$name}`", true, Db::FETCH_ASSOC);
 
 		return array('view' => $name, 'from' => $database, 'statement' => $view[0]['Create View']);
 	}
@@ -749,7 +742,7 @@ class App
 			. "FROM `INFORMATION_SCHEMA`.`ROUTINES` "
 			. "WHERE `ROUTINE_SCHEMA` = '{$database}'";
 
-		return $this->getDb($cid)->query($sql, array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER'));
+		return $this->getDb($cid)->fetchAll($sql, array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER'));
 	}
 
 
@@ -806,12 +799,12 @@ class App
 	 */
 	protected function showCreateProcedure($cid, $name, $database)
 	{
-		$procedure = $this->getDb($cid)->query("SHOW CREATE PROCEDURE `{$database}`.`{$name}`");
+		$procedure = $this->getDb($cid)->fetchRow("SHOW CREATE PROCEDURE `{$database}`.`{$name}`", DB::FETCH_ASSOC);
 
 		return array(
 			'procedure' => $name,
 			'from' => $database,
-			'statement' => $procedure[0]['Create Procedure']
+			'statement' => $procedure['Create Procedure']
 		);
 	}
 
@@ -826,7 +819,7 @@ class App
 	 */
 	protected function showCreateFunction($cid, $name, $database)
 	{
-		$function = $this->getDb($cid)->query("SHOW CREATE FUNCTION `{$database}`.`{$name}`");
+		$function = $this->getDb($cid)->fetchRow("SHOW CREATE FUNCTION `{$database}`.`{$name}`", DB::FETCH_ASSOC);
 
 		return array(
 			'function' => $name,
@@ -860,9 +853,9 @@ class App
 	 */
 	protected function showCreateTrigger($cid, $name, $database)
 	{
-		$trigger = $this->getDb($cid)->query("SHOW CREATE TRIGGER `{$database}`.`{$name}`");
+		$trigger = $this->getDb($cid)->fetchRow("SHOW CREATE TRIGGER `{$database}`.`{$name}`", Db::FETCH_ASSOC);
 
-		return array('trigger' => $name, 'from' => $database, 'statement' => $trigger[0]['SQL Original Statement']);
+		return array('trigger' => $name, 'from' => $database, 'statement' => $trigger['SQL Original Statement']);
 	}
 
 
@@ -879,6 +872,7 @@ class App
 	protected function dropTriggers($cid, array $triggers, $database)
 	{
 		$dropped = array();
+
 		foreach ($triggers as $trigger) {
 			try {
 				$this->getDb($cid)->query("DROP TRIGGER `{$database}`.`{$trigger}`");
@@ -906,11 +900,11 @@ class App
 	 */
 	protected function browse($cid, $table, $database, $limit = 30, $offset = 0)
 	{
-		$columns = $this->getDb($cid)->query("SHOW COLUMNS IN `{$table}` FROM `{$database}`", array('Field', 'Key', 'Type'));
-		$total = $this->getDb($cid)->query("SELECT COUNT(*) as `count` FROM `{$database}`.`{$table}`");
-		$data = $this->getDb($cid)->query("SELECT * FROM `{$database}`.`{$table}` LIMIT {$offset}, {$limit}");
+		$data = $this->getDb($cid)->fetchAll("SELECT * FROM `{$database}`.`{$table}` LIMIT {$offset}, {$limit}");
+		$columns = $this->getDb($cid)->fetchAll("SHOW COLUMNS IN `{$table}` FROM `{$database}`", array('Field', 'Key', 'Type'));
+		$total = $this->getDb($cid)->fetchRow("SELECT COUNT(*) AS `count` FROM `{$database}`.`{$table}`", Db::FETCH_ASSOC);
 
-		return array('data' => $data, 'columns' => $columns, 'total' => $total[0]['count']);
+		return array('data' => $data, 'columns' => $columns, 'total' => $total['count']);
 	}
 
 }

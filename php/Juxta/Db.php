@@ -3,11 +3,23 @@
 class Db
 {
 
+	const EXTENSION_MYSQLI = 'Mysqli';
+
+	const EXTENSION_PDO = 'Pdo';
+
+
 	const DEFAULT_HOST = 'localhost';
 
 	const DEFAULT_PORT = 3306;
 
 	const DEFAULT_CHARSET = 'utf8';
+
+
+	const FETCH_ASSOC = 1;
+
+	const FETCH_NUM = 2;
+
+	const FETCH_BOTH = 3;
 
 
 	/**
@@ -25,6 +37,7 @@ class Db
 		if (isset($params['user'])) {
 			$connection['user'] = $params['user'];
 		}
+
 		if (isset($params['password'])) {
 			$connection['password'] = $params['password'];
 		}
@@ -32,14 +45,16 @@ class Db
 		return $connection;
 	}
 
+
 	/**
-	 * @param string $driver
+	 * Create dtabase object
 	 * @param $params
+	 * @param string $extension
 	 * @return mixed
 	 */
-	public static function factory($driver = 'Mysqli', $params)
+	public static function factory($params, $extension = self::EXTENSION_MYSQLI)
 	{
-		$className = 'Juxta\Db_' . ucfirst($driver);
+		$className = 'Juxta\Db_' . ucfirst($extension);
 
 		return new $className($params);
 	}

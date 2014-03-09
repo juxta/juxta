@@ -2,7 +2,7 @@
 
 error_reporting(E_ALL | E_STRICT);
 
-ini_set('display_error', 'on');
+ini_set('display_errors', 'on');
 
 require_once 'Juxta/App.php';
 require_once 'Juxta/Exception.php';
