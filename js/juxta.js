@@ -118,7 +118,7 @@ var Juxta = function() {
 
 
 	//
-	$('.header-change-connection-link').on('click', function() {
+	$('.header-change-connection').on('click', function() {
 		//
 		var container = $('.header-connections-container'),
 			list = container.find('.header-connections');
@@ -491,7 +491,7 @@ Juxta.prototype._changeConnectionCallback = function(cid) {
 		}
 	}
 
-	$('.header-change-connection-link').text(text);
+	$('.header-change-connection').text(text);
 
 	this._updateWindowTitle(this._connection.get())
 		._repairHeaderLinks(this._connection.get());
