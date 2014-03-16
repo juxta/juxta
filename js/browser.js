@@ -92,7 +92,7 @@ Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
 
 
 /**
- * Show explorer
+ * Show data browser
  *
  * @param {Object} options
  * @retrun {Juxta.Browser}
@@ -201,9 +201,9 @@ Juxta.Browser.prototype.browse = function(params) {
 	this.find('.sql').hide();
 
 	this.show({
-		header: {title: 'Browse', name: params.browse, from: params.from},
+		header: {title: 'Browse', name: null, from: null},
 		menu: {'SQL': {click: (function() { this.toggleEditor(); return false; }).bind(this)}}
-	});
+	}, params);
 
 	this.mode = 'browse';
 
