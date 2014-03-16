@@ -55,7 +55,7 @@ var Juxta = function() {
 			}).bind(this)
 		},
 		response: {
-			connectionError: (function(response) { this.error(response.errormsg); this._auth.show();}).bind(this),
+			connectionError: (function(response) { this.error(response.errormsg); this._auth.show(); }).bind(this),
 			sessionNotFound: this.redirect.bind(this, 'login', undefined),
 			queryError: (function(response) { this.error(response.errormsg); }).bind(this),
 			error: this.error.bind(this, 'An error has occured')
@@ -117,7 +117,56 @@ var Juxta = function() {
 	this.messageBox = new Juxta.Modal('#message');
 
 
+	// Show Juxta when application ready
+	$.each([this._explorer, this._server, this.browser, this.table], (function(i, application) {
+		application.on('ready', this.show.bind(this))
+			.on('maximize', function() { $('#sidebar').addClass('_hidden'); })
+			.on('restore', function() {
+				$('#sidebar').removeClass('_hidden');
+				if ($('#applications').is(':visible')) {
+					$('#sidebar').show();
+				}
+			});
+	}).bind(this));
+
+	this._explorer.on('alert', this.message.bind(this))
+		.on('modal-hide', this._notification.hide.bind(this._notification));
+
 	//
+	this._connection.on('change', this._changeConnectionCallback.bind(this));
+
+	//
+	this._auth
+		.on('before-show', (function() { this.hide()._updateWindowTitle(); this._connection.reset(); }).bind(this))
+		.on('login', (function(connection) {
+			this._connection.set(connection.cid, connection);
+			this.redirect('databases', connection.cid);
+		}).bind(this))
+		.on('logout', (function() { this._cache.flush(); this._updateWindowTitle().redirect('login'); }).bind(this))
+		.on('change', (function(cid) { this.redirect('', cid); }).bind(this));
+
+	this._auth.on('notify', (function(message, type, options) {
+		if (type === 'error') {
+			this.error(message, options);
+		} else if (type === 'loading') {
+			this.loading(message, options);
+		} else {
+			this.notify(message, options);
+		}
+	}).bind(this));
+
+	// Header links
+
+	$('#header a[name=about]').on('click', (function() { this.message($('#about').html(), {title: ''}); return false; }).bind(this));
+
+	$('#header .sql a').on('click', (function() {
+		//
+		if (this.browser.is(':visible') && this.browser.mode == 'browse') {
+			this.browser.toggleEditor();
+			return false;
+		}
+	}).bind(this));
+
 	$('.header-change-connection').on('click', function() {
 		//
 		var container = $('.header-connections-container'),
@@ -134,66 +183,14 @@ var Juxta = function() {
 		return false;
 	});
 
-	//
-	this._connection.on('change', this._changeConnectionCallback.bind(this));
-
-	// Show Juxta when application ready to show
-	$.each([this._explorer, this._server, this.browser, this.table], (function(i, application) {
-		application.on('ready', this.show.bind(this))
-			.on('maximize', function() { $('#sidebar').addClass('_hidden'); })
-			.on('restore', function() {
-				$('#sidebar').removeClass('_hidden');
-				if ($('#applications').is(':visible')) {
-					$('#sidebar').show();
-				}
-			});
-	}).bind(this));
-
-	//
-	this._explorer.on('alert', this.message.bind(this))
-		.on('modal-hide', this._notification.hide.bind(this._notification));
-
-	//
-	this._auth
-		.on('before-show', (function() { this.hide()._updateWindowTitle(); this._connection.reset(); }).bind(this))
-		.on('login', (function(connection) {
-			this._connection.set(connection.cid, connection);
-			this.redirect('databases', connection.cid);
-		}).bind(this))
-		.on('logout', (function() { this._cache.flush(); this._updateWindowTitle().redirect('login'); }).bind(this))
-		.on('change', (function(cid) { this.redirect('', cid); }).bind(this));
-
-	// Notifications
-	this._auth.on('notify', (function(message, type, options) {
-		if (type === 'error') {
-			this.error(message, options);
-		} else if (type === 'loading') {
-			this.loading(message, options);
-		} else {
-			this.notify(message, options);
-		}
-	}).bind(this));
-
-	//
-	$('#header a[name=about]').on('click', (function() { this.message($('#about').html(), {title: ''}); return false; }).bind(this));
-
-	//
-	$('#header .sql a').on('click', (function() {
-		//
-		if (this.browser.is(':visible') && this.browser.mode == 'browse') {
-			this.browser.toggleEditor();
-		}
-
-		return false;
-
-	}).bind(this));
-
 	$('#header a[name=logout]').on('click', (function() { this._auth.logout(); return false; }).bind(this));
 
-	// @todo Remove this from here
+	// @todo Remove this
 	$(document.body).on('click', function() {
 		$('.context:visible').trigger('hide').hide();
 	});
+
+	//
 
 	this.run();
 
