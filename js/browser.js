@@ -2,14 +2,14 @@
 
 /**
  * @class Data browser
- * @extends Juxta.Application
+ * @extends Juxta.Window
  *
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
 Juxta.Browser = function(element, request) {
 
-	Juxta.Application.prototype.constructor.call(this, element, {header: 'Browse', closable: true, maximized: true});
+	Juxta.Window.prototype.constructor.call(this, element, {header: 'Browse', closable: true, maximized: true});
 
 	/**
 	 * Options
@@ -88,7 +88,7 @@ Juxta.Browser = function(element, request) {
 
 };
 
-Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
+Juxta.Lib.extend(Juxta.Browser, Juxta.Window);
 
 
 /**
@@ -98,7 +98,7 @@ Juxta.Lib.extend(Juxta.Browser, Juxta.Application);
  * @retrun {Juxta.Browser}
  */
 Juxta.Browser.prototype.show = function() {
-	Juxta.Application.prototype.show.apply(this, arguments);
+	Juxta.Window.prototype.show.apply(this, arguments);
 	this.stretch();
 
 	return this;

@@ -2,7 +2,7 @@
 
 /**
  * @class Server Information
- * @extends Juxta.Application
+ * @extends Juxta.Window
  *
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
@@ -16,7 +16,7 @@ Juxta.Server = function (element, request) {
 		cache: 60
 	};
 
-	Juxta.Application.prototype.constructor.call(this, element);
+	Juxta.Window.prototype.constructor.call(this, element);
 
 
 	/**
@@ -44,7 +44,7 @@ Juxta.Server = function (element, request) {
 
 };
 
-Juxta.Lib.extend(Juxta.Server, Juxta.Application);
+Juxta.Lib.extend(Juxta.Server, Juxta.Window);
 
 
 /**
@@ -54,7 +54,7 @@ Juxta.Lib.extend(Juxta.Server, Juxta.Application);
  */
 Juxta.Server.prototype.show = function() {
 	//
-	Juxta.Application.prototype.show.apply(this, arguments);
+	Juxta.Window.prototype.show.apply(this, arguments);
 
 	this._stretch();
 

@@ -1,13 +1,13 @@
 /*global history */
 
 /**
- * @class Application base class
+ * @class Abstract window class
  * @abstract
  *
  * @param {jQuery|String} element
  * @param {Object} options
  */
-Juxta.Application = function(element, options) {
+Juxta.Window = function(element, options) {
 
 	/**
 	 * @type {Object}
@@ -54,7 +54,7 @@ Juxta.Application = function(element, options) {
 
 };
 
-Juxta.Lib.extend(Juxta.Application, Juxta.Events);
+Juxta.Lib.extend(Juxta.Window, Juxta.Events);
 
 
 /**
@@ -62,9 +62,9 @@ Juxta.Lib.extend(Juxta.Application, Juxta.Events);
  *
  * @param {Object} options
  * @param {Object} variables
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype._applySettings = function(options, variables) {
+Juxta.Window.prototype._applySettings = function(options, variables) {
 	//
 	var header = this.find('.application-header'),
 		text = '';
@@ -97,9 +97,9 @@ Juxta.Application.prototype._applySettings = function(options, variables) {
  *
  * @param {Object} menu
  * @param {Object} variables
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype._setMenu = function(menu, variables) {
+Juxta.Window.prototype._setMenu = function(menu, variables) {
 	//
 	this._menu.empty();
 
@@ -153,9 +153,9 @@ Juxta.Application.prototype._setMenu = function(menu, variables) {
  *
  * @param {Object} options
  * @param {Object} variables
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype.show = function(options, variables) {
+Juxta.Window.prototype.show = function(options, variables) {
 	//
 	if (options) {
 		this._applySettings($.extend({}, this._settings, options), variables);
@@ -180,9 +180,9 @@ Juxta.Application.prototype.show = function(options, variables) {
 /**
  * Show application and trigger event 'ready'
  *
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype.ready = function() {
+Juxta.Window.prototype.ready = function() {
 	//
 	return this.trigger('ready').show();
 };
@@ -191,9 +191,9 @@ Juxta.Application.prototype.ready = function() {
 /**
  * Hide application
  *
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype.hide = function() {
+Juxta.Window.prototype.hide = function() {
 	this._container.hide();
 
 	return this;
@@ -206,7 +206,7 @@ Juxta.Application.prototype.hide = function() {
  *
  * @return {Juxta.Applcation}
  */
-Juxta.Application.prototype.maximize = function() {
+Juxta.Window.prototype.maximize = function() {
 	//
 	this._applicationsContainer.addClass('_maximized');
 	this.trigger('maximize');
@@ -218,9 +218,9 @@ Juxta.Application.prototype.maximize = function() {
 /**
  * Restore maximized application to standard size
  *
- * @return {Juxta.Application}
+ * @return {Juxta.Window}
  */
-Juxta.Application.prototype.restore = function() {
+Juxta.Window.prototype.restore = function() {
 	//
 	this._applicationsContainer.removeClass('_maximized');
 	this.trigger('restore');
@@ -235,7 +235,7 @@ Juxta.Application.prototype.restore = function() {
  * @return {Object}
  * @todo Move to abstract Juxta.Container
  */
-Juxta.Application.prototype.is = function() {
+Juxta.Window.prototype.is = function() {
 	return $.fn.is.apply(this._container, arguments);
 };
 
@@ -246,6 +246,6 @@ Juxta.Application.prototype.is = function() {
  * @return {Object}
  * @todo Move to abstract Juxta.Container
  */
-Juxta.Application.prototype.find = function() {
+Juxta.Window.prototype.find = function() {
 	return $.fn.find.apply(this._container, arguments);
 };

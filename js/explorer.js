@@ -2,14 +2,14 @@
 
 /**
  * @class Juxta.Explorer
- * @extends {Juxta.Application}
+ * @extends {Juxta.Window}
  *
  * @param {jQuery|String} element
  * @param {Juxta.Request} request
  */
 Juxta.Explorer = function(element, request) {
 
-	Juxta.Application.prototype.constructor.call(this, element, {cache: 3600});
+	Juxta.Window.prototype.constructor.call(this, element, {cache: 3600});
 
 	/**
 	 * @type {Juxta.Request}
@@ -77,7 +77,7 @@ Juxta.Explorer = function(element, request) {
 
 };
 
-Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
+Juxta.Lib.extend(Juxta.Explorer, Juxta.Window);
 
 
 /**
@@ -87,7 +87,7 @@ Juxta.Lib.extend(Juxta.Explorer, Juxta.Application);
  */
 Juxta.Explorer.prototype.show = function() {
 	//
-	Juxta.Application.prototype.show.apply(this, arguments);
+	Juxta.Window.prototype.show.apply(this, arguments);
 	this._stretch();
 
 	return this;

@@ -3,13 +3,13 @@
 
 /**
  * @class Table editor
- * @extends {Juxta.Application}
+ * @extends {Juxta.Window}
  *
  * @param {jQuery} element
  */
 Juxta.Table = function(element, request) {
 
-	Juxta.Application.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse Table': null}});
+	Juxta.Window.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse Table': null}});
 
 	/**
 	 * @type {Juxta.Request}
@@ -27,7 +27,7 @@ Juxta.Table = function(element, request) {
 
 };
 
-Juxta.Lib.extend(Juxta.Table, Juxta.Application);
+Juxta.Lib.extend(Juxta.Table, Juxta.Window);
 
 
 /**
@@ -37,7 +37,7 @@ Juxta.Lib.extend(Juxta.Table, Juxta.Application);
  * @return {Juxta.TableEditor}
  */
 Juxta.Table.prototype.show = function() {
-	Juxta.Application.prototype.show.apply(this, arguments);
+	Juxta.Window.prototype.show.apply(this, arguments);
 	this._stretch();
 
 	return this;
