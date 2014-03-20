@@ -1,3 +1,8 @@
+/**
+ * @class HTML container
+ * @constructor
+ * @param {HTMLElement} element
+ */
 Juxta.Container = function(element) {
 
 	/**
@@ -11,8 +16,7 @@ Juxta.Container = function(element) {
 /**
  * Check container element against a selector
  *
- * @see <a href="http://api.jquery.com/is/">jQuery.is()</a>
- * @return {Object}
+ * @return {Boolean}
  */
 Juxta.Container.prototype.is = function() {
 	return $.fn.is.apply(this._container, arguments);
@@ -21,8 +25,8 @@ Juxta.Container.prototype.is = function() {
 
 /**
  * Find elements by selector in current container
- * @return {Object}
- * @todo Move to abstract Juxta.Widget
+ *
+ * @return {jQuery}
  */
 Juxta.Container.prototype.find = function() {
 	return $.fn.find.apply(this._container, arguments);
@@ -30,8 +34,9 @@ Juxta.Container.prototype.find = function() {
 
 
 /**
- * Показывает контейнер
- * @return {Billing.Widget.Abstract}
+ * Shows the container
+ *
+ * @return {Juxta.Container}
  */
 Juxta.Container.prototype.show = function() {
 	//
@@ -42,8 +47,9 @@ Juxta.Container.prototype.show = function() {
 
 
 /**
- * Скрывает контейнер
- * @return {Billing.Widget.Abstract}
+ * Hides the container
+ *
+ * @return {Juxta.Container}
  */
 Juxta.Container.prototype.hide = function() {
 	//
@@ -54,8 +60,9 @@ Juxta.Container.prototype.hide = function() {
 
 
 /**
- * Показывает/скрывает контейнер
- * @return {Billing.Widget.Abstract}
+ * Toggle the container
+ *
+ * @return {Juxta.Container}
  */
 Juxta.Container.prototype.toggle = function() {
 	//
@@ -66,7 +73,8 @@ Juxta.Container.prototype.toggle = function() {
 
 
 /**
- * Возвращает DOM элемент
+ * Returns HTML element
+ *
  * @return {HTMLElement}
  */
 Juxta.Container.prototype.get = function() {
@@ -76,9 +84,10 @@ Juxta.Container.prototype.get = function() {
 
 
 /**
- * Устанавливает/возвращает ширину виджета в пикселях
+ * Get the current computed width or set the CSS width for the container
+ *
  * @param {Number} width
- * @return {Number}
+ * @return {Number|Juxta.Container}
  */
 Juxta.Container.prototype.width = function(width) {
 	//
@@ -92,10 +101,10 @@ Juxta.Container.prototype.width = function(width) {
 
 
 /**
- * Устанавливает/возвращает высоту виджета в пикселях
+ * Get the current computed height or set the CSS height for the container
  *
  * @param {Number} height
- * @return {Number}
+ * @return {Number|Juxta.Container}
  */
 Juxta.Container.height = function(height) {
 	//
