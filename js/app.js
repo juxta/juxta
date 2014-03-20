@@ -2,9 +2,11 @@
 
 /**
  * @class Juxta application
+ * @extends Juxta.Container
  */
 Juxta.App = function() {
 
+	Juxta.Container.prototype.constructor.call(this, window.document.body);
 
 	/**
 	 * @type {String}
@@ -61,7 +63,7 @@ Juxta.App = function() {
 	 *
 	 * @type {Juxta.Notification}
 	 */
-	this._notification = new Juxta.Notification($('.notifications').eq(0));
+	this._notification = new Juxta.Notification(this.find('.notifications').eq(0));
 
 
 	/**
@@ -113,13 +115,8 @@ Juxta.App = function() {
 	// Show Juxta when application ready
 	$.each([this._explorer, this._server, this.browser, this.table], (function(i, application) {
 		application.on('ready', this.show.bind(this))
-			.on('maximize', function() { $('#sidebar').addClass('_hidden'); })
-			.on('restore', function() {
-				$('#sidebar').removeClass('_hidden');
-				if ($('#applications').is(':visible')) {
-					$('#sidebar').show();
-				}
-			});
+			.on('maximize', (function() { this.find('#sidebar').hide(); }).bind(this))
+			.on('restore', (function() { this.find('#sidebar').toggle(this.find('#applications').is(':visible')); }).bind(this));
 	}).bind(this));
 
 	this._explorer.on('alert', this.message.bind(this))
@@ -150,9 +147,7 @@ Juxta.App = function() {
 
 	// Header links
 
-	$('#header a[name=about]').on('click', (function() { this.message($('#about').html(), {title: ''}); return false; }).bind(this));
-
-	$('#header .sql a').on('click', (function() {
+	this.find('#header .sql a').on('click', (function() {
 		//
 		if (this.browser.is(':visible') && this.browser.mode == 'browse') {
 			this.browser.toggleEditor();
@@ -160,26 +155,26 @@ Juxta.App = function() {
 		}
 	}).bind(this));
 
-	$('.header-change-connection').on('click', function() {
+	this.find('.header-change-connection').on('click', (function() {
 		//
-		var container = $('.header-connections-container'),
+		var container = this.find('.header-connections-container'),
 			list = container.find('.header-connections');
 
 		container.css({right: ''}).toggle();
 
-		if (container.is(':visible') && $('body').width() - container.offset().left < container.width()) {
+		if (container.is(':visible') && $(window.document.body).width() - container.offset().left < container.width()) {
 			container.css({right: 7});
 		}
 
 		list.toggleClass('scroll', list.prop('scrollHeight') > list.prop('offsetHeight'));
 
 		return false;
-	});
+	}).bind(this));
 
-	$('#header a[name=logout]').on('click', (function() { this._auth.logout(); return false; }).bind(this));
+	this.find('#header a[name=logout]').on('click', (function() { this._auth.logout(); return false; }).bind(this));
 
 	// @todo Remove this
-	$(document.body).on('click', function() {
+	this._container.on('click', function() {
 		$('.context:visible').trigger('hide').hide();
 	});
 
@@ -189,13 +184,13 @@ Juxta.App = function() {
 
 };
 
-
+Juxta.Lib.extend(Juxta.App, Juxta.Container);
 
 
 /**
  * Run application
  *
- * @return {Juxta}
+ * @return {Juxta.App}
  */
 Juxta.App.prototype.run = function() {
 	//
@@ -339,7 +334,7 @@ Juxta.App.prototype._updateWindowTitle = function(connection) {
  */
 Juxta.App.prototype._repairHeaderLinks = function(connection) {
 	//
-	$('.header a[name]').each(function(i, link) {
+	this.find('.header a[name]').each(function(i, link) {
 		$(link).attr('href', '#/' + connection.cid + '/' + $(link).attr('name'));
 	});
 
@@ -348,16 +343,19 @@ Juxta.App.prototype._repairHeaderLinks = function(connection) {
 
 
 /**
- * Show the appliaction
+ * Show the application
  *
- * @return {Juxta}
+ * @return {Juxta.App}
  */
 Juxta.App.prototype.show = function() {
-	$('#sidebar').not(':visible').slideDown(250);
-	$('.modal').hide();
-	if ($('#applications').not(':visible')) {
-		$('#applications').fadeIn(250);
-		$('#header h1, #header .header-links').fadeIn(250);
+	//
+	this.find('#sidebar').not(':visible').slideDown(250);
+
+	this.find('.modal').hide();
+
+	if (this.find('#applications').not(':visible')) {
+		this.find('#applications').fadeIn(250);
+		this.find('#header h1, #header .header-links').fadeIn(250);
 	}
 
 	return this;
@@ -367,17 +365,19 @@ Juxta.App.prototype.show = function() {
 /**
  * Hide
  *
- * @return {Juxta}
+ * @return {Juxta.App}
  */
 Juxta.App.prototype.hide = function() {
 	//
-	$('#header h1, #header .header-links, #sidebar, #applications, .modal, .context').hide();
+	this.find('#header h1, #header .header-links, #sidebar, #applications, .modal, .context').hide();
 
 	return this;
 };
 
 
 /**
+ * Explore a server
+ *
  * @param {Object} params
  * @return {jqXHR}
  */
@@ -385,12 +385,11 @@ Juxta.App.prototype.explore = function(params) {
 	//
 	if (params.from) {
 		this._sidebar.highlight(params.show, {'database': params.from});
-		return this._explorer.explore(params);
-
 	} else {
 		this._sidebar.highlight(params.show);
-		return this._explorer.explore(params);
 	}
+
+	return this._explorer.explore(params);
 };
 
 
@@ -465,7 +464,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 
 	var text = this._connection.get('name'),
 		hide = this.hide,
-		connectionsList = $('.header-connections');
+		connectionsList = this.find('.header-connections');
 
 	if (!text) {
 		text = this._connection.get('user') + '@' + this._connection.get('host');
@@ -475,7 +474,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 		}
 	}
 
-	$('.header-change-connection').text(text);
+	this.find('.header-change-connection').text(text);
 
 	this._updateWindowTitle(this._connection.get())
 		._repairHeaderLinks(this._connection.get());
