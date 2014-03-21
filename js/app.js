@@ -194,7 +194,7 @@ Juxta.Lib.extend(Juxta.App, Juxta.Container);
  */
 Juxta.App.prototype.run = function() {
 	//
-	setInterval($.proxy(this.route, this), 200);
+	setInterval(this.route.bind(this), 200);
 
 	return this;
 };
@@ -482,7 +482,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 	connectionsList.empty();
 
 	this._request.send({action: {get: 'connections'}, context: this, success: function(response) {
-		$.each(response, $.proxy(function(key, connection) {
+		$.each(response, (function(key, connection) {
 			//
 			var li = $('<li>').addClass('header-connection'),
 				a = $('<a>');
@@ -514,6 +514,6 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 
 			connectionsList.append(li.append(a.text(connection.name)));
 
-		}, this));
+		}).bind(this));
 	}});
 };

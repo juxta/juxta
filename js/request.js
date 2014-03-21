@@ -99,11 +99,11 @@ Juxta.Request.prototype.send = function (params) {
 
 	// Collect response callbacks
 	if ($.isFunction(params.success)) {
-		callbacks.ok = params.context ? $.proxy(params.success, params.context) : params.success;
+		callbacks.ok = params.context ? params.success.bind(params.context) : params.success;
 		delete(params.success);
 	}
 	if ($.isFunction(params.error)) {
-		callbacks.error = params.context ? $.proxy(params.error, params.context) : params.error;
+		callbacks.error = params.context ? params.error.bind(params.context) : params.error;
 		delete(params.error);
 	}
 

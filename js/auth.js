@@ -40,17 +40,17 @@ Juxta.Auth = function(element, request) {
 
 
 	//
-	this._form.on('submit', $.proxy(function() {
+	this._form.on('submit', (function() {
 		//
 		this._submit.focus();
 		this.login();
 
 		return false;
 
-	}, this));
+	}).bind(this));
 
 	//
-	this._connections.on('change', $.proxy(function(event) {
+	this._connections.on('change', (function(event) {
 		//
 		var id = event.target.value,
 			connection = this._storedConnections[id];
@@ -65,10 +65,10 @@ Juxta.Auth = function(element, request) {
 		} else {
 			this._form.find('[name=id]').val('').attr('disabled', true);
 		}
-	}, this));
+	}).bind(this));
 
 	//
-	this._form.find('[name=host],[name=user],[name=port]').on('keyup', $.proxy(function(event) {
+	this._form.find('[name=host],[name=user],[name=port]').on('keyup', (function(event) {
 		//
 		var input = $(event.target),
 			name = input.attr('name'),
@@ -82,7 +82,7 @@ Juxta.Auth = function(element, request) {
 		if (connection && connection[name] && connection[name] != input.val()) {
 			this._connections.val('').trigger('change');
 		}
-	}, this));
+	}).bind(this));
 
 	this._form.find('[name=host]').attr('placeholder', 'localhost');
 	this._form.find('[name=port]').attr('placeholder', Juxta.DEFAULT_PORT);
@@ -182,7 +182,7 @@ Juxta.Auth.prototype._getConnectionsCallback = function(response, id) {
 	this._connections.empty().prepend($('<option>').text(''));
 
 	if (!$.isEmptyObject(response)) {
-		$.each(response, $.proxy(function(key, connection) {
+		$.each(response, (function(key, connection) {
 			//
 			connection.name = connection.user + '@' + connection.host;
 
@@ -198,7 +198,7 @@ Juxta.Auth.prototype._getConnectionsCallback = function(response, id) {
 
 			$('<option>', {val: key}).html(connection.name).appendTo(this._connections);
 
-		}, this));
+		}).bind(this));
 
 		if (id !== undefined) {
 			this._connections.val(id).trigger('change');

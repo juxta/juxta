@@ -73,9 +73,7 @@ Juxta.Browser = function(element, request) {
 	this.mode = null;
 
 
-	this._grid.on('change', $.proxy(function () {
-		this._updateStatus();
-	}, this));
+	this._grid.on('change', this._updateStatus.bind(this));
 
 	$(window).on('resize', {that: this}, this.stretch);
 

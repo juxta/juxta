@@ -104,7 +104,7 @@ Juxta.Window.prototype._setMenu = function(menu, variables) {
 	this._menu.empty();
 
 	if ($.isPlainObject(menu)) {
-		$.each(menu, $.proxy(function(title, item) {
+		$.each(menu, (function(title, item) {
 			//
 			var link = $('<a>').html(title).attr('disabled', true),
 				href,
@@ -133,7 +133,7 @@ Juxta.Window.prototype._setMenu = function(menu, variables) {
 				link.attr('href', $.template(href, variables)).attr('disabled', false);
 			}
 			if (action) {
-				link.on('click', $.proxy(function (event) { action.call(this, event, variables); }, this)).attr('disabled', false);
+				link.on('click', (function (event) { action.call(this, event, variables); }).bind(this)).attr('disabled', false);
 			}
 			if (name) {
 				link.attr('name', name);
@@ -141,7 +141,7 @@ Juxta.Window.prototype._setMenu = function(menu, variables) {
 
 			this._menu.append(link);
 
-		}, this));
+		}).bind(this));
 	}
 
 	return this;
