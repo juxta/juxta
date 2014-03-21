@@ -12,10 +12,6 @@
 	border-radius: 5px;
 }
 
-.sidebar._hidden {
-	display: none;
-}
-
 .sidebar-levels {
 	list-style-type: none;
 	margin: 0;
