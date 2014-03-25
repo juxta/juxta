@@ -15,7 +15,7 @@ class Db_Mysqli
 	 */
 	public function __construct(array $params)
 	{
-		$this->connection = new \mysqli($params['host'], $params['user'], $params['password']);
+		$this->connection = @new \mysqli($params['host'], $params['user'], $params['password']);
 
 		if ($this->connection->connect_error) {
 			throw new Db_Exception_Connect($this->connection->connect_error, $this->connection->connect_errno);
