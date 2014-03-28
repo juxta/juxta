@@ -451,20 +451,38 @@ class App
 	 */
 	protected function showUsers($cid)
 	{
-		$users = $this->getDb($cid)->fetchAll("SELECT * FROM mysql.user", $type = Db::FETCH_ASSOC);
+		$users = null;
 
-		$response = null;
+		foreach ($this->getDb($cid)->fetchAll("SELECT * FROM mysql.user", Db::FETCH_ASSOC) as $row) {
 
-		if (is_array($users)) {
-			foreach ($users as $user) {
-				$user['Global_priv'] = '';
+			$user = array($row['User'], $row['Host'], !empty($row['Password']) ? 'YES' : 'NO',
+				$row['Grant_priv'] === 'Y' ? 'YES' : '');
 
-				$response[] = array($user['User'], $user['Host'], $user['Password'] ? 'YES' : 'NO',
-					$user['Global_priv'], $user['Grant_priv'] ? 'YES' : '');
+			$privileges = array();
+
+			foreach (Db::$privileges as $privilege => $title) {
+				if (isset($row[$privilege]) && $row[$privilege] === 'Y') {
+					$privileges[] = $title;
+				}
 			}
+
+			if (count($privileges) === 0) {
+				$privileges = 'USAGE';
+
+			} else if (count($privileges) === count(Db::$privileges)) {
+				$privileges = 'ALL';
+
+			} else {
+				$privileges = implode(', ', $privileges);
+			}
+
+			$user[] = $privileges;
+
+			$users[] = $user;
+
 		}
 
-		return $response;
+		return $users;
 	}
 
 

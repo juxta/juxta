@@ -55,10 +55,29 @@
 
 .application.explorer .grid2-head-column._column-password {
 	width: 60px;
+	text-align: center;
+}
+
+.application.explorer .grid2-body-column._column-password {
+	text-align: center;
+}
+
+.application.explorer .grid2-head-column._column-grant {
+	width: 60px;
+	text-align: center;
+}
+
+.application.explorer .grid2-body-column._column-grant {
+	text-align: center;
 }
 
 .application.explorer .grid2-head-column._column-privileges {
-	width: 175px;
+	width: 210px;
+}
+
+.application.explorer .grid2-body-column._column-privileges {
+	text-overflow: ellipsis;
+	border-right-width: 0;
 }
 
 /* Views */

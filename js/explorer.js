@@ -258,8 +258,8 @@ Juxta.Explorer.prototype._gridParams = {
 		actions: {kill: 'Kill'}
 	},
 	users: {
-		columns: ['Username', 'Host', 'Password', {name: 'privileges', title: 'Gloval privileges'}, 'Grant'],
-		row: '<tr><td><a name="\'{username}\'@\'{host}\'">{username}</a><td>{host}</td><td>{password}</td><td>{privileges}</td><td>{grant}</td></tr>',
+		columns: ['Username', 'Host', 'Password', 'Grant', {name: 'privileges', title: 'Global Privileges'} ],
+		row: '<tr><td><a name="\'{username}\'@\'{host}\'">{username}</a><td>{host}</td><td>{password}</td><td>{grant}</td><td>{privileges}</td><td></td></tr>',
 		contextMenu: {
 			'edit-privileges': 'Edit privileges',
 			'change-password': 'Change password',
