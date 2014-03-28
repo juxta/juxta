@@ -40,7 +40,7 @@ class Db_Mysqli
 		$values = null;
 
 		foreach ($columns as $column) {
-			if (!isset($row[$column])) {
+			if (!array_key_exists($column, $row)) {
 				continue;
 			}
 			if ($type === Db::FETCH_NUM || $type === Db::FETCH_BOTH) {
