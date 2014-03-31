@@ -47,6 +47,15 @@
 	text-align: right;
 }
 
+.application.explorer .grid2-head-column._column-info {
+	width: 300px;
+}
+
+.application.explorer .grid2-body-column._column-info {
+	text-overflow: ellipsis;
+	border-right-width: 0;
+}
+
 /* Users */
 
 .application.explorer .grid2-head-column._column-host {
