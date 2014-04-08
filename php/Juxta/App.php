@@ -230,6 +230,14 @@ class App
 	 */
 	protected function connect(array $connection)
 	{
+		if (empty($connection['password'])) {
+			$stored = $this->connections->getByKey(Connections::key($connection));
+		}
+
+		if (!empty($stored) && array_key_exists('password', $stored)) {
+			$connection['password'] = $stored['password'];
+		}
+
 		try {
 
 			Db::factory($connection);

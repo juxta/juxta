@@ -61,6 +61,9 @@ Juxta.Auth = function(element, request) {
 		} else if (connection) {
 			this.fill(connection);
 			this._form.find('[name=password]').focus().val('');
+			if (connection.password) {
+				this._form.submit();
+			}
 
 		} else {
 			this._form.find('[name=id]').val('').attr('disabled', true);
