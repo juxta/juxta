@@ -579,7 +579,7 @@ class App
 	 */
 	protected function showTables($cid, $database)
 	{
-		return $this->getDb($cid)->fetchAll("SHOW TABLE STATUS FROM `{$database}`",
+		return $this->getDb($cid)->fetchAll("SHOW TABLE STATUS FROM `{$database}` WHERE `Engine` IS NOT NULL",
 			array('Name', 'Engine', 'Rows', 'Data_length'));
 	}
 
