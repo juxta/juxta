@@ -6,7 +6,7 @@
  * @param {jQuery} textarea
  * @param {Object} options
  */
-Juxta.SqlEditor = function(textarea, options) {
+Juxta.Editor = function(textarea, options) {
 
 	/**
 	 * @type {Object}
@@ -39,7 +39,7 @@ Juxta.SqlEditor = function(textarea, options) {
 	/**
 	 * Set the editor content
 	 * @param {String} text
-	 * @return {Juxta.SqlEditor}
+	 * @return {Juxta.Editor}
 	 */
 	this.edit = function(text) {
 		//
@@ -51,7 +51,7 @@ Juxta.SqlEditor = function(textarea, options) {
 
 	/**
 	 * Redraw the editor
-	 * @return {Juxta.SqlEditor}
+	 * @return {Juxta.Editor}
 	 */
 	this.refresh = function() {
 		this._editor.refresh();

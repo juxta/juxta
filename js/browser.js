@@ -16,7 +16,7 @@ Juxta.Browser = function(element, request) {
 	 *
 	 * @type {Object}
 	 */
-	this._options = { limit: 50, sqlEditorHeight: 100 };
+	this._options = { limit: 50, editor: {height: 100}};
 
 
 	/**
@@ -55,9 +55,9 @@ Juxta.Browser = function(element, request) {
 
 
 	/**
-	 * @type {Juxta.SqlEditor}
+	 * @type {Juxta.Editor}
 	 */
-	this._editor = new Juxta.SqlEditor(this.find('textarea[name=browser]'));
+	this._editor = new Juxta.Editor(this.find('textarea[name=browser]'));
 
 
 	/**
@@ -131,8 +131,8 @@ Juxta.Browser.prototype.stretch = function(event) {
 	if (that.is(':visible')) {
 		if (that._grid.is(':visible')) {
 			if (that._editor.is(':visible')) {
-				that.find('.sql').height(that._options.sqlEditorHeight);
-				that._editor.setHeight(that._options.sqlEditorHeight);
+				that.find('.sql').height(that._options.editor.height);
+				that._editor.setHeight(that._options.editor.height);
 			}
 			height = $('#applications').height() - that.find('.grid2-body').position().top - that._status.height() - 24;
 			that._grid.setHeight(height);

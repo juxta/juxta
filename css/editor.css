@@ -1,6 +1,6 @@
 /* Code editor */
 
-.code-editor {
+.editor {
 	margin-top: 1px;
 	border-top: #ddd 1px solid;
 	border-bottom: #eee 1px solid;
@@ -8,13 +8,7 @@
 	font-family: Courier;
 }
 
-.code-editor textarea {
-	height: 250px;
-	width: 400px;
-}
-
-
-.CodeMirror {
-	width: 600px;
+.editor .CodeMirror {
+	width: 500px;
 	font-size: 13px;
 }

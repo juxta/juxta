@@ -16,9 +16,9 @@ Juxta.RoutineEditor = function(element, request) {
 
 
 	/**
-	 * @type {Juxta.SqlEditor}
+	 * @type {Juxta.Editor}
 	 */
-	this._editor = new Juxta.SqlEditor(this._container.find('textarea'));
+	this._editor = new Juxta.Editor(this._container.find('textarea'));
 
 };
 
