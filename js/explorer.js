@@ -256,7 +256,7 @@ Juxta.Explorer.prototype._gridParams = {
 	},
 	processlist: {
 		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
-		row: '<tr><td><a>{process_id}</td><td>{user}@{host}</td><td>{database}</td><td>{command}</td><td>{time}</td><td>{info}</td></tr>',
+		row: '<tr><td><a>{process_id}</td><td>{user}@{host}</td><td>{database}</td><td>{command}</td><td>{time}</td><td>{info}</td><td></td></tr>',
 		contextMenu: {
 			'show-process-query': 'Show Query',
 			'kill': 'Kill'
