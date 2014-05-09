@@ -463,8 +463,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 	}
 
 	var text = this._connection.get('name'),
-		hide = this.hide,
-		connectionsList = this.find('.header-connections');
+		connections = this.find('.header-connections');
 
 	if (!text) {
 		text = this._connection.get('user') + '@' + this._connection.get('host');
@@ -479,7 +478,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 	this._updateWindowTitle(this._connection.get())
 		._repairHeaderLinks(this._connection.get());
 
-	connectionsList.empty();
+	connections.empty();
 
 	this._request.send({action: {get: 'connections'}, context: this, success: function(response) {
 		$.each(response, (function(key, connection) {
@@ -510,10 +509,10 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 			}
 
 			if (a.attr('href')) {
-				a.on('click', function() { hide(); } );
+				a.on('click', this.hide.bind(this));
 			}
 
-			connectionsList.append(li.append(a.text(connection.name)));
+			connections.append(li.append(a.text(connection.name)));
 
 		}).bind(this));
 	}});
