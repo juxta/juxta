@@ -357,7 +357,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'show-process-query') {
 		this._sqlEditor.view(
 			this._request.cache.search(this._cacheKey, {processId: row})[6],
-			{title: "Process {id}", id: this._request.cache.search(this._cacheKey, {processId: row})[0]}
+			{title: 'Process {id}', id: this._request.cache.search(this._cacheKey, {processId: row})[0]}
 		);
 
 	} else if (event === 'edit-view') {

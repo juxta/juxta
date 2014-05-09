@@ -488,7 +488,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 				a = $('<a>');
 
 			if (connection.cid === undefined) {
-				connection.password && li.addClass('established');
+				li.toggleClass('established', connection.password !== undefined);
 				a.attr('href', '#/login?id=' + key);
 
 			} else if (!this._connection.isCurrent(connection.cid)) {
