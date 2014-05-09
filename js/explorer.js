@@ -42,6 +42,12 @@ Juxta.Explorer = function(element, request) {
 
 
 	/**
+	 * @type {Juxta.SqlEditor}
+	 */
+	this._sqlEditor = new Juxta.SqlEditor($('#edit-sql'));
+
+
+	/**
 	 * @type {Juxta.RoutineEditor}
 	 */
 	this._routineEditor = new Juxta.RoutineEditor($('#edit-routine'), this._request);
@@ -252,7 +258,7 @@ Juxta.Explorer.prototype._gridParams = {
 		columns: ['Process Id', 'User', {title: 'Host', hidden: true}, 'Database', 'Command', 'Time', 'Info'],
 		row: '<tr><td><a>{process_id}</td><td>{user}@{host}</td><td>{database}</td><td>{command}</td><td>{time}</td><td>{info}</td></tr>',
 		contextMenu: {
-			'information': 'Information',
+			'show-process-query': 'Show Query',
 			'kill': 'Kill'
 		},
 		actions: {kill: 'Kill'}
@@ -347,6 +353,12 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 
 	} else if (event === 'kill') {
 		return this.kill($.isArray(row) ? row : [row]);
+
+	} else if (event === 'show-process-query') {
+		this._sqlEditor.view(
+			this._request.cache.search(this._cacheKey, {processId: row})[6],
+			{title: "Process {id}", id: this._request.cache.search(this._cacheKey, {processId: row})[0]}
+		);
 
 	} else if (event === 'edit-view') {
 		return this._routineEditor.edit({view: row, from: context.from});
