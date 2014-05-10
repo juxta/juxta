@@ -74,7 +74,8 @@ Juxta.Sidebar = function(element, connection) {
 
 		if (head.is(':not(._fold):not(._last):visible')) {
 			head.addClass('_fold').find('.sidebar-links').slideUp(this.FOLD_DURATION);
-			this._container.find('.sidebar-level._last .sidebar-links').slideDown(this.FOLD_DURATION);
+			this._container.find('.sidebar-level._last').removeClass('_fold')
+				.find('.sidebar-links').slideDown(this.FOLD_DURATION);
 
 		} else if (head.is('._fold')) {
 			this._container.find('.sidebar-level:not(._fold):not(.last):visible').addClass('_fold')
