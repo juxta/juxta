@@ -26,14 +26,11 @@
 	background-color: #EEE;
 	border-right: #E0E0E0 1px solid;
 	padding-right: 11px;
+	width: 110px;
 }
 
 .properties._database .property-name {
 	width: 90px;
-}
-
-.properties._table .property-name {
-	width: 110px;
 }
 
 .property:first-child .property-name,

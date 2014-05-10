@@ -133,6 +133,9 @@ class App
 
 						} elseif (isset($_GET['table'])) {
 							$response = $this->showTableProperties($cid, $_GET['table'], $_GET['from']);
+
+						} elseif (isset($_GET['view'])) {
+							$response = $this->showViewProperties($cid, $_GET['view'], $_GET['from']);
 						}
 						break;
 				}
@@ -751,6 +754,29 @@ class App
 		$view = $this->getDb($cid)->fetchAll("SHOW CREATE VIEW `{$database}`.`{$name}`", true, Db::FETCH_ASSOC);
 
 		return array('view' => $name, 'from' => $database, 'statement' => $view[0]['Create View']);
+	}
+
+
+	/**
+	 * Return view properties
+	 *
+	 * @param int $cid
+	 * @param string $name View name
+	 * @param string $database Database
+	 * @return array
+	 */
+	protected function showViewProperties($cid, $name, $database)
+	{
+		$sql = "SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}' "
+			. " AND `TABLE_NAME` = '{$name}'";
+
+		$properties = $this->getDb($cid)->fetchRow($sql, Db::FETCH_ASSOC);
+
+		if (!empty($properties)) {
+			$properties = array_change_key_case($properties, CASE_LOWER);
+		}
+
+		return $properties;
 	}
 
 

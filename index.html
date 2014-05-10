@@ -449,6 +449,43 @@
 		<p class="modal-buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
 	</script>
 
+	<script type="text/html" id="view-properties">
+		<ul class="properties _view">
+			<li class="property">
+				<h4 class="property-name">Name</h4>
+				<p class="property-value">{table_name}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Database</h4>
+				<p class="property-value">{table_schema}</p>
+			</li>
+			<li class="property" title="The account of the user who created the view">
+				<h4 class="property-name">Definer</h4>
+				<p class="property-value">{definer}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Security Type</h4>
+				<p class="property-value">{security_type}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Updatable</h4>
+				<p class="property-value">{is_updatable}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Check Option</h4>
+				<p class="property-value">{check_option}</p>
+			</li>
+			<li class="property" title="The session value of the character_set_client system variable when the view was created">
+				<h4 class="property-name">Client Character Set</h4>
+				<p class="property-value">{character_set_client}</p>
+			</li>
+			<li class="property" title=" The session value of the collation_connection system variable when the view was created">
+				<h4 class="property-name">Collation</h4>
+				<p class="property-value">{collation_connection}</p>
+			</li>
+		</ul>
+	</script>
+
 	<div id="edit-routine" class="modal">
 		<h3 class="modal-header">Edit</h3>
 		<div class="editor">

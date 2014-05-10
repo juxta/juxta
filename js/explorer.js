@@ -348,6 +348,9 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'drop-tables') {
 		return this.drop('tables', $.isArray(row) ? row : [row], context.from);
 
+	} else if (event === 'view-properties') {
+		return this._request.send({action: {show: 'properties', view: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
 	} else if (event === 'drop-views') {
 		return this.drop('views', $.isArray(row) ? row : [row], context.from);
 
@@ -394,6 +397,9 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
 
 	} else if (templateName === 'table-properties' && template.is('[type=text/html]')) {
 		this.trigger('alert', $.template(template.html(), response), {title: 'Table {name}', name: response.name});
+
+	} else if (templateName === 'view-properties' && template.is('[type=text/html]')) {
+		this.trigger('alert', $.template(template.html(), response), {title: 'View {name}', name: response.table_name});
 	}
 
 };
