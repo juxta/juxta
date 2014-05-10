@@ -685,10 +685,10 @@ class App
 	 */
 	protected function showTableProperties($cid, $table, $database)
 	{
-		$properties = $this->getDb($cid)->row("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", true, Db::FETCH_ASSOC);
+		$properties = $this->getDb($cid)->fetchRow("SHOW TABLE STATUS FROM `{$database}` LIKE '{$table}'", Db::FETCH_ASSOC);
 
 		if (!empty($properties)) {
-			$properties = array_change_key_case($properties[0], CASE_LOWER);
+			$properties = array_change_key_case($properties, CASE_LOWER);
 		}
 
 		return $properties;
