@@ -372,13 +372,26 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'drop-routines') {
 		return this.drop('routines', row, context.from);
 
+	} else if (event === 'routine-properties') {
+		if (row.procedure) {
+			return this._request.send({
+				action: {show: 'properties', procedure: row.procedure, from: context.from, cid: context.cid},
+				success: this._showPropertiesCallback.bind(this, 'procedure-properties')
+			});
+
+		} else if (row.function) {
+			return this._request.send({
+				action: {show: 'properties', function: row.function, from: context.from, cid: context.cid},
+				success: this._showPropertiesCallback.bind(this, 'function-properties')
+			});
+		}
+
 	} else if (event === 'edit-trigger') {
 		return this._routineEditor.edit({trigger: row, from: context.from});
 
 	} else if (event === 'drop-triggers') {
 		return this.drop('triggers', $.isArray(row) ? row : [row], context.from);
 	}
-
 
 };
 
@@ -400,6 +413,12 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
 
 	} else if (templateName === 'view-properties' && template.is('[type=text/html]')) {
 		this.trigger('alert', $.template(template.html(), response), {title: 'View {name}', name: response.table_name});
+
+	} else if (templateName === 'procedure-properties' && template.is('[type=text/html]')) {
+		this.trigger('alert', $.template(template.html(), response), {title: 'Procedure {name}', name: response.routine_name});
+
+	} else if (templateName === 'function-properties' && template.is('[type=text/html]')) {
+		this.trigger('alert', $.template(template.html(), response), {title: 'Function {name}', name: response.routine_name});
 	}
 
 };

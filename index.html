@@ -486,6 +486,100 @@
 		</ul>
 	</script>
 
+	<script type="text/html" id="procedure-properties">
+		<ul class="properties _routine">
+			<li class="property">
+				<h4 class="property-name">Name</h4>
+				<p class="property-value">{routine_name}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Database</h4>
+				<p class="property-value">{routine_schema}</p>
+			</li>
+			<li class="property" title="The account of the user who created the routine">
+				<h4 class="property-name">Definer</h4>
+				<p class="property-value">{definer}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Security Type</h4>
+				<p class="property-value">{security_type}</p>
+			</li>
+			<li class="property" title="The session value of the character_set_client system variable when the view was created">
+				<h4 class="property-name">Client Character Set</h4>
+				<p class="property-value">{character_set_client}</p>
+			</li>
+			<li class="property" title="The session value of the collation_connection system variable when the view was created">
+				<h4 class="property-name">Connection Collation</h4>
+				<p class="property-value">{collation_connection}</p>
+			</li>
+			<li class="property" title="The collation of the database with which the routine is associated">
+				<h4 class="property-name">Database Collation</h4>
+				<p class="property-value">{dtabase_collation}</p>
+			</li>
+			<li class="property" title="when the routine was created">
+				<h4 class="property-name">Created</h4>
+				<p class="property-value">{created|date}</p>
+			</li>
+			<li class="property" title="When the routine was last modified">
+				<h4 class="property-name">Last altered</h4>
+				<p class="property-value">{last_altered|date}</p>
+			</li>
+		</ul>
+	</script>
+
+	<script type="text/html" id="function-properties">
+		<ul class="properties _routine">
+			<li class="property">
+				<h4 class="property-name">Name</h4>
+				<p class="property-value">{routine_name}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Database</h4>
+				<p class="property-value">{routine_schema}</p>
+			</li>
+			<li class="property" title="The account of the user who created the routine">
+				<h4 class="property-name">Definer</h4>
+				<p class="property-value">{definer}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Security Type</h4>
+				<p class="property-value">{security_type}</p>
+			</li>
+			<li class="property" title="The session value of the character_set_client system variable when the view was created">
+				<h4 class="property-name">Client Character Set</h4>
+				<p class="property-value">{character_set_client}</p>
+			</li>
+			<li class="property" title="The session value of the collation_connection system variable when the view was created">
+				<h4 class="property-name">Connection Collation</h4>
+				<p class="property-value">{collation_connection}</p>
+			</li>
+			<li class="property" title="The collation of the database with which the routine is associated">
+				<h4 class="property-name">Database Collation</h4>
+				<p class="property-value">{dtabase_collation}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Data Type</h4>
+				<p class="property-value">{data_type}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Numeric Precision</h4>
+				<p class="property-value">{numeric_precision}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Numeric Scale</h4>
+				<p class="property-value">{numeric_scale}</p>
+			</li>
+			<li class="property" title="when the routine was created">
+				<h4 class="property-name">Created</h4>
+				<p class="property-value">{created|date}</p>
+			</li>
+			<li class="property" title="When the routine was last modified">
+				<h4 class="property-name">Last altered</h4>
+				<p class="property-value">{last_altered|date}</p>
+			</li>
+		</ul>
+	</script>
+
 	<div id="edit-routine" class="modal">
 		<h3 class="modal-header">Edit</h3>
 		<div class="editor">

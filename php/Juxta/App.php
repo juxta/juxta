@@ -136,6 +136,13 @@ class App
 
 						} elseif (isset($_GET['view'])) {
 							$response = $this->showViewProperties($cid, $_GET['view'], $_GET['from']);
+
+						} elseif (isset($_GET['procedure'])) {
+							$response = $this->showProcedureProperties($cid, $_GET['procedure'], $_GET['from']);
+
+						} elseif (isset($_GET['function'])) {
+							$response = $this->showFunctionProperties($cid, $_GET['function'], $_GET['from']);
+
 						}
 						break;
 				}
@@ -860,6 +867,28 @@ class App
 		);
 	}
 
+	/**
+	 * Return stored procedure properties
+	 *
+	 * @param int $cid Connection ID
+	 * @param string $name Routine name
+	 * @param string $database Database
+	 * @return array
+	 */
+	protected function showProcedureProperties($cid, $name, $database)
+	{
+		$sql = "SELECT * FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}' "
+			. " AND `ROUTINE_NAME` = '{$name}' AND ROUTINE_TYPE = 'PROCEDURE'";
+
+		$properties = $this->getDb($cid)->fetchRow($sql, Db::FETCH_ASSOC);
+
+		if (!empty($properties)) {
+			$properties = array_change_key_case($properties, CASE_LOWER);
+		}
+
+		return $properties;
+	}
+
 
 	/**
 	 * Return create function statement
@@ -879,6 +908,29 @@ class App
 			'statement' => $function[0]['Create Function']
 		);
 	}
+
+
+	/**
+	 * Return stored function properties
+	 *
+	 * @param int $cid Connection ID
+	 * @param string $name Routine name
+	 * @param string $database Database
+	 * @return array
+	 */
+	protected function showFunctionProperties($cid, $name, $database)
+	{
+		$sql = "SELECT * FROM `INFORMATION_SCHEMA`.`ROUTINES` WHERE `ROUTINE_SCHEMA` = '{$database}' "
+			. " AND `ROUTINE_NAME` = '{$name}' AND ROUTINE_TYPE = 'FUNCTION'";
+
+		$properties = $this->getDb($cid)->fetchRow($sql, Db::FETCH_ASSOC);
+
+		if (!empty($properties)) {
+			$properties = array_change_key_case($properties, CASE_LOWER);
+		}
+
+		return $properties;
+		}
 
 
 	/**
