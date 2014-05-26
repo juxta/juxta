@@ -143,6 +143,8 @@ class App
 						} elseif (isset($_GET['function'])) {
 							$response = $this->showFunctionProperties($cid, $_GET['function'], $_GET['from']);
 
+						} elseif (isset($_GET['trigger'])) {
+							$response = $this->showTriggerProperties($cid, $_GET['trigger'], $_GET['from']);
 						}
 						break;
 				}
@@ -990,6 +992,28 @@ class App
 
 		return $dropped;
 	}
+
+    /**
+     * Return trigger properties
+     *
+     * @param int $cid Connection ID
+     * @param string $name Trigger name
+     * @param string $database Database
+     * @return array
+     */
+    protected function showTriggerProperties($cid, $name, $database)
+    {
+        $sql = "SELECT * FROM `INFORMATION_SCHEMA`.`TRIGGERS` WHERE `TRIGGER_SCHEMA` = '{$database}' "
+            . " AND `TRIGGER_NAME` = '{$name}'";
+
+        $properties = $this->getDb($cid)->fetchRow($sql, Db::FETCH_ASSOC);
+
+        if (!empty($properties)) {
+            $properties = array_change_key_case($properties, CASE_LOWER);
+        }
+
+        return $properties;
+    }
 
 
 	/**

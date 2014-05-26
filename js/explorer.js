@@ -389,6 +389,9 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'edit-trigger') {
 		return this._routineEditor.edit({trigger: row, from: context.from});
 
+	} else if (event === 'trigger-properties') {
+		return this._request.send({action: {show: 'properties', trigger: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
 	} else if (event === 'drop-triggers') {
 		return this.drop('triggers', $.isArray(row) ? row : [row], context.from);
 	}
@@ -419,6 +422,9 @@ Juxta.Explorer.prototype._showPropertiesCallback = function(templateName, respon
 
 	} else if (templateName === 'function-properties' && template.is('[type=text/html]')) {
 		this.trigger('alert', $.template(template.html(), response), {title: 'Function {name}', name: response.routine_name});
+
+	} else if (templateName === 'trigger-properties' && template.is('[type=text/html]')) {
+		this.trigger('alert', $.template(template.html(), response), {title: 'Trigger {name}', name: response.trigger_name});
 	}
 
 };

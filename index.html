@@ -580,6 +580,53 @@
 		</ul>
 	</script>
 
+	<script type="text/html" id="trigger-properties">
+		<ul class="properties _trigger">
+			<li class="property">
+				<h4 class="property-name">Name</h4>
+				<p class="property-value">{trigger_name}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Database</h4>
+				<p class="property-value">{trigger_schema}</p>
+			</li>
+			<li class="property" title="The account of the user who created the trigger, in 'user_name'@'host_name' format">
+				<h4 class="property-name">Definer</h4>
+				<p class="property-value">{definer}</p>
+			</li>
+			<li class="property" title="The trigger event. This is the type of operation on the associated table for which the trigger activates.">
+				<h4 class="property-name">Event</h4>
+				<p class="property-value">{event_manipulation}</p>
+			</li>
+			<li class="property">
+				<h4 class="property-name">Event Object</h4>
+				<p class="property-value">`{event_object_schema}`.`{event_object_table}`</p>
+			</li>
+			<li class="property" title="Whether the trigger activates before or after the triggering event">
+				<h4 class="property-name">Timing</h4>
+				<p class="property-value">{action_timing}</p>
+			</li>
+			<li class="property" title="The ordinal position of the trigger's action within the list of all similar triggers on the same table">
+				<h4 class="property-name">Order</h4>
+				<p class="property-value">{action_order}</p>
+			</li>
+
+			<li class="property" title="The session value of the character_set_client system variable when the trigger was created">
+				<h4 class="property-name">Client Character Set</h4>
+				<p class="property-value">{character_set_client}</p>
+			</li>
+			<li class="property" title="The session value of the collation_connection system variable when the trigger was created">
+				<h4 class="property-name">Connection Collation</h4>
+				<p class="property-value">{collation_connection}</p>
+			</li>
+			<li class="property" title="The collation of the database with which the trigger is associated">
+				<h4 class="property-name">Database Collation</h4>
+				<p class="property-value">{database_collation}</p>
+			</li>
+		</ul>
+
+	</script>
+
 	<div id="edit-routine" class="modal">
 		<h3 class="modal-header">Edit</h3>
 		<div class="editor">
