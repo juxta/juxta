@@ -51,6 +51,7 @@
 	border-right: #ddd 1px dotted;
 	font-size: 12px;
 	font-weight: bold;
+	overflow: hidden;
 	padding: 0 3px;
 	text-align: left;
 	width: 100px;
