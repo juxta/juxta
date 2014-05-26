@@ -943,7 +943,7 @@ class App
 	protected function showTriggers($cid, $database)
 	{
 		return $this->getDb($cid)
-			->query("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing'));
+			->fetchAll("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing'));
 	}
 
 
