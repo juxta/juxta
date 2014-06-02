@@ -316,10 +316,10 @@ Juxta.Explorer.prototype._gridParams = {
 		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{trigger}</a></td><td>{trigger_table}</td><td>{timing}&nbsp;{event}</td></tr>',
 		contextMenu: {
 			'edit-trigger': 'Edit',
-			'drop-trigger': 'Drop',
+			'drop-triggers': 'Drop',
 			'trigger-properties': 'Properties'
 		},
-		actions: {'drop-trigger': 'Drop'}
+		actions: {'drop-triggers': 'Drop'}
 	}
 };
 
