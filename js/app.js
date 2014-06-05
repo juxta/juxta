@@ -4,7 +4,7 @@
  * @class Juxta application
  * @extends Juxta.Container
  */
-Juxta.App = function() {
+Juxta.App = function(options) {
 
 	Juxta.Container.prototype.constructor.call(this, window.document.body);
 
@@ -38,7 +38,7 @@ Juxta.App = function() {
 	 * @type Juxta.Request
 	 */
 	this._request = new Juxta.Request(this._connection, this._cache, {
-		request: {
+		request: $.extend({
 			beforeSend: this.loading.bind(this, null),
 			complete: this.loading.bind(this, false),
 			error: (function(xhr, status) {
@@ -48,7 +48,7 @@ Juxta.App = function() {
 					this.error(xhr.status + ' ' + xhr.statusText);
 				}
 			}).bind(this)
-		},
+		}, options && options.request),
 		response: {
 			connectionError: (function(response) { this.error(response.errormsg); this._auth.show(); }).bind(this),
 			sessionNotFound: this.redirect.bind(this, 'login', undefined),

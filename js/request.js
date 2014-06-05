@@ -22,7 +22,7 @@ Juxta.Request = function(connection, cache, options) {
 	 * @type {Object}
 	 */
 	this._ajaxSettings = {
-		url: 'php/',
+		url: '/',
 		dataType: 'json',
 		type: 'POST',
 		data: {
