@@ -15,6 +15,10 @@ class Db_Mysqli
 	 */
 	public function __construct(array $params)
 	{
+		if (!function_exists('mysqli_connect')) {
+			throw new Db_Exception_Connect('The mysqli extension is not enabled');
+		}
+
 		$this->connection = @new \mysqli($params['host'], $params['user'], $params['password'], '', $params['port']);
 
 		if ($this->connection->connect_error) {
