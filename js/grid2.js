@@ -558,3 +558,40 @@ Juxta.Grid2.prototype.deselectAll = function() {
 
 	return this;
 };
+
+
+/**
+ *
+ * Return rows by name and type
+ *
+ * @param {Array|Object} names
+ * @return jQuery
+ */
+Juxta.Grid2.prototype.getRowsByName = function(names)
+{
+	var checkboxes = this._bodyContainer.find('.grid2-body-column:first-child input[type=checkbox]'),
+		filtered,
+		rows = $(),
+		type;
+
+	for (i in names) {
+
+		filtered = $();
+
+		if (Array.isArray(names[i])) {
+			type = i;
+			for (j in names[i]) {
+				filtered = filtered.add(checkboxes.filter('[name=' + names[type][j] + ']'));
+			}
+
+			filtered = filtered.filter('[item-type=' + type + ']');
+
+		} else {
+			filtered = checkboxes.filter('[name=' + names[i] + ']');
+		}
+
+		rows = rows.add(filtered);
+	}
+
+	return rows.closest('.grid2-body-row');
+};

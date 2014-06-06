@@ -193,6 +193,9 @@ class App
 			} elseif (isset($_GET['kill'])) {
 				$response = $this->kill($cid, (array)$_REQUEST['processes']);
 
+			} elseif (isset($_GET['truncate'])) {
+				$response = $this->truncate($cid, (array)$_POST['tables'], $_POST['from']);
+
 			} elseif (isset($_GET['browse'])) {
 				$response = $this->browse($cid, $_GET['browse'], $_GET['from'], isset($_GET['limit']) ? $_GET['limit'] : 30,
 					isset($_GET['offset']) ? $_GET['offset'] : 0);
@@ -623,6 +626,35 @@ class App
 
 		return $dropped;
 	}
+
+
+    /**
+     * Truncate tables
+     *
+     * @param $cid
+     * @param array $tables
+     * @param $from
+     * @return array
+     * @throws \Exception
+     * @throws Db_Exception_Query
+     */
+    protected function truncate($cid, array $tables, $from)
+    {
+        $truncated = null;
+
+        foreach ($tables as $table) {
+            try {
+                $this->getDb($cid)->query("TRUNCATE TABLE `{$from}`.`{$table}`;");
+                $truncated[] = $table;
+
+            } catch (Db_Exception_Query $e) {
+                $e->attach(array('truncated' => $truncated, 'from' => $from));
+                throw $e;
+            }
+        }
+
+        return $truncated;
+    }
 
 
 	/**

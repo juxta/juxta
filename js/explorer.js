@@ -280,6 +280,7 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
+			'truncate-tables': 'Truncate',
 			'drop-tables': 'Drop',
 			'table-properties': 'Properties'
 		},
@@ -313,7 +314,7 @@ Juxta.Explorer.prototype._gridParams = {
 	},
 	triggers: {
 		columns: ['Trigger', {name: 'trigger_table', title: 'Table'}, 'Event', {title: 'Timing', hidden: true}],
-		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{trigger}</a></td><td>{trigger_table}</td><td>{timing}&nbsp;{event}</td></tr>',
+		row: '<tr><td><a>{trigger}</a></td><td>{trigger_table}</td><td>{timing}&nbsp;{event}</td></tr>',
 		contextMenu: {
 			'edit-trigger': 'Edit',
 			'drop-triggers': 'Drop',
@@ -344,6 +345,9 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 
 	} else if (event === 'table-properties') {
 		return this._request.send({action: {show: 'properties', table: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+
+	} else if (event === 'truncate-tables') {
+		return this.truncate($.isArray(row) ? row : [row], context.from);
 
 	} else if (event === 'drop-tables') {
 		return this.drop('tables', $.isArray(row) ? row : [row], context.from);
@@ -538,4 +542,47 @@ Juxta.Explorer.prototype.kill = function(pids) {
 			context: this
 		});
 	}
+};
+
+/**
+ * Truncate tables from a database
+ *
+ * @param {Array} tables List of tables for truncate
+ * @param {String} from Database
+ * @return jqXHR|undefined
+ */
+Juxta.Explorer.prototype.truncate = function(tables, from) {
+	//
+	var message;
+
+	if (tables.length === 1) {
+		message = 'Truncate table `' + tables + '`?';
+
+	} else {
+		message = 'Truncate ' + tables.length + ' tables?';
+	}
+
+	if (!confirm(message)) {
+		return;
+	}
+
+	return this._request.send({
+		action: 'truncate',
+		data: {tables: tables, from: from},
+		success: this._truncateCallback.bind(this)
+	});
+};
+
+
+/**
+ * Callback on truncate table request
+ *
+ * @param {Object} response
+ */
+Juxta.Explorer.prototype._truncateCallback = function(response)
+{
+	this._grid.deselectAll()
+		.getRowsByName(response).find('.grid2-body-column._column-rows').text(0);
+
+	this._request.cache.flush(this._cacheKey);
 };
