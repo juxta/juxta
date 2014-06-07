@@ -111,7 +111,7 @@ class Db_Mysqli
 
 		$rows = null;
 
-		while ($row = $result->fetch_array(empty($columns) ? $mapFetchType[$type] : MYSQL_ASSOC)) {
+		while ($row = $result->fetch_array(empty($columns) ? $mapFetchType[$type] : MYSQLI_ASSOC)) {
 
 			$row = self::prepareRow($row, $columns, $type);
 
