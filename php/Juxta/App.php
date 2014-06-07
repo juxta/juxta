@@ -267,7 +267,7 @@ class App
 
 		} catch (Db_Exception_Connect $e) {
 
-			return $e->getMessage();
+			return "{$e->getCode()} {$e->getMessage()}";
 		}
 	}
 
