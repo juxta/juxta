@@ -312,11 +312,7 @@ Juxta.App.prototype._updateWindowTitle = function(connection) {
 		title = this._connection.get('name');
 
 		if (!title) {
-			title = connection.user + '@' +  connection.host;
-
-			if (Number(connection.port) != Juxta.DEFAULT_PORT) {
-				title += ':' + connection.port;
-			}
+			title = Juxta.composeConnectionName(connection);
 		}
 	}
 
@@ -466,11 +462,7 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 		connections = this.find('.header-connections');
 
 	if (!text) {
-		text = this._connection.get('user') + '@' + this._connection.get('host');
-
-		if (Number(this._connection.get('port')) !== Juxta.DEFAULT_PORT) {
-			text += ':' + this._connection.get('port');
-		}
+		text = Juxta.composeConnectionName(this._connection.get());
 	}
 
 	this.find('.header-change-connection').text(text);
@@ -498,22 +490,13 @@ Juxta.App.prototype._changeConnectionCallback = function(cid) {
 				li.addClass('current');
 			}
 
-			connection.name = connection.user + '@' + connection.host;
-
-			if (!connection.port) {
-				connection.port = Juxta.DEFAULT_PORT;
-			}
-
-			if (connection.port !== Juxta.DEFAULT_PORT) {
-				connection.name += ':' + connection.port;
-			}
-
 			if (a.attr('href')) {
 				a.on('click', this.hide.bind(this));
 			}
 
-			connections.append(li.append(a.text(connection.name)));
+			connections.append(li.append(a.text(Juxta.composeConnectionName(connection))));
 
 		}).bind(this));
 	}});
 };
+

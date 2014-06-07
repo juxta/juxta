@@ -187,15 +187,7 @@ Juxta.Auth.prototype._getConnectionsCallback = function(response, id) {
 	if (!$.isEmptyObject(response)) {
 		$.each(response, (function(key, connection) {
 			//
-			connection.name = connection.user + '@' + connection.host;
-
-			if (!connection.port) {
-				connection.port = Juxta.DEFAULT_PORT;
-			}
-
-			if (connection.port !== Juxta.DEFAULT_PORT) {
-				connection.name += ':' + connection.port;
-			}
+			connection.name = Juxta.composeConnectionName(connection);
 
 			this._storedConnections[key] = connection;
 
