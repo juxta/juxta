@@ -68,6 +68,9 @@
 
 .grid2-head-column:last-child {
 	border-right-width: 0;
+}
+
+.grid2-body .grid2-head-column:last-child {
 	width: auto;
 }
 
