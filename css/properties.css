@@ -4,7 +4,7 @@
 	font-size: 13px;
 	line-height: 24px;
 	list-style-type: none;
-	margin: 7px 0 14px 0;
+	margin: 0;
 	padding: 0;
 	width: 350px;
 	float: left;
@@ -31,6 +31,12 @@
 
 .properties._database .property-name {
 	width: 90px;
+}
+
+.properties._view .property-name,
+.properties._routine .property-name,
+.properties._trigger .property-name {
+	width: 135px;
 }
 
 .property:first-child .property-name,

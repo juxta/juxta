@@ -388,7 +388,6 @@
 				<p class="property-value">{index_length|size}</p>
 			</li>
 		</ul>
-		<p class="modal-buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
 	</script>
 
 	<script type="text/html" id="table-properties">
@@ -446,7 +445,6 @@
 				<p class="property-value">{check_time|date}</p>
 			</li>
 		</ul>
-		<p class="modal-buttons"><input type="button" value="Close" onclick="Jux.messageBox.hide();"></p>
 	</script>
 
 	<script type="text/html" id="view-properties">
@@ -480,7 +478,7 @@
 				<p class="property-value">{character_set_client}</p>
 			</li>
 			<li class="property" title="The session value of the collation_connection system variable when the view was created">
-				<h4 class="property-name">Collation</h4>
+				<h4 class="property-name">Connection Collation</h4>
 				<p class="property-value">{collation_connection}</p>
 			</li>
 		</ul>
@@ -545,18 +543,6 @@
 				<h4 class="property-name">Security Type</h4>
 				<p class="property-value">{security_type}</p>
 			</li>
-			<li class="property" title="The session value of the character_set_client system variable when the view was created">
-				<h4 class="property-name">Client Character Set</h4>
-				<p class="property-value">{character_set_client}</p>
-			</li>
-			<li class="property" title="The session value of the collation_connection system variable when the view was created">
-				<h4 class="property-name">Connection Collation</h4>
-				<p class="property-value">{collation_connection}</p>
-			</li>
-			<li class="property" title="The collation of the database with which the routine is associated">
-				<h4 class="property-name">Database Collation</h4>
-				<p class="property-value">{dtabase_collation}</p>
-			</li>
 			<li class="property">
 				<h4 class="property-name">Data Type</h4>
 				<p class="property-value">{data_type}</p>
@@ -568,6 +554,18 @@
 			<li class="property">
 				<h4 class="property-name">Numeric Scale</h4>
 				<p class="property-value">{numeric_scale}</p>
+			</li>
+			<li class="property" title="The collation of the database with which the routine is associated">
+				<h4 class="property-name">Database Collation</h4>
+				<p class="property-value">{database_collation}</p>
+			</li>
+			<li class="property" title="The session value of the character_set_client system variable when the view was created">
+				<h4 class="property-name">Client Character Set</h4>
+				<p class="property-value">{character_set_client}</p>
+			</li>
+			<li class="property" title="The session value of the collation_connection system variable when the view was created">
+				<h4 class="property-name">Connection Collation</h4>
+				<p class="property-value">{collation_connection}</p>
 			</li>
 			<li class="property" title="when the routine was created">
 				<h4 class="property-name">Created</h4>
@@ -610,7 +608,10 @@
 				<h4 class="property-name">Order</h4>
 				<p class="property-value">{action_order}</p>
 			</li>
-
+			<li class="property" title="The collation of the database with which the trigger is associated">
+				<h4 class="property-name">Database Collation</h4>
+				<p class="property-value">{database_collation}</p>
+			</li>
 			<li class="property" title="The session value of the character_set_client system variable when the trigger was created">
 				<h4 class="property-name">Client Character Set</h4>
 				<p class="property-value">{character_set_client}</p>
@@ -618,10 +619,6 @@
 			<li class="property" title="The session value of the collation_connection system variable when the trigger was created">
 				<h4 class="property-name">Connection Collation</h4>
 				<p class="property-value">{collation_connection}</p>
-			</li>
-			<li class="property" title="The collation of the database with which the trigger is associated">
-				<h4 class="property-name">Database Collation</h4>
-				<p class="property-value">{database_collation}</p>
 			</li>
 		</ul>
 
