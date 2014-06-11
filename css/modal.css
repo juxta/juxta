@@ -14,7 +14,7 @@
 .modal-header {
 	height: 52px;
 	line-height: 52px;
-	margin: 0 7px;
+	margin: 0 7px 1px 7px;
 	font-size: 22px;
 	font-weight: normal;
 	color: #333;
@@ -27,7 +27,7 @@
 
 .modal-close {
 	position: absolute;
-	top: 16px;
+	top: 18px;
 	right: 11px;
 }
 
