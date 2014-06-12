@@ -275,7 +275,12 @@ Juxta.Explorer.prototype._gridParams = {
 		actions: {'drop-users': 'Drop'}
 	},
 	tables: {
-		columns: ['Table', 'Engine', 'Rows', 'Size'],
+		columns: [
+			{title: 'Table', hint: 'Table name'},
+			{title: 'Engine', hint: 'Storage engine'},
+			{title: 'Rows', hint: 'Number of rows'},
+			{title: 'Size', hint: 'Length of data and index files'}
+		],
 		row: '<tr><td><a href="#/{cid}/{from}/{table}/browse">{table}</a></td><td>{engine}</td><td>{rows|number}</td><td>{size|size}</td><td></td></tr>',
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
