@@ -753,7 +753,7 @@ class App
 	protected function showViews($cid, $database)
 	{
 		return $this->getDb($cid)->fetchAll("SELECT * FROM `INFORMATION_SCHEMA`.`VIEWS` WHERE `TABLE_SCHEMA` = '{$database}'",
-			array('TABLE_NAME', 'DEFINER', 'IS_UPDATABLE'));
+			array('TABLE_NAME', 'IS_UPDATABLE'));
 	}
 
 
@@ -839,7 +839,7 @@ class App
 			. "FROM `INFORMATION_SCHEMA`.`ROUTINES` "
 			. "WHERE `ROUTINE_SCHEMA` = '{$database}'";
 
-		return $this->getDb($cid)->fetchAll($sql, array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DEFINER', 'DTD_IDENTIFIER'));
+		return $this->getDb($cid)->fetchAll($sql, array('ROUTINE_NAME', 'ROUTINE_TYPE', 'DTD_IDENTIFIER'));
 	}
 
 
@@ -981,7 +981,7 @@ class App
 	protected function showTriggers($cid, $database)
 	{
 		return $this->getDb($cid)
-			->fetchAll("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Table', 'Event', 'Timing'));
+			->fetchAll("SHOW TRIGGERS FROM `{$database}`", array('Trigger', 'Event', 'Timing', 'Table'));
 	}
 
 

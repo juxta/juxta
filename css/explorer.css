@@ -89,14 +89,7 @@
 	border-right-width: 0;
 }
 
-/* Views */
 
-.application.explorer  .grid2-head-column._column-definer {
-	width: 200px;
-}
-
-/* Triggers */
-
-.application.explorer  .grid2-head-column._column-trigger_table {
-	width: 200px;
+.application.explorer .grid2-head-column._column-event {
+	width: 125px;
 }
