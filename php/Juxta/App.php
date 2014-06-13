@@ -254,21 +254,23 @@ class App
 		}
 
 		try {
-
-			Db::factory($connection);
-
-			$cid = $this->connections->save($connection);
-
-			unset($connection['password']);
-
-			$connection['cid'] = $cid;
-
-			return $connection;
+			$db = Db::factory($connection);
 
 		} catch (Db_Exception_Connect $e) {
-
 			return "{$e->getCode()} {$e->getMessage()}";
 		}
+
+		$version = $db->fetchAll("SHOW VARIABLES LIKE '%version%'", DB::FETCH_ASSOC);
+
+		foreach ($version as $row) {
+				if (in_array($row['Variable_name'], array('version', 'version_comment'))) {
+					$connection['server'][$row['Variable_name']] = $row['Value'];
+				}
+		}
+
+		$connection = $this->connections->save($connection);
+
+		return Connections::maskPassword($connection);
 	}
 
 

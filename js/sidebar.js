@@ -157,11 +157,26 @@ Juxta.Sidebar.prototype.highlight = function(link, path) {
  */
 Juxta.Sidebar.prototype.setPath = function(path) {
 	//
+	var serverVersion, versionMatch;
+
 	$.extend(this._path, path);
 
-	$.each(this._values, (function(item, element) {
-		$(element).text(this._path[item]);
-	}.bind(this)));
+	if (this._path.server) {
+
+		serverVersion = this._path.server.version_comment;
+
+		versionMatch = this._path.server.version.match(/^(\d+\.\d+\.\d+)/);
+
+		if (versionMatch) {
+			serverVersion += ' ' + versionMatch[1];
+		}
+	}
+
+	if (serverVersion) {
+		this._container.find('[level=host] h2').attr('title', serverVersion);
+	}
+
+	$.each(this._values, (function(item, element) { $(element).text(this._path[item]); }.bind(this)));
 
 	this.repairLinks();
 };

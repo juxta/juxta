@@ -52,7 +52,7 @@ class Connections
 	 * @param array $connection
 	 * @return array
 	 */
-	protected static function maskPassword(array $connection)
+	public static function maskPassword(array $connection)
 	{
 		if (isset($connection['password'])) {
 			if (isset($connection['cid'])) {
@@ -131,7 +131,7 @@ class Connections
 
 	/**
 	 * @param array $connection
-	 * @return int
+	 * @return array
 	 */
 	public function save(array $connection)
 	{
@@ -139,11 +139,11 @@ class Connections
 			return max($cid, isset($connection['cid']) ? $connection['cid'] : -1);
 		}, -1) + 1;
 
-		$connection['cid'] = $cid;
+		$connection = array('cid' => $cid) + $connection;
 
 		$this->session->saveConnection($connection);
 
-		return $cid;
+		return $connection;
 	}
 
 
