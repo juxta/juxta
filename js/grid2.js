@@ -272,7 +272,13 @@ Juxta.Grid2.prototype.prepare = function(params, context) {
 			.append($('<label>').addClass('grid2-actions-select_all').text('Select all').prepend($('<input>').attr('type', 'checkbox').attr('name', 'select-all').addClass('grid2-actions-select_all-checkbox')));
 
 		$.each(params.actions, (function(name, title) {
-			this._actions.append($('<input>').addClass('grid2-actions-button').attr('type', 'button').attr('name', name).val(title));
+			this._actions
+				.append($('<input>')
+				.addClass('grid2-actions-button')
+				.attr('type', 'button')
+				.attr('name', name)
+				.attr('disabled', true)
+				.val(title));
 		}).bind(this));
 
 	} else {
