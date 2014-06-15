@@ -296,7 +296,7 @@ Juxta.Explorer.prototype._gridParams = {
 		row: '<tr><td><a href="#/{cid}/{from}/{view}/browse">{view}</a></td><td>{updatable}</td></tr>',
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
-			'edit-view': 'Edit',
+			'edit-view': 'Show Create Syntax',
 			'drop-views': 'Drop',
 			'view-properties': 'Properties'
 		},
@@ -311,7 +311,7 @@ Juxta.Explorer.prototype._gridParams = {
 		columns: ['Routine', {title: 'Type', hidden: true}, 'Return'],
 		row: '<tr><td><input type="checkbox" name="{routine}" item-type="{type}"><a>{routine}</a></td><td>{return}</td></tr>',
 		contextMenu: {
-			'edit-routine': 'Edit',
+			'edit-routine': 'Show Create Syntax',
 			'drop-routines': 'Drop',
 			'routine-properties': 'Properties'
 		},
@@ -321,7 +321,7 @@ Juxta.Explorer.prototype._gridParams = {
 		columns: ['Trigger', 'Event', {title: 'Timing', hidden: true}, {name: 'trigger_table', title: 'Table'},],
 		row: '<tr><td><a>{trigger}</a></td><td>{timing}&nbsp;{event}</td><td>{trigger_table}</td></tr>',
 		contextMenu: {
-			'edit-trigger': 'Edit',
+			'edit-trigger': 'Show Create Syntax',
 			'drop-triggers': 'Drop',
 			'trigger-properties': 'Properties'
 		},
