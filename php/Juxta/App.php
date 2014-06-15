@@ -942,11 +942,7 @@ class App
 	{
 		$function = $this->getDb($cid)->fetchRow("SHOW CREATE FUNCTION `{$database}`.`{$name}`", DB::FETCH_ASSOC);
 
-		return array(
-			'function' => $name,
-			'from' => $database,
-			'statement' => $function[0]['Create Function']
-		);
+		return array('function' => $name, 'from' => $database, 'statement' => $function['Create Function']);
 	}
 
 

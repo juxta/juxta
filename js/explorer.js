@@ -376,7 +376,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 		return this._routineEditor.edit({view: row, from: context.from});
 
 	} else if (event === 'edit-routine' && (row.procedure || row['function'])) {
-		return this._routineEditor.edit($(row, {from: context.from}));
+		return this._routineEditor.edit($.extend(row, {from: context.from}));
 
 	} else if (event === 'drop-routines') {
 		return this.drop('routines', row, context.from);

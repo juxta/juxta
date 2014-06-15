@@ -35,10 +35,13 @@ Juxta.RoutineEditor.prototype.edit = function(params) {
 
 	if (params.view) {
 		query = {show: 'view', view: params.view, from: params.from};
+
 	} else if (params['function']) {
 		query = {show: 'function', 'function': params['function'], from: params.from};
+
 	} else if (params.procedure) {
 		query = {show: 'procedure', procedure: params.procedure, from: params.from};
+
 	} else if (params.trigger) {
 		query = {show: 'trigger', trigger: params.trigger, from: params.from};
 	}
