@@ -250,7 +250,7 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'tables': {title: 'Tables', href: '#/{cid}/{name}/tables'},
 			'drop-databases': 'Drop',
-			'database-properties': 'Properties'
+			'database-properties': 'Show Properties'
 		},
 		actions: {'drop-databases': 'Drop'}
 	},
@@ -267,8 +267,8 @@ Juxta.Explorer.prototype._gridParams = {
 		columns: ['Username', 'Host', 'Password', 'Grant', {name: 'privileges', title: 'Global Privileges'} ],
 		row: '<tr><td><a name="\'{username}\'@\'{host}\'">{username}</a><td>{host}</td><td>{password}</td><td>{grant}</td><td>{privileges}</td><td></td></tr>',
 		contextMenu: {
-			'edit-privileges': 'Edit privileges',
-			'change-password': 'Change password',
+			'edit-privileges': 'Edit Privileges',
+			'change-password': 'Change Password',
 			'rename': 'Rename',
 			'drop-users': 'Drop'
 		},
@@ -284,10 +284,10 @@ Juxta.Explorer.prototype._gridParams = {
 		row: '<tr><td><a href="#/{cid}/{from}/{table}/browse">{table}</a></td><td>{engine}</td><td>{rows|number}</td><td>{size|size}</td><td></td></tr>',
 		contextMenu: {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
-			'columns': {title: 'Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
+			'columns': {title: 'Show Columns & Indexes', href: '#/{cid}/{from}/{name}/columns'},
 			'truncate-tables': 'Truncate',
 			'drop-tables': 'Drop',
-			'table-properties': 'Properties'
+			'table-properties': 'Show Properties'
 		},
 		actions: {'drop-tables': 'Drop'}
 	},
@@ -298,7 +298,7 @@ Juxta.Explorer.prototype._gridParams = {
 			'browse': {title: 'Browse', href: '#/{cid}/{from}/{name}/browse'},
 			'edit-view': 'Show Create Syntax',
 			'drop-views': 'Drop',
-			'view-properties': 'Properties'
+			'view-properties': 'Show Properties'
 		},
 		actions: {'drop-views': 'Drop'}
 	},
@@ -313,7 +313,7 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'edit-routine': 'Show Create Syntax',
 			'drop-routines': 'Drop',
-			'routine-properties': 'Properties'
+			'routine-properties': 'Show Properties'
 		},
 		actions: {'drop-routines': 'Drop'}
 	},
@@ -323,7 +323,7 @@ Juxta.Explorer.prototype._gridParams = {
 		contextMenu: {
 			'edit-trigger': 'Show Create Syntax',
 			'drop-triggers': 'Drop',
-			'trigger-properties': 'Properties'
+			'trigger-properties': 'Show Properties'
 		},
 		actions: {'drop-triggers': 'Drop'}
 	}
