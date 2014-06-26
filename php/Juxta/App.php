@@ -99,6 +99,10 @@ class App
 						$response = $this->showTable($cid, $_GET['table'], $_GET['from']);
 						break;
 
+					case 'foreign':
+						$response = $this->showForeign($cid, $_GET['table'], $_GET['from']);
+						break;
+
 					case 'views':
 						$response = $this->showViews($cid, $_GET['from']);
 						break;
@@ -722,6 +726,35 @@ class App
 			'columns' => $columns,
 			'table' => $table,
 		);
+	}
+
+	/**
+	 * Return foreign keys from a table
+	 *
+	 * @param int $cid Connection ID
+	 * @param string $table Table name
+	 * @param string $database Database
+	 * @return array|null
+	 */
+	protected function showForeign($cid, $table, $database)
+	{
+		$sql = <<<SQL
+SELECT
+	kcu.CONSTRAINT_NAME,
+	kcu.COLUMN_NAME,
+	CONCAT(kcu.REFERENCED_TABLE_NAME, '.', kcu.REFERENCED_COLUMN_NAME),
+	rc.UPDATE_RULE,
+	rc.DELETE_RULE
+FROM information_schema.KEY_COLUMN_USAGE kcu
+JOIN information_schema.REFERENTIAL_CONSTRAINTS rc
+	ON rc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+WHERE
+	kcu.TABLE_SCHEMA  = '{$database}'
+	AND kcu.TABLE_NAME = '{$table}'
+	AND kcu.CONSTRAINT_NAME <> 'PRIMARY'
+SQL;
+
+		return $this->getDb($cid)->fetchAll($sql);
 	}
 
 

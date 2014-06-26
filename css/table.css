@@ -37,3 +37,15 @@
 	color: #333;
 	display: inline;
 }
+
+/* Foreign keys */
+
+.application.table .grid2-head-column._column-reference_name,
+.application.table .grid2-head-column._column-column,
+.application.table .grid2-head-column._column-reference {
+	width: 175px;
+}
+
+.application.table .grid2-head-column._column-update {
+	width: 70px;
+}

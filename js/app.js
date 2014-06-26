@@ -280,8 +280,10 @@ Juxta.App.prototype.route = function() {
 				this.browser.sql({cid: cid, db: pathParams[0]});
 				break;
 			case 'columns':
+			case 'indexes':
+			case 'foreign':
 				this._sidebar.highlight('columns', {'database': pathParams[0], 'table': pathParams[1]});
-				this.table.edit({cid: cid, table: pathParams[1], from: pathParams[0]});
+				this.table.edit({cid: cid, edit: action, table: pathParams[1], from: pathParams[0]});
 				break;
 			case 'flush':
 				this._cache.flush();

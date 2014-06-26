@@ -35,7 +35,13 @@ Juxta.Window = function(element, options) {
 	/**
 	 * @type {Object}
 	 */
-	this._menu = this.find('.application-menu');
+	this._menu = $('<div>').addClass('application-menu').insertAfter(this.find('.application-header'));
+
+
+	/**
+	 * @type {jQuery}
+	 */
+	this._menuRight = $('<div>').addClass('application-menu _right').insertAfter(this._menu);
 
 
 	/**
@@ -46,6 +52,7 @@ Juxta.Window = function(element, options) {
 
 	if (this._settings.closable) {
 		this.find('.application-close').on('click', function() { history.back(); }).show();
+
 	} else {
 		this.find('.application-close').hide();
 	}
@@ -86,7 +93,13 @@ Juxta.Window.prototype._applySettings = function(options, variables) {
 
 	header.html(text);
 
-	this._setMenu(options.menu, variables);
+	if (options.menu) {
+		this._setMenu(this._menu, options.menu, variables);
+	}
+
+	if (options.menuRight) {
+		this._setMenu(this._menuRight, options.menuRight, variables);
+	}
 
 	return this;
 };
@@ -95,54 +108,56 @@ Juxta.Window.prototype._applySettings = function(options, variables) {
 /**
  * Set application menu
  *
- * @param {Object} menu
+ * @param {jQuery} menu
+ * @param {Object} items
  * @param {Object} variables
  * @return {Juxta.Window}
  */
-Juxta.Window.prototype._setMenu = function(menu, variables) {
+Juxta.Window.prototype._setMenu = function(menu, items, variables) {
 	//
-	this._menu.empty();
+	menu.empty();
 
-	if ($.isPlainObject(menu)) {
-		$.each(menu, (function(title, item) {
-			//
-			var link = $('<a>').html(title).attr('disabled', true),
-				href,
-				action,
-				name;
+	function append(title, item) {
 
-			if (item && typeof item == 'object') {
-				if (item.href) {
-					href= item.href;
-				}
-				if (item.click && typeof item.click == 'function') {
-					action = item.click;
-				}
-				if (item.name) {
-					name = item.name;
-				}
+		var link = $('<a>').html(title).attr('disabled', true),
+			href,
+			action,
+			name;
 
-			} else if (typeof item == 'function') {
-				action = item;
-
-			} else if (item) {
-				href = item;
+		if (item && typeof item == 'object') {
+			if (item.href) {
+				href= item.href;
+			}
+			if (item.click && typeof item.click == 'function') {
+				action = item.click;
+			}
+			if (item.name) {
+				name = item.name;
 			}
 
-			if (href) {
-				link.attr('href', $.template(href, variables)).attr('disabled', false);
-			}
-			if (action) {
-				link.on('click', (function (event) { action.call(this, event, variables); }).bind(this)).attr('disabled', false);
-			}
-			if (name) {
-				link.attr('name', name);
-			}
+		} else if (typeof item == 'function') {
+			action = item;
 
-			this._menu.append(link);
+		} else if (item) {
+			href = item;
+		}
 
-		}).bind(this));
+		if (href) {
+			link.attr('href', $.template(href, variables)).attr('disabled', false);
+		}
+		if (action) {
+			link.on('click', (function (event) { action.call(this, event, variables); }).bind(this)).attr('disabled', false);
+		}
+		if (name) {
+			link.attr('name', name);
+		}
+
+		menu.append(link);
 	}
+
+	$.each(items, append.bind(this));
+
+	menu.show();
 
 	return this;
 };

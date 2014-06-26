@@ -58,6 +58,12 @@
 	cursor: default;
 }
 
+.application-menu._right {
+	float: right;
+	margin-right: 7px;
+	font-size: 14px;
+}
+
 .application-menu a {
 	color: #00559c;
 	cursor: pointer;
