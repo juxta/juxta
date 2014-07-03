@@ -34,10 +34,12 @@ Juxta.Lib.extend(Juxta.Table, Juxta.Window);
  * Show editor
  *
  * @param {Object} options
- * @return {Juxta.TableEditor}
+ * @return {Juxta.Table}
  */
 Juxta.Table.prototype.show = function() {
+
 	Juxta.Window.prototype.show.apply(this, arguments);
+
 	this._stretch();
 
 	return this;
@@ -62,7 +64,7 @@ Juxta.Table.prototype._stretch = function() {
 
 
 /**
- * Show table editor
+ * Show editor
  *
  * @param {Object} params
  * @return {jqXHR}
@@ -82,14 +84,12 @@ Juxta.Table.prototype.edit = function(params)
 		return this._requestShowTable(params);
 
 	} else if (params.edit === 'indexes') {
-		return this._requestShowTable(params);
+		return this._requestIndexes(params);
 
 	} else if (params.edit === 'foreign') {
 		return this._requestShowForeign(params);
 
 	}
-
-
 };
 
 
@@ -175,6 +175,36 @@ Juxta.Table.prototype._responseShowTable = function(response) {
 	//
 	this._columns.disableSelectRows().fill(response.columns);
 	this.ready();
+};
+
+/**
+ * Request for table indices
+ *
+ * @param params
+ * @return {jqXHR}
+ */
+Juxta.Table.prototype._requestIndexes = function(params)
+{
+	var request;
+
+	this._columns.prepare({
+		columns: {
+			'index_name': 'Name',
+			'index_type': 'Type',
+			'index_unique': 'Unique',
+			'index_columns': 'Columns'
+		},
+		row: '<tr><td>{index_name}</td><td>{index_type}</td><td>{index_unique|bool:YES:NO}</td><td>{index_columns}</td></tr>',
+		actions: null
+	});
+
+	request = {
+		action: {cid: params.cid, show: 'indexes', table: params.table, from: params.from},
+		context: this,
+		success: (function(response) { this._columns.disableSelectRows().fill(response); this.ready(); }).bind(this)
+	};
+
+	return this._request.send($.extend({}, request, this._settings));
 };
 
 /**

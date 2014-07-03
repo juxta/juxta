@@ -99,6 +99,10 @@ class App
 						$response = $this->showTable($cid, $_GET['table'], $_GET['from']);
 						break;
 
+					case 'indexes':
+						$response = $this->showIndexes($cid, $_GET['table'], $_GET['from']);
+						break;
+
 					case 'foreign':
 						$response = $this->showForeign($cid, $_GET['table'], $_GET['from']);
 						break;
@@ -726,6 +730,39 @@ class App
 			'columns' => $columns,
 			'table' => $table,
 		);
+	}
+
+	/**
+	 * Return indices from a table
+	 *
+	 * @param int $cid Connection ID
+	 * @param string $table Table name
+	 * @param string $database Database
+	 * @return array|null
+	 */
+	protected function showIndexes($cid, $table, $database)
+	{
+		$columns = $this->getDb($cid)->fetchAll(
+			"SHOW INDEXES FROM {$database}.{$table}",
+			array('Key_name', 'Index_type', 'Non_unique', 'Column_name')
+		);
+
+		$indexes = null;
+
+		foreach ($columns as $column) {
+			if (isset($indexes[$column[0]])) {
+				$indexes[$column[0]][3][] = $column[3];
+			} else {
+				$indexes[$column[0]] = $column;
+				$indexes[$column[0]][3] = (array)$indexes[$column[0]][3];
+			}
+		}
+
+		if (is_array($indexes)) {
+			$indexes = array_values($indexes);
+		}
+
+		return $indexes;
 	}
 
 	/**

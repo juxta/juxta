@@ -38,6 +38,12 @@
 	display: inline;
 }
 
+/* Indexes */
+
+.application.table .grid2-head-column._column-index-unique {
+	width: 65px;
+}
+
 /* Foreign keys */
 
 .application.table .grid2-head-column._column-reference_name,

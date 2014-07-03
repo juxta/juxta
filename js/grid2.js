@@ -198,7 +198,10 @@ Juxta.Grid2.prototype.prepare = function(params, context) {
 	$.each(params.columns, (function (i, column) {
 		//
 		if (typeof column !== 'object') {
-			column = {name: String(column), title: String(column)};
+			column = {name: String(isNaN(i) ? i : column), title: String(column)};
+
+		} else if (!column.name  && isNaN(i)) {
+			column.name = String(i);
 
 		} else if (!column.name && column.title) {
 			column.name = String(column.title);
@@ -236,11 +239,12 @@ Juxta.Grid2.prototype.prepare = function(params, context) {
 		this._head.empty().hide();
 	}
 
+
 	// Make grid header
 	$.each(this._columns, (function(i, column) {
 		//
 		var th,
-			styles = ['grid2-head-column', '_column-' + column.name];
+			styles = ['grid2-head-column', '_column-' + column.name.replace('_', '-')];
 
 		if (column.hidden) {
 			return;
@@ -354,7 +358,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 				$.each($headRow.find('> td'), (function(i, td) {
 					//
 					if (columns[i]) {
-						$(td).addClass('_column-' + columns[i].name);
+						$(td).addClass('_column-' + columns[i].name.replace('_', '-'));
 
 						if (columns[i].style) {
 							$(td).addClass(columns[i].style.join(' '));
@@ -384,7 +388,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 			$.each($row.find('> td'), (function(i, td) {
 				//
 				if (columns[i]) {
-					$(td).addClass('_column-' + columns[i].name);
+					$(td).addClass('_column-' + columns[i].name.replace('_', '-'));
 
 					if (columns[i].style) {
 						$(td).addClass(columns[i].style.join(' '));
