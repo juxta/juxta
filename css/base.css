@@ -155,3 +155,13 @@ input[type=button][disabled].close {
 	cursor: default;
 	background: transparent url('../images/close.png') bottom center no-repeat;
 }
+
+/* Badges */
+
+.badge {
+	background-color: #E3E3E3;
+	border-radius: 3px;
+	padding: 0 3px;
+	margin-right: 3px;
+	text-transform: uppercase;
+}

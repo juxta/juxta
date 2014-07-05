@@ -1,41 +1,25 @@
-/* Table editor */
+/* Columns */
 
-.application.table .grid2-head-column:first-child,
-.application.table .grid2-body-column:first-child {
+.application.table .grid2-head-column:first-child {
 	width: 200px;
 }
 
-.application.table .grid2-head-column._column-type,
-.application.table .grid2-body-column._column-type {
+.application.table .grid2-head-column._column-column-type {
 	width: 100px;
 }
 
-.application.table .grid2-head-column._column-is_null,
-.application.table .grid2-body-column._column-is_null {
+.application.table .grid2-head-column._column-column-is-null,
+.application.table .grid2-body-column._column-column-is-null {
 	width: 30px;
 	text-align: center;
 }
 
-.application.table .grid2-head-column._column-attributes,
-.application.table .grid2-body-column._column-attributes {
-	width: 100px;
+.application.table .grid2-head-column._column-column-attributes {
+	width: 135px;
 }
 
-.application.table .grid2-head-column._column-default,
-.application.table .grid2-body-column._column-default {
-	width: 125px;
-}
-
-
-.application.table .grid2-body-column .badge-hidden {
-	color: #FFF;
-	display: none;
-}
-
-.application.table .grid2-body-column .badge-hidden.y {
-	background-color: #BFD4E6;
-	color: #333;
-	display: inline;
+.application.table .grid2-head-column._column-column-default {
+	width: 135px;
 }
 
 /* Indexes */

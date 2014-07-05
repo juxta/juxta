@@ -725,7 +725,7 @@ class App
 		}
 
 		return array(
-			'content' => array('column', 'type', 'is_null', 'atributes', 'default', 'options'),
+			'content' => array('column', 'type', 'is_null', 'attributes', 'default', 'options'),
 			'from' => $database,
 			'columns' => $columns,
 			'table' => $table,

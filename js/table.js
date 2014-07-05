@@ -101,69 +101,76 @@ Juxta.Table.prototype.edit = function(params)
  */
 Juxta.Table.prototype._requestShowTable = function(params) {
 	//
-	var that = this,
-		query = {cid: params.cid, show: 'table', table: params.table, from: params.from},
+	var query = {cid: params.cid, show: 'table', table: params.table, from: params.from},
 		options = {};
 
-	var row = function(column) {
+	function row(column)
+	{
+		var row = [];
 
-		var template = '';
-
-		template += '<tr><td>' + column.name + '</td>';
-		template += '<td>' + column.type + '</td>';
+		row.push(column.column_name);
+		row.push(column.column_type.toUpperCase().replace('(', ' ('));
 
 		// IS NULL
-		template += '<td><input type=checkbox disabled ' + (column.is_null === 'YES' ? 'checked' : '') + '></td>';
+		row.push('<input type=checkbox disabled ' + (column.column_is_null === 'YES' ? 'checked' : '') + '>');
 
 		// attributes
-		template += '<td>';
-		if ($.isArray(column.attributes)) {
-			$.each(column.attributes, function(i, attribute) {
-				template += '<span class="badge badge-hidden y">' + attribute + '</span>';
-			});
+		if (Array.isArray(column.column_attributes)) {
+			row.push(column.column_attributes.join(', ').toUpperCase());
+		} else {
+			row.push('');
 		}
-		template += '</td>';
 
 		// default
-		template += '<td>';
-		if (column['default'] === null && column.is_null === 'YES') {
-			template += '<span class="badge badge-null">NULL</span>';
-		} else if (column['default'] === 'CURRENT_TIMESTAMP') {
-			template += '<span class="badge badge-current-timestamp">CURRENT_TIMESTAMP</span>';
-		} else if (column['default'] !== null) {
-			template += column['default'];
+		if (column.column_default === null && column.column_is_null === 'YES') {
+			row.push('<span class="badge _null">NULL</span>');
+
+		} else if (column.column_default !== null) {
+			row.push(column.column_default.toUpperCase());
+
+		} else {
+			row.push('');
 		}
-		template += '</td>';
 
 		// options
-		template += '<td>';
-		if ($.isArray(column.options)) {
-			$.each(column.options, function(i, option) {
-				template += '<span class="badge badge-hidden y">' + option + '</span>';
-			});
-		}
-		template += '</td>';
+		if (Array.isArray(column.column_options)) {
+			for (var option in column.column_options) {
+				if (column.column_options[option] ===  'primary') {
+					column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
 
-		return template;
-	};
+				} else if (column.column_options[option] ===  'auto_increment') {
+					column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
+
+				} else {
+					column.column_options[option] = column.column_options[option].toUpperCase();
+				}
+			}
+
+			row.push(column.column_options.join(''));
+
+		} else {
+			row.push('');
+		}
+
+		return '<tr><td>' + row.join('</td><td>') + '</td></tr>';
+	}
 
 	this._columns.prepare({
-		columns: [{name: 'name', title: 'Column'}, 'Type', {name: 'is_null', title: 'NULL', 'hint': 'Allow NULL'}, 'Attributes', 'Default', 'Options'],
+		columns: {
+			'column_name': 'Column',
+			'column_type': 'Type',
+			'column_is_null': {title: 'NULL', 'hint': 'Allow NULL'},
+			'column_attributes': 'Attributes',
+			'column_default': 'Default',
+			'column_options': 'Options'
+		},
 		row: row,
 		actions: null
 	});
 
-	return this._request.send($.extend({},
-		{
-			action: query,
-			context: this,
-			success: function(response) {
-				that._responseShowTable(response, query);
-			}
-		},
-		this._settings,
-		options
-	));
+	return this._request.send(
+		$.extend({}, {action: query, success: this._responseShowTable.bind(this)}, this._settings, options)
+	);
 };
 
 /**

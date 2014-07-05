@@ -244,7 +244,7 @@ Juxta.Grid2.prototype.prepare = function(params, context) {
 	$.each(this._columns, (function(i, column) {
 		//
 		var th,
-			styles = ['grid2-head-column', '_column-' + column.name.replace('_', '-')];
+			styles = ['grid2-head-column', '_column-' + column.name.replace(/_/g, '-')];
 
 		if (column.hidden) {
 			return;
@@ -358,7 +358,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 				$.each($headRow.find('> td'), (function(i, td) {
 					//
 					if (columns[i]) {
-						$(td).addClass('_column-' + columns[i].name.replace('_', '-'));
+						$(td).addClass('_column-' + columns[i].name.replace(/_/g, '-'));
 
 						if (columns[i].style) {
 							$(td).addClass(columns[i].style.join(' '));
@@ -388,7 +388,7 @@ Juxta.Grid2.prototype.fill = function(data, params, extra) {
 			$.each($row.find('> td'), (function(i, td) {
 				//
 				if (columns[i]) {
-					$(td).addClass('_column-' + columns[i].name.replace('_', '-'));
+					$(td).addClass('_column-' + columns[i].name.replace(/_/g, '-'));
 
 					if (columns[i].style) {
 						$(td).addClass(columns[i].style.join(' '));
