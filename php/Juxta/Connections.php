@@ -2,167 +2,157 @@
 
 class Connections
 {
+    /**
+     * @var Juxta_Session
+     */
+    private $session;
 
-	/**
-	 * @var Juxta_Session
-	 */
-	protected $session;
+    /**
+     * @var array
+     */
+    private $config;
 
+    /**
+     * @param Session $session
+     * @param Config $config
+     */
+    public function __construct(Session $session, Config $config)
+    {
+        $this->session = $session;
+        $this->config = $config;
+    }
 
-	/**
-	 * @var array
-	 */
-	protected $config;
+    /**
+     * Compose connection key
+     *
+     * @param array $connection
+     * @return string
+     */
+    public static function key(array $connection)
+    {
+        $key = isset($connection['user']) ? $connection['user'] : '';
 
+        $key .= '@';
 
-	/**
-	 * @param Juxta_Session $session
-	 * @param array $config
-	 */
-	public function __construct(Session $session, Config $config)
-	{
-		$this->session = $session;
-		$this->config = $config;
-	}
+        $key .= isset($connection['host']) ? $connection['host'] : Db::DEFAULT_HOST;
 
+        $key .= ':';
 
-	/**
-	 * Compose connection key
-	 *
-	 * @param array $connection
-	 * @return string
-	 */
-	public static function key(array $connection)
-	{
-		$key = isset($connection['user']) ? $connection['user'] : '';
+        $key .= isset($connection['port']) ? $connection['port'] : Db::DEFAULT_PORT;
 
-		$key .= '@';
+        return $key;
+    }
 
-		$key .= isset($connection['host']) ? $connection['host'] : Db::DEFAULT_HOST;
+    /**
+     * @param array $connection
+     * @return array
+     */
+    public static function maskPassword(array $connection)
+    {
+        if (isset($connection['password'])) {
+            if (isset($connection['cid'])) {
+                unset($connection['password']);
 
-		$key .= ':';
+            } else {
+                $connection['password'] = true;
+            }
+        }
 
-		$key .= isset($connection['port']) ? $connection['port'] : Db::DEFAULT_PORT;
+        return $connection;
+    }
 
-		return $key;
-	}
+    /**
+     * @param bool $mask
+     * @return array|null
+     */
+    public function getAll($mask = true)
+    {
+        $stored = array();
+        $established = array();
 
+        if (!empty($this->config['connections'])) {
+            foreach ($this->config['connections'] as $connection) {
+                $stored[self::key($connection)] = $connection;
+            }
+        }
 
-	/**
-	 * @param array $connection
-	 * @return array
-	 */
-	public static function maskPassword(array $connection)
-	{
-		if (isset($connection['password'])) {
-			if (isset($connection['cid'])) {
-				unset($connection['password']);
+        foreach ((array)$this->session->getConnections() as $connection) {
+            $established[self::key($connection)] = $connection;
+        }
 
-			} else {
-				$connection['password'] = true;
-			}
-		}
-
-		return $connection;
-	}
-
-
-	/**
-	 * @param bool $mask
-	 * @return array|null
-	 */
-	public function getAll($mask = true)
-	{
-		$stored = array();
-		$established = array();
-
-		if (!empty($this->config['connections'])) {
-			foreach ($this->config['connections'] as $connection) {
-				$stored[self::key($connection)] = $connection;
-			}
-		}
-
-		foreach ((array)$this->session->getConnections() as $connection) {
-			$established[self::key($connection)] = $connection;
-		}
-
-		$connections = array_merge($stored, $established);
+        $connections = array_merge($stored, $established);
 
 
-		ksort($connections);
+        ksort($connections);
 
-		if ($mask) {
-			$connections = array_map(array($this, 'maskPassword'), $connections);
-		}
+        if ($mask) {
+            $connections = array_map(array($this, 'maskPassword'), $connections);
+        }
 
-		return !empty($connections) ? $connections : null;
-	}
+        return !empty($connections) ? $connections : null;
+    }
 
+    /**
+     * @param $key
+     * @param bool $mask
+     * @return array|null
+     */
+    public function getByKey($key, $mask = false)
+    {
+        $connections = $this->getAll($mask);
 
-	/**
-	 * @param $key
-	 * @param bool $mask
-	 * @return array|null
-	 */
-	public function getByKey($key, $mask = false)
-	{
-		$connections = $this->getAll($mask);
+        if (isset($connections[$key])) {
+            return $connections[$key];
+        }
+    }
 
-		if (isset($connections[$key])) {
-			return $connections[$key];
-		}
-	}
+    /**
+     * Return connection with Connection ID
+     *
+     * @param $cid
+     * @param bool $mask
+     * @return array|null
+     */
+    public function getByCid($cid, $mask = false)
+    {
+        $connection = array_filter((array)$this->getAll($mask), function ($c) use ($cid) {
+            return isset($c['cid']) && $c['cid'] == $cid;
+        });
 
+        return $connection ? reset($connection) : null;
+    }
 
-	/**
-	 * Return connection with Connection ID
-	 *
-	 * @param $cid
-	 * @param bool $mask
-	 * @return array|null
-	 */
-	public function getByCid($cid, $mask = false)
-	{
-		$connection = array_filter((array)$this->getAll($mask), function($c) use ($cid) { return isset($c['cid']) && $c['cid'] == $cid; });
+    /**
+     * @param array $connection
+     * @return array
+     */
+    public function save(array $connection)
+    {
+        $cid = array_reduce((array)$this->getAll(), function ($cid, $connection) {
+                return max($cid, isset($connection['cid']) ? $connection['cid'] : -1);
+            }, -1) + 1;
 
-		return $connection ? reset($connection) : null;
-	}
+        $connection = array('cid' => $cid) + $connection;
 
+        $this->session->saveConnection($connection);
 
-	/**
-	 * @param array $connection
-	 * @return array
-	 */
-	public function save(array $connection)
-	{
-		$cid = array_reduce((array)$this->getAll(), function($cid, $connection) {
-			return max($cid, isset($connection['cid']) ? $connection['cid'] : -1);
-		}, -1) + 1;
+        return $connection;
+    }
 
-		$connection = array('cid' => $cid) + $connection;
+    /**
+     * @param $cid
+     * @return bool
+     */
+    public function delete($cid)
+    {
+        return $this->session->deleteConnection($cid);
+    }
 
-		$this->session->saveConnection($connection);
-
-		return $connection;
-	}
-
-
-	/**
-	 * @param $cid
-	 * @return bool
-	 */
-	public function delete($cid)
-	{
-		return $this->session->deleteConnection($cid);
-	}
-
-
-	/**
-	 *
-	 */
-	public function deleteAll()
-	{
-		$this->session->deleteConnections();
-	}
-
+    /**
+     *
+     */
+    public function deleteAll()
+    {
+        $this->session->deleteConnections();
+    }
 }

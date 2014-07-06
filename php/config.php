@@ -1,9 +1,9 @@
 <?php
 
 $config = array(
-	'connections' => array(
-		array('host' => 'localhost', 'user' => 'root'),
-	)
+    'connections' => array(
+        array('host' => 'localhost', 'user' => 'root'),
+    )
 );
 
 return $config;

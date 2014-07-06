@@ -4,15 +4,19 @@ error_reporting(E_ALL | E_STRICT);
 
 ini_set('display_errors', 'on');
 
-require_once 'Juxta/App.php';
-require_once 'Juxta/Exception.php';
-require_once 'Juxta/Config.php';
-require_once 'Juxta/Connections.php';
-require_once 'Juxta/Session.php';
-require_once 'Juxta/Db.php';
-require_once 'Juxta/Db/Mysqli.php';
+spl_autoload_register(function ($className)
+{
+    $className = ltrim($className, '\\');
+    $fileName  = '';
+    if ($lastNsPos = strrpos($className, '\\')) {
+        $namespace = substr($className, 0, $lastNsPos);
+        $className = substr($className, $lastNsPos + 1);
+        $fileName  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+    }
+    $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-//
+    require $fileName;
+});
 
 use Juxta\App;
 use Juxta\Config;
