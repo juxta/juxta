@@ -99,6 +99,10 @@ Juxta.Window.prototype._applySettings = function(options, variables) {
 
 	if (options.menuRight) {
 		this._setMenu(this._menuRight, options.menuRight, variables);
+		this._menuRight.show();
+
+	} else {
+		this._menuRight.hide();
 	}
 
 	return this;
