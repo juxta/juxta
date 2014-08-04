@@ -2,6 +2,7 @@
 
 use Juxta\Exception\SessionNotFound;
 use Juxta\Db\Exception\Query;
+use Juxta\Db\Exception\Connect;
 
 class App
 {
@@ -261,7 +262,7 @@ class App
         try {
             $db = Db::factory($connection);
 
-        } catch (Db_Exception_Connect $e) {
+        } catch (Connect $e) {
             return "{$e->getCode()} {$e->getMessage()}";
         }
 
@@ -451,9 +452,9 @@ class App
                 $this->getDb($cid)->query("KILL {$process}");
                 $killed[] = $process;
 
-            } catch (Query $exception) {
-                $exception->attach(array('killed' => $killed));
-                throw $exception;
+            } catch (Query $e) {
+                $e->attach(array('killed' => $killed));
+                throw $e;
             }
         }
 
