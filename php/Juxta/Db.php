@@ -61,18 +61,30 @@ class Db
      */
     public static function connectionFromArray($params)
     {
-        $connection = array(
-            'host' => isset($params['host']) ? $params['host'] : self::DEFAULT_HOST,
-            'port' => isset($params['port']) ? $params['port'] : self::DEFAULT_PORT,
-            'charset' => isset($params['charset']) ? $params['charset'] : self::DEFAULT_CHARSET,
-        );
+        $connection = array_intersect_key($params, array_flip(array('host', 'port', 'user', 'password', 'charset')));
 
-        if (isset($params['user'])) {
-            $connection['user'] = $params['user'];
+        if (array_key_exists('host', $connection)) {
+            $connection['host'] = trim($connection['host']);
         }
 
-        if (isset($params['password'])) {
-            $connection['password'] = $params['password'];
+        if (empty($connection['host'])) {
+            $connection['host'] = self::DEFAULT_HOST;
+        }
+
+        if (array_key_exists('port', $connection)) {
+            $connection['port'] = (int)$connection['port'];
+        }
+
+        if (empty($connection['charset'])) {
+            $connection['charset'] = self::DEFAULT_CHARSET;
+        }
+
+        if (empty($connection['user'])) {
+            unset($connection['user']);
+        }
+
+        if (empty($connection['password'])) {
+            unset($connection['password']);
         }
 
         return $connection;
