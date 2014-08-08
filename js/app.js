@@ -41,10 +41,11 @@ Juxta.App = function(options) {
 		request: $.extend({
 			beforeSend: this.loading.bind(this, null),
 			complete: this.loading.bind(this, false),
-			error: (function(xhr, status) {
-				if (status == 'parsererror') {
-					this.error('Parse error');
-				} else {
+			error: (function(xhr, status, error) {
+				if (status === 'parsererror') {
+					this.error(error.message);
+
+				} else if (status !== 'abort') {
 					this.error(xhr.status + ' ' + xhr.statusText);
 				}
 			}).bind(this)

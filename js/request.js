@@ -19,6 +19,12 @@ Juxta.Request = function(connection, cache, options) {
 
 
 	/**
+	 * @type {jqXHR}
+	 */
+	this._lastRequest = null;
+
+
+	/**
 	 * @type {Object}
 	 */
 	this._ajaxSettings = {
@@ -135,10 +141,14 @@ Juxta.Request.prototype.send = function (params) {
 
 	params.url = this._ajaxSettings.url + '?' + queryString;
 
-	// Response from cache or make request
 	getSession.done(function() {
+
 		if (params.refresh !== true) {
 			fromCache = this.cache.get(queryString);
+		}
+
+		if (this._lastRequest && !this._lastRequest.getConnection) {
+			this._lastRequest.abort();
 		}
 
 		if (fromCache) {
@@ -146,9 +156,15 @@ Juxta.Request.prototype.send = function (params) {
 			params.success(fromCache);
 			getResponse.resolve();
 			return;
-		} else {
-			return $.ajax(params).done(function() { getResponse.resolve(); });
 		}
+
+		this._lastRequest = $.ajax(params).done(function() { getResponse.resolve(); });
+
+		if (params.action.get && params.action.get === 'connections') {
+			this._lastRequest.getConnection = true;
+		}
+
+		return this._lastRequest;
 	});
 
 	return getResponse;
