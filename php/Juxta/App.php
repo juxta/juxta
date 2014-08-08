@@ -582,14 +582,21 @@ class App
      */
     protected function showTables($cid, $database)
     {
-        $tables = $this->getDb($cid)->fetchAll("SHOW TABLE STATUS FROM `{$database}` WHERE `Engine` IS NOT NULL",
-            array('Name', 'Engine', 'Rows', 'Data_length', 'Index_length'));
+        $tables = $this->getDb($cid)->fetchAll(
+            "SHOW TABLE STATUS FROM `{$database}` WHERE `Engine` IS NOT NULL",
+            array('Name', 'Engine', 'Rows', 'Data_length', 'Index_length')
+        );
 
-        $tables = array_map(function ($table) {
-            $table[3] += $table[4];
-            unset($table[4]);
-            return $table;
-        }, $tables);
+        if (!empty($tables)) {
+            $tables = array_map(
+                function ($table) {
+                    $table[3] += $table[4];
+                    unset($table[4]);
+                    return $table;
+                },
+                $tables
+            );
+        }
 
         return $tables;
     }
