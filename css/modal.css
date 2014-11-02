@@ -41,8 +41,3 @@
 	margin: 14px 0 0;
 	text-align: center;
 }
-
-.modal-buttons input[type=button],
-.modal-buttons input[type=submit] {
-	padding: 2px 7px;
-}

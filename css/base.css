@@ -67,80 +67,21 @@ form p label {
 	text-align: right;
 }
 
-form input[type=text],
-form input[type=password],
-form select {
-	background-color: #fff;
-	border: #ccc 1px solid;
-	border-top-color: #b9b9b9;
-	border-radius: 2px;
-	color: #333;
-	float: left;
-	font-size: 13px;
-	padding: 3px 5px;
+input, select {
+    font-size: 12px;
 }
-
-form input[type=text]:focus,
-form input[type=password]:focus,
-form select:focus {
-	box-shadow: 0px 0px 1px rgba(24, 63, 122, 0.5);
-}
-
-form select optgroup {
-	color: #666;
-}
-
-form select option {
-	color: #333;
-}
-
-form .helper {
-	padding: 0 3px;
-	background-color: #E3E3E3;
-	border-radius: 3px;
-}
-
-/* Buttons, others interface elements */
 
 input[type=button],
 input[type=submit] {
-	height: 28px;
-	font-weight: bold;
-	color: #333;
-	border: 0;
-	background-color: #fff;
-	background: -moz-linear-gradient(top, #ffffff, #e3e3e3);
-	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e3e3e3));
-	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-	border-radius: 3px;
-	text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
+    -webkit-appearance: button;
+    font-size: 12px;
+    height: 21px;
 }
 
-input[type=button]:hover,
-input[type=submit]:hover {
-	color: #00559C;
-	cursor: pointer;
-	background-color: #fcfcfc;
-	background: -moz-linear-gradient(top, #fcfcfc, #dcdcdc);
-	background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dcdcdc));
-}
-
-input[type=button]:active,
-input[type=submit]:active {
-	cursor: pointer;
-	background-color: #f0f0f0;
-	background: -moz-linear-gradient(top, #e3e3e3, #fcfcfc);
-	background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#fcfcfc));
-}
-
-input[type=button]:disabled,
-input[type=submit]:disabled {
-	cursor: default;
-	background: #eee;
-	color: #666;
-}
+/* Close button */
 
 input[type=button].close {
+	border: 0;
 	height: 18px;
 	width: 18px;
 	background: transparent url('../images/close.png') center no-repeat;
