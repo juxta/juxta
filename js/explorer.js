@@ -340,7 +340,7 @@ Juxta.Explorer.prototype._gridParams = {
 Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 
 	if (event === 'database-properties') {
-		return this._request.send({action: {show: 'properties', database: row, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'database-properties', database: row, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 	} else if (event === 'drop-databases') {
 		return this.drop('databases', $.isArray(row) ? row : [row]);
@@ -349,7 +349,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 		return this.drop('users', $.isArray(row) ? row : [row]);
 
 	} else if (event === 'table-properties') {
-		return this._request.send({action: {show: 'properties', table: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'table-properties', table: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 	} else if (event === 'truncate-tables') {
 		return this.truncate($.isArray(row) ? row : [row], context.from);
@@ -358,7 +358,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 		return this.drop('tables', $.isArray(row) ? row : [row], context.from);
 
 	} else if (event === 'view-properties') {
-		return this._request.send({action: {show: 'properties', view: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'view-properties', view: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 	} else if (event === 'drop-views') {
 		return this.drop('views', $.isArray(row) ? row : [row], context.from);
@@ -384,13 +384,13 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 	} else if (event === 'routine-properties') {
 		if (row.procedure) {
 			return this._request.send({
-				action: {show: 'properties', procedure: row.procedure, from: context.from, cid: context.cid},
+				action: {show: 'procedure-properties', procedure: row.procedure, from: context.from, cid: context.cid},
 				success: this._showPropertiesCallback.bind(this, 'procedure-properties')
 			});
 
 		} else if (row.function) {
 			return this._request.send({
-				action: {show: 'properties', function: row.function, from: context.from, cid: context.cid},
+				action: {show: 'function-properties', function: row.function, from: context.from, cid: context.cid},
 				success: this._showPropertiesCallback.bind(this, 'function-properties')
 			});
 		}
@@ -399,7 +399,7 @@ Juxta.Explorer.prototype._gridActionCallback = function(event, row, context) {
 		return this._routineEditor.edit({trigger: row, from: context.from});
 
 	} else if (event === 'trigger-properties') {
-		return this._request.send({action: {show: 'properties', trigger: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
+		return this._request.send({action: {show: 'trigger-properties', trigger: row, from: context.from, cid: context.cid}, success: this._showPropertiesCallback.bind(this, event)});
 
 	} else if (event === 'drop-triggers') {
 		return this.drop('triggers', $.isArray(row) ? row : [row], context.from);
@@ -468,6 +468,13 @@ Juxta.Explorer.prototype.drop = function(drop, items, from) {
 	}
 
 	data[drop] = items;
+
+	if ($.isPlainObject(items)) {
+		data = items;
+
+	} else {
+		data[drop] = items;
+	}
 
 	if ($.isArray(items)) {
 		dropItemsCount = items.length;
