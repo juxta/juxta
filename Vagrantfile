@@ -4,7 +4,11 @@ export LC_ALL=en_US.UTF-8
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password 0000'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password 0000'
 
-apt-get install -y nginx mysql-server php5-fpm php5-cli php5-mysql
+apt-get install -y nginx mysql-server php5-fpm php5-cli php5-mysql php5-dev php-pear
+
+pecl install xdebug
+
+echo $'\n\n;xdebug\nzend_extension=xdebug.so' >> /etc/php5/cli/php.ini
 
 if [ ! -L /usr/share/nginx/juxta ]; then
   ln -s /home/vagrant/juxta /usr/share/nginx/juxta
