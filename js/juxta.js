@@ -18,21 +18,21 @@ Juxta.DEFAULT_PORT = 3306;
  */
 Juxta.composeConnectionName = function(connection)
 {
-	var name = '';
+    var name = '';
 
-	if (connection.user) {
-		name += connection.user + '@';
-	}
+    if (connection.user) {
+        name += connection.user + '@';
+    }
 
-	name += connection.host;
+    name += connection.host;
 
-	if (!connection.port) {
-		connection.port = Juxta.DEFAULT_PORT;
-	}
+    if (!connection.port) {
+        connection.port = Juxta.DEFAULT_PORT;
+    }
 
-	if (connection.port != Juxta.DEFAULT_PORT) {
-		name += ':' + connection.port;
-	}
+    if (connection.port != Juxta.DEFAULT_PORT) {
+        name += ':' + connection.port;
+    }
 
-	return name;
+    return name;
 };

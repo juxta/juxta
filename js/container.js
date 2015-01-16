@@ -5,10 +5,10 @@
  */
 Juxta.Container = function(element) {
 
-	/**
-	 * @type {jQuery}
-	 */
-	this._container = $(element);
+    /**
+     * @type {jQuery}
+     */
+    this._container = $(element);
 
 };
 
@@ -19,7 +19,7 @@ Juxta.Container = function(element) {
  * @return {Boolean}
  */
 Juxta.Container.prototype.is = function() {
-	return $.fn.is.apply(this._container, arguments);
+    return $.fn.is.apply(this._container, arguments);
 };
 
 
@@ -29,7 +29,7 @@ Juxta.Container.prototype.is = function() {
  * @return {jQuery}
  */
 Juxta.Container.prototype.find = function() {
-	return $.fn.find.apply(this._container, arguments);
+    return $.fn.find.apply(this._container, arguments);
 };
 
 
@@ -39,10 +39,10 @@ Juxta.Container.prototype.find = function() {
  * @return {Juxta.Container}
  */
 Juxta.Container.prototype.show = function() {
-	//
-	$.fn.show.apply(this._container, arguments);
+    //
+    $.fn.show.apply(this._container, arguments);
 
-	return this;
+    return this;
 };
 
 
@@ -52,10 +52,10 @@ Juxta.Container.prototype.show = function() {
  * @return {Juxta.Container}
  */
 Juxta.Container.prototype.hide = function() {
-	//
-	$.fn.hide.apply(this._container, arguments);
+    //
+    $.fn.hide.apply(this._container, arguments);
 
-	return this;
+    return this;
 };
 
 
@@ -65,10 +65,10 @@ Juxta.Container.prototype.hide = function() {
  * @return {Juxta.Container}
  */
 Juxta.Container.prototype.toggle = function() {
-	//
-	$.fn.toggle.apply(this._container, arguments);
+    //
+    $.fn.toggle.apply(this._container, arguments);
 
-	return this;
+    return this;
 };
 
 
@@ -78,8 +78,8 @@ Juxta.Container.prototype.toggle = function() {
  * @return {HTMLElement}
  */
 Juxta.Container.prototype.get = function() {
-	//
-	return $.fn.get.apply(this._container, arguments);
+    //
+    return $.fn.get.apply(this._container, arguments);
 };
 
 
@@ -90,13 +90,13 @@ Juxta.Container.prototype.get = function() {
  * @return {Number|Juxta.Container}
  */
 Juxta.Container.prototype.width = function(width) {
-	//
-	if (width) {
-		$.fn.width.apply(this._container, arguments);
-		return this;
-	}
+    //
+    if (width) {
+        $.fn.width.apply(this._container, arguments);
+        return this;
+    }
 
-	return $.fn.width.apply(this._container, arguments);
+    return $.fn.width.apply(this._container, arguments);
 };
 
 
@@ -107,11 +107,11 @@ Juxta.Container.prototype.width = function(width) {
  * @return {Number|Juxta.Container}
  */
 Juxta.Container.height = function(height) {
-	//
-	if (height) {
-		$.fn.height.apply(this._container, arguments);
-		return this;
-	}
+    //
+    if (height) {
+        $.fn.height.apply(this._container, arguments);
+        return this;
+    }
 
-	return $.fn.height.apply(this._container, arguments);
+    return $.fn.height.apply(this._container, arguments);
 };

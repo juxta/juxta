@@ -8,67 +8,67 @@
  */
 Juxta.Editor = function(textarea, options) {
 
-	/**
-	 * @type {Object}
-	 */
-	this._settings = {
-		mode: 'text/x-mysql',
-		tabMode: 'indent',
-		tabSize: 4,
-		matchBrackets: true,
-		lineNumbers: true,
-		fixedGutter: true,
-		autoFormatLineBreaks: true
-	};
+    /**
+     * @type {Object}
+     */
+    this._settings = {
+        mode: 'text/x-mysql',
+        tabMode: 'indent',
+        tabSize: 4,
+        matchBrackets: true,
+        lineNumbers: true,
+        fixedGutter: true,
+        autoFormatLineBreaks: true
+    };
 
-	$.extend(this._settings, options);
-
-
-	/**
-	 * @type {jQuery}
-	 */
-	this._textarea = $(textarea);
+    $.extend(this._settings, options);
 
 
-	/**
-	 * @type {CodeMirror}
-	 */
-	this._editor = CodeMirror.fromTextArea(this._textarea.get(0), this._settings);
+    /**
+     * @type {jQuery}
+     */
+    this._textarea = $(textarea);
 
 
-	/**
-	 * Set the editor content
-	 * @param {String} text
-	 * @return {Juxta.Editor}
-	 */
-	this.edit = function(text) {
-		//
-		this._editor.setValue(text);
-
-		return this;
-	};
+    /**
+     * @type {CodeMirror}
+     */
+    this._editor = CodeMirror.fromTextArea(this._textarea.get(0), this._settings);
 
 
-	/**
-	 * Redraw the editor
-	 * @return {Juxta.Editor}
-	 */
-	this.refresh = function() {
-		this._editor.refresh();
+    /**
+     * Set the editor content
+     * @param {String} text
+     * @return {Juxta.Editor}
+     */
+    this.edit = function(text) {
+        //
+        this._editor.setValue(text);
 
-		return this;
-	};
-
-
-	this.setHeight = function(height) {
-		this._editor.setSize(null, height);
-
-		return this;
-	};
+        return this;
+    };
 
 
-	this.is = function() {
-		return $.fn.is.apply($(this._editor.getWrapperElement()), arguments);
-	};
+    /**
+     * Redraw the editor
+     * @return {Juxta.Editor}
+     */
+    this.refresh = function() {
+        this._editor.refresh();
+
+        return this;
+    };
+
+
+    this.setHeight = function(height) {
+        this._editor.setSize(null, height);
+
+        return this;
+    };
+
+
+    this.is = function() {
+        return $.fn.is.apply($(this._editor.getWrapperElement()), arguments);
+    };
 
 };

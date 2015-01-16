@@ -9,21 +9,21 @@
  */
 Juxta.Table = function(element, request) {
 
-	Juxta.Window.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse Table': null}, cache: 3600});
+    Juxta.Window.prototype.constructor.call(this, element, {closable: false, mazimized: false, menu: {'Browse Table': null}, cache: 3600});
 
-	/**
-	 * @type {Juxta.Request}
-	 */
-	this._request = request;
-
-
-	/**
-	 * @type {Juxta.Grid2}
-	 */
-	this._columns = new Juxta.Grid2(this.find('.grid2'));
+    /**
+     * @type {Juxta.Request}
+     */
+    this._request = request;
 
 
-	$(window).on('resize', this._stretch.bind(this));
+    /**
+     * @type {Juxta.Grid2}
+     */
+    this._columns = new Juxta.Grid2(this.find('.grid2'));
+
+
+    $(window).on('resize', this._stretch.bind(this));
 
 };
 
@@ -38,11 +38,11 @@ Juxta.Lib.extend(Juxta.Table, Juxta.Window);
  */
 Juxta.Table.prototype.show = function() {
 
-	Juxta.Window.prototype.show.apply(this, arguments);
+    Juxta.Window.prototype.show.apply(this, arguments);
 
-	this._stretch();
+    this._stretch();
 
-	return this;
+    return this;
 };
 
 
@@ -50,16 +50,16 @@ Juxta.Table.prototype.show = function() {
  * Stretch grid to window height
  */
 Juxta.Table.prototype._stretch = function() {
-	//
-	var height = 0;
+    //
+    var height = 0;
 
-	if (this.is(':visible')) {
-		height = this._applicationsContainer.height();
-		height -= this.find('.grid2-body').position().top + this._status.outerHeight(true); // minus padding from top, minus status bar height
-		height -= this.find('.grid2-body').outerHeight() - this.find('.grid2-body').height(); // minus grid body padding + border
+    if (this.is(':visible')) {
+        height = this._applicationsContainer.height();
+        height -= this.find('.grid2-body').position().top + this._status.outerHeight(true); // minus padding from top, minus status bar height
+        height -= this.find('.grid2-body').outerHeight() - this.find('.grid2-body').height(); // minus grid body padding + border
 
-		this._columns.setHeight(height);
-	}
+        this._columns.setHeight(height);
+    }
 };
 
 
@@ -71,25 +71,25 @@ Juxta.Table.prototype._stretch = function() {
  */
 Juxta.Table.prototype.edit = function(params)
 {
-	this.show(
-		{
-			header: {title: 'Table ', name: params.table},
-			menu: {'Browse': {href: '#/{cid}/{from}/{table}/browse'}},
-			menuRight: this._rightMenuOptions[params.edit]
-		},
-		params
-	);
+    this.show(
+        {
+            header: {title: 'Table ', name: params.table},
+            menu: {'Browse': {href: '#/{cid}/{from}/{table}/browse'}},
+            menuRight: this._rightMenuOptions[params.edit]
+        },
+        params
+    );
 
-	if (params.edit === 'columns') {
-		return this._requestShowTable(params);
+    if (params.edit === 'columns') {
+        return this._requestShowTable(params);
 
-	} else if (params.edit === 'indexes') {
-		return this._requestIndexes(params);
+    } else if (params.edit === 'indexes') {
+        return this._requestIndexes(params);
 
-	} else if (params.edit === 'foreign') {
-		return this._requestShowForeign(params);
+    } else if (params.edit === 'foreign') {
+        return this._requestShowForeign(params);
 
-	}
+    }
 };
 
 
@@ -100,77 +100,77 @@ Juxta.Table.prototype.edit = function(params)
  * @return {jqXHR}
  */
 Juxta.Table.prototype._requestShowTable = function(params) {
-	//
-	var query = {cid: params.cid, show: 'table', table: params.table, from: params.from},
-		options = {};
+    //
+    var query = {cid: params.cid, show: 'table', table: params.table, from: params.from},
+        options = {};
 
-	function row(column)
-	{
-		var row = [];
+    function row(column)
+    {
+        var row = [];
 
-		row.push(column.column_name);
-		row.push(column.column_type.toUpperCase().replace('(', ' ('));
+        row.push(column.column_name);
+        row.push(column.column_type.toUpperCase().replace('(', ' ('));
 
-		// IS NULL
-		row.push('<input type=checkbox disabled ' + (column.column_is_null === 'YES' ? 'checked' : '') + '>');
+        // IS NULL
+        row.push('<input type=checkbox disabled ' + (column.column_is_null === 'YES' ? 'checked' : '') + '>');
 
-		// attributes
-		if (Array.isArray(column.column_attributes)) {
-			row.push(column.column_attributes.join(', ').toUpperCase());
-		} else {
-			row.push('');
-		}
+        // attributes
+        if (Array.isArray(column.column_attributes)) {
+            row.push(column.column_attributes.join(', ').toUpperCase());
+        } else {
+            row.push('');
+        }
 
-		// default
-		if (column.column_default === null && column.column_is_null === 'YES') {
-			row.push('<span class="badge _null">NULL</span>');
+        // default
+        if (column.column_default === null && column.column_is_null === 'YES') {
+            row.push('<span class="badge _null">NULL</span>');
 
-		} else if (column.column_default !== null) {
-			row.push(column.column_default.toUpperCase());
+        } else if (column.column_default !== null) {
+            row.push(column.column_default.toUpperCase());
 
-		} else {
-			row.push('');
-		}
+        } else {
+            row.push('');
+        }
 
-		// options
-		if (Array.isArray(column.column_options)) {
-			for (var option in column.column_options) {
-				if (column.column_options[option] ===  'primary') {
-					column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
+        // options
+        if (Array.isArray(column.column_options)) {
+            for (var option in column.column_options) {
+                if (column.column_options[option] ===  'primary') {
+                    column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
 
-				} else if (column.column_options[option] ===  'auto_increment') {
-					column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
+                } else if (column.column_options[option] ===  'auto_increment') {
+                    column.column_options[option] = '<span class="badge">' + column.column_options[option] + '</span>';
 
-				} else {
-					column.column_options[option] = column.column_options[option].toUpperCase();
-				}
-			}
+                } else {
+                    column.column_options[option] = column.column_options[option].toUpperCase();
+                }
+            }
 
-			row.push(column.column_options.join(''));
+            row.push(column.column_options.join(''));
 
-		} else {
-			row.push('');
-		}
+        } else {
+            row.push('');
+        }
 
-		return '<tr><td>' + row.join('</td><td>') + '</td></tr>';
-	}
+        return '<tr><td>' + row.join('</td><td>') + '</td></tr>';
+    }
 
-	this._columns.prepare({
-		columns: {
-			'column_name': 'Column',
-			'column_type': 'Type',
-			'column_is_null': {title: 'NULL', 'hint': 'Allow NULL'},
-			'column_attributes': 'Attributes',
-			'column_default': 'Default',
-			'column_options': 'Options'
-		},
-		row: row,
-		actions: null
-	});
+    this._columns.prepare({
+        columns: {
+            'column_name': 'Column',
+            'column_type': 'Type',
+            'column_is_null': {title: 'NULL', 'hint': 'Allow NULL'},
+            'column_attributes': 'Attributes',
+            'column_default': 'Default',
+            'column_options': 'Options'
+        },
+        row: row,
+        actions: null
+    });
 
-	return this._request.send(
-		$.extend({}, {action: query, success: this._responseShowTable.bind(this)}, this._settings, options)
-	);
+    return this._request.send(
+        $.extend({}, {action: query, success: this._responseShowTable.bind(this)}, this._settings, options)
+    );
 };
 
 /**
@@ -179,9 +179,9 @@ Juxta.Table.prototype._requestShowTable = function(params) {
  * @private
  */
 Juxta.Table.prototype._responseShowTable = function(response) {
-	//
-	this._columns.disableSelectRows().fill(response.columns);
-	this.ready();
+    //
+    this._columns.disableSelectRows().fill(response.columns);
+    this.ready();
 };
 
 /**
@@ -192,26 +192,26 @@ Juxta.Table.prototype._responseShowTable = function(response) {
  */
 Juxta.Table.prototype._requestIndexes = function(params)
 {
-	var request;
+    var request;
 
-	this._columns.prepare({
-		columns: {
-			'index_name': 'Name',
-			'index_type': 'Type',
-			'index_unique': 'Unique',
-			'index_columns': 'Columns'
-		},
-		row: '<tr><td>{index_name}</td><td>{index_type}</td><td>{index_unique|bool:YES:NO}</td><td>{index_columns}</td></tr>',
-		actions: null
-	});
+    this._columns.prepare({
+        columns: {
+            'index_name': 'Name',
+            'index_type': 'Type',
+            'index_unique': 'Unique',
+            'index_columns': 'Columns'
+        },
+        row: '<tr><td>{index_name}</td><td>{index_type}</td><td>{index_unique|bool:YES:NO}</td><td>{index_columns}</td></tr>',
+        actions: null
+    });
 
-	request = {
-		action: {cid: params.cid, show: 'indexes', table: params.table, from: params.from},
-		context: this,
-		success: (function(response) { this._columns.disableSelectRows().fill(response); this.ready(); }).bind(this)
-	};
+    request = {
+        action: {cid: params.cid, show: 'indexes', table: params.table, from: params.from},
+        context: this,
+        success: (function(response) { this._columns.disableSelectRows().fill(response); this.ready(); }).bind(this)
+    };
 
-	return this._request.send($.extend({}, request, this._settings));
+    return this._request.send($.extend({}, request, this._settings));
 };
 
 /**
@@ -222,21 +222,21 @@ Juxta.Table.prototype._requestIndexes = function(params)
  */
 Juxta.Table.prototype._requestShowForeign = function(params)
 {
-	var request;
+    var request;
 
-	this._columns.prepare({
-		columns: ['Name', 'Column', 'Reference', 'Update', 'Delete'],
-		row: '<tr><td>{name}</td><td>{column}</td><td>{reference}</td><td>{update}</td><td>{delete}</td></tr>',
-		actions: null
-	});
+    this._columns.prepare({
+        columns: ['Name', 'Column', 'Reference', 'Update', 'Delete'],
+        row: '<tr><td>{name}</td><td>{column}</td><td>{reference}</td><td>{update}</td><td>{delete}</td></tr>',
+        actions: null
+    });
 
-	request = {
-		action: {cid: params.cid, show: 'foreign', table: params.table, from: params.from},
-		context: this,
-		success: (function(response) { this._columns.disableSelectRows().fill(response); this.ready(); }).bind(this)
-	};
+    request = {
+        action: {cid: params.cid, show: 'foreign', table: params.table, from: params.from},
+        context: this,
+        success: (function(response) { this._columns.disableSelectRows().fill(response); this.ready(); }).bind(this)
+    };
 
-	return this._request.send($.extend({}, request, this._settings));
+    return this._request.send($.extend({}, request, this._settings));
 };
 
 /**
@@ -245,19 +245,19 @@ Juxta.Table.prototype._requestShowForeign = function(params)
  * @type {Object}
  */
 Juxta.Table.prototype._rightMenuOptions = {
-	columns: {
-		'Columns': null,
-		'Indexes': '#/{cid}/{from}/{table}/indexes',
-		'Foreign Keys': '#/{cid}/{from}/{table}/foreign'
-	},
-	indexes: {
-		'Columns': '#/{cid}/{from}/{table}/columns',
-		'Indexes': null,
-		'Foreign Keys': '#/{cid}/{from}/{table}/foreign'
-	},
-	foreign: {
-		'Columns': '#/{cid}/{from}/{table}/columns',
-		'Indexes': '#/{cid}/{from}/{table}/indexes',
-		'Foreign Keys': null
-	}
+    columns: {
+        'Columns': null,
+        'Indexes': '#/{cid}/{from}/{table}/indexes',
+        'Foreign Keys': '#/{cid}/{from}/{table}/foreign'
+    },
+    indexes: {
+        'Columns': '#/{cid}/{from}/{table}/columns',
+        'Indexes': null,
+        'Foreign Keys': '#/{cid}/{from}/{table}/foreign'
+    },
+    foreign: {
+        'Columns': '#/{cid}/{from}/{table}/columns',
+        'Indexes': '#/{cid}/{from}/{table}/indexes',
+        'Foreign Keys': null
+    }
 };

@@ -3,18 +3,18 @@
  */
 Juxta.Connection = function() {
 
-	/**
-	 * Connections data
-	 * @type {Object}
-	 */
-	this._connections = {};
+    /**
+     * Connections data
+     * @type {Object}
+     */
+    this._connections = {};
 
 
-	/**
-	 * Current connection ID
-	 * @type {Number}
-	 */
-	this._current = null;
+    /**
+     * Current connection ID
+     * @type {Number}
+     */
+    this._current = null;
 
 };
 
@@ -28,18 +28,18 @@ Juxta.Lib.extend(Juxta.Connection, Juxta.Events);
  * @param {Object} connection
  */
 Juxta.Connection.prototype.set = function(cid, connection) {
-	//
-	if (connection) {
-		connection.cid = Number(cid);
-		this._connections[cid] = connection;
-	}
+    //
+    if (connection) {
+        connection.cid = Number(cid);
+        this._connections[cid] = connection;
+    }
 
-	if (this.is(cid) && this._current !== cid) {
-		this._current = Number(cid);
-		this.trigger('change', this._current);
-	}
+    if (this.is(cid) && this._current !== cid) {
+        this._current = Number(cid);
+        this.trigger('change', this._current);
+    }
 
-	return this;
+    return this;
 };
 
 
@@ -50,14 +50,14 @@ Juxta.Connection.prototype.set = function(cid, connection) {
  * @return {*}
  */
 Juxta.Connection.prototype.get = function(param) {
-	//
-	if (typeof param === 'undefined') {
-		return this._connections[this._current];
-	}
+    //
+    if (typeof param === 'undefined') {
+        return this._connections[this._current];
+    }
 
-	if (this._current !== null && this._connections[this._current]) {
-		return this._connections[this._current][param];
-	}
+    if (this._current !== null && this._connections[this._current]) {
+        return this._connections[this._current][param];
+    }
 };
 
 
@@ -67,7 +67,7 @@ Juxta.Connection.prototype.get = function(param) {
  * @return {Boolean}
  */
 Juxta.Connection.prototype.is = function(cid) {
-	return this._connections[cid] !== undefined;
+    return this._connections[cid] !== undefined;
 };
 
 /**
@@ -76,7 +76,7 @@ Juxta.Connection.prototype.is = function(cid) {
  * @return {Boolean}
  */
 Juxta.Connection.prototype.isCurrent = function(cid) {
-	return this._current !== null && this._current === cid;
+    return this._current !== null && this._current === cid;
 };
 
 
@@ -86,9 +86,9 @@ Juxta.Connection.prototype.isCurrent = function(cid) {
  * @return {Juxta}
  */
 Juxta.Connection.prototype.reset = function() {
-	//
-	this._current = null;
-	this.trigger('change');
+    //
+    this._current = null;
+    this.trigger('change');
 
-	return this;
+    return this;
 };

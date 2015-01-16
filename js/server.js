@@ -9,38 +9,38 @@
  */
 Juxta.Server = function (element, request) {
 
-	/**
-	 * @type {Object}
-	 */
-	this._settings ={
-		cache: 60
-	};
+    /**
+     * @type {Object}
+     */
+    this._settings ={
+        cache: 60
+    };
 
-	Juxta.Window.prototype.constructor.call(this, element);
-
-
-	/**
-	 * @type {Juxta.Request}
-	 */
-	this._request = request;
+    Juxta.Window.prototype.constructor.call(this, element);
 
 
-	/**
-	 * @type {Juxta.Grid}
-	 */
-	this._grid = new Juxta.Grid2(this.find('.grid2'));
+    /**
+     * @type {Juxta.Request}
+     */
+    this._request = request;
 
 
-	/**
-	 * @type {String}
-	 */
-	this._preparedFor = null;
+    /**
+     * @type {Juxta.Grid}
+     */
+    this._grid = new Juxta.Grid2(this.find('.grid2'));
 
 
-	this._grid.disableSelectRows();
+    /**
+     * @type {String}
+     */
+    this._preparedFor = null;
 
-	// Stretch grid by height
-	$(window).on('resize', this._stretch.bind(this));
+
+    this._grid.disableSelectRows();
+
+    // Stretch grid by height
+    $(window).on('resize', this._stretch.bind(this));
 
 };
 
@@ -53,12 +53,12 @@ Juxta.Lib.extend(Juxta.Server, Juxta.Window);
  * @param {Object} options
  */
 Juxta.Server.prototype.show = function() {
-	//
-	Juxta.Window.prototype.show.apply(this, arguments);
+    //
+    Juxta.Window.prototype.show.apply(this, arguments);
 
-	this._stretch();
+    this._stretch();
 
-	return this;
+    return this;
 };
 
 
@@ -66,16 +66,16 @@ Juxta.Server.prototype.show = function() {
  * Stretch grid to window height
  */
 Juxta.Server.prototype._stretch = function() {
-	//
-	var height = 0;
+    //
+    var height = 0;
 
-	if (this.is(':visible')) {
-		height = this._applicationsContainer.height();
-		height -= this.find('.grid2-body').position().top + this._status.outerHeight(true); // minus padding from top, minus status bar height
-		height -= this.find('.grid2-body').outerHeight() - this.find('.grid2-body').height(); // minus grid body padding + border
+    if (this.is(':visible')) {
+        height = this._applicationsContainer.height();
+        height -= this.find('.grid2-body').position().top + this._status.outerHeight(true); // minus padding from top, minus status bar height
+        height -= this.find('.grid2-body').outerHeight() - this.find('.grid2-body').height(); // minus grid body padding + border
 
-		this._grid.setHeight(height);
-	}
+        this._grid.setHeight(height);
+    }
 };
 
 
@@ -86,16 +86,16 @@ Juxta.Server.prototype._stretch = function() {
  * @return {Boolean}
  */
 Juxta.Server.prototype._prepare = function(template) {
-	//
-	if (template === this._preparedFor) {
-		return true;
+    //
+    if (template === this._preparedFor) {
+        return true;
 
-	} else if (this._grid.prepare(this._gridParams[template])) {
-		this._preparedFor = template;
-		return true;
-	}
+    } else if (this._grid.prepare(this._gridParams[template])) {
+        this._preparedFor = template;
+        return true;
+    }
 
-	return false;
+    return false;
 };
 
 
@@ -106,7 +106,7 @@ Juxta.Server.prototype._prepare = function(template) {
  * @return {jqXHR}
  */
 Juxta.Server.prototype.info = function(params) {
-	return this._serverInformationRequest(params);
+    return this._serverInformationRequest(params);
 };
 
 
@@ -117,30 +117,30 @@ Juxta.Server.prototype.info = function(params) {
  * @return {jqXHR}
  */
 Juxta.Server.prototype._serverInformationRequest = function(params) {
-	//
-	this.show(this._headerOptions[params.show], params);
+    //
+    this.show(this._headerOptions[params.show], params);
 
-	if (params.show === 'charsets' || params.show === 'engines') {
-		$.extend(params, {cache: Infinity}, params);
-	}
+    if (params.show === 'charsets' || params.show === 'engines') {
+        $.extend(params, {cache: Infinity}, params);
+    }
 
-	// Move options values from query to options variable
-	var query = $.extend({}, params),
-		options = {};
+    // Move options values from query to options variable
+    var query = $.extend({}, params),
+        options = {};
 
-	$.each(['cache', 'refresh'], function(index, value) {
-		delete query[value];
-		if (params[value] !== undefined) {
-			options[value] = params[value];
-		}
-	});
+    $.each(['cache', 'refresh'], function(index, value) {
+        delete query[value];
+        if (params[value] !== undefined) {
+            options[value] = params[value];
+        }
+    });
 
-	if (this._prepare(query.show)) {
-		return this._request.send($.extend({},
-			{action: query, context: this, success: function(response) { return this._serverInformationCallback(response, query); } },
-			this._settings, options
-		));
-	}
+    if (this._prepare(query.show)) {
+        return this._request.send($.extend({},
+            {action: query, context: this, success: function(response) { return this._serverInformationCallback(response, query); } },
+            this._settings, options
+        ));
+    }
 };
 
 
@@ -152,10 +152,10 @@ Juxta.Server.prototype._serverInformationRequest = function(params) {
  * @return {Juxta.Explorer}
  */
 Juxta.Server.prototype._serverInformationCallback = function(response, request) {
-	//
-	this._grid.fill(response, this._gridParams[request.show]);
+    //
+    this._grid.fill(response, this._gridParams[request.show]);
 
-	return this.ready();
+    return this.ready();
 };
 
 
@@ -163,22 +163,22 @@ Juxta.Server.prototype._serverInformationCallback = function(response, request) 
  * @type {Object}
  */
 Juxta.Server.prototype._headerOptions = {
-	status: {
-		header: 'Server Status',
-		menu: {'Server Status': null, 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
-	},
-	variables: {
-		header: 'System Variables',
-		menu: {'Server Status': '#/{cid}/status', 'System Variables': null, 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
-	},
-	charsets: {
-		header: 'Charsets',
-		menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': null, 'Engines': '#/{cid}/engines'}
-	},
-	engines: {
-		header: 'Engines',
-		menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': null}
-	}
+    status: {
+        header: 'Server Status',
+        menu: {'Server Status': null, 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
+    },
+    variables: {
+        header: 'System Variables',
+        menu: {'Server Status': '#/{cid}/status', 'System Variables': null, 'Charsets': '#/{cid}/charsets', 'Engines': '#/{cid}/engines'}
+    },
+    charsets: {
+        header: 'Charsets',
+        menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': null, 'Engines': '#/{cid}/engines'}
+    },
+    engines: {
+        header: 'Engines',
+        menu: {'Server Status': '#/{cid}/status', 'System Variables': '#/{cid}/variables', 'Charsets': '#/{cid}/charsets', 'Engines': null}
+    }
 };
 
 
@@ -188,16 +188,16 @@ Juxta.Server.prototype._headerOptions = {
  * @type {Object}
  */
 Juxta.Server.prototype._gridParams = {
-	status: {
-		columns: ['Variable', 'Value']
-	},
-	variables: {
-		columns: ['Variable', 'Value']
-	},
-	charsets: {
-		columns: ['Charset', 'Default collation', 'Description']
-	},
-	engines: {
-		columns: ['Engine', 'Support', 'Description']
-	}
+    status: {
+        columns: ['Variable', 'Value']
+    },
+    variables: {
+        columns: ['Variable', 'Value']
+    },
+    charsets: {
+        columns: ['Charset', 'Default collation', 'Description']
+    },
+    engines: {
+        columns: ['Engine', 'Support', 'Description']
+    }
 };
