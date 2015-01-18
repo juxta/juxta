@@ -1,645 +1,645 @@
 <!DOCTYPE html>
 <head>
-	<title>Juxta</title>
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<link href="css/juxta.css" rel="stylesheet" media="all" />
-	<link href="lib/codemirror/codemirror.css" rel="stylesheet" media="all" />
-	<script src="lib/jquery-2.0.3.js"></script>
-	<script src="lib/jquery-ui-1.10.3.custom.js"></script>
-	<script src="lib/jquery-template.js"></script>
-	<script src="js/juxta.js"></script>
-	<script src="js/lib.js"></script>
-	<script src="js/container.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/events.js"></script>
-	<script src="js/connection.js"></script>
-	<script src="js/request.js"></script>
-	<script src="js/cache.js"></script>
-	<script src="js/notification.js"></script>
-	<script src="js/sidebar.js"></script>
-	<script src="js/modal.js"></script>
-	<script src="js/editor.js"></script>
-	<script src="js/auth.js"></script>
-	<script src="js/routineeditor.js"></script>
-	<script src="js/sqleditor.js"></script>
-	<script src="js/createdatabase.js"></script>
-	<script src="js/grid2.js"></script>
-	<script src="js/grid2contextmenu.js"></script>
-	<script src="js/window.js"></script>
-	<script src="js/browser.js"></script>
-	<script src="js/explorer.js"></script>
-	<script src="js/server.js"></script>
-	<script src="js/table.js"></script>
-	<script src="lib/codemirror/codemirror.js"></script>
-	<script src="lib/codemirror/mysql.js"></script>
+    <title>Juxta</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link href="css/juxta.css" rel="stylesheet" media="all" />
+    <link href="lib/codemirror/codemirror.css" rel="stylesheet" media="all" />
+    <script src="lib/jquery-2.0.3.js"></script>
+    <script src="lib/jquery-ui-1.10.3.custom.js"></script>
+    <script src="lib/jquery-template.js"></script>
+    <script src="js/juxta.js"></script>
+    <script src="js/lib.js"></script>
+    <script src="js/container.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/connection.js"></script>
+    <script src="js/request.js"></script>
+    <script src="js/cache.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/routineeditor.js"></script>
+    <script src="js/sqleditor.js"></script>
+    <script src="js/createdatabase.js"></script>
+    <script src="js/grid2.js"></script>
+    <script src="js/grid2contextmenu.js"></script>
+    <script src="js/window.js"></script>
+    <script src="js/browser.js"></script>
+    <script src="js/explorer.js"></script>
+    <script src="js/server.js"></script>
+    <script src="js/table.js"></script>
+    <script src="lib/codemirror/codemirror.js"></script>
+    <script src="lib/codemirror/mysql.js"></script>
 </head>
 
 <body>
-	<ul id="notify" class="notifications"></ul>
+    <ul id="notify" class="notifications"></ul>
 
-	<div id="header" class="header">
-		<h1><a name="databases">Juxta</a></h1>
-		<ul class="header-links">
-			<li class="header-link sql"><a name="sql" title="Run SQL">SQL</a></li>
-			<li class="header-link connection">
-				<a class="header-change-connection" href="#/login" title="Select a connection"></a>
-				<div class="header-connections-container context">
-					<ul class="header-connections"></ul>
-					<div class="header-connections-container-top"></div>
-					<div class="header-connections-container-bottom"></div>
-				</div>
-			</li>
-			<li class="header-link logout"><a name="logout" title="Close the connection">Logout</a></li>
-		</ul>
-	</div>
+    <div id="header" class="header">
+        <h1><a name="databases">Juxta</a></h1>
+        <ul class="header-links">
+            <li class="header-link sql"><a name="sql" title="Run SQL">SQL</a></li>
+            <li class="header-link connection">
+                <a class="header-change-connection" href="#/login" title="Select a connection"></a>
+                <div class="header-connections-container context">
+                    <ul class="header-connections"></ul>
+                    <div class="header-connections-container-top"></div>
+                    <div class="header-connections-container-bottom"></div>
+                </div>
+            </li>
+            <li class="header-link logout"><a name="logout" title="Close the connection">Logout</a></li>
+        </ul>
+    </div>
 
-	<div id="sidebar" class="sidebar">
-		<ul class="sidebar-levels">
-			<li class="sidebar-level" level="host"><h2><span class="sidebar-level-name">Host</span><span class="sidebar-level-value"></span></h2>
-				<ul class="sidebar-links">
-					<li class="sidebar-link"><a href="#databases">Databases</a></li>
-					<li class="sidebar-link"><a href="#processlist">Processlist</a></li>
-					<li class="sidebar-link"><a href="#users">Users</a></li>
-					<li class="sidebar-link"><a href="#status">Server&nbsp;Information</a></li>
-					<li class="sidebar-link"><a href="#backup" disabled>Backup</a></li>
-					<li class="sidebar-link"><a href="#restore" disabled>Restore</a></li>
-				</ul>
-			</li>
-			<li class="sidebar-level" level="database"><h2><span class="sidebar-level-name">Database</span><span class="sidebar-level-value"></span></h2>
-				<ul class="sidebar-links">
-					<li class="sidebar-link"><a href="#tables">Tables</a></li>
-					<li class="sidebar-link"><a href="#views">Views</a></li>
-					<li class="sidebar-link"><a href="#routines">Stored Routines</a></li>
-					<li class="sidebar-link"><a href="#triggers">Triggers</a></li>
-				</ul>
-			</li>
-			<li class="sidebar-level" level="table"><h2><span class="sidebar-level-name">Table</span><span class="sidebar-level-value"></span></h2>
-				<ul class="sidebar-links">
-					<li class="sidebar-link"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indexes</a></li>
-					<li class="sidebar-link"><a href="#options" disabled>Options</a></li>
-					<li class="sidebar-link"><a href="#maintenance" disabled>Maintenance</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
+    <div id="sidebar" class="sidebar">
+        <ul class="sidebar-levels">
+            <li class="sidebar-level" level="host"><h2><span class="sidebar-level-name">Host</span><span class="sidebar-level-value"></span></h2>
+                <ul class="sidebar-links">
+                    <li class="sidebar-link"><a href="#databases">Databases</a></li>
+                    <li class="sidebar-link"><a href="#processlist">Processlist</a></li>
+                    <li class="sidebar-link"><a href="#users">Users</a></li>
+                    <li class="sidebar-link"><a href="#status">Server&nbsp;Information</a></li>
+                    <li class="sidebar-link"><a href="#backup" disabled>Backup</a></li>
+                    <li class="sidebar-link"><a href="#restore" disabled>Restore</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-level" level="database"><h2><span class="sidebar-level-name">Database</span><span class="sidebar-level-value"></span></h2>
+                <ul class="sidebar-links">
+                    <li class="sidebar-link"><a href="#tables">Tables</a></li>
+                    <li class="sidebar-link"><a href="#views">Views</a></li>
+                    <li class="sidebar-link"><a href="#routines">Stored Routines</a></li>
+                    <li class="sidebar-link"><a href="#triggers">Triggers</a></li>
+                </ul>
+            </li>
+            <li class="sidebar-level" level="table"><h2><span class="sidebar-level-name">Table</span><span class="sidebar-level-value"></span></h2>
+                <ul class="sidebar-links">
+                    <li class="sidebar-link"><a href="#columns">Columns&nbsp;&amp;&nbsp;Indexes</a></li>
+                    <li class="sidebar-link"><a href="#options" disabled>Options</a></li>
+                    <li class="sidebar-link"><a href="#maintenance" disabled>Maintenance</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
-	<div id="applications" class="application-container">
-		<div class="application explorer">
-			<h1 class="application-header">Databases</h1>
-			<input type="button" class="application-close close"/><br class="clear"/>
-			<div class="grid2 clear">
-				<div class="grid2-actions"></div>
-				<div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
-				<div class="grid2-body">
-					<table cellspacing="0">
-						<tbody></tbody>
-					</table>
-					<div class="grid2-body-empty">No items found</div>
-				</div>
-			</div>
-			<div class="application-status">&nbsp;</div>
-		</div>
+    <div id="applications" class="application-container">
+        <div class="application explorer">
+            <h1 class="application-header">Databases</h1>
+            <input type="button" class="application-close close"/><br class="clear"/>
+            <div class="grid2 clear">
+                <div class="grid2-actions"></div>
+                <div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
+                <div class="grid2-body">
+                    <table cellspacing="0">
+                        <tbody></tbody>
+                    </table>
+                    <div class="grid2-body-empty">No items found</div>
+                </div>
+            </div>
+            <div class="application-status">&nbsp;</div>
+        </div>
 
-		<div id="server-info" class="application server">
-			<h1 class="application-header">Server Information</h1>
-			<input type="button" class="application-close close"/><br class="clear"/>
-			<div class="grid2 clear">
-				<div class="grid2-actions"></div>
-				<div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
-				<div class="grid2-body">
-					<table cellspacing="0">
-						<tbody></tbody>
-					</table>
-					<div class="grid2-body-empty">No items found</div>
-				</div>
-			</div>
-			<div class="application-status">&nbsp;</div>
-		</div>
+        <div id="server-info" class="application server">
+            <h1 class="application-header">Server Information</h1>
+            <input type="button" class="application-close close"/><br class="clear"/>
+            <div class="grid2 clear">
+                <div class="grid2-actions"></div>
+                <div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
+                <div class="grid2-body">
+                    <table cellspacing="0">
+                        <tbody></tbody>
+                    </table>
+                    <div class="grid2-body-empty">No items found</div>
+                </div>
+            </div>
+            <div class="application-status">&nbsp;</div>
+        </div>
 
-		<div id="data-browser" class="application browser">
-			<h1 class="application-header">Browse</h1>
-			<input type="button" class="application-close close"/><br class="clear"/>
-			<div class="sql">
-				<textarea name="browser"></textarea>
-			</div>
-			<div class="grid2 clear">
-				<div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span>
-					<input type="button" value="Drop" name="drop" class="grid2-actions-button drop" />
-				</div>
-				<div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
-				<div class="grid2-body">
-					<table cellspacing="0">
-						<tbody></tbody>
-					</table>
-					<div class="grid2-body-empty">No items found</div>
-				</div>
-			</div>
-			<div class="application-status">&nbsp;</div>
-		</div>
+        <div id="data-browser" class="application browser">
+            <h1 class="application-header">Browse</h1>
+            <input type="button" class="application-close close"/><br class="clear"/>
+            <div class="sql">
+                <textarea name="browser"></textarea>
+            </div>
+            <div class="grid2 clear">
+                <div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span>
+                    <input type="button" value="Drop" name="drop" class="grid2-actions-button drop" />
+                </div>
+                <div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
+                <div class="grid2-body">
+                    <table cellspacing="0">
+                        <tbody></tbody>
+                    </table>
+                    <div class="grid2-body-empty">No items found</div>
+                </div>
+            </div>
+            <div class="application-status">&nbsp;</div>
+        </div>
 
-		<div id="table" class="application table">
-			<h1 class="application-header">Table</h1>
-			<input type="button" class="application-close close"/><br class="clear" />
+        <div id="table" class="application table">
+            <h1 class="application-header">Table</h1>
+            <input type="button" class="application-close close"/><br class="clear" />
 
-			<div class="grid2 clear">
-				<div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span> <input type="button" value="Drop" name="drop" class="grid2-actions-button drop" /></div>
-				<div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
-				<div class="grid2-body">
-					<table cellspacing="0">
-						<tbody></tbody>
-					</table>
-					<div class="grid2-body-empty">No items found</div>
-				</div>
-			</div>
-			<div class="application-status">&nbsp;</div>
+            <div class="grid2 clear">
+                <div class="grid2-actions">Select:&nbsp;<span name="all" class="grid2-actions-link all">all</span>,&nbsp;<span name="nothing" class="grid2-actions-link nothing">nothing</span> <input type="button" value="Drop" name="drop" class="grid2-actions-button drop" /></div>
+                <div class="grid2-head"><table cellpadding=0 cellspacing=0><thead></thead></table></div>
+                <div class="grid2-body">
+                    <table cellspacing="0">
+                        <tbody></tbody>
+                    </table>
+                    <div class="grid2-body-empty">No items found</div>
+                </div>
+            </div>
+            <div class="application-status">&nbsp;</div>
 
-			<!--<div class="grid columns clear">
-				<div class="actions"></div>
-				<ul class="head">
-					<li class="column">Column</li>
-					<li class="column-type">Type</li>
-					<li class="column-not-null">not<br/>NULL</li>
-					<li class="column-attributes">Attributes</li>
-					<li class="column-default-value">Default</li>
-					<li class="column-options">Options</li>
-				</ul>
-				<div class="body">
-					<table cellspacing="0">
-						<tr>
-							<td class="column"><a>member_id</a></td>
-							<td class="column-type">INT(10)</td>
-							<td class="column-not-null"><input type="checkbox" checked></td>
-							<td class="column-attributes"><span class="unsigned y">UNSIGNED</span><span class="zerofill">ZEROFILL</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary y">PRIMARY</span><span class="auto-inc y">AUTO_INC</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>last_name</a></td>
-							<td class="column-type">VARCHAR(20)</td>
-							<td class="column-not-null"><input type="checkbox" checked></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>first_name</a></td>
-							<td class="column-type">VARCHAR(20)</td>
-							<td class="column-not-null"><input type="checkbox" checked></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>suffix</a></td>
-							<td class="column-type">VARCHAR(5)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>expiration</a></td>
-							<td class="column-type">DATE</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>email</a></td>
-							<td class="column-type">VARCHAR(100)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>street</a></td>
-							<td class="column-type">VARCHAR(50)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>city</a></td>
-							<td class="column-type">VARCHAR(50)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>state</a></td>
-							<td class="column-type">VARCHAR(2)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>zip</a></td>
-							<td class="column-type">VARCHAR(10)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>phone</a></td>
-							<td class="column-type">VARCHAR(20)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>interests</a></td>
-							<td class="column-type">VARCHAR(255)</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"><span class="binary">BINARY</span></td>
-							<td class="column-default-value"><span class="null y">NULL</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-						<tr>
-							<td class="column"><a>timestamp</a></td>
-							<td class="column-type">TIMESTAMP</td>
-							<td class="column-not-null"><input type="checkbox"></td>
-							<td class="column-attributes"></td>
-							<td class="column-default-value"><span class="null">NULL</span><span class="current_timestamp">TIMESTAMP</span></td>
-							<td class="column-options"><span class="primary">PRIMARY</span></td>
-						</tr>
-					</table>
-				</div>
-				<div class="context"><ul></ul></div>
-			</div>-->
+            <!--<div class="grid columns clear">
+                <div class="actions"></div>
+                <ul class="head">
+                    <li class="column">Column</li>
+                    <li class="column-type">Type</li>
+                    <li class="column-not-null">not<br/>NULL</li>
+                    <li class="column-attributes">Attributes</li>
+                    <li class="column-default-value">Default</li>
+                    <li class="column-options">Options</li>
+                </ul>
+                <div class="body">
+                    <table cellspacing="0">
+                        <tr>
+                            <td class="column"><a>member_id</a></td>
+                            <td class="column-type">INT(10)</td>
+                            <td class="column-not-null"><input type="checkbox" checked></td>
+                            <td class="column-attributes"><span class="unsigned y">UNSIGNED</span><span class="zerofill">ZEROFILL</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary y">PRIMARY</span><span class="auto-inc y">AUTO_INC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>last_name</a></td>
+                            <td class="column-type">VARCHAR(20)</td>
+                            <td class="column-not-null"><input type="checkbox" checked></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>first_name</a></td>
+                            <td class="column-type">VARCHAR(20)</td>
+                            <td class="column-not-null"><input type="checkbox" checked></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>suffix</a></td>
+                            <td class="column-type">VARCHAR(5)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>expiration</a></td>
+                            <td class="column-type">DATE</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>email</a></td>
+                            <td class="column-type">VARCHAR(100)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>street</a></td>
+                            <td class="column-type">VARCHAR(50)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>city</a></td>
+                            <td class="column-type">VARCHAR(50)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>state</a></td>
+                            <td class="column-type">VARCHAR(2)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>zip</a></td>
+                            <td class="column-type">VARCHAR(10)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>phone</a></td>
+                            <td class="column-type">VARCHAR(20)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>interests</a></td>
+                            <td class="column-type">VARCHAR(255)</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"><span class="binary">BINARY</span></td>
+                            <td class="column-default-value"><span class="null y">NULL</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                        <tr>
+                            <td class="column"><a>timestamp</a></td>
+                            <td class="column-type">TIMESTAMP</td>
+                            <td class="column-not-null"><input type="checkbox"></td>
+                            <td class="column-attributes"></td>
+                            <td class="column-default-value"><span class="null">NULL</span><span class="current_timestamp">TIMESTAMP</span></td>
+                            <td class="column-options"><span class="primary">PRIMARY</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="context"><ul></ul></div>
+            </div>-->
 
-			<!--<h2>Indexes <a class="fast">Foreign keys</a></h2>
+            <!--<h2>Indexes <a class="fast">Foreign keys</a></h2>
 
-			<div class="grid indexes clear">
-				<div class="actions hide"></div>
-				<ul class="head">
-					<li class="index">Key</li>
-					<li class="index-kind">Kind</li>
-					<li class="index-type">Type</li>
-					<li class="index-columns">Columns</li>
-				</ul>
-				<div class="body" style="height: 72px;">
-					<table cellspacing="0">
-						<tr><td class="index"><a>PRIMARY</a></td><td class="index-kind">PRIMARY</td><td class="index-type">BTREE</td><td class="index-columns">id</td></tr>
-						<tr><td class="index"><a>idx_name</a></td><td class="index-kind">INDEX</td><td class="index-type">BTREE</td><td class="index-columns">first_name, last_name</td></tr>
-					</table>
-				</div>
-				<div class="context"><ul></ul></div>
-			</div>-->
-		</div>
-	</div>
+            <div class="grid indexes clear">
+                <div class="actions hide"></div>
+                <ul class="head">
+                    <li class="index">Key</li>
+                    <li class="index-kind">Kind</li>
+                    <li class="index-type">Type</li>
+                    <li class="index-columns">Columns</li>
+                </ul>
+                <div class="body" style="height: 72px;">
+                    <table cellspacing="0">
+                        <tr><td class="index"><a>PRIMARY</a></td><td class="index-kind">PRIMARY</td><td class="index-type">BTREE</td><td class="index-columns">id</td></tr>
+                        <tr><td class="index"><a>idx_name</a></td><td class="index-kind">INDEX</td><td class="index-type">BTREE</td><td class="index-columns">first_name, last_name</td></tr>
+                    </table>
+                </div>
+                <div class="context"><ul></ul></div>
+            </div>-->
+        </div>
+    </div>
 
-	<!-- -->
+    <!-- -->
 
-	<div id="login" class="modal">
-		<h3 class="modal-header">Connect to Server</h3>
+    <div id="login" class="modal">
+        <h3 class="modal-header">Connect to Server</h3>
 
-		<form class="modal-form" name="login" method="post" autocomplete="off">
-			<input type="hidden" name="id" value="" disabled />
-			<p class="connections">
-				<label for="login-connections">Select connection</label>
-				<select name="connection" id="login-connections"></select>
-			</p>
-			<p class="host">
-				<label for="login-host">Host</label>
-				<input name="host" type="text" id="login-host" />
-			</p>
-			<p class="port">
-				<label for="login-port">Port</label>
-				<input name="port" type="text" id="login-port" />
-			</p>
-			<p>
-				<label for="login-user">User</label>
-				<input name="user" type="text" id="login-user" />
-			</p>
-			<p>
-				<label for="user-password">Password</label>
-				<input name="password" type="password" id="user-password" />
-			</p>
-			<br class="clear"/>
+        <form class="modal-form" name="login" method="post" autocomplete="off">
+            <input type="hidden" name="id" value="" disabled />
+            <p class="connections">
+                <label for="login-connections">Select connection</label>
+                <select name="connection" id="login-connections"></select>
+            </p>
+            <p class="host">
+                <label for="login-host">Host</label>
+                <input name="host" type="text" id="login-host" />
+            </p>
+            <p class="port">
+                <label for="login-port">Port</label>
+                <input name="port" type="text" id="login-port" />
+            </p>
+            <p>
+                <label for="login-user">User</label>
+                <input name="user" type="text" id="login-user" />
+            </p>
+            <p>
+                <label for="user-password">Password</label>
+                <input name="password" type="password" id="user-password" />
+            </p>
+            <br class="clear"/>
 
-			<div class="modal-buttons"><input type="submit" name="connect" value="Connect" /></div>
-		</form>
-	</div>
+            <div class="modal-buttons"><input type="submit" name="connect" value="Connect" /></div>
+        </form>
+    </div>
 
-	<!-- -->
+    <!-- -->
 
-	<div id="message" class="modal message"></div>
+    <div id="message" class="modal message"></div>
 
-	<script type="text/html" id="about">
-		<div class="about">
-			<h4>Juxta</h4>
-			<p class="version">Version 0.0.1</p>
-			<p class="site"><a href="http://juxta.ru">http://juxta.ru</a></p>
-			<p>Copyright &copy; 2010&ndash;2011 Alexey Golovnya</p>
-		</div>
-	</script>
+    <script type="text/html" id="about">
+        <div class="about">
+            <h4>Juxta</h4>
+            <p class="version">Version 0.0.1</p>
+            <p class="site"><a href="http://juxta.ru">http://juxta.ru</a></p>
+            <p>Copyright &copy; 2010&ndash;2011 Alexey Golovnya</p>
+        </div>
+    </script>
 
-	<div id="create-database" class="modal">
-		<h3 class="modal-header">Create Database</h3>
-		<form class="modal-form" name="create-database">
-			<p>
-				<label for="create-database-name" class="database-name">Database name</label>
-				<input type="text" name="name" id="create-database-name" value=""/>
-			</p>
-			<br class="clear"/>
-			<div class="modal-buttons"><input type="submit" name="create" value="Create"/></div>
-		</form>
-	</div>
+    <div id="create-database" class="modal">
+        <h3 class="modal-header">Create Database</h3>
+        <form class="modal-form" name="create-database">
+            <p>
+                <label for="create-database-name" class="database-name">Database name</label>
+                <input type="text" name="name" id="create-database-name" value=""/>
+            </p>
+            <br class="clear"/>
+            <div class="modal-buttons"><input type="submit" name="create" value="Create"/></div>
+        </form>
+    </div>
 
-	<script type="text/html" id="database-properties">
-		<ul class="properties _database">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Charset</h4>
-				<p class="property-value">{charset}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Collation</h4>
-				<p class="property-value">{collation}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Tables</h4>
-				<p class="property-value">{tables|number|empty:n/a}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Rows</h4>
-				<p class="property-value">{rows|number|empty:n/a}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Data length</h4>
-				<p class="property-value">{data_length|size}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Index length</h4>
-				<p class="property-value">{index_length|size}</p>
-			</li>
-		</ul>
-	</script>
+    <script type="text/html" id="database-properties">
+        <ul class="properties _database">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Charset</h4>
+                <p class="property-value">{charset}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Collation</h4>
+                <p class="property-value">{collation}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Tables</h4>
+                <p class="property-value">{tables|number|empty:n/a}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Rows</h4>
+                <p class="property-value">{rows|number|empty:n/a}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Data length</h4>
+                <p class="property-value">{data_length|size}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Index length</h4>
+                <p class="property-value">{index_length|size}</p>
+            </li>
+        </ul>
+    </script>
 
-	<script type="text/html" id="table-properties">
-		<ul class="properties _table">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Engine</h4>
-				<p class="property-value">{engine} v.{version}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Row format</h4>
-				<p class="property-value">{row_format}</p>
-			</li>
-			<li class="property" title="Character set and collation">
-				<h4 class="property-name">Collation</h4>
-				<p class="property-value">{collation}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Rows</h4>
-				<p class="property-value">{rows|number|empty:n/a}</p>
-			</li>
-			<li class="property" title="The next AUTO_INCREMENT value">
-				<h4 class="property-name">Auto Increment</h4>
-				<p class="property-value">{auto_increment|number}</p>
-			</li>
-			<li class="property" title="The length of the data file">
-				<h4 class="property-name">Data length</h4>
-				<p class="property-value">{data_length|size}</p>
-			</li>
-			<li class="property" title="The maximum length of the data file">
-				<h4 class="property-name">Max data length</h4>
-				<p class="property-value">{max_data_length|size}</p>
-			</li>
-			<li class="property" title="The number of allocated but unused bytes">
-				<h4 class="property-name">Data free length</h4>
-				<p class="property-value">{data_free|size}</p>
-			</li>
-			<li class="property" title="The length of the index file">
-				<h4 class="property-name">Index length</h4>
-				<p class="property-value">{index_length|size}</p>
-			</li>
-			<li class="property" title="When the table was created">
-				<h4 class="property-name">Created</h4>
-				<p class="property-value">{create_time|date}</p>
-			</li>
-			<li class="property" title="When the data file was last updated">
-				<h4 class="property-name">Updated</h4>
-				<p class="property-value">{update_time|date}</p>
-			</li>
-			<li class="property" title="When the table was last checked">
-				<h4 class="property-name">Checked</h4>
-				<p class="property-value">{check_time|date}</p>
-			</li>
-		</ul>
-	</script>
+    <script type="text/html" id="table-properties">
+        <ul class="properties _table">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Engine</h4>
+                <p class="property-value">{engine} v.{version}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Row format</h4>
+                <p class="property-value">{row_format}</p>
+            </li>
+            <li class="property" title="Character set and collation">
+                <h4 class="property-name">Collation</h4>
+                <p class="property-value">{collation}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Rows</h4>
+                <p class="property-value">{rows|number|empty:n/a}</p>
+            </li>
+            <li class="property" title="The next AUTO_INCREMENT value">
+                <h4 class="property-name">Auto Increment</h4>
+                <p class="property-value">{auto_increment|number}</p>
+            </li>
+            <li class="property" title="The length of the data file">
+                <h4 class="property-name">Data length</h4>
+                <p class="property-value">{data_length|size}</p>
+            </li>
+            <li class="property" title="The maximum length of the data file">
+                <h4 class="property-name">Max data length</h4>
+                <p class="property-value">{max_data_length|size}</p>
+            </li>
+            <li class="property" title="The number of allocated but unused bytes">
+                <h4 class="property-name">Data free length</h4>
+                <p class="property-value">{data_free|size}</p>
+            </li>
+            <li class="property" title="The length of the index file">
+                <h4 class="property-name">Index length</h4>
+                <p class="property-value">{index_length|size}</p>
+            </li>
+            <li class="property" title="When the table was created">
+                <h4 class="property-name">Created</h4>
+                <p class="property-value">{create_time|date}</p>
+            </li>
+            <li class="property" title="When the data file was last updated">
+                <h4 class="property-name">Updated</h4>
+                <p class="property-value">{update_time|date}</p>
+            </li>
+            <li class="property" title="When the table was last checked">
+                <h4 class="property-name">Checked</h4>
+                <p class="property-value">{check_time|date}</p>
+            </li>
+        </ul>
+    </script>
 
-	<script type="text/html" id="view-properties">
-		<ul class="properties _view">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{table_name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Database</h4>
-				<p class="property-value">{table_schema}</p>
-			</li>
-			<li class="property" title="The account of the user who created the view">
-				<h4 class="property-name">Definer</h4>
-				<p class="property-value">{definer}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Security Type</h4>
-				<p class="property-value">{security_type}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Updatable</h4>
-				<p class="property-value">{is_updatable}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Check Option</h4>
-				<p class="property-value">{check_option}</p>
-			</li>
-			<li class="property" title="The session value of the character_set_client system variable when the view was created">
-				<h4 class="property-name">Client Character Set</h4>
-				<p class="property-value">{character_set_client}</p>
-			</li>
-			<li class="property" title="The session value of the collation_connection system variable when the view was created">
-				<h4 class="property-name">Connection Collation</h4>
-				<p class="property-value">{collation_connection}</p>
-			</li>
-		</ul>
-	</script>
+    <script type="text/html" id="view-properties">
+        <ul class="properties _view">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{table_name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Database</h4>
+                <p class="property-value">{table_schema}</p>
+            </li>
+            <li class="property" title="The account of the user who created the view">
+                <h4 class="property-name">Definer</h4>
+                <p class="property-value">{definer}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Security Type</h4>
+                <p class="property-value">{security_type}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Updatable</h4>
+                <p class="property-value">{is_updatable}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Check Option</h4>
+                <p class="property-value">{check_option}</p>
+            </li>
+            <li class="property" title="The session value of the character_set_client system variable when the view was created">
+                <h4 class="property-name">Client Character Set</h4>
+                <p class="property-value">{character_set_client}</p>
+            </li>
+            <li class="property" title="The session value of the collation_connection system variable when the view was created">
+                <h4 class="property-name">Connection Collation</h4>
+                <p class="property-value">{collation_connection}</p>
+            </li>
+        </ul>
+    </script>
 
-	<script type="text/html" id="procedure-properties">
-		<ul class="properties _routine">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{routine_name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Database</h4>
-				<p class="property-value">{routine_schema}</p>
-			</li>
-			<li class="property" title="The account of the user who created the routine">
-				<h4 class="property-name">Definer</h4>
-				<p class="property-value">{definer}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Security Type</h4>
-				<p class="property-value">{security_type}</p>
-			</li>
-			<li class="property" title="The session value of the character_set_client system variable when the view was created">
-				<h4 class="property-name">Client Character Set</h4>
-				<p class="property-value">{character_set_client}</p>
-			</li>
-			<li class="property" title="The session value of the collation_connection system variable when the view was created">
-				<h4 class="property-name">Connection Collation</h4>
-				<p class="property-value">{collation_connection}</p>
-			</li>
-			<li class="property" title="The collation of the database with which the routine is associated">
-				<h4 class="property-name">Database Collation</h4>
-				<p class="property-value">{database_collation}</p>
-			</li>
-			<li class="property" title="when the routine was created">
-				<h4 class="property-name">Created</h4>
-				<p class="property-value">{created|date}</p>
-			</li>
-			<li class="property" title="When the routine was last modified">
-				<h4 class="property-name">Last altered</h4>
-				<p class="property-value">{last_altered|date}</p>
-			</li>
-		</ul>
-	</script>
+    <script type="text/html" id="procedure-properties">
+        <ul class="properties _routine">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{routine_name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Database</h4>
+                <p class="property-value">{routine_schema}</p>
+            </li>
+            <li class="property" title="The account of the user who created the routine">
+                <h4 class="property-name">Definer</h4>
+                <p class="property-value">{definer}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Security Type</h4>
+                <p class="property-value">{security_type}</p>
+            </li>
+            <li class="property" title="The session value of the character_set_client system variable when the view was created">
+                <h4 class="property-name">Client Character Set</h4>
+                <p class="property-value">{character_set_client}</p>
+            </li>
+            <li class="property" title="The session value of the collation_connection system variable when the view was created">
+                <h4 class="property-name">Connection Collation</h4>
+                <p class="property-value">{collation_connection}</p>
+            </li>
+            <li class="property" title="The collation of the database with which the routine is associated">
+                <h4 class="property-name">Database Collation</h4>
+                <p class="property-value">{database_collation}</p>
+            </li>
+            <li class="property" title="when the routine was created">
+                <h4 class="property-name">Created</h4>
+                <p class="property-value">{created|date}</p>
+            </li>
+            <li class="property" title="When the routine was last modified">
+                <h4 class="property-name">Last altered</h4>
+                <p class="property-value">{last_altered|date}</p>
+            </li>
+        </ul>
+    </script>
 
-	<script type="text/html" id="function-properties">
-		<ul class="properties _routine">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{routine_name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Database</h4>
-				<p class="property-value">{routine_schema}</p>
-			</li>
-			<li class="property" title="The account of the user who created the routine">
-				<h4 class="property-name">Definer</h4>
-				<p class="property-value">{definer}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Security Type</h4>
-				<p class="property-value">{security_type}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Data Type</h4>
-				<p class="property-value">{data_type}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Numeric Precision</h4>
-				<p class="property-value">{numeric_precision}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Numeric Scale</h4>
-				<p class="property-value">{numeric_scale}</p>
-			</li>
-			<li class="property" title="The collation of the database with which the routine is associated">
-				<h4 class="property-name">Database Collation</h4>
-				<p class="property-value">{database_collation}</p>
-			</li>
-			<li class="property" title="The session value of the character_set_client system variable when the view was created">
-				<h4 class="property-name">Client Character Set</h4>
-				<p class="property-value">{character_set_client}</p>
-			</li>
-			<li class="property" title="The session value of the collation_connection system variable when the view was created">
-				<h4 class="property-name">Connection Collation</h4>
-				<p class="property-value">{collation_connection}</p>
-			</li>
-			<li class="property" title="when the routine was created">
-				<h4 class="property-name">Created</h4>
-				<p class="property-value">{created|date}</p>
-			</li>
-			<li class="property" title="When the routine was last modified">
-				<h4 class="property-name">Last altered</h4>
-				<p class="property-value">{last_altered|date}</p>
-			</li>
-		</ul>
-	</script>
+    <script type="text/html" id="function-properties">
+        <ul class="properties _routine">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{routine_name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Database</h4>
+                <p class="property-value">{routine_schema}</p>
+            </li>
+            <li class="property" title="The account of the user who created the routine">
+                <h4 class="property-name">Definer</h4>
+                <p class="property-value">{definer}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Security Type</h4>
+                <p class="property-value">{security_type}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Data Type</h4>
+                <p class="property-value">{data_type}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Numeric Precision</h4>
+                <p class="property-value">{numeric_precision}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Numeric Scale</h4>
+                <p class="property-value">{numeric_scale}</p>
+            </li>
+            <li class="property" title="The collation of the database with which the routine is associated">
+                <h4 class="property-name">Database Collation</h4>
+                <p class="property-value">{database_collation}</p>
+            </li>
+            <li class="property" title="The session value of the character_set_client system variable when the view was created">
+                <h4 class="property-name">Client Character Set</h4>
+                <p class="property-value">{character_set_client}</p>
+            </li>
+            <li class="property" title="The session value of the collation_connection system variable when the view was created">
+                <h4 class="property-name">Connection Collation</h4>
+                <p class="property-value">{collation_connection}</p>
+            </li>
+            <li class="property" title="when the routine was created">
+                <h4 class="property-name">Created</h4>
+                <p class="property-value">{created|date}</p>
+            </li>
+            <li class="property" title="When the routine was last modified">
+                <h4 class="property-name">Last altered</h4>
+                <p class="property-value">{last_altered|date}</p>
+            </li>
+        </ul>
+    </script>
 
-	<script type="text/html" id="trigger-properties">
-		<ul class="properties _trigger">
-			<li class="property">
-				<h4 class="property-name">Name</h4>
-				<p class="property-value">{trigger_name}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Database</h4>
-				<p class="property-value">{trigger_schema}</p>
-			</li>
-			<li class="property" title="The account of the user who created the trigger, in 'user_name'@'host_name' format">
-				<h4 class="property-name">Definer</h4>
-				<p class="property-value">{definer}</p>
-			</li>
-			<li class="property" title="The trigger event. This is the type of operation on the associated table for which the trigger activates.">
-				<h4 class="property-name">Event</h4>
-				<p class="property-value">{event_manipulation}</p>
-			</li>
-			<li class="property">
-				<h4 class="property-name">Event Object</h4>
-				<p class="property-value">`{event_object_schema}`.`{event_object_table}`</p>
-			</li>
-			<li class="property" title="Whether the trigger activates before or after the triggering event">
-				<h4 class="property-name">Timing</h4>
-				<p class="property-value">{action_timing}</p>
-			</li>
-			<li class="property" title="The ordinal position of the trigger's action within the list of all similar triggers on the same table">
-				<h4 class="property-name">Order</h4>
-				<p class="property-value">{action_order}</p>
-			</li>
-			<li class="property" title="The collation of the database with which the trigger is associated">
-				<h4 class="property-name">Database Collation</h4>
-				<p class="property-value">{database_collation}</p>
-			</li>
-			<li class="property" title="The session value of the character_set_client system variable when the trigger was created">
-				<h4 class="property-name">Client Character Set</h4>
-				<p class="property-value">{character_set_client}</p>
-			</li>
-			<li class="property" title="The session value of the collation_connection system variable when the trigger was created">
-				<h4 class="property-name">Connection Collation</h4>
-				<p class="property-value">{collation_connection}</p>
-			</li>
-		</ul>
+    <script type="text/html" id="trigger-properties">
+        <ul class="properties _trigger">
+            <li class="property">
+                <h4 class="property-name">Name</h4>
+                <p class="property-value">{trigger_name}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Database</h4>
+                <p class="property-value">{trigger_schema}</p>
+            </li>
+            <li class="property" title="The account of the user who created the trigger, in 'user_name'@'host_name' format">
+                <h4 class="property-name">Definer</h4>
+                <p class="property-value">{definer}</p>
+            </li>
+            <li class="property" title="The trigger event. This is the type of operation on the associated table for which the trigger activates.">
+                <h4 class="property-name">Event</h4>
+                <p class="property-value">{event_manipulation}</p>
+            </li>
+            <li class="property">
+                <h4 class="property-name">Event Object</h4>
+                <p class="property-value">`{event_object_schema}`.`{event_object_table}`</p>
+            </li>
+            <li class="property" title="Whether the trigger activates before or after the triggering event">
+                <h4 class="property-name">Timing</h4>
+                <p class="property-value">{action_timing}</p>
+            </li>
+            <li class="property" title="The ordinal position of the trigger's action within the list of all similar triggers on the same table">
+                <h4 class="property-name">Order</h4>
+                <p class="property-value">{action_order}</p>
+            </li>
+            <li class="property" title="The collation of the database with which the trigger is associated">
+                <h4 class="property-name">Database Collation</h4>
+                <p class="property-value">{database_collation}</p>
+            </li>
+            <li class="property" title="The session value of the character_set_client system variable when the trigger was created">
+                <h4 class="property-name">Client Character Set</h4>
+                <p class="property-value">{character_set_client}</p>
+            </li>
+            <li class="property" title="The session value of the collation_connection system variable when the trigger was created">
+                <h4 class="property-name">Connection Collation</h4>
+                <p class="property-value">{collation_connection}</p>
+            </li>
+        </ul>
 
-	</script>
+    </script>
 
-	<div id="edit-routine" class="modal">
-		<h3 class="modal-header">Edit</h3>
-		<div class="editor">
-			<textarea id="code-editor" wrap="off"></textarea>
-		</div>
-	</div>
+    <div id="edit-routine" class="modal">
+        <h3 class="modal-header">Edit</h3>
+        <div class="editor">
+            <textarea id="code-editor" wrap="off"></textarea>
+        </div>
+    </div>
 
-	<div id="edit-sql" class="modal">
-		<h3 class="modal-header">Edit</h3>
-		<div class="editor">
-			<textarea wrap="off"></textarea>
-		</div>
-		<div class="modal-buttons"><input type="button" value="Run" title="Run SQL"/></div>
-	</div>
+    <div id="edit-sql" class="modal">
+        <h3 class="modal-header">Edit</h3>
+        <div class="editor">
+            <textarea wrap="off"></textarea>
+        </div>
+        <div class="modal-buttons"><input type="button" value="Run" title="Run SQL"/></div>
+    </div>
 
-	<script>
-		$(document).ready(function() {
-			window.Jux = new Juxta.App({request: {url: 'php/index.php'}});
-		});
-	</script>
+    <script>
+        $(document).ready(function() {
+            window.Jux = new Juxta.App({request: {url: 'php/index.php'}});
+        });
+    </script>
 
 </body>
 </html>
