@@ -1,84 +1,91 @@
-/**
- * @class Create Database
- * @extends Juxta.Modal
- *
- * @param {jQuery} element
- * @param {Juxta.Request} request
- */
-Juxta.CreateDatabase = function(element, request) {
-
-    Juxta.Modal.prototype.constructor.call(this, element);
+define(['modal'], function (Modal) {
 
     /**
-     * @type {Juxta.Request}
+     * @class Create Database
+     * @extends Juxta.Modal
+     *
+     * @param {jQuery} element
+     * @param {Juxta.Request} request
      */
-    this._request = request;
+    function CreateDatabase(element, request) {
 
+        Modal.prototype.constructor.call(this, element);
+
+        /**
+         * @type {Juxta.Request}
+         */
+        this._request = request;
+
+        /**
+         * @type {jQuery}
+         */
+        this._form = this._container.find('form[name=create-database]');
+
+        /**
+         * @type {jQuery}
+         */
+        this._submit = this._form.find('input[type=submit]');
+
+
+        this._form.on('submit', (function () {
+            this._createDatabaseRequest();
+            return false;
+        }).bind(this));
+
+    }
+
+    CreateDatabase.prototype = Object.create(Modal.prototype);
+    CreateDatabase.prototype.constructor = CreateDatabase;
 
     /**
-     * @type {jQuery}
+     * Show dialog window
+     *
+     * @see {Juxta.Modal.prototype.show}
+     * @return {Juxta.CreateDatabase}
      */
-    this._form = this._container.find('form[name=create-database]');
+    CreateDatabase.prototype.show = function () {
+        //
+        Modal.prototype.show.apply(this, arguments);
 
+        this._submit.attr('disabled', false);
+        this._container.find('input[type=text]').focus().val(null);
+
+        return this;
+    };
 
     /**
-     * @type {jQuery}
+     * Request to create database
+     *
+     * @return {jqXHR}
      */
-    this._submit = this._form.find('input[type=submit]');
+    CreateDatabase.prototype._createDatabaseRequest = function () {
+        //
+        this._submit.attr('disabled', true);
 
+        return this._request.send({
+            action: {create: 'database'},
+            data: this._form.serialize(),
+            success: this._createDatabaseCallback,
+            error: function () {
+                this._submit.attr('disabled', false);
+            },
+            context: this
+        });
+    };
 
-    this._form.on('submit', (function() { this._createDatabaseRequest(); return false; }).bind(this));
+    /**
+     * Callback on database create
+     *
+     * @return {Juxta.CreateDatabase}
+     */
+    CreateDatabase.prototype._createDatabaseCallback = function () {
+        //
+        this._container.hide();
+        this.trigger('created');
 
-};
+        return this;
+    };
 
-Juxta.Lib.extend(Juxta.CreateDatabase, Juxta.Modal);
+    return CreateDatabase;
 
-
-/**
- * Show dialog window
- *
- * @see {Juxta.Modal.prototype.show}
- * @return {Juxta.CreateDatabase}
- */
-Juxta.CreateDatabase.prototype.show = function() {
-    //
-    Juxta.Modal.prototype.show.apply(this, arguments);
-
-    this._submit.attr('disabled', false);
-    this._container.find('input[type=text]').focus().val(null);
-
-    return this;
-};
-
-
-/**
- * Request to create database
- *
- * @return {jqXHR}
- */
-Juxta.CreateDatabase.prototype._createDatabaseRequest = function() {
-    //
-    this._submit.attr('disabled', true);
-
-    return this._request.send({
-        action: {create: 'database'},
-        data: this._form.serialize(),
-        success: this._createDatabaseCallback,
-        error: function() { this._submit.attr('disabled', false); },
-        context: this
-    });
-};
-
-
-/**
- * Callback on database create
- *
- * @return {Juxta.CreateDatabase}
- */
-Juxta.CreateDatabase.prototype._createDatabaseCallback = function() {
-    //
-    this._container.hide();
-    this.trigger('created');
-
-    return this;
-};
+});

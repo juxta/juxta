@@ -1,48 +1,55 @@
-/**
- * @class SQL editor
- * @extends Juxta.Modal
- *
- * @param {jQuery} element
- */
-Juxta.SqlEditor = function(element) {
-
-    Juxta.Modal.prototype.constructor.call(this, element);
+define(['modal', 'editor'], function (Modal, Editor) {
 
     /**
-     * @type {Juxta.Editor}
+     * @class SQL editor
+     * @extends Juxta.Modal
+     *
+     * @param {jQuery} element
      */
-    this._editor = new Juxta.Editor(this._container.find('textarea'));
+    function SqlEditor(element) {
 
-};
+        Modal.prototype.constructor.call(this, element);
 
-Juxta.Lib.extend(Juxta.SqlEditor, Juxta.Modal);
+        /**
+         * @type {Editor}
+         */
+        this._editor = new Editor(this._container.find('textarea'));
 
-/**
- * View SQL (read only)
- *
- * @param {Object} params
- */
-Juxta.SqlEditor.prototype.view = function(query, params) {
+    }
 
-    this._container.find('.modal-buttons').hide();
+    SqlEditor.prototype = Object.create(Modal.prototype);
+    SqlEditor.prototype.constructor = SqlEditor;
 
-    this.show(params);
+    /**
+     * View SQL (read only)
+     *
+     * @param {Object} params
+     */
+    SqlEditor.prototype.view = function (query, params) {
 
-    this._editor.edit(query);
+        this._container.find('.modal-buttons').hide();
 
-    return this;
-};
+        this.show(params);
 
-/**
- * Edit SQL
- *
- * @param {Object} params
- */
-Juxta.SqlEditor.prototype.edit = function(query, params) {
+        this._editor.edit(query);
 
-    this._editor.edit(query);
+        return this;
+    };
 
-    this.show(params);
+    /**
+     * Edit SQL
+     *
+     * @param {Object} params
+     */
+    SqlEditor.prototype.edit = function (query, params) {
 
-    return this;
-};
+        this._editor.edit(query);
+
+        this.show(params);
+
+        return this;
+    };
+
+    return SqlEditor;
+
+});

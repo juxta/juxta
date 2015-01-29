@@ -1,82 +1,86 @@
-/**
- * @class Editor for views, stored procedures and triggers
- * @extends Juxta.Modal
- *
- * @param {jQuery} element
- * @param {Juxta.Request} request
- */
-Juxta.RoutineEditor = function(element, request) {
-
-    Juxta.Modal.prototype.constructor.call(this, element);
+define(['modal', 'editor'], function (Modal, Editor) {
 
     /**
-     * @type {Juxta.Request}
+     * @class Editor for views, stored procedures and triggers
+     * @extends Modal
+     *
+     * @param {jQuery} element
+     * @param {Request} request
      */
-    this._request = request;
+    function RoutineEditor(element, request) {
 
+        Modal.prototype.constructor.call(this, element);
+
+        /**
+         * @type {Request}
+         */
+        this._request = request;
+
+
+        /**
+         * @type {Editor}
+         */
+        this._editor = new Editor(this._container.find('textarea'));
+
+    }
+
+    RoutineEditor.prototype = Object.create(Modal.prototype);
+    RoutineEditor.prototype.constructor = RoutineEditor
 
     /**
-     * @type {Juxta.Editor}
+     * Show editor
+     * @param {Object} params
      */
-    this._editor = new Juxta.Editor(this._container.find('textarea'));
+    RoutineEditor.prototype.edit = function (params) {
+        //
+        var query;
 
-};
+        if (params.view) {
+            query = {show: 'view', view: params.view, from: params.from};
 
-Juxta.Lib.extend(Juxta.RoutineEditor, Juxta.Modal);
+        } else if (params['function']) {
+            query = {show: 'function', 'function': params['function'], from: params.from};
 
+        } else if (params.procedure) {
+            query = {show: 'procedure', procedure: params.procedure, from: params.from};
 
-/**
- * Show editor
- * @param {Object} params
- */
-Juxta.RoutineEditor.prototype.edit = function(params) {
-    //
-    var query;
+        } else if (params.trigger) {
+            query = {show: 'trigger', trigger: params.trigger, from: params.from};
+        }
 
-    if (params.view) {
-        query = {show: 'view', view: params.view, from: params.from};
+        if (query) {
+            this._requestCreateRoutine(query);
+        }
+    };
 
-    } else if (params['function']) {
-        query = {show: 'function', 'function': params['function'], from: params.from};
+    /**
+     * @param {Object} query
+     */
+    RoutineEditor.prototype._requestCreateRoutine = function (query) {
+        this._request.send({
+            action: query,
+            success: this._responseEditRoutine,
+            context: this
+        });
+    };
 
-    } else if (params.procedure) {
-        query = {show: 'procedure', procedure: params.procedure, from: params.from};
+    /**
+     * @param {Object} response
+     */
+    RoutineEditor.prototype._responseEditRoutine = function (response) {
+        if (response.view) {
+            this.show({title: 'View {name}', name: response.view, from: response.from});
+        } else if (response['function']) {
+            this.show({title: 'Function {name}', name: response['function'], from: response.from});
+        } else if (response.procedure) {
+            this.show({title: 'Procedure {name}', name: response.procedure, from: response.from});
+        } else if (response.trigger) {
+            this.show({title: 'Trigger {name}', name: response.trigger, from: response.from});
+        }
 
-    } else if (params.trigger) {
-        query = {show: 'trigger', trigger: params.trigger, from: params.from};
-    }
+        this._editor.edit(response.statement);
+    };
 
-    if (query) {
-        this._requestCreateRoutine(query);
-    }
-};
+    return RoutineEditor;
 
-
-/**
- * @param {Object} query
- */
-Juxta.RoutineEditor.prototype._requestCreateRoutine = function(query) {
-    this._request.send({
-        action: query,
-        success: this._responseEditRoutine,
-        context: this
-    });
-};
-
-
-/**
- * @param {Object} response
- */
-Juxta.RoutineEditor.prototype._responseEditRoutine = function(response) {
-    if (response.view) {
-        this.show({title: 'View {name}', name: response.view, from: response.from});
-    } else if (response['function']) {
-        this.show({title: 'Function {name}', name: response['function'], from: response.from});
-    } else if (response.procedure) {
-        this.show({title: 'Procedure {name}', name: response.procedure, from: response.from});
-    } else if (response.trigger) {
-        this.show({title: 'Trigger {name}', name: response.trigger, from: response.from});
-    }
-
-    this._editor.edit(response.statement);
-};
+});

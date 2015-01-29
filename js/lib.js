@@ -11,7 +11,8 @@ Juxta.Lib = {};
  * @return {Object}
  */
 Juxta.Lib.extend = function (child, parent) {
-    var F = function() {};
+    var F = function () {
+    };
     F.prototype = parent.prototype;
     F.prototype.constructor = parent;
     return child.prototype = new F();
@@ -21,22 +22,21 @@ Juxta.Lib.extend = function (child, parent) {
 /**
  * Date functions
  */
-Juxta.Lib.Date = (function() {
+Juxta.Lib.Date = (function () {
 
-    //
     var settings = {
-        months : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        monthsShort : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        weekdays : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        weekdaysShort : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         midday: null,
         pretty: {
-            lastDay : 'Yesterday %R',
-            sameDay : '%R',
-            nextDay : '%b %-d, %Y %R',
-            lastWeek : '%b %-d, %Y %R',
-            nextWeek : '%b %-d, %Y %R',
-            sameElse : '%b %-d, %Y %R'
+            lastDay: 'Yesterday %R',
+            sameDay: '%R',
+            nextDay: '%b %-d, %Y %R',
+            lastWeek: '%b %-d, %Y %R',
+            nextWeek: '%b %-d, %Y %R',
+            sameElse: '%b %-d, %Y %R'
         },
         uptime: {
             days: '%d days, %-H:%M',
@@ -102,7 +102,7 @@ Juxta.Lib.Date = (function() {
                 case 'y' :
                     return padLeft(year % 100, flag == '-' ? 0 : width || 2, flag == '_' ? ' ' : '0');
                 case 'Y' :
-                    return padLeft(year, flag == '-' ? 0 : width || 4,  flag == '_' ? ' ' : '0');
+                    return padLeft(year, flag == '-' ? 0 : width || 4, flag == '_' ? ' ' : '0');
                 case 'C' :
                     return Math.floor(year / 100);
 
@@ -110,7 +110,7 @@ Juxta.Lib.Date = (function() {
                 case 'e':
                     flag = '_';
                     width = 2;
-                    /* falls through */
+                /* falls through */
                 case 'd' :
                     return padLeft(day, flag == '-' ? 0 : width || 2, flag == '_' ? ' ' : '0');
 
@@ -145,7 +145,7 @@ Juxta.Lib.Date = (function() {
                 // AM/PM
                 case 'P' :
                     flag = '^';
-                    /* falls through */
+                /* falls through */
                 case 'p':
                     var ampm = typeof midday == 'function' ? midday(hours, minutes) : (hours > 11 ? 'pm' : 'am');
                     if (flag === '^') {
@@ -214,11 +214,11 @@ Juxta.Lib.Date = (function() {
 
         var d = diff(new Date(date), startOfTheDate),
             f = d < -6 ? settings.pretty.sameElse :
-            d < -1 ? settings.pretty.lastWeek :
-            d < 0 ? settings.pretty.lastDay :
-            d < 1 ? settings.pretty.sameDay :
-            d < 2 ? settings.pretty.nextDay :
-            d < 7 ? settings.pretty.nextWeek : settings.pretty.sameElse;
+                d < -1 ? settings.pretty.lastWeek :
+                    d < 0 ? settings.pretty.lastDay :
+                        d < 1 ? settings.pretty.sameDay :
+                            d < 2 ? settings.pretty.nextDay :
+                                d < 7 ? settings.pretty.nextWeek : settings.pretty.sameElse;
 
         return strftime(date, f);
     }
@@ -246,13 +246,13 @@ Juxta.Lib.Date = (function() {
         result.s = Math.floor(diff / 1000);
 
         format = result.d > 1 && ['days'] ||
-            result.d === 1 && ['day'] ||
-            result.h > 1 && ['hours'] ||
-            result.h === 1 && ['hour'] ||
-            result.m > 1 && ['minutes'] ||
-            result.m === 1 && ['minute'] || ['less'];
+        result.d === 1 && ['day'] ||
+        result.h > 1 && ['hours'] ||
+        result.h === 1 && ['hour'] ||
+        result.m > 1 && ['minutes'] ||
+        result.m === 1 && ['minute'] || ['less'];
 
-        return settings.uptime[format] ? settings.uptime[format].replace(/%(-|\^|_|0)?(\d+)?([dHM])/g, function(specifier, flag, width, token) {
+        return settings.uptime[format] ? settings.uptime[format].replace(/%(-|\^|_|0)?(\d+)?([dHM])/g, function (specifier, flag, width, token) {
             switch (token) {
                 case 'd':
                     return padLeft(result.d, flag == '-' ? 0 : width || 0, flag == '_' ? ' ' : '0');
@@ -273,7 +273,7 @@ Juxta.Lib.Date = (function() {
 })();
 
 
-Juxta.Lib.Number = (function() {
+Juxta.Lib.Number = (function () {
 
     /**
      * Format a number with grouped thousands

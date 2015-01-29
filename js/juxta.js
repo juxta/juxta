@@ -1,38 +1,43 @@
-/**
- * @namespace Juxta
- */
-var Juxta = {};
+define(function () {
 
-/**
- * Default MySQL port
- *
- * @constant {Number}
- */
-Juxta.DEFAULT_PORT = 3306;
+    /**
+     * @namespace Juxta
+     */
+    var Juxta = {};
 
-/**
- * Compose name string from connection params
- *
- * @param {Object} connection
- * @return {String}
- */
-Juxta.composeConnectionName = function(connection)
-{
-    var name = '';
+    /**
+     * Default MySQL port
+     *
+     * @constant {Number}
+     */
+    Juxta.DEFAULT_PORT = 3306;
 
-    if (connection.user) {
-        name += connection.user + '@';
-    }
+    /**
+     * Compose name string from connection params
+     *
+     * @param {Object} connection
+     * @return {String}
+     */
+    Juxta.composeConnectionName = function (connection) {
+        var name = '';
 
-    name += connection.host;
+        if (connection.user) {
+            name += connection.user + '@';
+        }
 
-    if (!connection.port) {
-        connection.port = Juxta.DEFAULT_PORT;
-    }
+        name += connection.host;
 
-    if (connection.port != Juxta.DEFAULT_PORT) {
-        name += ':' + connection.port;
-    }
+        if (!connection.port) {
+            connection.port = Juxta.DEFAULT_PORT;
+        }
 
-    return name;
-};
+        if (connection.port != Juxta.DEFAULT_PORT) {
+            name += ':' + connection.port;
+        }
+
+        return name;
+    };
+
+    return Juxta;
+
+});
