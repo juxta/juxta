@@ -1,4 +1,4 @@
-define(['events', 'grid2contextmenu'], function (Events, ContextMenu) {
+define(['events', 'template', 'grid2contextmenu'], function (Events, render, ContextMenu) {
 
     /**
      * @class Grid 2
@@ -337,7 +337,7 @@ define(['events', 'grid2contextmenu'], function (Events, ContextMenu) {
                 if (typeof this._rowTemplate === 'function') {
                     row = this._rowTemplate(valuesForTemplate);
                 } else {
-                    row = $.template(this._rowTemplate, valuesForTemplate);
+                    row = render(this._rowTemplate, valuesForTemplate);
                 }
 
                 // Row for thead

@@ -1,6 +1,6 @@
 /*global history */
 
-define(['events'], function (Events) {
+define(['events', 'template'], function (Events, render) {
     /**
      * @class Abstract window class
      * @abstract
@@ -150,7 +150,7 @@ define(['events'], function (Events) {
             }
 
             if (href) {
-                link.attr('href', $.template(href, variables)).attr('disabled', false);
+                link.attr('href', render(href, variables)).attr('disabled', false);
             }
             if (action) {
                 link.on('click', (function (event) {

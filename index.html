@@ -614,15 +614,14 @@
             baseUrl: 'js/',
             paths: {
                 lib: '../lib',
+                Juxta: './',
                 jquery: '../lib/jquery-2.0.3',
-                'jquery-template': '../lib/jquery-template',
                 codemirror: '../lib/codemirror/codemirror'
             },
             shim: {
                 codemirror: {
                     exports: 'CodeMirror'
-                },
-                'jquery-template': ['jquery']
+                }
             }
         });
 

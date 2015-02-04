@@ -1,4 +1,4 @@
-define(['events', 'jquery-template'], function (Events) {
+define(['events', 'template'], function (Events, template) {
 
     /**
      * @class Modal dialog
@@ -73,7 +73,7 @@ define(['events', 'jquery-template'], function (Events) {
             options.name = '<a class="modal-header-link">' + options.name + '</a>';
         }
 
-        this._header.html($.template(options.title, options));
+        this._header.html(template(options.title, options));
 
         // Append content
         if (content) {

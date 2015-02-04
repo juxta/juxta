@@ -1,4 +1,4 @@
-define(['window', 'grid2', 'createdatabase', 'sqleditor', 'routineeditor'], function (Frame, Grid2, CreateDatabase, SqlEditor, RoutineEditor) {
+define(['window', 'grid2', 'createdatabase', 'sqleditor', 'routineeditor', 'template'], function (Frame, Grid2, CreateDatabase, SqlEditor, RoutineEditor, render) {
 
     /**
      * @class Explorer
@@ -446,39 +446,39 @@ define(['window', 'grid2', 'createdatabase', 'sqleditor', 'routineeditor'], func
      *
      * @param {Object} response
      */
-    Explorer.prototype._showPropertiesCallback = function (templateName, response) {
+    Explorer.prototype._showPropertiesCallback = function (name, response) {
         //
-        var template = $('#' + templateName);
+        var template = $('#' + name);
 
-        if (templateName === 'database-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {
+        if (name === 'database-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {
                 title: 'Database {name}',
                 name: response.name
             });
 
-        } else if (templateName === 'table-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {title: 'Table {name}', name: response.name});
+        } else if (name === 'table-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {title: 'Table {name}', name: response.name});
 
-        } else if (templateName === 'view-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {
+        } else if (name === 'view-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {
                 title: 'View {name}',
                 name: response.table_name
             });
 
-        } else if (templateName === 'procedure-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {
+        } else if (name === 'procedure-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {
                 title: 'Procedure {name}',
                 name: response.routine_name
             });
 
-        } else if (templateName === 'function-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {
+        } else if (name === 'function-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {
                 title: 'Function {name}',
                 name: response.routine_name
             });
 
-        } else if (templateName === 'trigger-properties' && template.is('[type=text/html]')) {
-            this.trigger('alert', $.template(template.html(), response), {
+        } else if (name === 'trigger-properties' && template.is('[type=text/html]')) {
+            this.trigger('alert', render(template.html(), response), {
                 title: 'Trigger {name}',
                 name: response.trigger_name
             });

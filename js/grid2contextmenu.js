@@ -1,4 +1,4 @@
-define(['events'], function (Events) {
+define(['events', 'template'], function (Events, render) {
 
     /**
      * @class Juxta.Grid2.ContextMenu
@@ -89,7 +89,7 @@ define(['events'], function (Events) {
             item = this._menu[link.attr('name')];
 
             if (item && typeof item === 'object' && item.href) {
-                link.attr('href', $.template(item.href, values));
+                link.attr('href', render(item.href, values));
             }
 
         }).bind(this));
